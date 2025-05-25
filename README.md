@@ -1,1 +1,1 @@
-# Console-music-player
+# Console Music Player
