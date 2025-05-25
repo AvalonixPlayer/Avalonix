@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Avalonix.MainWindow"
+        Title="Avalonix">
+
+        <Grid RowDefinitions="Auto,*,Auto" Margin="10">
+        <TextBlock Grid.Row="0" Text="Music Player" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+        
+        <ListBox Grid.Row="1" x:Name="PlaylistBox" SelectionMode="Single">
+            <ListBoxItem>Song 1 - Artist 1</ListBoxItem>
+            <ListBoxItem>Song 2 - Artist 2</ListBoxItem>
+            <ListBoxItem>Song 3 - Artist 3</ListBoxItem>
+            <ListBoxItem>Song 4 - Artist 4</ListBoxItem>
+            <ListBoxItem>Song 5 - Artist 5</ListBoxItem>
+        </ListBox>
+        
+        <!-- Controls -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*,*" Margin="0,10,0,0">
+            <Button Grid.Column="0" Content="⏮" ToolTip.Tip="Previous" Margin="2"/>
+            <Button Grid.Column="1" Content="⏯" ToolTip.Tip="Play/Pause" Margin="2"/>
+            <Button Grid.Column="2" Content="⏭" ToolTip.Tip="Next" Margin="2"/>
+            <Button Grid.Column="3" Content="➕" ToolTip.Tip="Add song" Margin="2"/>
+            <Button Grid.Column="4" Content="🗑" ToolTip.Tip="Remove song" Margin="2"/>
+        </Grid>
+        
+        <Grid Grid.Row="2" VerticalAlignment="Top" Margin="0,5,0,0">
+            <ProgressBar Height="5" Value="30" Maximum="100"/>
+            <TextBlock Text="1:23 / 4:56" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,30"/>
+        </Grid>
+        
+        <Grid Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock Text="🔈" VerticalAlignment="Center"/>
+                <Slider Width="100" Minimum="0" Maximum="100" Value="70"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
