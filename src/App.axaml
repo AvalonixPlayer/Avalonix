@@ -2,14 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Avalonix.App"
              xmlns:local="using:Avalonix"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             RequestedThemeVariant="Default"
+             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles">
+  <Application.Styles>
+    <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Green" SecondaryColor="Lime" />
+  </Application.Styles>
 
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
   
-    <Application.Styles>
-        <FluentTheme />
-    </Application.Styles>
 </Application>
