@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Dsp;
 using NAudio.Wave;
-namespace ConsolePlayer.src
+namespace AvaloniaAPI
 {
     public static class MediaPlayer
     {

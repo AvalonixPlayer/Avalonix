@@ -1,22 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace ConsolePlayer.src
+namespace AvaloniaAPI
 {
     public class Playlist
     {
-        private string[] _audioPaths = null!;
+        private string _playlistName = null!;
 
-        public void GetAudios(string playlistName)
+        public Playlist(string playlistName)
         {
-            _audioPaths = Directory.GetFiles(Path.GetDirectoryName(Environment.ProcessPath) + "\\" + playlistName);
+            _playlistName = playlistName;
         }
 
         public void Play()
         {
-            foreach (var i in _audioPaths)
+            foreach (var i in DiskManager.GetAudios(_playlistName))
             {
                 MediaPlayer.Stop();
                 Thread thread = new Thread(() => MediaPlayer.Play(i));
@@ -31,7 +33,6 @@ namespace ConsolePlayer.src
 
         public void Stop()
         {
-            _audioPaths = new string[0];
             MediaPlayer.Stop();
         }
     }
