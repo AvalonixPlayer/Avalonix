@@ -12,8 +12,8 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Console.WriteLine(DiskManager.GetAudios("gorkiy park")[0]);
-        DiskManager.AddToPlaylist("gorkiy park", "moscow calling");
+        Console.WriteLine(PlaylistsManager.GetAudios("gorkiy park")[0]);
+        PlaylistsManager.AddToPlaylist("gorkiy park", "moscow calling");
 
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);

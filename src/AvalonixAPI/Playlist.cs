@@ -16,7 +16,7 @@ namespace AvalonixAPI
         public Playlist(string playlistName)
         {
             _playlistName = playlistName;
-            _audios = DiskManager.GetAudios(_playlistName);
+            _audios = PlaylistsManager.GetAudios(_playlistName);
         }
 
         public void Play()
