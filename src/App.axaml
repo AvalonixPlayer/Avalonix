@@ -5,7 +5,7 @@
              RequestedThemeVariant="Default"
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles">
   <Application.Styles>
-    <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Green" SecondaryColor="Lime" />
+    <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="LightGreen" SecondaryColor="Lime" />
   </Application.Styles>
 
 </Application>
