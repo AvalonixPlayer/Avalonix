@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace AvalonixAPI
 {
-    public class PlaylistsManager
+    public static class PlaylistsManager
     {
         public static string[] GetAudios(string playlistName)
         {
