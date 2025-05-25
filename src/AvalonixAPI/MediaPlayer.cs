@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Dsp;
 using NAudio.Wave;
-namespace AvaloniaAPI
+namespace AvalonixAPI
 {
     public static class MediaPlayer
     {
