@@ -10,14 +10,10 @@
         <TextBlock Grid.Row="0" Text="Music Player" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,10"/>
         
         <ListBox Grid.Row="1" x:Name="PlaylistBox" SelectionMode="Single">
-            <ListBoxItem>Song 1 - Artist 1</ListBoxItem>
-            <ListBoxItem>Song 2 - Artist 2</ListBoxItem>
-            <ListBoxItem>Song 3 - Artist 3</ListBoxItem>
-            <ListBoxItem>Song 4 - Artist 4</ListBoxItem>
-            <ListBoxItem>Song 5 - Artist 5</ListBoxItem>
         </ListBox>
-        
-        <!-- Controls -->
+        <Image Grid.Row="1">
+        </Image>
+
         <Grid Grid.Row="2" ColumnDefinitions="50,50,50,50,50" Margin="0,50,0,0">
             <Button Grid.Column="0" Content="⏮" ToolTip.Tip="Previous" Margin="2"/>
             <Button Grid.Column="1" Content="⏯" ToolTip.Tip="Play/Pause" Margin="2"/>
