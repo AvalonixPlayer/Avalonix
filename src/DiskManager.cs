@@ -12,5 +12,10 @@ namespace AvaloniaAPI
         {
             return Directory.GetFiles(Path.GetDirectoryName(Environment.ProcessPath) + "\\playlists\\" + playlistName);
         }
+
+        public static string[] Playlists()
+        {
+            return Directory.GetDirectories(Path.GetDirectoryName(Environment.ProcessPath) + "\\playlists\\");
+        }
     }
 }
