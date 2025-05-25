@@ -18,7 +18,7 @@
         </ListBox>
         
         <!-- Controls -->
-        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*,*" Margin="0,50,0,0">
+        <Grid Grid.Row="2" ColumnDefinitions="50,50,50,50,50" Margin="0,50,0,0">
             <Button Grid.Column="0" Content="⏮" ToolTip.Tip="Previous" Margin="2"/>
             <Button Grid.Column="1" Content="⏯" ToolTip.Tip="Play/Pause" Margin="2"/>
             <Button Grid.Column="2" Content="⏭" ToolTip.Tip="Next" Margin="2"/>
