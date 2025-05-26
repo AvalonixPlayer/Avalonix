@@ -1,4 +1,4 @@
-namespace Avalonix.AvalonixAPI;
+namespace AvalonixAPI;
 
 public static class Settings
 {

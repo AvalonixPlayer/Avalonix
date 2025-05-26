@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using AvalonixAPI;
 
-namespace Avalonix.AvalonixAPI;
+namespace AvalonixAPI;
 
 public class Playlist
 {
