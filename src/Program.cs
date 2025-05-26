@@ -1,7 +1,5 @@
 ﻿using Avalonia;
-using AvalonixAPI;
 using System;
-using System.Threading;
 
 namespace Avalonix;
 
@@ -13,18 +11,6 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Playlist pl = new Playlist("gorkiy park");
-        Thread thread = new Thread(() => pl.Play());
-        thread.Start();
-
-        /*
-        while (true)
-        {
-            Console.WriteLine(MediaPlayer.TotalMusicTime());
-            Thread.Sleep(100);
-        }
-        */
-
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
