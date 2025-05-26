@@ -20,7 +20,7 @@
     </PackageReference>
     <PackageReference Include="Material.Avalonia" Version="3.12.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="NeoSimpleLogger" Version="1.0.0" />
+    <PackageReference Include="NeoSimpleLogger" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 </Project>

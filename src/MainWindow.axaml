@@ -4,6 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="300"
         x:Class="Avalonix.MainWindow"
+        MinHeight="100"
+        MinWidth="100"
         Title="Avalonix">
     <Grid RowDefinitions="*,Auto" ColumnDefinitions="250,*" Margin="10">
         <ListBox Grid.Row="0" Grid.Column="0" x:Name="PlaylistBox" SelectionMode="Single">

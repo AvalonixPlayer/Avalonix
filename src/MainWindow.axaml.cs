@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using NeoSimpleLogger.Logger;
+using NeoSimpleLogger;
 
 namespace Avalonix;
 
@@ -7,7 +7,8 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
+        var logger = new Logger();
         InitializeComponent();
-        Info("App started");
+        logger.Info("App Started");
     }
 }

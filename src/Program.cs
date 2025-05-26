@@ -11,23 +11,7 @@ class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args)
-    {
-        Playlist pl = new Playlist("gorkiy park");
-        Thread thread = new Thread(() => pl.Play());
-        thread.Start();
-
-        /*
-        while (true)
-        {
-            Console.WriteLine(MediaPlayer.TotalMusicTime());
-            Thread.Sleep(100);
-        }
-        */
-
-        BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
-    }
+    public static void Main(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
 
     // Avalonia configuration, don't remove; also used by visual designer.
