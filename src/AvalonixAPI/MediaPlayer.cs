@@ -1,70 +1,64 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using NAudio.Dsp;
 using NAudio.Utils;
 using NAudio.Wave;
-namespace AvalonixAPI
+using NeoSimpleLogger;
+
+namespace Avalonix.AvalonixAPI;
+public static class MediaPlayer
 {
-    public static class MediaPlayer
+    private static WaveOutEvent _playingMusic = null!;
+
+    private static float _totalMusicTime;
+    private static string _musicName = null!;
+    private static Logger _logger = new Logger();
+    public static void Play(string path)
     {
-        private static WaveOutEvent _playingMusic = null!;
+        using var audioFile = new AudioFileReader(path);
+        _musicName = Path.GetFileName(path);
+        _totalMusicTime = (float)audioFile.TotalTime.TotalSeconds;
+        _playingMusic = new WaveOutEvent();
+        _playingMusic.Init(audioFile);
+        _playingMusic.Play();
+        _logger.Info($"Start playing {path}");
 
-        private static float _totalMusicTime = 0;
-        private static string _musicName = null!;
-        public static void Play(string path)
+        while (Playing())
         {
-            using (var audioFile = new AudioFileReader(path))
-            {
-                _musicName = Path.GetFileName(path);
-                _totalMusicTime = (float)audioFile.TotalTime.TotalSeconds;
-                _playingMusic = new WaveOutEvent();
-                _playingMusic.Init(audioFile);
-                _playingMusic.Play();
-
-                while (_playingMusic != null && Playing())
-                {
-                    Thread.Sleep(1000);
-                }
-            }
+            Thread.Sleep(1000);
         }
+    }
 
-        public static void Stop()
+    public static void Stop()
+    {
+        if (_playingMusic != null)
         {
-            if (_playingMusic != null)
-            {
-                _playingMusic.Stop();
-                _playingMusic = null!;
-            }
-            else
-            {
-#if DEBUG
-                Console.WriteLine("playing music is null");
-#endif
-            }
+            _playingMusic.Stop();
+            _playingMusic = null!;
         }
-
-        public static bool Playing()
+        else
         {
-            return _playingMusic != null ? (_playingMusic.PlaybackState == PlaybackState.Playing ? true : false) : false;
+            _logger.Error("Playing music is null");
         }
+    }
 
-        public static float MusicTime()
-        {
-            return _playingMusic != null ? (float)_playingMusic.GetPositionTimeSpan().TotalSeconds : 0;
-        }
+    public static bool Playing()
+    {
+        return _playingMusic.PlaybackState == PlaybackState.Playing;
+    }
 
-        public static float TotalMusicTime()
-        {
-            return _totalMusicTime;
-        }
+    public static float MusicTime()
+    {
+        return _playingMusic != null ? (float)_playingMusic.GetPositionTimeSpan().TotalSeconds : 0;
+    }
 
-        public static string MusicName()
-        {
-            return _musicName;
-        }
+    public static float TotalMusicTime()
+    {
+        return _totalMusicTime;
+    }
+
+    public static string MusicName()
+    {
+        return _musicName;
     }
 }
