@@ -1,13 +1,12 @@
 using System;
 using System.IO;
 
-namespace AvalonixAPI
+namespace AvalonixAPI;
+
+public static class DiskManager
 {
-    public static class DiskManager
+    public static string EnvPath()
     {
-        public static string EnvPath()
-        {
-            return Path.GetDirectoryName(Environment.ProcessPath) ?? "";
-        }
+        return Path.GetDirectoryName(Environment.ProcessPath) ?? "";
     }
 }

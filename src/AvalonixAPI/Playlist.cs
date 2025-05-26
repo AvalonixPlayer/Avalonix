@@ -1,13 +1,14 @@
 using System;
 using System.Threading;
+using AvalonixAPI;
 
-namespace AvalonixAPI
+namespace Avalonix.AvalonixAPI
 {
     public class Playlist
     {
         private string _playlistName = null!;
 
-        private string[] _audios = null!;
+        private readonly string[] _audios = null!;
 
         public Playlist(string playlistName)
         {
@@ -21,11 +22,11 @@ namespace AvalonixAPI
             {
                 foreach (var i in _audios)
                 {
-                    if (Settings.shuffle)
+                    if (Settings.Shuffle)
                         Shuffle();
 
                     MediaPlayer.Stop();
-                    Thread thread = new Thread(() => MediaPlayer.Play(i));
+                    var thread = new Thread(() => MediaPlayer.Play(i));
                     thread.Start();
                     Thread.Sleep(1000);
                     while (MediaPlayer.Playing())
@@ -34,7 +35,7 @@ namespace AvalonixAPI
                     }
                 }
             }
-            while (Settings.loopingPlaylists);
+            while (Settings.LoopingPlaylists);
         }
 
         public void Shuffle()
