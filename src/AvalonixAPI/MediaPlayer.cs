@@ -4,16 +4,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Dsp;
+using NAudio.Utils;
 using NAudio.Wave;
 namespace AvalonixAPI
 {
     public static class MediaPlayer
     {
         private static WaveOutEvent _playingMusic = null!;
+
+        private static float _totalMusicTime;
         public static void Play(string path)
         {
             using (var audioFile = new AudioFileReader(path))
             {
+                _totalMusicTime = (float)audioFile.TotalTime.TotalSeconds;
                 _playingMusic = new WaveOutEvent();
                 _playingMusic.Init(audioFile);
                 _playingMusic.Play();
@@ -42,6 +46,16 @@ namespace AvalonixAPI
         public static bool Playing()
         {
             return _playingMusic != null ? (_playingMusic.PlaybackState == PlaybackState.Playing ? true : false) : false;
+        }
+
+        public static float MusicTime()
+        {
+            return _playingMusic != null ? (float)_playingMusic.GetPositionTimeSpan().TotalSeconds : 0;
+        }
+
+        public static float TotalMusicTime()
+        {
+            return _totalMusicTime;
         }
     }
 }

@@ -21,7 +21,6 @@ namespace AvalonixAPI
 
         public void Play()
         {
-
             do
             {
                 foreach (var i in _audios)
