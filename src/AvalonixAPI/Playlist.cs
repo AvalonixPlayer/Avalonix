@@ -1,8 +1,7 @@
 using System;
 using System.Threading;
 
-namespace Avalonix.AvalonixAPI
-{
+namespace Avalonix.AvalonixAPI;
 public class Playlist
 {
     private string _playlistName = null!;
@@ -37,14 +36,7 @@ public class Playlist
         while (Settings.LoopingPlaylists);
     }
 
-    public void Shuffle()
-    {
-        Random.Shared.Shuffle(_audios);
-    }
+    public void Shuffle() => Random.Shared.Shuffle(_audios);
 
-    public void Stop()
-    {
-        MediaPlayer.Stop();
-    }
-}
+    public void Stop() => MediaPlayer.Stop();
 }

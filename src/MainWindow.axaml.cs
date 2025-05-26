@@ -1,3 +1,5 @@
+using System;
+using Avalonia;
 using Avalonia.Controls;
 using NeoSimpleLogger;
 
@@ -7,8 +9,12 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
-        var logger = new Logger();
+        if (Program.Logger != null) Program.Logger.Info("MainWindow opened");
         InitializeComponent();
-        logger.Info("App Started");
+    }
+
+    private void AvaloniaObject_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+       // Изменение громкости 
     }
 }
