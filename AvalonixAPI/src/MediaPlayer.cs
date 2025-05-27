@@ -18,7 +18,7 @@ public static class MediaPlayer
     {
         using (var audioFile = new AudioFileReader(path))
         {
-            musicName = Path.GetFileName(path);
+            musicName = Path.GetFileNameWithoutExtension(path);
             totalMusicTime = (float)audioFile.TotalTime.TotalSeconds;
             _playingMusic = new WaveOutEvent();
             _playingMusic.Init(audioFile);
