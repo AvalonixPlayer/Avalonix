@@ -5,8 +5,5 @@ namespace AvalonixAPI;
 
 public static class DiskManager
 {
-    public static string EnvPath()
-    {
-        return Path.GetDirectoryName(Environment.ProcessPath) ?? "";
-    }
+    public static string EnvPath() => return Path.GetDirectoryName(Environment.ProcessPath) ?? "";
 }
