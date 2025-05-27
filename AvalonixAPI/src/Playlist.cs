@@ -17,24 +17,29 @@ public class Playlist
     }
     public void Play()
     {
-        do
+        Thread thread = new Thread(() => thr());
+        thread.Start();
+        void thr()
         {
-            foreach (var i in _audios)
+            do
             {
-                if (Settings.Shuffle)
-                    Shuffle();
-
-                MediaPlayer.Stop();
-                var thread = new Thread(() => MediaPlayer.Play(i));
-                thread.Start();
-                Thread.Sleep(1000);
-                while (MediaPlayer.Playing())
+                foreach (var i in _audios)
                 {
+                    if (Settings.Shuffle)
+                        Shuffle();
+
+                    MediaPlayer.Stop();
+                    var thread = new Thread(() => MediaPlayer.Play(i));
+                    thread.Start();
                     Thread.Sleep(1000);
+                    while (MediaPlayer.Playing())
+                    {
+                        Thread.Sleep(1000);
+                    }
                 }
             }
+            while (Settings.LoopingPlaylists);
         }
-        while (Settings.LoopingPlaylists);
     }
 
     public void Shuffle() => Random.Shared.Shuffle(_audios);

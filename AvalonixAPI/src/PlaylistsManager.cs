@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System;
 using Newtonsoft.Json;
 
 namespace AvalonixAPI;
@@ -9,8 +10,9 @@ public static class PlaylistsManager
 {
     public static string[] GetAudios(string playlistName)
     {
-        string pathToPlaylist = DiskManager.EnvPath() + "\\playlists\\" + playlistName + ".json";
+        string pathToPlaylist = playlistName;
         string json = File.Exists(pathToPlaylist) ? File.ReadAllText(pathToPlaylist) : null!;
+        Console.WriteLine(pathToPlaylist);
         string[] jsonObj = JsonConvert.DeserializeObject<string[]>(json)!;
         return jsonObj;
     }
