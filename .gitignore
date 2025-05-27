@@ -2,5 +2,7 @@ src/obj
 src/bin
 src/.idea
 
+*.sln
+AvalonixAPI/.idea
 AvalonixAPI/bin
 AvalonixAPI/obj
