@@ -1,6 +1,7 @@
 src/obj
 src/bin
 src/.idea
+.idea
 
 *.sln
 AvalonixAPI/.idea
