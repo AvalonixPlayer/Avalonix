@@ -8,7 +8,7 @@ using NeoSimpleLogger;
 namespace Avalonix.AvalonixAPI;
 public static class MediaPlayer
 {
-    public Logger _logger = new Logger();
+    public static readonly Logger Logger = new (Logger.TypeLogger.Console);
     private static WaveOutEvent _playingMusic = null!;
 
     private static float _totalMusicTime;
@@ -21,7 +21,7 @@ public static class MediaPlayer
         _playingMusic = new WaveOutEvent();
         _playingMusic.Init(audioFile);
         _playingMusic.Play();
-        _logger.Info($"Start playing {path}");
+        Logger.Info($"Start playing {path}");
 
         while (Playing())
         {
@@ -38,7 +38,7 @@ public static class MediaPlayer
         }
         else
         {
-            _logger.Error("Playing music is null");
+            Logger.Error("Playing music is null");
         }
     }
 

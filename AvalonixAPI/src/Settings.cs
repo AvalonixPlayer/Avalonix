@@ -2,6 +2,6 @@ namespace AvalonixAPI;
 
 public static class Settings
 {
-    public static bool LoopingPlaylists = false;
-    public static bool Shuffle = true;
+    public static bool LoopingPlaylists { get; } = true; 
+    public static bool Shuffle { get; } 
 }

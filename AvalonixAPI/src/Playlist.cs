@@ -1,25 +1,17 @@
-using System;
-using System.Threading;
-using AvalonixAPI;
-
 namespace AvalonixAPI;
 
 public class Playlist
 {
-    private string _playlistName = null!;
+    private readonly string[] _audios;
 
-    private readonly string[] _audios = null!;
-
-    public Playlist(string playlistName)
-    {
-        _playlistName = playlistName;
-        _audios = PlaylistsManager.GetAudios(_playlistName);
-    }
+    public Playlist(string playlistName) => _audios = PlaylistsManager.GetAudios(playlistName);
     public void Play()
     {
-        Thread thread = new Thread(() => thr());
+        Thread thread = new Thread(Thr);
         thread.Start();
-        void thr()
+        return;
+
+        void Thr()
         {
             do
             {

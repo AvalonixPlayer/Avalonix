@@ -1,19 +1,17 @@
 ﻿using Avalonia;
 using System;
 using NeoSimpleLogger;
-using AvalonixAPI;
-using System.Threading;
-using System.IO;
+using static NeoSimpleLogger.Logger;
 
 namespace Avalonix;
 
-internal abstract class Program
+public class Program
 {
     public static Logger? Logger { get; private set; }
     [STAThread]
     public static void Main(string[] args)
     {
-        Logger = new Logger();
+        Logger = new Logger(TypeLogger.Console);
         Logger.Info("App started");
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }

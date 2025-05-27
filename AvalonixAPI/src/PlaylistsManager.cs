@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System;
 using Newtonsoft.Json;
 
 namespace AvalonixAPI;
@@ -17,21 +13,15 @@ public static class PlaylistsManager
         return jsonObj;
     }
 
-    public static string[] Playlists()
-    {
-        return Directory.GetFiles(DiskManager.EnvPath() + "\\playlists\\", "*.json");
-    }
+    public static string[] Playlists() => Directory.GetFiles(DiskManager.EnvPath() + @"\playlists\", "*.json");
 
-    public static void CreatePlaylist(string playlistName)
-    {
-        Directory.CreateDirectory(DiskManager.EnvPath() + "\\playlists\\" + playlistName + ".json");
-    }
+    public static void CreatePlaylist(string playlistName) => Directory.CreateDirectory(DiskManager.EnvPath() + @"\playlists\" + playlistName + ".json");
 
     public static void AddToPlaylist(string playlistName, string musicPath)
     {
         List<string> list = GetAudios(playlistName).ToList();
         list.Add(musicPath);
         string json = JsonConvert.SerializeObject(list);
-        File.WriteAllText(DiskManager.EnvPath() + "\\playlists\\" + playlistName + ".json", json);
+        File.WriteAllText(DiskManager.EnvPath() + @"\playlists\" + playlistName + ".json", json);
     }
 }

@@ -1,13 +1,12 @@
-using System;
-using System.IO;
-using System.Threading;
 using NAudio.Utils;
 using NAudio.Wave;
+using NeoSimpleLogger;
 
 namespace AvalonixAPI;
 
 public static class MediaPlayer
 {
+    public static  Logger Logger { get; } = new (Logger.TypeLogger.Console);
     private static WaveOutEvent _playingMusic = null!;
 
     public static float totalMusicTime { get; private set; } = 0;
@@ -40,19 +39,12 @@ public static class MediaPlayer
         }
         else
         {
-#if DEBUG
-            Console.WriteLine("playing music is null");
-#endif
+            Logger.CallStack = false;
+            Logger.Info($"{nameof(MediaPlayer)} is stopped.");
         }
     }
 
-    public static bool Playing()
-    {
-        return _playingMusic != null ? (_playingMusic.PlaybackState == PlaybackState.Playing ? true : false) : false;
-    }
+    public static bool Playing() => _playingMusic.PlaybackState == PlaybackState.Playing;
 
-    public static float MusicTime()
-    {
-        return _playingMusic != null ? (float)_playingMusic.GetPositionTimeSpan().TotalSeconds : 0;
-    }
+    public static float MusicTime() => (float)_playingMusic.GetPositionTimeSpan().TotalSeconds;
 }

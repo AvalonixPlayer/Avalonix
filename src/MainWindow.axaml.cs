@@ -1,7 +1,5 @@
-using System;
 using Avalonia;
 using Avalonia.Controls;
-using NeoSimpleLogger;
 
 namespace Avalonix;
 
