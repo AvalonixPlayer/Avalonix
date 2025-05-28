@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "f:\\Avalonix\\src\\Avalonix.csproj": {}
+    "F:\\Avalonix\\src\\Avalonix.csproj": {}
   },
   "projects": {
-    "f:\\Avalonix\\src\\Avalonix.csproj": {
+    "F:\\Avalonix\\src\\Avalonix.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\Avalonix\\src\\Avalonix.csproj",
+        "projectUniqueName": "F:\\Avalonix\\src\\Avalonix.csproj",
         "projectName": "Avalonix",
-        "projectPath": "f:\\Avalonix\\src\\Avalonix.csproj",
+        "projectPath": "F:\\Avalonix\\src\\Avalonix.csproj",
         "packagesPath": "C:\\Users\\tsfka\\.nuget\\packages\\",
-        "outputPath": "f:\\Avalonix\\src\\obj\\",
+        "outputPath": "F:\\Avalonix\\src\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

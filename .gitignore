@@ -1,8 +1,6 @@
 src/bin
+src/obj
 src/.idea
 *.idea*
 
 *.sln
-AvalonixAPI/.idea
-AvalonixAPI/bin
-AvalonixAPI/obj
