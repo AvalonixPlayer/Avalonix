@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using System;
 using NeoSimpleLogger;
 using static NeoSimpleLogger.Logger;
 

@@ -2,11 +2,12 @@ using NAudio.Utils;
 using NAudio.Wave;
 using NeoSimpleLogger;
 
+
 namespace AvalonixAPI;
 
 public static class MediaPlayer
 {
-    public static  Logger Logger { get; } = new (Logger.TypeLogger.Console);
+    public static Logger Logger { get; } = new(Logger.TypeLogger.Console);
     private static WaveOutEvent _playingMusic = null!;
 
     public static float totalMusicTime { get; private set; } = 0;
