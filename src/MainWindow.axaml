@@ -7,7 +7,9 @@
         MinHeight="100"
         MinWidth="100"
         Title="Avalonix">
+    
     <Grid RowDefinitions="*,Auto" ColumnDefinitions="250,*" Margin="10">
+       
         <ListBox Grid.Row="0" Grid.Column="0" x:Name="PlaylistBox" SelectionMode="Single">
             <ListBoxItem>Killing Road - Megadeth</ListBoxItem>
             <ListBoxItem>Fear Of The Dark - Iron Maiden</ListBoxItem>
@@ -25,6 +27,7 @@
                     <Style Selector="Button">
                     <Setter Property="Width" Value="50"/>
                     <Setter Property="Height" Value="40"/>
+                    <Setter Property="CornerRadius" Value="10"/>
                 </Style>
                 </StackPanel.Styles>
                 <Button Content="⏮" ToolTip.Tip= "Previous"/>
