@@ -1,3 +1,5 @@
+using System.IO;
+using System.Threading;
 using NAudio.Utils;
 using NAudio.Wave;
 using NeoSimpleLogger;
