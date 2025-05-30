@@ -3,11 +3,10 @@ using System.Threading;
 
 namespace AvalonixAPI;
 
-public class Playlist
+public class Playlist(string playlistName)
 {
-    private readonly string[] _audios;
+    private readonly string[] _audios = PlaylistsManager.GetAudios(playlistName);
 
-    public Playlist(string playlistName) => _audios = PlaylistsManager.GetAudios(playlistName);
     public void Play()
     {
         Thread thread = new Thread(Thr);
