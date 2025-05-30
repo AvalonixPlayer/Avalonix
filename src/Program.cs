@@ -1,8 +1,8 @@
 ﻿using Avalonia;
 using System;
 using NeoSimpleLogger;
-using AvalonixAPI;
 using System.Threading;
+using Avalonix.AvalonixAPI;
 
 namespace Avalonix;
 
