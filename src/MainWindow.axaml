@@ -35,6 +35,7 @@
                 <Button Click="DoubleForwardButton_OnClick" Content="⏭" ToolTip.Tip= "Next"/>
                 <Button Click="AddSongButton_OnClick" Content="➕" ToolTip.Tip= "Add song"/>
                 <Button Click="RemoveButton_OnClick" Content="🗑" ToolTip.Tip="Remove song"/>
+                <Button Click="PauseButton_OnClick" Content="🗑" ToolTip.Tip="Remove song"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">

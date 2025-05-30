@@ -47,4 +47,10 @@ public partial class MainWindow : Window
         Logger.Info("Remove button clicked");
         throw new System.NotImplementedException();
     }
+
+    private void PauseButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Logger.Info("Pause button clicked");
+        
+    }
 }
