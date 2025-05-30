@@ -2,30 +2,84 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace AvalonixAPI;
 
 public static class PlaylistsManager
 {
-    public static string[] GetAudios(string playlistName)
+    public static PlaylistData LoadPlaylist(string playlistName)
     {
-        string pathToPlaylist = playlistName;
-        string json = File.Exists(pathToPlaylist) ? File.ReadAllText(pathToPlaylist) : null!;
-        Console.WriteLine(pathToPlaylist);
-        string[] jsonObj = JsonConvert.DeserializeObject<string[]>(json)!;
-        return jsonObj;
+        DiskManager.EnsurePlaylistsDirectoryExists();
+        string path = GetPlaylistPath(playlistName);
+        
+        if (!File.Exists(path))
+            throw new FileNotFoundException($"Playlist {playlistName} not found at {path}");
+
+        string json = File.ReadAllText(path);
+        return PlaylistData.FromJson(json);
     }
 
-    public static string[] Playlists() => Directory.GetFiles(DiskManager.EnvPath() + @"\playlists\", "*.json");
-
-    public static void CreatePlaylist(string playlistName) => Directory.CreateDirectory(DiskManager.EnvPath() + @"\playlists\" + playlistName + ".json");
-
-    public static void AddToPlaylist(string playlistName, string musicPath)
+    public static void SavePlaylist(PlaylistData playlistData)
     {
-        List<string> list = GetAudios(playlistName).ToList();
-        list.Add(musicPath);
-        string json = JsonConvert.SerializeObject(list);
-        File.WriteAllText(DiskManager.EnvPath() + @"\playlists\" + playlistName + ".json", json);
+        DiskManager.EnsurePlaylistsDirectoryExists();
+        string path = GetPlaylistPath(playlistData.Name);
+        File.WriteAllText(path, playlistData.ToJson());
     }
+
+    public static PlaylistData CreateNewPlaylist(string name, int year = -1)
+    {
+        if (year == -1) year = DateTime.Now.Year;
+        
+        var playlist = new PlaylistData
+        {
+            Name = name,
+            Year = year,
+            PlayCount = 0,
+            LastPlayed = DateTime.MinValue,
+            Songs = new List<PlaylistData.SongInfo>()
+        };
+        
+        SavePlaylist(playlist);
+        return playlist;
+    }
+
+    public static void AddSongToPlaylist(string playlistName, string songPath, 
+        string title = null, string artist = null, string album = null, TimeSpan? duration = null)
+    {
+        var playlist = LoadPlaylist(playlistName);
+        
+        title ??= Path.GetFileNameWithoutExtension(songPath);
+        duration ??= TimeSpan.Zero;
+        
+        playlist.Songs.Add(new PlaylistData.SongInfo
+        {
+            Title = title,
+            Path = DiskManager.GetFullPath(songPath),
+            Duration = duration.Value,
+            Artist = artist,
+            Album = album
+        });
+        
+        SavePlaylist(playlist);
+    }
+
+    public static string[] GetAvailablePlaylists()
+    {
+        DiskManager.EnsurePlaylistsDirectoryExists();
+        return Directory.GetFiles(Settings.PlaylistsDirectory, "*.json")
+                       .Select(Path.GetFileNameWithoutExtension)
+                       .ToArray();
+    }
+
+    public static void DeletePlaylist(string playlistName)
+    {
+        string path = GetPlaylistPath(playlistName);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static string GetPlaylistPath(string playlistName) => 
+        Path.Combine(Settings.PlaylistsDirectory, $"{playlistName}.json");
 }
