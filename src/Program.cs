@@ -14,18 +14,7 @@ public static class Program
         [STAThread]
         public static void Main(string[] args)
         {
-                // тестовый поток
-                Thread th = new Thread(() =>
-                {
-                        MediaPlayer.Play(@"F:\Плейлисты\Простой\Geoxor - Ephermal.mp3");
-                        Thread.Sleep(4000);
-                        MediaPlayer.Pause();
-                        Thread.Sleep(1000);
-                        MediaPlayer.Continue();
-                        Thread.Sleep(1000);
-                        MediaPlayer.Stop();
-                });
-                th.Start();
+                Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
 
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
