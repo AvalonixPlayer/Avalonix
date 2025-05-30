@@ -1,51 +1,53 @@
-using System.IO;
 using System.Threading;
-using Avalonix;
-using NAudio.Utils;
 using NAudio.Wave;
-using static Avalonix.Program;
-
 
 namespace AvalonixAPI;
 
 public static class MediaPlayer
 {
-    private static WaveOutEvent _playingMusic = null!;
-
-    public static float totalMusicTime { get; private set; } = 0;
-
-    public static string musicName { get; private set; } = null!;
+    private static Thread _playbackThread = null!;
+    private static AudioFileReader _audioFile = null!;
+    private static WaveOutEvent _output = null!;
 
     public static void Play(string path)
     {
-        using var audioFile = new AudioFileReader(path);
-        musicName = Path.GetFileNameWithoutExtension(path);
-        totalMusicTime = (float)audioFile.TotalTime.TotalSeconds;
-        _playingMusic = new WaveOutEvent();
-        _playingMusic.Init(audioFile);
-        _playingMusic.Play();
-        Logger.Info($"{nameof(audioFile)} is started");
-
-        while (Playing())
+        _playbackThread = new Thread(() =>
         {
-            Thread.Sleep(1000);
-        }
+            _audioFile = new AudioFileReader(path);
+            _output = new WaveOutEvent();
+            _output.Init(_audioFile);
+            _output.Play();
+            while (_output?.PlaybackState == PlaybackState.Playing)
+            {
+                Thread.Sleep(1000);
+            }
+        });
+        _playbackThread.Start();
     }
 
     public static void Stop()
     {
-        _playingMusic.Stop();
-        _playingMusic = null!;
-        Logger.Info($"{nameof(MediaPlayer)} is stopped.");
+        if (_output?.PlaybackState == PlaybackState.Playing)
+        {
+            _output.Stop();
+            _output = null!;
+        }
+        _playbackThread = null!;
     }
 
-    public static bool Playing() => _playingMusic.PlaybackState == PlaybackState.Playing;
-
-    public static float MusicTime() => (float)_playingMusic.GetPositionTimeSpan().TotalSeconds;
-
-    public static void Pause()  
+    public static void Pause()
     {
-        _playingMusic.Pause();
-        Logger.Info($"{nameof(MediaPlayer)} is paused.");
+        if (_output?.PlaybackState == PlaybackState.Playing)
+        {
+            _output.Pause();
+        }
+    }
+
+    public static void Continue()
+    {
+        if (_output?.PlaybackState == PlaybackState.Paused)
+        {
+            _output.Play();
+        }
     }
 }

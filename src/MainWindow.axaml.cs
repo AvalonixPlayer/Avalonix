@@ -15,7 +15,7 @@ public partial class MainWindow : Window
 
     private void AvaloniaObject_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-       // Изменение громкости 
+        // Изменение громкости 
     }
 
     private void BackButton_OnClick(object? sender, RoutedEventArgs e)
@@ -51,6 +51,6 @@ public partial class MainWindow : Window
     private void PauseButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Logger.Info("Pause button clicked");
-        
+
     }
 }
