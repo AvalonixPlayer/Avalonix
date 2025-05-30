@@ -14,6 +14,9 @@ public class Program
     private static AppBuilder BuildAvaloniaApp()
     {
         Logger.Info("Building App");
+#if DEBUG
+        Logger.CallStack = true;
+#endif
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
