@@ -30,11 +30,11 @@
                     <Setter Property="CornerRadius" Value="10"/>
                 </Style>
                 </StackPanel.Styles>
-                <Button Content="⏮" ToolTip.Tip= "Previous"/>
-                <Button Content="⏯" ToolTip.Tip= "Play/Pause"/>
-                <Button Content="⏭" ToolTip.Tip= "Next"/>
-                <Button Content="➕" ToolTip.Tip= "Add song"/>
-                <Button Content="🗑" ToolTip.Tip="Remove song"/>
+                <Button Click="BackButton_OnClick" Content="⏮" ToolTip.Tip= "Previous"/>
+                <Button Click="ForwardButton_OnClick" Content="⏯" ToolTip.Tip= "Play/Pause"/>
+                <Button Click="DoubleForwardButton_OnClick" Content="⏭" ToolTip.Tip= "Next"/>
+                <Button Click="AddSongButton_OnClick" Content="➕" ToolTip.Tip= "Add song"/>
+                <Button Click="RemoveButton_OnClick" Content="🗑" ToolTip.Tip="Remove song"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">

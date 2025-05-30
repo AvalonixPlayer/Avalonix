@@ -8,16 +8,15 @@ public class Program
 {
     public static Logger Logger = new(Logger.TypeLogger.Console);
     [STAThread]
-    public static void Main(string[] args)
-    {
-        Logger.Info("App started");
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-    }
+    public static void Main(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
 
     private static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    {
+        Logger.Info("Building App");
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+    }
 }

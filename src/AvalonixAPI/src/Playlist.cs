@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+
 namespace AvalonixAPI;
 
 public class Playlist
