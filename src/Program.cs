@@ -17,12 +17,15 @@ public static class Program
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
 
-                List<string> sas = new List<string> { };
+                var s = new Dictionary<string, SongData>
+                {
+                        {"ExamplePath",new SongData("Name",2024) }
+                };
 
-                PlaylistsManager.CreateNewPlaylist(new PlaylistData("TEST-1", sas, 2024, "Gorillaz", "Example album"));
-                PlaylistsManager.AddSongToPlaylist(PlaylistsManager.PlaylistsNames[0], "Example path");
+                PlaylistsManager.CreateNewPlaylist(new PlaylistData("TEST-1", s, 2024, "Gorillaz", "Example album"));
+                PlaylistsManager.AddSongToPlaylist(PlaylistsManager.PlaylistsNames[0], "Example path", new SongData("Test"));
 
-                MediaPlayer.Play(PlaylistsManager.JsonToPlaylist(PlaylistsManager.PlaylistsPaths[0]).SongsPaths[0]);
+                //MediaPlayer.Play(PlaylistsManager.JsonToPlaylist(PlaylistsManager.PlaylistsPaths[0]).Songs[0]);
 
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }

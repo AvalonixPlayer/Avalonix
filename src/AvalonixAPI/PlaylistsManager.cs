@@ -25,11 +25,11 @@ public static class PlaylistsManager
     }
 
 
-    public static void AddSongToPlaylist(string name, string pathToSong)
+    public static void AddSongToPlaylist(string name, string pathToSong, SongData songData)
     {
         string path = Path.Combine(DiskManager.SettingsPath, $"{name}.json");
         PlaylistData data = JsonToPlaylist(path);
-        data.SongsPaths.Add(pathToSong);
+        data.Songs.Add(pathToSong, songData);
         PlaylistToJson(path, data);
     }
 
