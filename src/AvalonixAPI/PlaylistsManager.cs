@@ -10,6 +10,29 @@ namespace AvalonixAPI;
 
 public static class PlaylistsManager
 {
+    public static string[] PlaylistsPaths => Directory.GetFiles(DiskManager.SettingsPath);
+
+    public static string[] PlaylistsNames
+    {
+        get
+        {
+            List<string> result = new List<string>();
+
+            foreach (var i in PlaylistsPaths) result.Add(Path.GetFileNameWithoutExtension(i));
+
+            return result.ToArray();
+        }
+    }
+
+
+    public static void AddSongToPlaylist(string name, string pathToSong)
+    {
+        string path = Path.Combine(DiskManager.SettingsPath, $"{name}.json");
+        PlaylistData data = JsonToPlaylist(path);
+        data.SongsPaths.Add(pathToSong);
+        PlaylistToJson(path, data);
+    }
+
     public static void CreateNewPlaylist(PlaylistData data)
     {
         CreatePlaylistFile(data);
@@ -19,17 +42,14 @@ public static class PlaylistsManager
 
     public static void ChangeSettingsToPlaylist(string name, PlaylistData data)
     {
-        PlaylistData playlistData = new PlaylistData();
-        playlistData.Name = data.Name;
-
         string oldPath = Path.Combine(DiskManager.SettingsPath, $"{name}.json");
-        string path = Path.Combine(DiskManager.SettingsPath, $"{playlistData.Name}.json");
+        string path = Path.Combine(DiskManager.SettingsPath, $"{data.Name}.json");
 
         File.Delete(oldPath);
 
         CreatePlaylistFile(data);
 
-        PlaylistToJson(path, playlistData);
+        PlaylistToJson(path, data);
     }
 
     public static void PlaylistToJson(string path, PlaylistData playlist)
@@ -39,9 +59,12 @@ public static class PlaylistsManager
         using (StreamWriter sw = new StreamWriter(path))
         using (JsonWriter writer = new JsonTextWriter(sw))
         {
+            serializer.Formatting = Formatting.Indented;
             serializer.Serialize(writer, playlist);
         }
     }
+
+    public static PlaylistData JsonToPlaylist(string path) => JsonConvert.DeserializeObject<PlaylistData>(File.ReadAllText(path));
 
     private static void CreatePlaylistFile(PlaylistData data)
     {
