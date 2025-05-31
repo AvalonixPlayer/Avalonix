@@ -1,7 +1,7 @@
 using System.Threading;
 using NAudio.Wave;
 
-namespace AvalonixAPI;
+namespace Avalonix.AvalonixAPI;
 
 public static class MediaPlayer
 {

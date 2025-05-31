@@ -1,8 +1,8 @@
 ﻿using Avalonia;
 using System;
 using NeoSimpleLogger;
-using AvalonixAPI;
 using System.Threading;
+using AvalonixAPI;
 
 namespace Avalonix;
 
@@ -15,6 +15,10 @@ public static class Program
         public static void Main(string[] args)
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
+
+                PlaylistsManager.CreateNewPlaylist(new PlaylistData("TEST-1"));
+
+                PlaylistsManager.ChangeSettingsToPlaylist("TEST-1", new PlaylistData("TEST-2"));
 
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
