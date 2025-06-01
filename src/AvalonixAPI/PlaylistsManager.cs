@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonix.AvalonixAPI;
 using Newtonsoft.Json;
 
 namespace AvalonixAPI;
@@ -94,6 +95,29 @@ public static class PlaylistsManager
 
     public static PlaylistData JsonToPlaylist(string path) => JsonConvert.DeserializeObject<PlaylistData>(File.ReadAllText(path));
 
+    public static void PlayPlaylist(string playlistName)
+    {
+        PlaylistData data = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json"));
+
+        foreach (var song in data.Songs)
+            MediaPlayer.Play(song.Path);
+    }
+
+    public static void PausePlaylist()
+    {
+        MediaPlayer.Pause();
+    }
+
+    public static void ContinuePlaylist()
+    {
+        MediaPlayer.Continue();
+    }
+
+    public static void StopPlaylist()
+    {
+        MediaPlayer.Stop();
+    }
+
     private static void CreatePlaylistFile(PlaylistData data)
     {
         string path = Path.Combine(DiskManager.SettingsPath, $"{data.Name}.json");
@@ -104,4 +128,5 @@ public static class PlaylistsManager
             fs.Dispose();
         }
     }
+
 }

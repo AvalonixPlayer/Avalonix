@@ -4,6 +4,7 @@ using NeoSimpleLogger;
 using AvalonixAPI;
 using System.Collections.Generic;
 using Avalonix.AvalonixAPI;
+using System.Threading;
 
 namespace Avalonix;
 
@@ -17,24 +18,52 @@ public static class Program
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
 
-                List<SongData> songs = new List<SongData>();
-
-                string playlistName = "TestPlaylist";
-
-                PlaylistsManager.CreateNewPlaylist(new PlaylistData(playlistName, songs, 2024, "Gorillaz", "Example album"));
-                PlaylistsManager.AddSongToPlaylist(playlistName, new SongData("CreatedSong", "CreatedSongPath"));
-
-                foreach (var i in PlaylistsManager.SongsNamesInPlaylist(playlistName))
+                Thread testPlaylistThread = new Thread(() =>
                 {
-                        Console.WriteLine(i);
-                }
+                        List<SongData> songs = new List<SongData>() { new SongData("blood // water", @"F:\Плейлисты\Простой\Blood water.mp3") };
 
-                PlaylistsManager.RemoveSongFromPlaylist(playlistName, "CreatedSong");
+                        string playlistName = "TestPlaylist";
 
-                PlaylistsManager.RemovePlaylist(playlistName);
+                        PlaylistsManager.CreateNewPlaylist(new PlaylistData(playlistName, songs));
+                        //PlaylistsManager.AddSongToPlaylist(playlistName, new SongData("CreatedSong", "CreatedSongPath"));
 
-                //MediaPlayer.Play(PlaylistsManager.JsonToPlaylist(PlaylistsManager.PlaylistsPaths[0]).Songs[0]);
+                        PlaylistsManager.PlayPlaylist(playlistName);
 
+                        Thread.Sleep(1000);
+
+                        PlaylistsManager.PausePlaylist();
+
+                        Thread.Sleep(1000);
+
+                        PlaylistsManager.ContinuePlaylist();
+
+                        Thread.Sleep(1000);
+
+                        PlaylistsManager.StopPlaylist();
+
+                        PlaylistsManager.PlayPlaylist(playlistName);
+
+                        Thread.Sleep(1000);
+
+                        PlaylistsManager.PausePlaylist();
+
+                        Thread.Sleep(1000);
+
+                        PlaylistsManager.ContinuePlaylist();
+
+                        foreach (var i in PlaylistsManager.SongsNamesInPlaylist(playlistName))
+                        {
+                                Console.WriteLine(i);
+                        }
+
+                        //PlaylistsManager.RemoveSongFromPlaylist(playlistName, "CreatedSong");
+
+                        //PlaylistsManager.RemovePlaylist(playlistName);
+
+                        //MediaPlayer.Play(PlaylistsManager.JsonToPlaylist(PlaylistsManager.PlaylistsPaths[0]).Songs[0]);
+                });
+
+                testPlaylistThread.Start();
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
