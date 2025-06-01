@@ -25,11 +25,27 @@ public static class PlaylistsManager
     }
 
 
-    public static void AddSongToPlaylist(string name, string pathToSong, SongData songData)
+    public static void AddSongToPlaylist(string playlistName, SongData songData)
     {
-        string path = Path.Combine(DiskManager.SettingsPath, $"{name}.json");
+        string path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
         PlaylistData data = JsonToPlaylist(path);
-        data.Songs.Add(pathToSong, songData);
+        data.Songs.Add(songData);
+        PlaylistToJson(path, data);
+    }
+
+    public static void RemoveSongFromPlaylist(string playlistName, string songName)
+    {
+        string path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
+        PlaylistData data = JsonToPlaylist(path);
+
+        SongData songToRemove = new SongData();
+        foreach (var song in data.Songs)
+        {
+            if (song.Name == songName) songToRemove = song;
+        }
+        data.Songs.Remove(songToRemove);
+
+
         PlaylistToJson(path, data);
     }
 
