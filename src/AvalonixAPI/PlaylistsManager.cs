@@ -13,6 +13,9 @@ public static class PlaylistsManager
 {
     public static string[] PlaylistsPaths => Directory.GetFiles(DiskManager.SettingsPath);
 
+    private static CancellationTokenSource _playlistCts = new CancellationTokenSource();
+    private static CancellationToken _playlistCtsToken = _playlistCts.Token;
+
     public static string[] PlaylistsNames
     {
         get
@@ -99,8 +102,32 @@ public static class PlaylistsManager
     {
         PlaylistData data = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json"));
 
-        foreach (var song in data.Songs)
-            MediaPlayer.Play(song.Path);
+        Thread thread = new Thread(() =>
+        {
+            if (Settings.Loop)
+            {
+                while (_playlistCtsToken.IsCancellationRequested == false)
+                {
+                    Play();
+                }
+            }
+            else
+            {
+                Play();
+            }
+            void Play()
+            {
+                if (Settings.Shuffle == true)
+                {
+                    data.Songs = data.Songs.OrderBy(x => Random.Shared.Next()).ToList();
+                }
+                foreach (var song in data.Songs)
+                {
+                    MediaPlayer.Play(song.Path);
+                }
+            }
+        });
+        thread.Start();
     }
 
     public static void PausePlaylist()
@@ -115,6 +142,11 @@ public static class PlaylistsManager
 
     public static void StopPlaylist()
     {
+        _playlistCts.Cancel();
+        _playlistCts.Dispose();
+        _playlistCts = new CancellationTokenSource();
+        _playlistCtsToken = _playlistCts.Token;
+
         MediaPlayer.Stop();
     }
 

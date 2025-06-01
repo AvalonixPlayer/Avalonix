@@ -9,6 +9,14 @@ public static class MediaPlayer
     private static AudioFileReader _audioFile = null!;
     private static WaveOutEvent _output = null!;
 
+    public static PlaybackState State
+    {
+        get
+        {
+            return _output.PlaybackState;
+        }
+    }
+
     public static void Play(string path)
     {
         _playbackThread = new Thread(() =>
@@ -17,12 +25,13 @@ public static class MediaPlayer
             _output = new WaveOutEvent();
             _output.Init(_audioFile);
             _output.Play();
-            while (_output?.PlaybackState == PlaybackState.Playing)
+            while (_output?.PlaybackState != PlaybackState.Stopped)
             {
                 Thread.Sleep(1000);
             }
         });
         _playbackThread.Start();
+        _playbackThread.Join();
     }
 
     public static void Stop()
