@@ -17,15 +17,22 @@ public static class Program
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
 
-                var intiSong = new List<SongData>();
-                intiSong.Add(new SongData("InitSong", "InitSongPath", 2025));
+                List<SongData> songs = new List<SongData>();
 
-                string playlistName = PlaylistsManager.PlaylistsNames[0];
+                string playlistName = "TestPlaylist";
 
-                PlaylistsManager.CreateNewPlaylist(new PlaylistData(playlistName, intiSong, 2024, "Gorillaz", "Example album"));
+                PlaylistsManager.CreateNewPlaylist(new PlaylistData(playlistName, songs, 2024, "Gorillaz", "Example album"));
                 PlaylistsManager.AddSongToPlaylist(playlistName, new SongData("CreatedSong", "CreatedSongPath"));
 
+                foreach (var i in PlaylistsManager.SongsNamesInPlaylist(playlistName))
+                {
+                        Console.WriteLine(i);
+                }
+
                 PlaylistsManager.RemoveSongFromPlaylist(playlistName, "CreatedSong");
+
+                PlaylistsManager.RemovePlaylist(playlistName);
+
                 //MediaPlayer.Play(PlaylistsManager.JsonToPlaylist(PlaylistsManager.PlaylistsPaths[0]).Songs[0]);
 
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);

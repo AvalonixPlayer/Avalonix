@@ -24,6 +24,16 @@ public static class PlaylistsManager
         }
     }
 
+    public static string[] SongsNamesInPlaylist(string playlistName)
+    {
+        SongData[] allSongs = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json")).Songs.ToArray();
+        string[] result = new string[allSongs.Length];
+        for (int i = 0; i < allSongs.Length; i++)
+        {
+            result[i] = allSongs[i].Name;
+        }
+        return result;
+    }
 
     public static void AddSongToPlaylist(string playlistName, SongData songData)
     {
@@ -39,7 +49,7 @@ public static class PlaylistsManager
         PlaylistData data = JsonToPlaylist(path);
 
         SongData songToRemove = new SongData();
-        foreach (var song in data.Songs)
+        foreach (SongData song in data.Songs)
         {
             if (song.Name == songName) songToRemove = song;
         }
@@ -55,6 +65,8 @@ public static class PlaylistsManager
 
         ChangeSettingsToPlaylist(data.Name, data);
     }
+
+    public static void RemovePlaylist(string playlistName) => File.Delete(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json"));
 
     public static void ChangeSettingsToPlaylist(string name, PlaylistData data)
     {
