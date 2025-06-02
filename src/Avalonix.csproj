@@ -11,6 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\ThirdPartyLicenses\*" CopyToOutputDirectory="Always" />
+    <None Include="..\LICENSE" CopyToOutputDirectory="Always" />
+    
     <PackageReference Include="Avalonia" Version="11.3.0" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.0" />
