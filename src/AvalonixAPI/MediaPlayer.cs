@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using NAudio.Wave;
 
@@ -8,6 +9,7 @@ public static class MediaPlayer
     private static Thread _playbackThread = null!;
     private static AudioFileReader _audioFile = null!;
     private static WaveOutEvent _output = null!;
+    public static float Volume { get; private set; } = 1;
 
     public static PlaybackState State
     {
@@ -27,6 +29,7 @@ public static class MediaPlayer
             _output.Play();
             while (_output?.PlaybackState != PlaybackState.Stopped)
             {
+                _output!.Volume = Volume;
                 Thread.Sleep(1000);
             }
         });
@@ -59,4 +62,14 @@ public static class MediaPlayer
             _output.Play();
         }
     }
+
+    public static void ChangeVolume(float volume)
+    {
+        Volume = volume;
+    }
+
+    public static TimeSpan PlaybackTime => _audioFile.CurrentTime;
+
+    public static TimeSpan TotalMusicTime => _audioFile.TotalTime;
+
 }

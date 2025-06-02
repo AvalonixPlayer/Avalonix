@@ -18,9 +18,9 @@ public static class Program
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
                 /*example for developers
-                                Thread testPlaylistThread = new Thread(() =>
+                          Thread testPlaylistThread = new Thread(() =>
                                 {
-                                        List<SongData> songs = new List<SongData>() { new SongData("blood // water", @"F:\Плейлисты\Простой\Blood water.mp3") };
+                                        List<SongData> songs = new List<SongData>() { new SongData("blood // water", @"C:\Example path\music.mp3") };
 
                                         string playlistName = "TestPlaylist";
                                         PlaylistsManager.CreateNewPlaylist(new PlaylistData(playlistName, songs));
@@ -28,8 +28,10 @@ public static class Program
                                         PlaylistsManager.PlayPlaylist(playlistName);
 
                                 });
-                                testPlaylistThread.Start();
+                testPlaylistThread.Start();      
                 */
+
+
 
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
