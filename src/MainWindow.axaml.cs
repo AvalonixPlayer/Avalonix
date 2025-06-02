@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using static Avalonix.Program;
 
 namespace Avalonix;
@@ -39,7 +40,15 @@ public partial class MainWindow : Window
     private void AddSongButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Logger.Info("Add song button clicked");
-        throw new System.NotImplementedException();
+        var topLevel = TopLevel.GetTopLevel(this);
+
+        var files = topLevel?.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Open Text File",
+            AllowMultiple = false
+        });
+
+        Logger.Debug(files?.ToString() ?? string.Empty);
     }
 
     private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)

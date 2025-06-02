@@ -11,13 +11,7 @@ public static class MediaPlayer
     private static WaveOutEvent _output = null!;
     public static float Volume { get; private set; } = 1;
 
-    public static PlaybackState State
-    {
-        get
-        {
-            return _output.PlaybackState;
-        }
-    }
+    public static PlaybackState State => _output.PlaybackState;
 
     public static void Play(string path)
     {
