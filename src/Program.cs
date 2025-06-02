@@ -11,7 +11,7 @@ namespace Avalonix;
 
 public static class Program
 {
-        public static Logger Logger = new(Logger.TypeLogger.Console);
+        public static readonly Logger Logger = new(Logger.TypeLogger.Console);
 
         [STAThread]
         public static void Main(string[] args)

@@ -40,7 +40,7 @@ public partial class MainWindow : Window
     private void AddSongButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Logger.Info("Add song button clicked");
-        var topLevel = TopLevel.GetTopLevel(this);
+        var topLevel = GetTopLevel(this);
 
         var files = topLevel?.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
