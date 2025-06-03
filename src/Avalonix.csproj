@@ -13,6 +13,7 @@
   <ItemGroup>
     <None Include="..\ThirdPartyLicenses\*" CopyToOutputDirectory="Always" />
     <None Include="..\LICENSE" CopyToOutputDirectory="Always" />
+    <AvaloniaResource Include="Assets\*" />
     
     <PackageReference Include="Avalonia" Version="11.3.0" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />

@@ -6,6 +6,7 @@
         x:Class="Avalonix.MainWindow"
         MinHeight="100"
         MinWidth="100"
+        Icon="Assets/icon.png"
         Title="Avalonix">
     
     <Grid RowDefinitions="*,Auto" ColumnDefinitions="250,*" Margin="10">
