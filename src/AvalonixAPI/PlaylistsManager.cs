@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonix.AvalonixAPI;
 using Newtonsoft.Json;
 
@@ -31,12 +32,10 @@ public static class PlaylistsManager
     {
         SongData[] allSongs = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json")).Songs.ToArray();
         string[] result = new string[allSongs.Length];
-
         for (int i = 0; i < allSongs.Length; i++)
         {
-            result[i] = allSongs[i].Name;
+            result[i] = allSongs[i].Title;
         }
-
         return result;
     }
 
@@ -44,11 +43,7 @@ public static class PlaylistsManager
     {
         string path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
         PlaylistData data = JsonToPlaylist(path);
-
-        string songExt = Path.GetExtension(songData.Path);
-
         data.Songs.Add(songData);
-
         PlaylistToJson(path, data);
     }
 
@@ -57,14 +52,13 @@ public static class PlaylistsManager
         string path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
         PlaylistData data = JsonToPlaylist(path);
 
-        SongData songToRemove = new SongData();
-
-        foreach (SongData song in data.Songs)
+        SongData songToRemove = null!;
+        foreach (var song in data.Songs.Where(song => song.Title == songName))
         {
-            if (song.Name == songName) songToRemove = song;
+            songToRemove = song;
         }
-
         data.Songs.Remove(songToRemove);
+
 
         PlaylistToJson(path, data);
     }
@@ -110,15 +104,30 @@ public static class PlaylistsManager
 
         Thread thread = new Thread(() =>
         {
-            if (Settings.Loop) while (_playlistCtsToken.IsCancellationRequested == false) { Play(); }
-            else Play();
-
+            if (Settings.Loop)
+            {
+                while (_playlistCtsToken.IsCancellationRequested == false)
+                {
+                    Play();
+                }
+            }
+            else
+            {
+                Play();
+            }
             void Play()
             {
-                if (Settings.Shuffle == true) data.Songs = data.Songs.OrderBy(x => Random.Shared.Next()).ToList();
-                foreach (var song in data.Songs) MediaPlayer.Play(song.Path);
+                if (Settings.Shuffle == true)
+                {
+                    data.Songs = data.Songs.OrderBy(x => Random.Shared.Next()).ToList();
+                }
+                foreach (var song in data.Songs)
+                {
+                    MediaPlayer.Play(song.FilePath);
+                }
             }
-        }); thread.Start();
+        });
+        thread.Start();
     }
 
     public static void PausePlaylist()
@@ -145,11 +154,9 @@ public static class PlaylistsManager
     {
         string path = Path.Combine(DiskManager.SettingsPath, $"{data.Name}.json");
 
-        using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
-        {
-            fs.Write(null!);
-            fs.Dispose();
-        }
+        using FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
+        fs.Write(null!);
+        fs.Dispose();
     }
 
 }
