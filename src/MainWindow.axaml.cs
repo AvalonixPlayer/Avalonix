@@ -21,6 +21,17 @@ public partial class MainWindow : Window
     private readonly TextBlock? _playbackTimeTextBlock;
     private readonly Button? _forwardButton;
 
+    readonly string[] _supportedAudioFormats = [
+        "*.mp3", "*.wav", "*.flac", "*.opus", 
+        "*.aiff", "*.aif", "*.wma", "*.asf", 
+        "*.ac3", "*.adts", "*.mp2", "*.mpa", 
+        "*.m4a", "*.mp4", "*.ogg", "*.aac", 
+        "*.adt", "*.dts", "*.ape", "*.wv", 
+        "*.caf", "*.gsm", "*.alaw", "*.ulaw", 
+        "*.dwd", "*.snd", "*.au", "*.raw", 
+        "*.pcm"
+    ];
+
     public MainWindow()
     {
         Logger.Info("MainWindow opened");
@@ -86,7 +97,7 @@ public partial class MainWindow : Window
             {
                 Title = "Open Audio File",
                 AllowMultiple = false,
-                FileTypeFilter = [new FilePickerFileType("Audio Files") { Patterns = ["*.mp3", "*.wav"] }]
+                FileTypeFilter = [new FilePickerFileType("Audio Files") { Patterns = _supportedAudioFormats }]
             })!;
 
             if (!(files.Count > 0)) return;
@@ -207,18 +218,16 @@ public partial class MainWindow : Window
 
     private void AvaloniaObject_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.Property.Name == "Value" && sender is Slider { Name: null } slider) 
+        if (e.Property.Name != "Value" || sender is not Slider { Name: null } slider) return;
+        try
         {
-            try
-            {
-                float volume = (float)(slider.Value / 100.0);
-                MediaPlayer.ChangeVolume(volume);
-                Logger.Info($"Volume changed to {volume}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Volume change error: {ex.Message}");
-            }
+            float volume = (float)(slider.Value / 100.0);
+            MediaPlayer.ChangeVolume(volume);
+            Logger.Debug($"Volume changed to {volume}");
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Volume change error: {ex.Message}");
         }
     }
 

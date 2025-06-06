@@ -19,7 +19,7 @@ public static class PlaylistsManager
 
     public static string[] SongsNamesInPlaylist(string playlistName)
     {
-        SongData[] allSongs = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json")).Songs.ToArray();
+        var allSongs = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json")).Songs.ToArray();
         string[] result = new string[allSongs.Length];
         for (int i = 0; i < allSongs.Length; i++)
         {
@@ -47,7 +47,6 @@ public static class PlaylistsManager
             songToRemove = song;
         }
         data.Songs.Remove(songToRemove);
-
 
         PlaylistToJson(path, data);
     }
