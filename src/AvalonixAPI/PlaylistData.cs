@@ -2,20 +2,16 @@ using System.Collections.Generic;
 
 namespace AvalonixAPI;
 
-public struct PlaylistData
+public struct PlaylistData(
+    string name,
+    List<SongData> songs,
+    int? year = -1,
+    string? perfomer = null!,
+    string? album = null!)
 {
-    public string Name { get; set; }
-    public List<SongData> Songs { get; set; }
-    public int? Year { get; set; }
-    public string? Performer { get; set; }
-    public string? PathToIcon { get; set; }
-
-    public PlaylistData(string name, List<SongData> songs, int? year = -1, string? perfomer = null!, string? pathToIcon = null!)
-    {
-        Name = name;
-        Songs = songs;
-        Year = year;
-        Performer = perfomer;
-        PathToIcon = pathToIcon;
-    }
+    public string Name { get; set; } = name;
+    public List<SongData> Songs { get; set; } = songs;
+    public int? Year { get; set; } = year;
+    public string? Performer { get; set; } = perfomer;
+    public string? Album { get; set; } = album;
 }

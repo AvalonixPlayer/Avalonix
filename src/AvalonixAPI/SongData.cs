@@ -7,8 +7,8 @@ namespace AvalonixAPI
         public string Title { get; set; } = title;
         public string FilePath { get; set; } = filePath;
         public TimeSpan? Duration { get; set; } = duration;
-        public TrackInfo TrackInfo { get; set; } = new();
-        public AlbumInfo AlbumInfo { get; set; } = new();
+        private TrackInfo TrackInfo { get; set; } = new();
+        private AlbumInfo AlbumInfo { get; set; } = new();
         public AdditionalMetadata ExtraMetadata { get; set; } = new();
 
         public override string ToString()

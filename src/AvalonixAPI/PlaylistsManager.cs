@@ -10,22 +10,12 @@ namespace AvalonixAPI;
 
 public static class PlaylistsManager
 {
-    public static string[] PlaylistsPaths => Directory.GetFiles(DiskManager.SettingsPath);
+    private static string[] PlaylistsPaths => Directory.GetFiles(DiskManager.SettingsPath);
 
     private static CancellationTokenSource _playlistCts = new CancellationTokenSource();
     private static CancellationToken _playlistCtsToken = _playlistCts.Token;
 
-    public static string[] PlaylistsNames
-    {
-        get
-        {
-            List<string> result = new List<string>();
-
-            foreach (var i in PlaylistsPaths) result.Add(Path.GetFileNameWithoutExtension(i));
-
-            return result.ToArray();
-        }
-    }
+    public static string?[] PlaylistsNames => PlaylistsPaths.Select(Path.GetFileNameWithoutExtension).ToArray();
 
     public static string[] SongsNamesInPlaylist(string playlistName)
     {
@@ -87,12 +77,11 @@ public static class PlaylistsManager
     {
         JsonSerializer serializer = new JsonSerializer();
 
-        using (StreamWriter sw = new StreamWriter(path))
-        using (JsonWriter writer = new JsonTextWriter(sw))
-        {
-            serializer.Formatting = Formatting.Indented;
-            serializer.Serialize(writer, playlist);
-        }
+        using StreamWriter sw = new StreamWriter(path);
+        using JsonWriter writer = new JsonTextWriter(sw);
+        
+        serializer.Formatting = Formatting.Indented;
+        serializer.Serialize(writer, playlist);
     }
 
     public static PlaylistData JsonToPlaylist(string path) => JsonConvert.DeserializeObject<PlaylistData>(File.ReadAllText(path));
@@ -114,11 +103,14 @@ public static class PlaylistsManager
             {
                 Play();
             }
+
+            return;
+
             void Play()
             {
-                if (Settings.Shuffle == true)
+                if (Settings.Shuffle)
                 {
-                    data.Songs = data.Songs.OrderBy(x => Random.Shared.Next()).ToList();
+                    data.Songs = data.Songs.OrderBy(_ => Random.Shared.Next()).ToList();
                 }
                 foreach (var song in data.Songs)
                 {
@@ -156,5 +148,4 @@ public static class PlaylistsManager
         using FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
         fs.Write(null!);
     }
-
 }
