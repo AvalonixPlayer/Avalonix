@@ -156,7 +156,6 @@ public static class PlaylistsManager
 
         using FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
         fs.Write(null!);
-        fs.Dispose();
     }
 
 }
