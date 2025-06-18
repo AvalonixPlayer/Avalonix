@@ -11,24 +11,25 @@ using System.Timers;
 using Avalonia.Threading;
 using Avalonix.AvalonixAPI;
 using NAudio.Wave;
+using System.Threading;
 
 namespace Avalonix;
 
 public partial class MainWindow : Window
 {
     private const string CurrentPlaylistName = "TestPlaylist";
-    public required Timer? PlaybackTimer;
+    public required System.Timers.Timer? PlaybackTimer;
     private readonly TextBlock? _playbackTimeTextBlock;
     private readonly Button? _forwardButton;
 
     readonly string[] _supportedAudioFormats = [
-        "*.mp3", "*.wav", "*.flac", "*.opus", 
-        "*.aiff", "*.aif", "*.wma", "*.asf", 
-        "*.ac3", "*.adts", "*.mp2", "*.mpa", 
-        "*.m4a", "*.mp4", "*.ogg", "*.aac", 
-        "*.adt", "*.dts", "*.ape", "*.wv", 
-        "*.caf", "*.gsm", "*.alaw", "*.ulaw", 
-        "*.dwd", "*.snd", "*.au", "*.raw", 
+        "*.mp3", "*.wav", "*.flac", "*.opus",
+        "*.aiff", "*.aif", "*.wma", "*.asf",
+        "*.ac3", "*.adts", "*.mp2", "*.mpa",
+        "*.m4a", "*.mp4", "*.ogg", "*.aac",
+        "*.adt", "*.dts", "*.ape", "*.wv",
+        "*.caf", "*.gsm", "*.alaw", "*.ulaw",
+        "*.dwd", "*.snd", "*.au", "*.raw",
         "*.pcm"
     ];
 
@@ -42,9 +43,9 @@ public partial class MainWindow : Window
         }
         catch (Exception e)
         {
-           Logger.Fatal(e.Message); 
+            Logger.Fatal(e.Message);
         }
-        
+
         InitializeComponent();
         InitializePlaybackTimer();
         UpdatePlaylistBox();
@@ -52,7 +53,7 @@ public partial class MainWindow : Window
 
     private void InitializePlaybackTimer()
     {
-        PlaybackTimer = new Timer(1000); 
+        PlaybackTimer = new System.Timers.Timer(1000);
         PlaybackTimer.Elapsed += UpdatePlaybackTime;
         PlaybackTimer.AutoReset = true;
     }
@@ -149,7 +150,7 @@ public partial class MainWindow : Window
                 PlaylistsManager.PausePlaylist();
                 PlaybackTimer?.Stop();
                 Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
-                _forwardButton.Content = "⏯"; 
+                _forwardButton.Content = "⏯";
                 Logger.Info("Playback paused");
             }
             else
@@ -165,7 +166,7 @@ public partial class MainWindow : Window
                     MediaPlayer.Play(song.FilePath);
                     PlaybackTimer?.Start();
                     Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
-                    _forwardButton.Content = "⏸"; 
+                    _forwardButton.Content = "⏸";
                     Logger.Info($"Playing song: {songTitle}");
                 }
                 else
@@ -173,7 +174,7 @@ public partial class MainWindow : Window
                     PlaylistsManager.PlayPlaylist(CurrentPlaylistName);
                     PlaybackTimer?.Start();
                     Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
-                    _forwardButton.Content = "⏸"; 
+                    _forwardButton.Content = "⏸";
                     Logger.Info($"Playing playlist: {CurrentPlaylistName}");
                 }
             }
@@ -239,10 +240,11 @@ public partial class MainWindow : Window
                 System.IO.Path.Combine(DiskManager.SettingsPath, $"{CurrentPlaylistName}.json"));
             var song = playlist.Songs.FirstOrDefault(s => s.Title == songTitle);
             if (song == null) return;
+            MediaPlayer.Stop();
             MediaPlayer.Play(song.FilePath);
             PlaybackTimer?.Start();
-            Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
-            _forwardButton.Content = "⏸"; 
+            //Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
+            _forwardButton!.Content = "⏸";
             Logger.Info($"Playing song: {songTitle}");
         }
         catch (Exception ex)

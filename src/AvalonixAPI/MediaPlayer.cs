@@ -21,14 +21,14 @@ public static class MediaPlayer
             _output = new WaveOutEvent();
             _output.Init(_audioFile);
             _output.Play();
-            while (_output.PlaybackState != PlaybackState.Stopped)
+            while (_output?.PlaybackState != PlaybackState.Stopped)
             {
-                _output.Volume = Volume;
+                if (_output != null)
+                    _output.Volume = Volume;
                 Thread.Sleep(1000);
             }
         });
         _playbackThread.Start();
-        _playbackThread.Join();
     }
 
     public static void Stop()
