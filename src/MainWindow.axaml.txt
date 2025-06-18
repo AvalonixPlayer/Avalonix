@@ -18,8 +18,8 @@
             <Setter Property="Background" Value="DarkSlateGray"/>
         </Style>
         <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
-            <Setter Property="Background" Value="#3deb34"/>
-            <Setter Property="TextBlock.Foreground" Value="Transparent"/>
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="TextBlock.Foreground" Value="DimGray"/>
         </Style>
     </Window.Styles>
 
@@ -27,7 +27,7 @@
        
         <ListBox Grid.Row="0" Grid.Column="0" x:Name="PlaylistBox" 
                 
-                BorderBrush="DarkSlateGray"
+                BorderBrush="DimGray"
                 BorderThickness="1">
             <ListBoxItem>Killing Road - Megadeth</ListBoxItem>
             <ListBoxItem>Fear Of The Dark - Iron Maiden</ListBoxItem>
@@ -35,42 +35,40 @@
         </ListBox>
 
         <Border Grid.Row="0" Grid.Column="1" Width="350" Height="350" Margin="20,0,0,0"
-                Background="Transparent" CornerRadius="4"
-                BorderBrush="DarkSlateGray" BorderThickness="1">
+                Background="White" CornerRadius="4"
+                BorderBrush="#CCCCCC" BorderThickness="1">
         </Border>
         
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="210,*,Auto" Margin="0,15,0,0">
+        <!-- Controls Section - Windows-style buttons -->
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*,Auto" Margin="0,15,0,0">
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
                 <Button Width="40" Height="40" Click="BackButton_OnClick" 
-                        Background="Transparent" Foreground="White"
+                        Background="#0078D7" Foreground="White"
                         Content="⏮" ToolTip.Tip="Previous"/>
                 <Button Name="PlayPauseButton" Width="40" Height="40" Click="PauseButton_OnClick"
-                        Background="Transparent" Foreground="White"
+                        Background="#0078D7" Foreground="White"
                         Content="⏯" ToolTip.Tip="Play/Pause"/>
                 <Button Width="40" Height="40" Click="ForwardButton_OnClick"
-                        Background="Transparent" Foreground="White"
+                        Background="#0078D7" Foreground="White"
                         Content="⏭" ToolTip.Tip="Next"/>
                 <Button Width="40" Height="40" Click="AddSongButton_OnClick"
-                        Background="Transparent" Foreground="White"
+                        Background="#E5E5E5" Foreground="Black"
                         Content="➕" ToolTip.Tip="Add song"/>
                 <Button Width="40" Height="40" Click="RemoveButton_OnClick"
-                        Background="#3deb34" Foreground=""
+                        Background="#E5E5E5" Foreground="Black"
                         Content="🗑" ToolTip.Tip="Remove song"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock x:Name="TimeSong" Text="1:23 / 4:56" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                <Button Width="40" Height="40" Click="BackButton_OnClick" 
-                        Background="Transparent" Foreground="White"
-                        Content="Pause" ToolTip.Tip="Previous"/>
                 <Slider Width="500" Height="15" Minimum="0" Maximum="100" Value="30"
-                        Background="Transparent" BorderBrush="DarkSlateGray"/>
+                        Background="White" BorderBrush="#CCCCCC"/>
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
                 <TextBlock Text="🔈" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <Slider Width="100" Minimum="0" Maximum="100" Value="70" VerticalAlignment="Center"
-                        Background="Transparent" BorderBrush="DarkSlateGray"/>
+                        Background="White" BorderBrush="#CCCCCC"/>
             </StackPanel>
         </Grid>
     </Grid>

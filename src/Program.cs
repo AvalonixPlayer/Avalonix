@@ -17,6 +17,7 @@ public static class Program
         public static void Main(string[] args)
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
+                
                 /*
                           Thread testPlaylistThread = new Thread(() =>
                                 {
@@ -28,8 +29,8 @@ public static class Program
                                         PlaylistsManager.PlayPlaylist(playlistName);
 
                                 });
-                testPlaylistThread.Start();      
-                */
+                testPlaylistThread.Start();  
+        */
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 

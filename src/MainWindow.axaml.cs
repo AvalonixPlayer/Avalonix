@@ -161,14 +161,12 @@ public partial class MainWindow : Window
                     var playlist = PlaylistsManager.JsonToPlaylist(
                         System.IO.Path.Combine(DiskManager.SettingsPath, $"{CurrentPlaylistName}.json"));
                     var song = playlist.Songs.FirstOrDefault(s => s.Title == songTitle);
-                    if (song != null)
-                    {
-                        MediaPlayer.Play(song.FilePath);
-                        PlaybackTimer?.Start();
-                        Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
-                        _forwardButton.Content = "⏸"; 
-                        Logger.Info($"Playing song: {songTitle}");
-                    }
+                    if (song == null) return;
+                    MediaPlayer.Play(song.FilePath);
+                    PlaybackTimer?.Start();
+                    Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
+                    _forwardButton.Content = "⏸"; 
+                    Logger.Info($"Playing song: {songTitle}");
                 }
                 else
                 {
@@ -233,27 +231,23 @@ public partial class MainWindow : Window
 
     private void PlaySelectedSong()
     {
-        if (PlaylistBox.SelectedItem is ListBoxItem selectedItem)
+        if (PlaylistBox.SelectedItem is not ListBoxItem selectedItem) return;
+        try
         {
-            try
-            {
-                var songTitle = selectedItem.Content?.ToString();
-                var playlist = PlaylistsManager.JsonToPlaylist(
-                    System.IO.Path.Combine(DiskManager.SettingsPath, $"{CurrentPlaylistName}.json"));
-                var song = playlist.Songs.FirstOrDefault(s => s.Title == songTitle);
-                if (song != null)
-                {
-                    MediaPlayer.Play(song.FilePath);
-                    PlaybackTimer?.Start();
-                    Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
-                    _forwardButton.Content = "⏸"; 
-                    Logger.Info($"Playing song: {songTitle}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Play song error: {ex.Message}");
-            }
+            var songTitle = selectedItem.Content?.ToString();
+            var playlist = PlaylistsManager.JsonToPlaylist(
+                System.IO.Path.Combine(DiskManager.SettingsPath, $"{CurrentPlaylistName}.json"));
+            var song = playlist.Songs.FirstOrDefault(s => s.Title == songTitle);
+            if (song == null) return;
+            MediaPlayer.Play(song.FilePath);
+            PlaybackTimer?.Start();
+            Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
+            _forwardButton.Content = "⏸"; 
+            Logger.Info($"Playing song: {songTitle}");
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Play song error: {ex.Message}");
         }
     }
 }
