@@ -20,8 +20,8 @@ public static class PlaylistsManager
     public static string[] SongsNamesInPlaylist(string playlistName)
     {
         var allSongs = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json")).Songs.ToArray();
-        string[] result = new string[allSongs.Length];
-        for (int i = 0; i < allSongs.Length; i++)
+        var result = new string[allSongs.Length];
+        for (var i = 0; i < allSongs.Length; i++)
         {
             result[i] = allSongs[i].Title;
         }
@@ -30,16 +30,16 @@ public static class PlaylistsManager
 
     public static void AddSongToPlaylist(string playlistName, SongData songData)
     {
-        string path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
-        PlaylistData data = JsonToPlaylist(path);
+        var path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
+        var data = JsonToPlaylist(path);
         data.Songs.Add(songData);
         PlaylistToJson(path, data);
     }
 
     public static void RemoveSongFromPlaylist(string playlistName, string songName)
     {
-        string path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
-        PlaylistData data = JsonToPlaylist(path);
+        var path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
+        var data = JsonToPlaylist(path);
 
         SongData songToRemove = null!;
         foreach (var song in data.Songs.Where(song => song.Title == songName))
@@ -74,9 +74,9 @@ public static class PlaylistsManager
 
     public static void PlaylistToJson(string path, PlaylistData playlist)
     {
-        JsonSerializer serializer = new JsonSerializer();
+        var serializer = new JsonSerializer();
 
-        using StreamWriter sw = new StreamWriter(path);
+        using var sw = new StreamWriter(path);
         using JsonWriter writer = new JsonTextWriter(sw);
         
         serializer.Formatting = Formatting.Indented;
@@ -87,9 +87,9 @@ public static class PlaylistsManager
 
     public static void PlayPlaylist(string playlistName)
     {
-        PlaylistData data = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json"));
+        var data = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json"));
 
-        Thread thread = new Thread(() =>
+        var thread = new Thread(() =>
         {
             if (Settings.Loop)
             {

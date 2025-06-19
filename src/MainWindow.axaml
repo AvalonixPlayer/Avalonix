@@ -29,9 +29,7 @@
                 CornerRadius="7" 
                 BorderBrush="DarkSlateGray"
                 BorderThickness="1">
-            <ListBoxItem>Killing Road - Megadeth</ListBoxItem>
-            <ListBoxItem>Fear Of The Dark - Iron Maiden</ListBoxItem>
-            <ListBoxItem>Пришло время переустанавливать виндов - GNU/Linux</ListBoxItem>
+
         </ListBox>
 
         <Border Grid.Row="0" Grid.Column="1" Width="350" Height="350" Margin="20,0,0,0"

@@ -21,7 +21,7 @@ public partial class MainWindow : Window
     private readonly TextBlock? _playbackTimeTextBlock;
     private readonly Button? _forwardButton;
 
-    readonly string[] _supportedAudioFormats = [
+    private readonly string[] _supportedAudioFormats = [
         "*.mp3", "*.wav", "*.flac", "*.opus", 
         "*.aiff", "*.aif", "*.wma", "*.asf", 
         "*.ac3", "*.adts", "*.mp2", "*.mpa", 
