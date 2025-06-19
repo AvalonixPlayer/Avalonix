@@ -17,20 +17,7 @@ public static class Program
         public static void Main(string[] args)
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
-                
-                /*
-                          Thread testPlaylistThread = new Thread(() =>
-                                {
-                                        List<SongData> songs = [new ("blood // water", "test.mp3")];
 
-                                        string playlistName = "TestPlaylist";
-                                        PlaylistsManager.CreateNewPlaylist(new PlaylistData(playlistName, songs));
-
-                                        PlaylistsManager.PlayPlaylist(playlistName);
-
-                                });
-                testPlaylistThread.Start();  
-        */
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
