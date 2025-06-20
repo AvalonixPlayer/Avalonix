@@ -26,6 +26,7 @@ pkgs.mkShell {
     fontconfig
     libglvnd
     alsa-lib
+    wine
   ] ++ xlibs ++ naudiolibs ;
 
   LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath ([
