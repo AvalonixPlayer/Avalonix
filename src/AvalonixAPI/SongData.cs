@@ -1,4 +1,5 @@
 using System;
+using TagLib;
 
 namespace AvalonixAPI
 {
@@ -16,6 +17,41 @@ namespace AvalonixAPI
             return $"{TrackInfo.Artist} - {Title} ({AlbumInfo.Album}, {AlbumInfo.Year}) " +
                    $"[Track {TrackInfo.TrackNumber}/{AlbumInfo.TotalTracks}, " +
                    $"Disc {TrackInfo.DiscNumber}/{AlbumInfo.TotalDiscs}]";
+        }
+
+        public void ExtractMetadata(string songPath)
+        {
+            TagLib.File file = TagLib.File.Create(songPath);
+            TrackInfo = new TrackInfo
+                {
+                    Artist = file.Tag.FirstPerformer,
+                    TrackNumber = (int?)file.Tag.Track,
+                    DiscNumber = (int?)file.Tag.Disc,
+                    Genre = file.Tag.FirstGenre,
+                    Lyrics = file.Tag.Lyrics,
+                    Composer = file.Tag.FirstComposer
+                };
+
+                AlbumInfo = new AlbumInfo
+                {
+                    Album = file.Tag.Album,
+                    AlbumArtist = file.Tag.FirstAlbumArtist,
+                    Year = (int?)file.Tag.Year,
+                    TotalTracks = (int?)file.Tag.TrackCount,
+                    TotalDiscs = (int?)file.Tag.DiscCount,
+                    CoverArtPath = null
+                };
+
+                ExtraMetadata = new AdditionalMetadata
+                {
+                    Comment = file.Tag.Comment,
+                    Publisher = file.Tag.Publisher
+                };
+
+                if (Duration == null)
+                {
+                    Duration = file.Properties.Duration;
+                }
         }
     }
 
@@ -44,4 +80,5 @@ namespace AvalonixAPI
         public string? Comment { get; set; }
         public string? Publisher { get; set; }
     }
+    
 }
