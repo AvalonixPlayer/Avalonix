@@ -25,7 +25,7 @@
     </PackageReference>
     <PackageReference Include="Material.Avalonia" Version="3.12.1-nightly.0.3" />
     <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="NeoSimpleLogger" Version="1.2.3" />
+    <PackageReference Include="NeoSimpleLogger" Version="1.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SkiaSharp" Version="3.119.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.0" />
