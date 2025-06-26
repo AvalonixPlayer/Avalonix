@@ -11,7 +11,7 @@
         TransparencyLevelHint="AcrylicBlur"
         WindowStartupLocation="CenterScreen"
         Title="Avalonix - Music player"
-        FontFamily="Segoe UI">
+        FontFamily="Fira Mono">
     
     <Window.Styles>
         <Style Selector="Window">
@@ -37,7 +37,7 @@
                 BorderBrush="DarkSlateGray" BorderThickness="1">
         </Border>
         
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="210,*,Auto" Margin="0,15,0,0">
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="250,*,Auto" Margin="0,15,0,0">
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
                 <Button Width="40" Height="40" Click="BackButton_OnClick" 
                         Background="Transparent" Foreground="White"
@@ -48,10 +48,13 @@
                         Content="⏭" ToolTip.Tip="Next"/>
                 <Button Width="40" Height="40" Click="AddSongButton_OnClick"
                         Background="Transparent" Foreground="White"
-                        Content="➕" ToolTip.Tip="Add song"/>
+                        Content="x" ToolTip.Tip="Add song"/>
                 <Button Width="40" Height="40" Click="RemoveButton_OnClick"
                         Background="Transparent" Foreground="White"
                         Content="✖" ToolTip.Tip="Remove song"/>
+                <Button Width="40" Height="40" Click="PlaylistCreate_OnClick"
+                        Background="Transparent" Foreground="White"
+                        Content="" ToolTip.Tip="Create playlist"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" >

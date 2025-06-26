@@ -1,5 +1,4 @@
 using System;
-using TagLib;
 
 namespace AvalonixAPI
 {
@@ -21,7 +20,7 @@ namespace AvalonixAPI
 
         public void ExtractMetadata(string songPath)
         {
-            TagLib.File file = TagLib.File.Create(songPath);
+            var file = TagLib.File.Create(songPath);
             TrackInfo = new TrackInfo
                 {
                     Artist = file.Tag.FirstPerformer,
@@ -48,10 +47,7 @@ namespace AvalonixAPI
                     Publisher = file.Tag.Publisher
                 };
 
-                if (Duration == null)
-                {
-                    Duration = file.Properties.Duration;
-                }
+                Duration ??= file.Properties.Duration;
         }
     }
 

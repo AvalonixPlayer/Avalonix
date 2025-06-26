@@ -250,4 +250,10 @@ public partial class MainWindow : Window
             Logger.Error($"Play song error: {ex.Message}");
         }
     }
+
+    private void PlaylistCreate_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var window = new PlaylistCreateWindow();
+        window.Show();
+    }
 }
