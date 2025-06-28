@@ -7,7 +7,7 @@
         MinHeight="450"
         MinWidth="800"
         Icon="Assets/icon.png"
-        Background="Transparent"
+        Background="#80808080"
         TransparencyLevelHint="AcrylicBlur"
         WindowStartupLocation="CenterScreen"
         Title="Avalonix - Music player"
@@ -28,12 +28,13 @@
         <ListBox Grid.Row="0" Grid.Column="0" x:Name="PlaylistBox" 
                 CornerRadius="7" 
                 BorderBrush="DarkSlateGray"
+                Background="#80808080"
                 BorderThickness="1">
 
         </ListBox>
 
         <Border Grid.Row="0" Grid.Column="1" Width="350" Height="350" Margin="20,0,0,0"
-                Background="Transparent" CornerRadius="7"
+                Background="#80808080" CornerRadius="7"
                 BorderBrush="DarkSlateGray" BorderThickness="1">
         </Border>
         

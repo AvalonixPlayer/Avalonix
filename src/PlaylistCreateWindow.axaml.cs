@@ -1,6 +1,5 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+using static Avalonix.Program;
 
 namespace Avalonix;
 
@@ -8,6 +7,7 @@ public partial class PlaylistCreateWindow : Window
 {
     public PlaylistCreateWindow()
     {
+        Logger.Info("PlaylistCreateWindow opened");
         InitializeComponent();
     }
 }
