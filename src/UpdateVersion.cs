@@ -7,20 +7,12 @@ namespace Avalonix;
 
 public abstract class UpdateVersion
 {
-   public static string LocalVersion { get; }
+   public static string LocalVersion = "0.1.0"; 
+
    public static string OnlineVersion { get; set; } = null!;
    private const string ApiUrl = "https://mncrzz.github.io/api/version.txt";
 
-   private static string GetLocalVersion()
-   {
-      return "0.1.0";
-   }
-
-   private static async Task<string> GetOnlineVersion()
-   {
-       using var httpClient = new HttpClient();
-       return await httpClient.GetStringAsync(ApiUrl);
-   }
+   private static async Task<string> GetOnlineVersion() => await new HttpClient().GetStringAsync(ApiUrl);
    
    public static async void CheckUpdates()
    {
@@ -35,6 +27,6 @@ public abstract class UpdateVersion
        }
    }
 
-   private static bool IsUpdateAvailable() => OnlineVersion == LocalVersion;
+   public static bool IsUpdateAvailable() => OnlineVersion != LocalVersion;
 
 }

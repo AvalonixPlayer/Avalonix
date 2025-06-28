@@ -11,6 +11,7 @@ using System.Timers;
 using Avalonia.Threading;
 using Avalonix.AvalonixAPI;
 using NAudio.Wave;
+using static Avalonix.UpdateVersion;
 
 namespace Avalonix;
 
@@ -20,6 +21,7 @@ public partial class MainWindow : Window
     public required Timer? PlaybackTimer;
     private readonly TextBlock? _playbackTimeTextBlock;
     private readonly Button? _forwardButton;
+    private readonly Label? _versionLabel;
 
     private readonly string[] _supportedAudioFormats = [
         "*.mp3", "*.wav", "*.flac", "*.opus", 
@@ -35,6 +37,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         Logger.Info("MainWindow opened");
+        
         try
         {
             _playbackTimeTextBlock = this.FindControl<TextBlock>("TimeSong");
@@ -46,6 +49,8 @@ public partial class MainWindow : Window
         }
         
         InitializeComponent();
+        _versionLabel = this.FindControl<Label>("Version");
+        _versionLabel!.Content = IsUpdateAvailable() ? "v" + LocalVersion: $"v{LocalVersion}, Update Available v{OnlineVersion}";
         InitializePlaybackTimer();
         UpdatePlaylistBox();
     }
