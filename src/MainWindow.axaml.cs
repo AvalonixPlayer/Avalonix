@@ -21,7 +21,6 @@ public partial class MainWindow : Window
     public required Timer? PlaybackTimer;
     private readonly TextBlock? _playbackTimeTextBlock;
     private readonly Button? _forwardButton;
-    private readonly Label? _versionLabel;
 
     private readonly string[] _supportedAudioFormats = [
         "*.mp3", "*.wav", "*.flac", "*.opus", 
@@ -36,6 +35,7 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
+        InitializeComponent();
         Logger.Info("MainWindow opened");
         
         try
@@ -45,12 +45,12 @@ public partial class MainWindow : Window
         }
         catch (Exception e)
         {
-           Logger.Fatal(e.Message); 
+           Logger.Fatal(e.Message);
+           return;
         }
         
-        InitializeComponent();
-        _versionLabel = this.FindControl<Label>("Version");
-        _versionLabel!.Content = IsUpdateAvailable() ? "v" + LocalVersion: $"v{LocalVersion}, Update Available v{OnlineVersion}";
+        var versionLabel = this.FindControl<Label>("Version");
+        versionLabel!.Content = IsUpdateAvailable() ? $"v{LocalVersion}, new version available {OnlineVersion}" : $"v{LocalVersion}";
         InitializePlaybackTimer();
         UpdatePlaylistBox();
     }

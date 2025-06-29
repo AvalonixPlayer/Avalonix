@@ -2,5 +2,5 @@ src/bin
 src/obj
 src/.idea
 *.idea*
-out
+publish
 Avalonix.sln

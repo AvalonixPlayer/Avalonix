@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using System.Threading.Tasks;
 using NeoSimpleLogger;
 using AvalonixAPI;
 
@@ -11,10 +12,10 @@ public static class Program
         public static readonly Logger Logger = new(Logger.TypeLogger.Console);
 
         [STAThread]
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
-                UpdateVersion.CheckUpdates();
+                await UpdateVersion.CheckUpdates();
 
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
@@ -26,6 +27,5 @@ public static class Program
                     .UsePlatformDetect()
                     .WithInterFont()
                     .LogToTrace();
-
         }
 }

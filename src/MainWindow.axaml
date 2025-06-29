@@ -12,67 +12,101 @@
         WindowStartupLocation="CenterScreen"
         Title="Avalonix - Music player"
         FontFamily="Fira Mono">
-    
+
     <Window.Styles>
         <Style Selector="Window">
             <Setter Property="Background" Value="DarkSlateGray"/>
         </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#80808080"/>
+            <Setter Property="BorderBrush" Value="DarkSlateGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="DarkSlateGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/> </Style>
+
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#50505050"/>
+            <Setter Property="BorderBrush" Value="#3deb34"/>
+        </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#30303030"/>
+            <Setter Property="BorderBrush" Value="#3deb34"/>
+        </Style>
+
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="#80808080"/>
+            <Setter Property="BorderBrush" Value="DarkSlateGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
         <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
             <Setter Property="Background" Value="#3deb34"/>
-            <Setter Property="TextBlock.Foreground" Value="Transparent"/>
+            <Setter Property="TextBlock.Foreground" Value="Black"/> </Style>
+
+        <Style Selector="Slider">
+            <Setter Property="Background" Value="#80808080"/>
+            <Setter Property="BorderBrush" Value="DarkSlateGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/> 
         </Style>
+
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Label">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        
     </Window.Styles>
 
     <Grid RowDefinitions="*,Auto" ColumnDefinitions="250,*" Margin="10">
        
-        <ListBox Grid.Row="0" Grid.Column="0" x:Name="PlaylistBox" 
-                CornerRadius="7" 
-                BorderBrush="DarkSlateGray"
-                Background="#80808080"
-                BorderThickness="1">
-
-        </ListBox>
+        <ListBox Grid.Row="0" Grid.Column="0" x:Name="PlaylistBox" />
 
         <Border Grid.Row="0" Grid.Column="1" Width="350" Height="350" Margin="20,0,0,0"
                 Background="#80808080" CornerRadius="7"
-                BorderBrush="DarkSlateGray" BorderThickness="1">
-        </Border>
+                BorderBrush="DarkSlateGray" BorderThickness="1"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            </Border>
         
         <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="250,*,Auto" Margin="0,15,0,0">
-            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                 <Button Width="40" Height="40" Click="BackButton_OnClick" 
-                        Background="Transparent" Foreground="White"
                         Content="⏮" ToolTip.Tip="Previous"/>
 
                 <Button Width="40" Height="40" Click="ForwardButton_OnClick"
-                        Background="Transparent" Foreground="White"
                         Content="⏭" ToolTip.Tip="Next"/>
                 <Button Width="40" Height="40" Click="AddSongButton_OnClick"
-                        Background="Transparent" Foreground="White"
-                        Content="x" ToolTip.Tip="Add song"/>
-                <Button Width="40" Height="40" Click="RemoveButton_OnClick"
-                        Background="Transparent" Foreground="White"
-                        Content="✖" ToolTip.Tip="Remove song"/>
-                <Button Width="40" Height="40" Click="PlaylistCreate_OnClick"
-                        Background="Transparent" Foreground="White"
-                        Content="" ToolTip.Tip="Create playlist"/>
-            </StackPanel>
+                        Content="&#xE710;" ToolTip.Tip="Add song"/> <Button Width="40" Height="40" Click="RemoveButton_OnClick"
+                        Content="&#xE74D;" ToolTip.Tip="Remove song"/> <Button Width="40" Height="40" Click="PlaylistCreate_OnClick"
+                        x:Name="PlaylistCreateButton"
+                        ToolTip.Tip="Create playlist"/> </StackPanel>
 
-            <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" >
+            <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" >
                 <TextBlock x:Name="TimeSong" Text="1:23 / 4:56" HorizontalAlignment="Center" Margin="0,0,0,5"/>
                 <Button Width="40" Height="40" Click="PauseButton_OnClick" 
-                        Background="Transparent" Foreground="White"
-                        Content="||" ToolTip.Tip="Previous"/>
-                <Slider Width="500" Height="15" Minimum="0" Maximum="100" Value="30"
-                        Background="Transparent" BorderBrush="DarkSlateGray" Margin="0, 0, 0, 20"/>
-            </StackPanel>
+                        Content="&#xE768;" ToolTip.Tip="Play/Pause"/> <Slider Width="500" Height="15" Minimum="0" Maximum="100" Value="30"
+                        Margin="0, 10, 0, 0"/> </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
-                <TextBlock Text="♪" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <Slider Width="100" Minimum="0" Maximum="100" Value="70" VerticalAlignment="Center"
-                        Background="Transparent" BorderBrush="DarkSlateGray"/>
-                <Label x:Name="Version"></Label>
-            </StackPanel>
+                <TextBlock Text="&#xE767;" VerticalAlignment="Center" Margin="0,0,5,0" FontSize="16"/> <Slider Width="100" Minimum="0" Maximum="100" Value="70" VerticalAlignment="Center"/>
+                <Label x:Name="Version" Content="v1.0"></Label> </StackPanel>
         </Grid>
     </Grid>
 </Window>

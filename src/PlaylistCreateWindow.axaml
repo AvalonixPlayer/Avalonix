@@ -6,8 +6,70 @@
         Height="450"
         Width="300"
         Background="#80808080"
-        TransparencyLevelHint="Blur"
-        TransparencyBackgroundFallback="#38453c"
+        TransparencyLevelHint="AcrylicBlur"
+        WindowStartupLocation="CenterScreen"
+        Title="Avalonix - Create Playlist"
         x:Class="Avalonix.PlaylistCreateWindow"
-        Title="Avalonix - Playlist Create">
+        FontFamily="Fira Mono">
+
+    <Window.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#80808080"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#50505050"/> </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#30303030"/> </Style>
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="#80808080"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="#3deb34"/>
+            <Setter Property="TextBlock.Foreground" Value="Black"/> </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="10">
+        <TextBox Grid.Row="0"
+                 Watermark=" Name"
+                 Margin="0,0,0,5"
+                 HorizontalAlignment="Stretch"
+                 x:Name="PlaylistNameTextBox"/>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,10">
+            <Button Content="Add"
+                    Margin="0,0,10,0"
+                    Padding="10,5"
+                    x:Name="AddButton"/>
+            <Button Content="Remove"
+                    Padding="10,5"
+                    x:Name="RemoveButton"/>
+        </StackPanel>
+
+        <ListBox Grid.Row="2"
+                 Margin="0,0,0,10"
+                 x:Name="PlaylistListBox">
+            </ListBox>
+
+        <Button Grid.Row="3"
+                Content="Create"
+                HorizontalAlignment="Stretch"
+                Padding="10,8"
+                x:Name="CreatePlaylistButton"/>
+    </Grid>
 </Window>
