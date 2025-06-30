@@ -8,7 +8,7 @@ public static class MediaPlayer
 {
     private static Thread _playbackThread = null!;
     private static AudioFileReader _audioFile = null!;
-    private static WaveOutEvent _output = null!;
+    private static WasapiOut _output = null!;
     private static float Volume { get; set; } = 1;
 
     public static PlaybackState State => _output.PlaybackState;
@@ -18,7 +18,7 @@ public static class MediaPlayer
         _playbackThread = new Thread(() =>
         {
             _audioFile = new AudioFileReader(path);
-            _output = new WaveOutEvent();
+            _output = new WasapiOut();
             _output.Init(_audioFile);
             _output.Play();
             while (_output?.PlaybackState != PlaybackState.Stopped)
@@ -43,25 +43,16 @@ public static class MediaPlayer
 
     public static void Pause()
     {
-        if (_output.PlaybackState == PlaybackState.Playing)
-        {
-            _output.Pause();
-        }
+        if (_output.PlaybackState == PlaybackState.Playing) _output.Pause();
     }
 
     public static void Continue()
     {
-        if (_output.PlaybackState == PlaybackState.Paused)
-        {
-            _output.Play();
-        }
-    }
+        if (_output.PlaybackState == PlaybackState.Paused) _output.Play();  
+    } 
 
-    public static void ChangeVolume(float volume)
-    {
-        Volume = volume;
-    }
-
+    public static void ChangeVolume(float volume) => Volume = volume;
+    
     public static TimeSpan PlaybackTime => _audioFile.CurrentTime;
 
     public static TimeSpan TotalMusicTime => _audioFile.TotalTime;

@@ -42,34 +42,57 @@
     </Window.Styles>
 
     <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="10">
-        <TextBox Grid.Row="0"
-                 Watermark=" Name"
-                 Margin="0,0,0,5"
-                 HorizontalAlignment="Stretch"
-                 x:Name="PlaylistNameTextBox"/>
-
+        <StackPanel Grid.Row="0">
+            <Label Grid.Row="0">Playlist Name</Label>
+                    <TextBox Grid.Row="0"
+                             Watermark=" Name"
+                             Margin="0,0,0,5"
+                             HorizontalAlignment="Stretch"
+                             x:Name="PlaylistNameTextBox"/>
+                    <Label Grid.Row="0">Optional metadata</Label>
+                    <TextBox Grid.Row="0"
+                             Watermark=" Album"
+                             Margin="0,0,0,5"
+                             HorizontalAlignment="Stretch"
+                             x:Name="AlbumTextBox"/>
+                    <TextBox Grid.Row="0"
+                             Watermark=" Performer"
+                             Margin="0,0,0,5"
+                             HorizontalAlignment="Stretch"
+                             x:Name="PerformerTextBox"/>
+                    <TextBox Grid.Row="0"
+                             Watermark=" Year"
+                             Margin="0,0,0,5"
+                             HorizontalAlignment="Stretch"
+                             x:Name="YearTextBox"/>
+        </StackPanel>
+        
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,10">
             <Button Content="Add"
                     Margin="0,0,10,0"
+                    Click="AddButton_OnClick"
                     Padding="10,5"
                     x:Name="AddButton"/>
             <Button Content="Remove"
+                    Click="RemoveButton_OnClick"
                     Padding="10,5"
+                    IsEnabled="False"
                     x:Name="RemoveButton"/>
         </StackPanel>
 
         <ListBox Grid.Row="2"
                  Margin="0,0,0,10"
                  x:Name="PlaylistListBox">
-            </ListBox>
+        </ListBox>
 
         <Button Grid.Row="3"
                 Content="Create"
                 HorizontalAlignment="Stretch"
                 Padding="10,8"
+                Click="CreatePlaylistButton_OnClick"
                 x:Name="CreatePlaylistButton"/>
     </Grid>
 </Window>

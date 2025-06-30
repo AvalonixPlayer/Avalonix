@@ -16,16 +16,10 @@ public static class Program
         {
                 Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
                 await UpdateVersion.CheckUpdates();
-
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
-        private static AppBuilder BuildAvaloniaApp()
-        {
-                Logger.Info("Building App");
-                return AppBuilder.Configure<App>()
-                    .UsePlatformDetect()
-                    .WithInterFont()
-                    .LogToTrace();
-        }
+        private static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
+                                                            .UsePlatformDetect()
+                                                            .LogToTrace();
 }

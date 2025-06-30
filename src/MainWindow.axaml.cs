@@ -17,7 +17,7 @@ namespace Avalonix;
 
 public partial class MainWindow : Window
 {
-    private const string CurrentPlaylistName = "TestPlaylist";
+    private string? _currentPlaylistName;
     public required Timer? PlaybackTimer;
     private readonly TextBlock? _playbackTimeTextBlock;
     private readonly Button? _forwardButton;
@@ -76,19 +76,20 @@ public partial class MainWindow : Window
 
     private void UpdatePlaylistBox()
     {
+        if (_currentPlaylistName == null) return;
         PlaylistBox.Items.Clear();
         try
         {
-            var songNames = PlaylistsManager.SongsNamesInPlaylist(CurrentPlaylistName);
+            var songNames = PlaylistsManager.SongsNamesInPlaylist(_currentPlaylistName!);
             foreach (var song in songNames)
             {
                 PlaylistBox.Items.Add(new ListBoxItem { Content = song });
             }
-            Logger.Info($"Loaded songs for playlist: {CurrentPlaylistName}");
+            Logger.Info($"Loaded songs for playlist: {_currentPlaylistName}");
         }
         catch (Exception ex)
         {
-            Logger.Error($"Failed to load playlist {CurrentPlaylistName}: {ex.Message}");
+            Logger.Error($"Failed to load playlist {_currentPlaylistName}: {ex.Message}");
         }
     }
 
@@ -111,9 +112,9 @@ public partial class MainWindow : Window
                 var filePath = files[0].Path.LocalPath;
                 var songTitle = System.IO.Path.GetFileNameWithoutExtension(filePath);
                 var songData = new SongData(songTitle, filePath);
-                PlaylistsManager.AddSongToPlaylist(CurrentPlaylistName, songData);
+                PlaylistsManager.AddSongToPlaylist(_currentPlaylistName, songData);
                 UpdatePlaylistBox();
-                Logger.Info($"Added song {songTitle} to playlist {CurrentPlaylistName}");
+                Logger.Info($"Added song {songTitle} to playlist {_currentPlaylistName}");
             }
             catch (Exception ex)
             {
@@ -134,9 +135,9 @@ public partial class MainWindow : Window
         {
             var songTitle = selectedItem.Content?.ToString();
             if (songTitle == null) return;
-            PlaylistsManager.RemoveSongFromPlaylist(CurrentPlaylistName, songTitle);
+            PlaylistsManager.RemoveSongFromPlaylist(_currentPlaylistName, songTitle);
             UpdatePlaylistBox();
-            Logger.Info($"Removed song {songTitle} from playlist {CurrentPlaylistName}");
+            Logger.Info($"Removed song {songTitle} from playlist {_currentPlaylistName}");
         }
         catch (Exception ex)
         {
@@ -164,7 +165,7 @@ public partial class MainWindow : Window
                     if (selectedItem.Content == null) return;
                     var songTitle = selectedItem.Content.ToString();
                     var playlist = PlaylistsManager.JsonToPlaylist(
-                        System.IO.Path.Combine(DiskManager.SettingsPath, $"{CurrentPlaylistName}.json"));
+                        System.IO.Path.Combine(DiskManager.SettingsPath, $"{_currentPlaylistName}.json"));
                     var song = playlist.Songs.FirstOrDefault(s => s.Title == songTitle);
                     if (song == null) return;
                     MediaPlayer.Play(song.FilePath);
@@ -175,11 +176,11 @@ public partial class MainWindow : Window
                 }
                 else
                 {
-                    PlaylistsManager.PlayPlaylist(CurrentPlaylistName);
+                    PlaylistsManager.PlayPlaylist(_currentPlaylistName);
                     PlaybackTimer?.Start();
                     Debug.Assert(_forwardButton != null, nameof(_forwardButton) + " != null");
                     _forwardButton.Content = "⏸"; 
-                    Logger.Info($"Playing playlist: {CurrentPlaylistName}");
+                    Logger.Info($"Playing playlist: {_currentPlaylistName}");
                 }
             }
         }
@@ -241,7 +242,7 @@ public partial class MainWindow : Window
         {
             var songTitle = selectedItem.Content?.ToString();
             var playlist = PlaylistsManager.JsonToPlaylist(
-                System.IO.Path.Combine(DiskManager.SettingsPath, $"{CurrentPlaylistName}.json"));
+                System.IO.Path.Combine(DiskManager.SettingsPath, $"{_currentPlaylistName}.json"));
             var song = playlist.Songs.FirstOrDefault(s => s.Title == songTitle);
             if (song == null) return;
             MediaPlayer.Play(song.FilePath);
@@ -256,9 +257,16 @@ public partial class MainWindow : Window
         }
     }
 
-    private void PlaylistCreate_OnClick(object? sender, RoutedEventArgs e)
+    private async void PlaylistCreate_OnClick(object? sender, RoutedEventArgs e)
     {
-        var window = new PlaylistCreateWindow();
-        window.Show();
+        try
+        {
+            var window = new PlaylistCreateWindow();
+            await window.ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Error with opening create playlist dialog: {ex.Message} ");
+        }
     }
 }
