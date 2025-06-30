@@ -36,13 +36,13 @@ public static class PlaylistsManager
         PlaylistToJson(path, data);
     }
 
-    public static void RemoveSongFromPlaylist(string playlistName, string songName)
+    public static void RemoveSongFromPlaylist(string playlistName, string songNameToRemove)
     {
         var path = Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json");
         var data = JsonToPlaylist(path);
 
         SongData songToRemove = null!;
-        foreach (var song in data.Songs.Where(song => song.Title == songName))
+        foreach (var song in data.Songs.Where(song => song.Title == songNameToRemove))
         {
             songToRemove = song;
         }
@@ -72,16 +72,8 @@ public static class PlaylistsManager
         PlaylistToJson(path, data);
     }
 
-    public static void PlaylistToJson(string path, PlaylistData playlist)
-    {
-        var serializer = new JsonSerializer();
-
-        using var sw = new StreamWriter(path);
-        using JsonWriter writer = new JsonTextWriter(sw);
-        
-        serializer.Formatting = Formatting.Indented;
-        serializer.Serialize(writer, playlist);
-    }
+    public static void PlaylistToJson(string path, PlaylistData playlist) => 
+        new JsonSerializer { Formatting = Formatting.Indented }.Serialize(new JsonTextWriter(new StreamWriter(path)), playlist);
 
     public static PlaylistData JsonToPlaylist(string path) => JsonConvert.DeserializeObject<PlaylistData>(File.ReadAllText(path));
 
@@ -89,23 +81,24 @@ public static class PlaylistsManager
     {
         var data = JsonToPlaylist(Path.Combine(DiskManager.SettingsPath, $"{playlistName}.json"));
 
-        var thread = new Thread(() =>
+        new Thread(() =>
         {
             if (Settings.Loop)
             {
                 while (_playlistCtsToken.IsCancellationRequested == false)
                 {
-                    Play();
+                    PlaySongs();
+                    if (_playlistCtsToken.IsCancellationRequested) break; // Exit loop if cancellation requested mid-loop
                 }
             }
             else
             {
-                Play();
+                PlaySongs();
             }
 
             return;
 
-            void Play()
+            void PlaySongs()
             {
                 if (Settings.Shuffle)
                 {
@@ -113,11 +106,12 @@ public static class PlaylistsManager
                 }
                 foreach (var song in data.Songs)
                 {
+                    // Check for cancellation before playing each song
+                    if (_playlistCtsToken.IsCancellationRequested) return; 
                     MediaPlayer.Play(song.FilePath);
                 }
             }
-        });
-        thread.Start();
+        }).Start();
     }
 
     public static void PausePlaylist()
@@ -142,9 +136,7 @@ public static class PlaylistsManager
 
     private static void CreatePlaylistFile(PlaylistData data)
     {
-        string path = Path.Combine(DiskManager.SettingsPath, $"{data.Name}.json");
-
-        using FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
-        fs.Write(null!);
+        var path = Path.Combine(DiskManager.SettingsPath, $"{data.Name}.json");
+        new FileStream(path, FileMode.OpenOrCreate).Write(null!);
     }
 }
