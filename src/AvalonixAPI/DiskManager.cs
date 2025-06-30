@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace AvalonixAPI;
+namespace Avalonix.AvalonixAPI;
 
 public static class DiskManager
 {

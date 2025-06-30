@@ -5,7 +5,7 @@ using System.Threading;
 using Avalonix.AvalonixAPI;
 using Newtonsoft.Json;
 
-namespace AvalonixAPI;
+namespace Avalonix.AvalonixAPI;
 
 public static class PlaylistsManager
 {

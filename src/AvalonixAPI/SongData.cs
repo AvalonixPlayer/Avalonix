@@ -1,6 +1,6 @@
 using System;
 
-namespace AvalonixAPI
+namespace Avalonix.AvalonixAPI
 {
     public class SongData(string title, string filePath, TimeSpan? duration = null)
     {
@@ -53,9 +53,9 @@ namespace AvalonixAPI
 
     public struct TrackInfo
     {
-        public string? Artist { get; set; }
-        public int? TrackNumber { get; set; }
-        public int? DiscNumber { get; set; }
+        public string? Artist { get; init; }
+        public int? TrackNumber { get; init; }
+        public int? DiscNumber { get; init; }
         public string? Genre { get; set; }
         public string? Lyrics { get; set; }
         public string? Composer { get; set; }

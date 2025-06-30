@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AvalonixAPI;
+namespace Avalonix.AvalonixAPI;
 
 public struct PlaylistData(
     string name,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using AvalonixAPI;
+using Avalonix.AvalonixAPI;
 using static Avalonix.Program;
 
 namespace Avalonix;
@@ -55,6 +55,15 @@ public partial class PlaylistCreateWindow : Window
                 Songs = _songs,
                 Year = Convert.ToInt32(_optionalMedataTextBoxes["Year"].Text), 
             });
+
+            new Playlist
+            {
+                Name = _playlistNameTextBox.Text ?? "New Playlist",
+                Album = _optionalMedataTextBoxes["Album"].Text,
+                Performer = _optionalMedataTextBoxes["Performer"].Text,
+                Songs = _songs,
+                Year = Convert.ToInt32(_optionalMedataTextBoxes["Year"].Text), 
+            };
         }
         catch (Exception exception)
         {

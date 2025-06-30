@@ -5,7 +5,6 @@ using Avalonia.Platform.Storage;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using AvalonixAPI;
 using static Avalonix.Program;
 using System.Timers;
 using Avalonia.Threading;

@@ -1,11 +1,10 @@
 ﻿using Avalonia;
 using System;
 using System.Threading.Tasks;
+using Avalonix.AvalonixAPI;
 using NeoSimpleLogger;
-using AvalonixAPI;
 
 namespace Avalonix;
-
 
 public static class Program
 {
