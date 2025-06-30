@@ -31,6 +31,7 @@
 - [**NAudio**](https://github.com/naudio/NAudio?tab=MIT-1-ov-file)
 - [**Newtonsoft.Json**](https://github.com/JamesNK/Newtonsoft.Json?tab=MIT-1-ov-file)
 - [**Avalonia**](https://github.com/AvaloniaUI/Avalonia?tab=MIT-1-ov-file)
+- [**NeoSimpleLogger](https://github.com/ruzen42/simple-logger)
 
 ## **Building**
 
