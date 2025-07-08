@@ -56,13 +56,10 @@ public partial class PlaylistCreateWindow : Window
                 Year = Convert.ToInt32(_optionalMedataTextBoxes["Year"].Text), 
             });
 
-            new Playlist
+            var newPlaylist = new Playlist
             {
                 Name = _playlistNameTextBox.Text ?? "New Playlist",
-                Album = _optionalMedataTextBoxes["Album"].Text,
-                Performer = _optionalMedataTextBoxes["Performer"].Text,
                 Songs = _songs,
-                Year = Convert.ToInt32(_optionalMedataTextBoxes["Year"].Text), 
             };
         }
         catch (Exception exception)

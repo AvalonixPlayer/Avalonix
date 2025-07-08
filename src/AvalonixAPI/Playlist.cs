@@ -11,10 +11,6 @@ public class Playlist
 {
     public string Name { get; set; }
     public List<SongData> Songs { get; set; }
-    public int? Year { get; set; }
-    public string? Performer { get; set; }
-    public string? Album { get; set; }
-
     private static string PlaylistsDirectory => DiskManager.SettingsPath;
 
     private static CancellationTokenSource _playlistCts = new CancellationTokenSource();
@@ -24,19 +20,11 @@ public class Playlist
     {
         Name = name;
         Songs = songs;
-        Year = year;
-        Performer = performer;
-        Album = album;
     }
 
-    public Playlist()
-    {
-    }
+    public Playlist() {}
 
-    public string[] GetSongsNames()
-    {
-        return Songs.Select(song => song.Title).ToArray();
-    }
+    public string[] GetSongsNames() => Songs.Select(song => song.Title).ToArray();
 
     public void AddSong(SongData songData)
     {
@@ -58,10 +46,7 @@ public class Playlist
         SaveToJsonFile();
     }
 
-    public void Delete()
-    {
-        File.Delete(Path.Combine(PlaylistsDirectory, $"{Name}.json"));
-    }
+    public void Delete() => File.Delete(Path.Combine(PlaylistsDirectory, $"{Name}.json"));
 
     public void UpdateName(string newName)
     {
