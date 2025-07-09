@@ -2,21 +2,18 @@ using System;
 
 namespace Avalonix.AvalonixAPI
 {
-    public class SongData(string title, string filePath, TimeSpan? duration = null)
+    public class Song(string title, string filePath)
     {
         public string Title { get; set; } = title;
         public string FilePath { get; set; } = filePath;
-        public TimeSpan? Duration { get; set; } = duration;
         private TrackInfo TrackInfo { get; set; } = new();
         private AlbumInfo AlbumInfo { get; set; } = new();
         public AdditionalMetadata ExtraMetadata { get; set; } = new();
 
-        public override string ToString()
-        {
-            return $"{TrackInfo.Artist} - {Title} ({AlbumInfo.Album}, {AlbumInfo.Year}) " +
+        public override string ToString() => 
+                   $"{TrackInfo.Artist} - {Title} ({AlbumInfo.Album}, {AlbumInfo.Year}) " +
                    $"[Track {TrackInfo.TrackNumber}/{AlbumInfo.TotalTracks}, " +
                    $"Disc {TrackInfo.DiscNumber}/{AlbumInfo.TotalDiscs}]";
-        }
 
         public void ExtractMetadata(string songPath)
         {
@@ -47,7 +44,6 @@ namespace Avalonix.AvalonixAPI
                     Publisher = file.Tag.Publisher
                 };
 
-                Duration ??= file.Properties.Duration;
         }
     }
 

@@ -14,7 +14,7 @@ public partial class PlaylistCreateWindow : Window
     private readonly Button _songRemoveButton;
     private readonly Button _createPlaylistButton;
     private readonly ListBox _playlistBox;
-    private readonly List<SongData> _songs = [];
+    private readonly List<Song> _songs = [];
     
     private readonly string[] _supportedAudioFormats = [
         "*.mp3", "*.wav", "*.flac", "*.opus", 
@@ -48,7 +48,7 @@ public partial class PlaylistCreateWindow : Window
         {
             var newPlaylist = new Playlist
             {
-                Name = _playlistNameTextBox.Text ?? "New Playlist",
+                Name = _playlistNameTextBox.Text ?? "New_playlist",
                 Songs = _songs
             };
             newPlaylist.SaveToJsonFile();
@@ -56,8 +56,8 @@ public partial class PlaylistCreateWindow : Window
         catch (Exception ex)
         {
             Logger.Error($"Error with creating playlist: {ex}");
-            throw;
         }
+        Close();
     }
 
     private async void AddButton_OnClick(object? sender, RoutedEventArgs e)
@@ -76,7 +76,7 @@ public partial class PlaylistCreateWindow : Window
             {
                 var name = file.Name;
                 _playlistBox.Items.Add(name);
-                _songs.Add(new SongData(name, file.Path.ToString(), TimeSpan.Zero));
+                _songs.Add(new Song(name, file.Path.ToString()));
             }
 
             _songRemoveButton.IsEnabled = true;

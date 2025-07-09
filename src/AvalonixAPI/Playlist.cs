@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using NeoSimpleLogger;
 using Newtonsoft.Json;
 
 namespace Avalonix.AvalonixAPI;
 
 public class Playlist
 {
-    public string Name { get; set; }
-    public List<SongData> Songs { get; set; }
+    public string? Name { get; set; }
+    public List<Song> Songs { get; set; }
     private static string PlaylistsDirectory => DiskManager.SettingsPath;
 
     private static CancellationTokenSource _playlistCts = new CancellationTokenSource();
     private static CancellationToken _playlistCtsToken = _playlistCts.Token;
 
-    public Playlist(string name, List<SongData> songs)
+    public Playlist(string? name, List<Song> songs)
     {
         Name = name;
         Songs = songs;
@@ -27,9 +26,9 @@ public class Playlist
 
     public string[] GetSongsNames() => Songs.Select(song => song.Title).ToArray();
 
-    public void AddSong(SongData songData)
+    public void AddSong(Song song)
     {
-        Songs.Add(songData);
+        Songs.Add(song);
         SaveToJsonFile();
     }
 
@@ -49,7 +48,7 @@ public class Playlist
 
     public void Delete() => File.Delete(Path.Combine(PlaylistsDirectory, $"{Name}.json"));
 
-    public void UpdateName(string newName)
+    public void UpdateName(string? newName)
     {
         var oldPath = Path.Combine(PlaylistsDirectory, $"{Name}.json");
         File.Delete(oldPath);
@@ -62,22 +61,6 @@ public class Playlist
         var path = Path.Combine(PlaylistsDirectory, $"{Name}.json");
         new JsonSerializer { Formatting = Formatting.Indented }
             .Serialize(new JsonTextWriter(new StreamWriter(path)), this);
-    }
-
-    public static Playlist Load(string playlistName)
-    {
-        var path = Path.Combine(PlaylistsDirectory, $"{playlistName}.json");
-        var playlist = new Playlist();
-        try
-        {
-            playlist = JsonConvert.DeserializeObject<Playlist>(File.ReadAllText(path))!;
-        }
-        catch (Exception ex)
-        { 
-            Program.Logger.Error($"Error loading playlist: {ex}");
-        }
-
-        return playlist;
     }
 
     public void Play()
@@ -132,7 +115,7 @@ public class Playlist
         MediaPlayer.Stop();
     }
 
-    private static void CreatePlaylistFile(string playlistName)
+    private static void CreatePlaylistFile(string? playlistName)
     {
         var path = Path.Combine(PlaylistsDirectory, $"{playlistName}.json");
         Directory.CreateDirectory(PlaylistsDirectory);
@@ -146,13 +129,13 @@ public class Playlist
             .Select(Path.GetFileNameWithoutExtension)
             .ToArray();
 
-    public void ChangeName(string newName)
+    public void ChangeName(string? newName)
     {
         Name = newName;
         SaveToJsonFile();
     }
 
-    public void ChangeSongs(List<SongData> newSongs)
+    public void ChangeSongs(List<Song> newSongs)
     {
         Songs = newSongs;
         SaveToJsonFile();

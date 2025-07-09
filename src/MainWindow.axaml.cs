@@ -111,7 +111,7 @@ public partial class MainWindow : Window
             {
                 var filePath = files[0].Path.LocalPath;
                 var songTitle = System.IO.Path.GetFileNameWithoutExtension(filePath);
-                var songData = new SongData(songTitle, filePath);
+                var songData = new Song(songTitle, filePath);
                 if (_currentPlaylistName == null) return;
                 PlaylistsManager.AddSongToPlaylist(_currentPlaylistName, songData);
                 UpdatePlaylistBox();
