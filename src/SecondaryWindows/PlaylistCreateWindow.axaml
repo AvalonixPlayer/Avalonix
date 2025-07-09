@@ -49,22 +49,6 @@
                              Margin="0,0,0,5"
                              HorizontalAlignment="Stretch"
                              x:Name="PlaylistNameTextBox"/>
-                    <Label Grid.Row="0">Optional metadata</Label>
-                    <TextBox Grid.Row="0"
-                             Watermark=" Album"
-                             Margin="0,0,0,5"
-                             HorizontalAlignment="Stretch"
-                             x:Name="AlbumTextBox"/>
-                    <TextBox Grid.Row="0"
-                             Watermark=" Performer"
-                             Margin="0,0,0,5"
-                             HorizontalAlignment="Stretch"
-                             x:Name="PerformerTextBox"/>
-                    <TextBox Grid.Row="0"
-                             Watermark=" Year"
-                             Margin="0,0,0,5"
-                             HorizontalAlignment="Stretch"
-                             x:Name="YearTextBox"/>
         </StackPanel>
         
         <StackPanel Grid.Row="1"
@@ -92,6 +76,7 @@
                 Content="Create"
                 HorizontalAlignment="Stretch"
                 Padding="10,8"
+                IsEnabled="False"
                 Click="CreatePlaylistButton_OnClick"
                 x:Name="CreatePlaylistButton"/>
     </Grid>

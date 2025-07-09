@@ -93,10 +93,12 @@
                 <Button Width="40" Height="40" Click="ForwardButton_OnClick"
                         Content="⏭" ToolTip.Tip="Next"/>
                 <Button Width="40" Height="40" Click="AddSongButton_OnClick"
-                        Content="&#xE710;" ToolTip.Tip="Add song"/> <Button Width="40" Height="40" Click="RemoveButton_OnClick"
-                        Content="&#xE74D;" ToolTip.Tip="Remove song"/> <Button Width="40" Height="40" Click="PlaylistCreate_OnClick"
-                        x:Name="PlaylistCreateButton"
-                        ToolTip.Tip="Create playlist"/> </StackPanel>
+                        Content="&#xE710;" ToolTip.Tip="Add song"/> 
+                <Button Width="40" Height="40" Click="RemoveButton_OnClick"
+                        Content="&#xE74D;" ToolTip.Tip="Remove song"/> 
+                <Button Width="40" Height="40" Click="PlaylistCreate_OnClick"
+                        x:Name="PlaylistCreateButton" ToolTip.Tip="Create playlist"/>
+            </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" >
                 <TextBlock x:Name="TimeSong" Text="1:23 / 4:56" HorizontalAlignment="Center" Margin="0,0,0,5"/>

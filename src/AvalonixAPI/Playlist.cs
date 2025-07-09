@@ -57,7 +57,7 @@ public class Playlist
         SaveToJsonFile();
     }
 
-    private void SaveToJsonFile()
+    public void SaveToJsonFile()
     {
         var path = Path.Combine(PlaylistsDirectory, $"{Name}.json");
         new JsonSerializer { Formatting = Formatting.Indented }
@@ -72,9 +72,9 @@ public class Playlist
         {
             playlist = JsonConvert.DeserializeObject<Playlist>(File.ReadAllText(path))!;
         }
-        catch (Exception e)
+        catch (Exception ex)
         { 
-            Program.Logger.Error("Error loading playlist: {e}");
+            Program.Logger.Error($"Error loading playlist: {ex}");
         }
 
         return playlist;
@@ -149,6 +149,12 @@ public class Playlist
     public void ChangeName(string newName)
     {
         Name = newName;
+        SaveToJsonFile();
+    }
+
+    public void ChangeSongs(List<SongData> newSongs)
+    {
+        Songs = newSongs;
         SaveToJsonFile();
     }
 }

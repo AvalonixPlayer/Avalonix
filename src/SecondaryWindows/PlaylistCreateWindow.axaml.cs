@@ -12,6 +12,7 @@ public partial class PlaylistCreateWindow : Window
 {
     private readonly TextBox _playlistNameTextBox;
     private readonly Button _songRemoveButton;
+    private readonly Button _createPlaylistButton;
     private readonly ListBox _playlistBox;
     private readonly List<SongData> _songs = [];
     
@@ -30,24 +31,27 @@ public partial class PlaylistCreateWindow : Window
         InitializeComponent();
         Logger.Info("PlaylistCreateWindow opened");
         _playlistNameTextBox = this.FindControl<TextBox>("PlaylistNameTextBlock")!;
-        
         _playlistBox = this.FindControl<ListBox>("PlaylistListBox")!;
         _songRemoveButton = this.FindControl<Button>("RemoveButton")!;
+        _createPlaylistButton = this.FindControl<Button>("CreatePlaylistButton")!;
     }
 
-    private void RemoveButton_OnClick(object? sender, RoutedEventArgs e) => _playlistBox.Items.Remove(_playlistBox.SelectedItem);
-    
+    private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _playlistBox.Items.Remove(_playlistBox.SelectedItem);
+        if (_playlistBox.Items.Count == 0) _createPlaylistButton.IsEnabled = false;
+    }
 
     private void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
     {
         try
         {
-            Logger.Debug($"Songs: {_songs.Count} + {_songs.ToArray()} \n Info: {_playlistNameTextBox.Text!}");
             var newPlaylist = new Playlist
             {
                 Name = _playlistNameTextBox.Text ?? "New Playlist",
-                Songs = _songs!,
+                Songs = _songs
             };
+            newPlaylist.SaveToJsonFile();
         }
         catch (Exception ex)
         {
@@ -76,10 +80,11 @@ public partial class PlaylistCreateWindow : Window
             }
 
             _songRemoveButton.IsEnabled = true;
+            _createPlaylistButton.IsEnabled = true; 
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-           Logger.Error("Failed to open audio file" + exception); 
+           Logger.Error($"Failed to open audio file: {ex}"); 
         }
     }
 }
