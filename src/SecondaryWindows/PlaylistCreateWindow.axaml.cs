@@ -76,7 +76,11 @@ public partial class PlaylistCreateWindow : Window
             {
                 var name = file.Name;
                 _playlistBox.Items.Add(name);
-                _songs.Add(new Song(name, file.Path.ToString()));
+                _songs.Add(new Song
+                {
+                    Title = name,
+                    FilePath = file.Path.AbsolutePath
+                });
             }
 
             _songRemoveButton.IsEnabled = true;

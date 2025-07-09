@@ -119,9 +119,14 @@ public partial class MainWindow : Window
             {
                 var filePath = files[0].Path.LocalPath;
                 var songTitle = System.IO.Path.GetFileNameWithoutExtension(filePath);
-                var songData = new Song(songTitle, filePath);
+                var newSong = new Song
+                {
+                    Title = songTitle,
+                    FilePath = filePath,
+                };
+                
                 if (_playlist.Name == null) return;
-                _playlist.AddSong(songData);
+                _playlist.AddSong(newSong);
                 UpdatePlaylistBox();
                 Logger.Info($"Added song {songTitle} to playlist {_playlist.Name}");
             }

@@ -86,7 +86,11 @@
 
             <MenuItem Header="_Playlist">
                 <MenuItem Header="_Play" />
-                <MenuItem Header="_Paste" />
+                <MenuItem Header="_Pause" />
+                <MenuItem Header="_Stop" />
+                <MenuItem Header="_Create" />
+                <MenuItem Header="_Change exiting..." />
+                <MenuItem Header="_See all playlists..." />
             </MenuItem>
         </Menu>
         
