@@ -5,7 +5,6 @@ using Avalonia.Platform.Storage;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using static Avalonix.Program;
 using System.Timers;
 using Avalonia.Threading;
@@ -18,9 +17,10 @@ namespace Avalonix;
 public partial class MainWindow : Window
 {
     private readonly string? _currentPlaylistName = null!;
-    public required Timer? PlaybackTimer;
-    private readonly TextBlock? _playbackTimeTextBlock;
-    private readonly Button? _forwardButton;
+    public required Timer PlaybackTimer;
+    private readonly TextBlock _playbackTimeTextBlock = null!;
+    private readonly Button _forwardButton = null!;
+    private readonly ListBox _playlistSongsListBox = null!;
 
     private readonly string[] _supportedAudioFormats = [
         "*.mp3", "*.wav", "*.flac", "*.opus", 
@@ -40,17 +40,17 @@ public partial class MainWindow : Window
         
         try
         {
-            _playbackTimeTextBlock = this.FindControl<TextBlock>("TimeSong");
-            _forwardButton = this.FindControl<Button>("ForwardButton");
+            _playbackTimeTextBlock = this.FindControl<TextBlock>("TimeSong")!;
+            _forwardButton = this.FindControl<Button>("ForwardButton")!;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-           Logger.Fatal(e.Message);
+           Logger.Fatal($"Error while opening playback time: {ex}");
            return;
         }
         
-        var versionLabel = this.FindControl<Label>("Version");
-        versionLabel!.Content = IsUpdateAvailable() ? $"v{LocalVersion}, new version available {OnlineVersion}" : $"v{LocalVersion}";
+        this.FindControl<Label>("Version")!.Content 
+            = IsUpdateAvailable() ? $"v{LocalVersion}, new version available {OnlineVersion}" : $"v{LocalVersion}";
         InitializePlaybackTimer();
         UpdatePlaylistBox();
     }
@@ -69,7 +69,6 @@ public partial class MainWindow : Window
             if (MediaPlayer.State != PlaybackState.Playing) return;
             var current = MediaPlayer.PlaybackTime;
             var total = MediaPlayer.TotalMusicTime;
-            Debug.Assert(_playbackTimeTextBlock != null, nameof(_playbackTimeTextBlock) + " != null");
             _playbackTimeTextBlock.Text = $@"{current:mm\:ss} / {total:mm\:ss}";
         });
     }
@@ -77,13 +76,13 @@ public partial class MainWindow : Window
     private void UpdatePlaylistBox()
     {
         if (_currentPlaylistName == null) return;
-        PlaylistBox.Items.Clear();
+        _playlistSongsListBox.Items.Clear();
         try
         {
             var songNames = PlaylistsManager.SongsNamesInPlaylist(_currentPlaylistName!);
             foreach (var song in songNames)
             {
-                PlaylistBox.Items.Add(new ListBoxItem { Content = song });
+                _playlistSongsListBox.Items.Add(new ListBoxItem { Content = song });
             }
             Logger.Info($"Loaded songs for playlist: {_currentPlaylistName}");
         }
@@ -131,7 +130,7 @@ public partial class MainWindow : Window
     private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Logger.Info("Remove button clicked");
-        if (PlaylistBox.SelectedItem is not ListBoxItem selectedItem) return;
+        if (_playlistSongsListBox.SelectedItem is not ListBoxItem selectedItem) return;
         try
         {
             var songTitle = selectedItem.Content?.ToString();
@@ -161,7 +160,7 @@ public partial class MainWindow : Window
             }
             else
             {
-                if (PlaylistBox.SelectedItem is ListBoxItem selectedItem)
+                if (_playlistSongsListBox.SelectedItem is ListBoxItem selectedItem)
                 {
                     if (selectedItem.Content == null) return;
                     var songTitle = selectedItem.Content.ToString();
@@ -196,13 +195,13 @@ public partial class MainWindow : Window
         Logger.Info("Previous button clicked");
         try
         {
-            if (PlaylistBox.SelectedIndex <= 0) return;
-            PlaylistBox.SelectedIndex--;
+            if (_playlistSongsListBox.SelectedIndex <= 0) return;
+            _playlistSongsListBox.SelectedIndex--;
             PlaySelectedSong();
         }
         catch (Exception ex)
         {
-            Logger.Error($"Previous song error: {ex.Message}");
+            Logger.Error($"Previous song error: {ex}");
         }
     }
 
@@ -211,13 +210,13 @@ public partial class MainWindow : Window
         Logger.Info("Next button clicked");
         try
         {
-            if (PlaylistBox.SelectedIndex >= PlaylistBox.Items.Count - 1) return;
-            PlaylistBox.SelectedIndex++;
+            if (_playlistSongsListBox.SelectedIndex >= _playlistSongsListBox.Items.Count - 1) return;
+            _playlistSongsListBox.SelectedIndex++;
             PlaySelectedSong();
         }
         catch (Exception ex)
         {
-            Logger.Error($"Next song error: {ex.Message}");
+            Logger.Error($"Next song error: {ex}");
         }
     }
 
@@ -232,13 +231,13 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            Logger.Error($"Volume change error: {ex.Message}");
+            Logger.Error($"Volume change error: {ex}");
         }
     }
 
     private void PlaySelectedSong()
     {
-        if (PlaylistBox.SelectedItem is not ListBoxItem selectedItem) return;
+        if (_playlistSongsListBox.SelectedItem is not ListBoxItem selectedItem) return;
         try
         {
             var songTitle = selectedItem.Content?.ToString();
@@ -254,7 +253,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            Logger.Error($"Play song error: {ex.Message}");
+            Logger.Error($"Play song error: {ex}");
         }
     }
 
@@ -262,8 +261,8 @@ public partial class MainWindow : Window
     {
         try
         {
-            var plalistCreateWindow = new SecondaryWindows.PlaylistCreateWindow();
-            await plalistCreateWindow.ShowDialog(this);
+            var playlistCreateWindow = new SecondaryWindows.PlaylistCreateWindow();
+            await playlistCreateWindow.ShowDialog(this);
         }
         catch (Exception ex)
         {
