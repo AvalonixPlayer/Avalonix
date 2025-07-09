@@ -12,9 +12,10 @@ public partial class PlaylistChangeWindow : Window
 {
     private readonly TextBox _playlistNameTextBox;
     private readonly Button _songRemoveButton;
-    private readonly Button _createPlaylistButton;
+    private readonly Button _confirmPlaylistChange;
     private readonly ListBox _playlistBox;
     private readonly List<Song> _songs = [];
+    private Playlist _selectedPlaylist;
     
     private readonly string[] _supportedAudioFormats = [
         "*.mp3", "*.wav", "*.flac", "*.opus", 
@@ -30,17 +31,22 @@ public partial class PlaylistChangeWindow : Window
     public PlaylistChangeWindow()
     {
         InitializeComponent();
-        Logger.Info("PlaylistCreateWindow opened");
+        Logger.Info("PlaylistChangeWindow opened");
         _playlistNameTextBox = this.FindControl<TextBox>("PlaylistNameTextBlock")!;
         _playlistBox = this.FindControl<ListBox>("PlaylistListBox")!;
         _songRemoveButton = this.FindControl<Button>("RemoveButton")!;
-        _createPlaylistButton = this.FindControl<Button>("CreatePlaylistButton")!;
+        _confirmPlaylistChange = this.FindControl<Button>("CreatePlaylistButton")!;
+        
+        foreach (var song in _selectedPlaylist.Songs)
+        {
+            _playlistBox.Items.Add(song);
+        }
     }
 
     private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
         _playlistBox.Items.Remove(_playlistBox.SelectedItem);
-        if (_playlistBox.Items.Count == 0) _createPlaylistButton.IsEnabled = false;
+        if (_playlistBox.Items.Count == 0) _confirmPlaylistChange.IsEnabled = false;
     }
 
     private void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
@@ -81,7 +87,7 @@ public partial class PlaylistChangeWindow : Window
             }
 
             _songRemoveButton.IsEnabled = true;
-            _createPlaylistButton.IsEnabled = true; 
+            _confirmPlaylistChange.IsEnabled = true; 
         }
         catch (Exception ex)
         {

@@ -43,7 +43,7 @@
 
     <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="10">
         <StackPanel Grid.Row="0">
-            <Label Grid.Row="0">Playlist Name</Label>
+            <Label Grid.Row="0">new Playlist Name</Label>
                     <TextBox Grid.Row="0"
                              Watermark=" Name"
                              Margin="0,0,0,5"
