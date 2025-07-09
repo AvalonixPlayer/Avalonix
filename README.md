@@ -18,7 +18,7 @@
 
 ## **About**
 
-**Avalonix** is a _**simple playlists player**_
+**Avalonix** is a _**simple playlists player**_ 
 
 ## **Features**
 
@@ -40,11 +40,15 @@
 
 ### Clone
 
-`git clone https://github.com/Nokskiy/Avalonix.git`
+```Bash
+git clone https://github.com/Nokskiy/Avalonix.git
+```
 
 ### Build
-
-`dotnet build`
+```Bash
+cd Avalonix/src
+dotnet build
+```
 
 ## **Contibuting**
 
