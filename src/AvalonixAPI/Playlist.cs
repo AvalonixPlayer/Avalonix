@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using NeoSimpleLogger;
 using Newtonsoft.Json;
 
 namespace Avalonix.AvalonixAPI;
@@ -16,7 +17,7 @@ public class Playlist
     private static CancellationTokenSource _playlistCts = new CancellationTokenSource();
     private static CancellationToken _playlistCtsToken = _playlistCts.Token;
 
-    public Playlist(string name, List<SongData> songs, int? year = -1, string? performer = null!, string? album = null!)
+    public Playlist(string name, List<SongData> songs)
     {
         Name = name;
         Songs = songs;
@@ -59,13 +60,24 @@ public class Playlist
     private void SaveToJsonFile()
     {
         var path = Path.Combine(PlaylistsDirectory, $"{Name}.json");
-        new JsonSerializer { Formatting = Formatting.Indented }.Serialize(new JsonTextWriter(new StreamWriter(path)), this);
+        new JsonSerializer { Formatting = Formatting.Indented }
+            .Serialize(new JsonTextWriter(new StreamWriter(path)), this);
     }
 
     public static Playlist Load(string playlistName)
     {
         var path = Path.Combine(PlaylistsDirectory, $"{playlistName}.json");
-        return JsonConvert.DeserializeObject<Playlist>(File.ReadAllText(path))!;
+        var playlist = new Playlist();
+        try
+        {
+            playlist = JsonConvert.DeserializeObject<Playlist>(File.ReadAllText(path))!;
+        }
+        catch (Exception e)
+        { 
+            Program.Logger.Error("Error loading playlist: {e}");
+        }
+
+        return playlist;
     }
 
     public void Play()
@@ -133,4 +145,10 @@ public class Playlist
     public static string?[] GetAllPlaylistNames() => Directory.GetFiles(PlaylistsDirectory)
             .Select(Path.GetFileNameWithoutExtension)
             .ToArray();
+
+    public void ChangeName(string newName)
+    {
+        Name = newName;
+        SaveToJsonFile();
+    }
 }

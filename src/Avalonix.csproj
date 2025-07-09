@@ -30,4 +30,11 @@
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.0" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SecondaryWindows\PlaylistCreateWindow.axaml.cs">
+      <DependentUpon>PlaylistCreateWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

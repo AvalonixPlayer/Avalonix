@@ -9,7 +9,7 @@
         TransparencyLevelHint="AcrylicBlur"
         WindowStartupLocation="CenterScreen"
         Title="Avalonix - Create Playlist"
-        x:Class="Avalonix.PlaylistCreateWindow"
+        x:Class="Avalonix.SecondaryWindows.PlaylistCreateWindow"
         FontFamily="Fira Mono">
 
     <Window.Styles>

@@ -5,6 +5,7 @@ using Avalonia.Platform.Storage;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using static Avalonix.Program;
 using System.Timers;
 using Avalonia.Threading;
@@ -16,7 +17,7 @@ namespace Avalonix;
 
 public partial class MainWindow : Window
 {
-    private string? _currentPlaylistName;
+    private readonly string? _currentPlaylistName = null!;
     public required Timer? PlaybackTimer;
     private readonly TextBlock? _playbackTimeTextBlock;
     private readonly Button? _forwardButton;
@@ -111,6 +112,7 @@ public partial class MainWindow : Window
                 var filePath = files[0].Path.LocalPath;
                 var songTitle = System.IO.Path.GetFileNameWithoutExtension(filePath);
                 var songData = new SongData(songTitle, filePath);
+                if (_currentPlaylistName == null) return;
                 PlaylistsManager.AddSongToPlaylist(_currentPlaylistName, songData);
                 UpdatePlaylistBox();
                 Logger.Info($"Added song {songTitle} to playlist {_currentPlaylistName}");
@@ -224,7 +226,7 @@ public partial class MainWindow : Window
         if (e.Property.Name != "Value" || sender is not Slider { Name: null } slider) return;
         try
         {
-            float volume = (float)(slider.Value / 100.0);
+            var volume = (float)(slider.Value / 100.0);
             MediaPlayer.ChangeVolume(volume);
             Logger.Debug($"Volume changed to {volume}");
         }
@@ -260,12 +262,12 @@ public partial class MainWindow : Window
     {
         try
         {
-            var window = new PlaylistCreateWindow();
-            await window.ShowDialog(this);
+            var plalistCreateWindow = new SecondaryWindows.PlaylistCreateWindow();
+            await plalistCreateWindow.ShowDialog(this);
         }
         catch (Exception ex)
         {
-            Logger.Error($"Error with opening create playlist dialog: {ex.Message} ");
+            Logger.Error($"Error with opening create playlist dialog: {ex} ");
         }
     }
 }

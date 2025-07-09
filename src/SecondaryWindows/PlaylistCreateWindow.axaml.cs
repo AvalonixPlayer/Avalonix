@@ -6,12 +6,11 @@ using Avalonia.Platform.Storage;
 using Avalonix.AvalonixAPI;
 using static Avalonix.Program;
 
-namespace Avalonix;
+namespace Avalonix.SecondaryWindows;
 
 public partial class PlaylistCreateWindow : Window
 {
     private readonly TextBox _playlistNameTextBox;
-    private readonly Dictionary<string, TextBox> _optionalMedataTextBoxes;
     private readonly Button _songRemoveButton;
     private readonly ListBox _playlistBox;
     private readonly List<SongData> _songs = [];
@@ -34,9 +33,6 @@ public partial class PlaylistCreateWindow : Window
         
         _playlistBox = this.FindControl<ListBox>("PlaylistListBox")!;
         _songRemoveButton = this.FindControl<Button>("RemoveButton")!;
-        _optionalMedataTextBoxes["Album"] = this.FindControl<TextBox>("AlbumTextBox")!;
-        _optionalMedataTextBoxes["Performer"] = this.FindControl<TextBox>("PerformerTextBox")!;
-        _optionalMedataTextBoxes["Year"] = this.FindControl<TextBox>("YearTextBox")!;
     }
 
     private void RemoveButton_OnClick(object? sender, RoutedEventArgs e) => _playlistBox.Items.Remove(_playlistBox.SelectedItem);
@@ -46,25 +42,16 @@ public partial class PlaylistCreateWindow : Window
     {
         try
         {
-
-            PlaylistsManager.CreateNewPlaylist(new PlaylistData
-            {
-                Name = _playlistNameTextBox.Text ?? "New Playlist",
-                Album = _optionalMedataTextBoxes["Album"].Text,
-                Performer = _optionalMedataTextBoxes["Performer"].Text,
-                Songs = _songs,
-                Year = Convert.ToInt32(_optionalMedataTextBoxes["Year"].Text), 
-            });
-
+            Logger.Debug($"Songs: {_songs.Count} + {_songs.ToArray()} \n Info: {_playlistNameTextBox.Text!}");
             var newPlaylist = new Playlist
             {
                 Name = _playlistNameTextBox.Text ?? "New Playlist",
-                Songs = _songs,
+                Songs = _songs!,
             };
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            Console.WriteLine(exception);
+            Logger.Error($"Error with creating playlist: {ex}");
             throw;
         }
     }
