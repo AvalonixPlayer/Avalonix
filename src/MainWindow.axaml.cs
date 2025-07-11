@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Linq;
 using static Avalonix.Program;
 using System.Timers;
-using System.Windows.Input;
 using Avalonia.Threading;
 using Avalonix.AvalonixAPI;
 using NAudio.Wave;
@@ -17,8 +16,8 @@ namespace Avalonix;
 
 public partial class MainWindow : Window
 {
-    private Playlist _playlist;
-    public required Timer PlaybackTimer;
+    private Playlist? _playlist;
+    public Timer PlaybackTimer;
     private readonly TextBlock _playbackTimeTextBlock = null!;
     private readonly Button _forwardButton = null!;
     private readonly ListBox _playlistSongsListBox = null!;
@@ -41,8 +40,8 @@ public partial class MainWindow : Window
         
         try
         {
-            _playbackTimeTextBlock = this.FindControl<TextBlock>("TimeSong")!;
-            _forwardButton = this.FindControl<Button>("ForwardButton")!;
+            //_playbackTimeTextBlock = this.FindControl<TextBlock>("TimeSong")!;
+            //_forwardButton = this.FindControl<Button>("ForwardButton")!;
         }
         catch (Exception ex)
         {
@@ -58,7 +57,7 @@ public partial class MainWindow : Window
         UpdatePlaylistBox();
     }
 
-    private void ChangePlaylist(Playlist playlist)
+    private void ReselectPlaylist(Playlist? playlist)
     {
         _playlist.Stop();
         _playlist = playlist;  
@@ -89,10 +88,9 @@ public partial class MainWindow : Window
         _playlistSongsListBox.Items.Clear();
         try
         {
-            var songNames = _playlist.Songs;
-            foreach (var song in songNames)
+            foreach (var song in _playlist.Songs)
             {
-                _playlistSongsListBox.Items.Add(new ListBoxItem { Content = song });
+                _playlistSongsListBox.Items.Add(new ListBoxItem { Content = song.Title });
             }
             Logger.Info($"Loaded songs for playlist: {_playlist.Name}");
         }
@@ -233,7 +231,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void AvaloniaObject_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    private void SoundVolumeSlider_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property.Name != "Value" || sender is not Slider { Name: null } slider) return;
         try
@@ -287,7 +285,29 @@ public partial class MainWindow : Window
     {
         try
         {
-            var window = new SecondaryWindows.PlaylistChangeWindow();
+            if (_playlist.Name == null)  return;
+            var window = new SecondaryWindows.PlaylistChangeWindow
+            {
+                _selectedPlaylist = _playlist
+            };
+            await window.ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Error with opening change playlist dialog: {ex}");
+        }
+    }
+
+    private void SeeAllPlaylistMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async void PlaylistManagerMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var window = new SecondaryWindows.PlaylistManagerWindow();
             await window.ShowDialog(this);
         }
         catch (Exception ex)

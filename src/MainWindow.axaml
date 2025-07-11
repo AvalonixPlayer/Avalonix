@@ -90,18 +90,25 @@
                 <MenuItem Header="_Stop" />
                 <MenuItem Header="_Create" Click="PlaylistCreate_OnClick" />
                 <MenuItem Header="_Change exiting..." Click="ChangeExitingPlaylist_OnClick" />
-                <MenuItem Header="_See all playlists..." />
+                <MenuItem Header="_See all playlists..." Click="SeeAllPlaylistMenuItem_OnClick" />
+                <MenuItem Header="Open Playlist Manager" Click="PlaylistManagerMenuItem_OnClick" />
             </MenuItem>
         </Menu>
         
-        <Grid ColumnDefinitions="*,100,30" >
-            <Grid Grid.Column="0" RowDefinitions="*,*">
-                <Border Grid.Row="0" 
+        <Grid RowDefinitions="*,100,30" >
+            <Grid Grid.Row="0" ColumnDefinitions="*,*">
+                <Border Grid.Column="0" 
                         CornerRadius="17" 
                         Background="#50505050"></Border>
-                <ListBox Grid.Row="1"
+                <ListBox Grid.Column="1"
                          Name="PlaylistListBox"></ListBox>
             </Grid>     
+            <Grid  Grid.Row="1">
+                
+            </Grid>
+            <Grid Grid.Row="2">
+                <Label Name="Version"/>
+            </Grid>
         </Grid> 
     </DockPanel>
 </Window>

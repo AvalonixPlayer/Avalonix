@@ -15,7 +15,7 @@ public partial class PlaylistChangeWindow : Window
     private readonly Button _confirmPlaylistChange;
     private readonly ListBox _playlistBox;
     private readonly List<Song> _songs = [];
-    private Playlist _selectedPlaylist;
+    public required Playlist _selectedPlaylist;
     
     private readonly string[] _supportedAudioFormats = [
         "*.mp3", "*.wav", "*.flac", "*.opus", 
