@@ -78,18 +78,18 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="12">
             <MenuItem Header="_File">
-                <MenuItem Header="_New playlist"/>
-                <MenuItem Header="_Open playlist..."/>
+                <MenuItem Header="_New playlist" Click="PlaylistCreate_OnClick"/>
+                <MenuItem Header="_Open playlist..." />
                 <Separator/>
-                <MenuItem Header="_Exit" />
+                <MenuItem Header="_Exit" Click="ExitButtonInDockMenu_OnClick" />
             </MenuItem>
 
             <MenuItem Header="_Playlist">
                 <MenuItem Header="_Play" />
                 <MenuItem Header="_Pause" />
                 <MenuItem Header="_Stop" />
-                <MenuItem Header="_Create" />
-                <MenuItem Header="_Change exiting..." />
+                <MenuItem Header="_Create" Click="PlaylistCreate_OnClick" />
+                <MenuItem Header="_Change exiting..." Click="ChangeExitingPlaylist_OnClick" />
                 <MenuItem Header="_See all playlists..." />
             </MenuItem>
         </Menu>

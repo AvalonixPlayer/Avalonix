@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using static Avalonix.Program;
 using System.Timers;
+using System.Windows.Input;
 using Avalonia.Threading;
 using Avalonix.AvalonixAPI;
 using NAudio.Wave;
@@ -271,12 +272,27 @@ public partial class MainWindow : Window
     {
         try
         {
-            var playlistCreateWindow = new SecondaryWindows.PlaylistCreateWindow();
-            await playlistCreateWindow.ShowDialog(this);
+            var window = new SecondaryWindows.PlaylistCreateWindow();
+            await window.ShowDialog(this);
         }
         catch (Exception ex)
         {
             Logger.Error($"Error with opening create playlist dialog: {ex} ");
+        }
+    }
+
+    private void ExitButtonInDockMenu_OnClick(object? sender, RoutedEventArgs e) => Environment.Exit(0);
+
+    private async void ChangeExitingPlaylist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var window = new SecondaryWindows.PlaylistChangeWindow();
+            await window.ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Error with opening change playlist dialog: {ex}");
         }
     }
 }
