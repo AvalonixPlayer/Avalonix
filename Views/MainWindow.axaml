@@ -13,8 +13,8 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
     
-    <Grid>
-        <Button Content="Click"></Button>     
+    <Grid RowDefinitions="20,*,*" ColumnDefinitions="*,*,*">
+        <ListBox  Grid.Column="1" Grid.Row="1"></ListBox>
     </Grid>
 
 </Window>
