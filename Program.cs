@@ -15,11 +15,11 @@ internal static class Program
         var playlist = new PlaylistData("test_playlist");
         
         DiskManager.CreatePlaylist(playlist);
-        playlist.AddTrack(new Track(@"C:\Accept\Accept - Teutonic Terror.mp3").TrackData);
+        playlist.AddTrack(new Track(@"F:\Плейлисты\Accept\Accept - Fast As A Shark.mp3").TrackData);
         */
         
         /* test Playlist loading
-        DiskManager.GetPlaylistData("test_playlists");
+        Console.WriteLine(DiskManager.GetPlaylistData("test_playlist").Tracks[0].Lyric);
         */
         
         BuildAvaloniaApp()
