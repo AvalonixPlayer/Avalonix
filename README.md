@@ -5,9 +5,6 @@
 
 ---
 
-> [!IMPORTANT]
-> The project will be ready for release soon
-
 ## Content
 
 - [About](#about)
