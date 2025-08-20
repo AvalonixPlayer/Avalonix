@@ -30,40 +30,40 @@ public static class DiskManager
     }
 
     public static string[] PlaylistsPaths => Directory.GetFiles(PlaylistsPath);
-    
+
     public static PlaylistData GetPlaylistData(string name)
     {
         string path = Path.Combine(PlaylistsPath, name);
         string json = File.ReadAllText(path);
-        
+
         PlaylistData playlistData = JsonConvert.DeserializeObject<PlaylistData>(json);
         return playlistData;
     }
-    
+
     public static void SavePlaylistData(PlaylistData playlistData)
     {
         string path = Path.Combine(PlaylistsPath, playlistData.Name);
-        
+
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         };
-        
-        string json = JsonConvert.SerializeObject(playlistData,settings);
+
+        string json = JsonConvert.SerializeObject(playlistData, settings);
 
         File.WriteAllText(path, json);
     }
-    
+
     public static void CreatePlaylist(PlaylistData playlistData)
     {
         string path = Path.Combine(PlaylistsPath, playlistData.Name);
         File.Create(path).Close();
         SavePlaylistData(playlistData);
     }
-    
+
     public static void RemovePlaylist(PlaylistData playlistData)
     {
-        string path = Path.Combine(PlaylistsPath,playlistData.Name);
+        string path = Path.Combine(PlaylistsPath, playlistData.Name);
         File.Delete(path);
     }
 }
