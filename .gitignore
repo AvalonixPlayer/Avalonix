@@ -1,6 +1,6 @@
-src/bin
-src/obj
-src/.idea
+bin
+obj
+.idea
 *.idea*
 publish
 Avalonix.sln
