@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using NeoSimpleLogger;
-using AvalonixAPI;
+using Avalonix.API;
 
 namespace Avalonix;
 
@@ -14,7 +14,7 @@ public static class Program
         [STAThread]
         public static async Task Main(string[] args)
         {
-                Logger.Info(".avalonix path - " + DiskManager.SettingsPath);
+                Logger.Info(".avalonix path - " + DiskManager.AvalonixFolderPath);
                 await UpdateVersion.CheckUpdates();
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
