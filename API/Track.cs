@@ -10,7 +10,7 @@ public struct TrackData(
     string? album,
     string? artist,
     string? genre,
-    int? year,
+    short? year,
     string? lyric,
     string? duration)
 {
@@ -19,7 +19,7 @@ public struct TrackData(
     public string? Album => album;
     public string? Artist => artist;
     public string? Genre => genre;
-    public int? Year => year;
+    public short? Year => year;
     public string? Lyric => lyric;
     public string? Duration => duration;
 }
@@ -34,7 +34,7 @@ public class Track(string path)
         string? album;
         string? artist;
         string? genre;
-        int? year;
+        short? year;
         string? lyric;
         string? duration;
         using (var track = File.Create(path))
@@ -43,7 +43,7 @@ public class Track(string path)
             album = track.Tag.Album;
             artist = track.Tag.FirstPerformer;
             genre = track.Tag.FirstGenre;
-            year = (int)track.Tag.Year;
+            year = (short)track.Tag.Year;
             lyric = track.Tag.Lyrics;
             duration = track.Tag.Length;
         }
