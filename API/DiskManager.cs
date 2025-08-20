@@ -109,8 +109,14 @@ public static class DiskManager
     public static void SaveSettings(Settings settings)
     {
         string path = Path.Combine(PlaylistsPath, SettingsPath);
+
+        var opt = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            IncludeFields = true
+        };
         
-        string json = JsonSerializer.Serialize(settings);
+        string json = JsonSerializer.Serialize(settings,opt);
 
         File.WriteAllText(path, json);
     }
