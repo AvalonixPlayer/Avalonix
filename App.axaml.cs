@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using Avalonix.Services;
 using Avalonix.ViewModels;
 using Avalonix.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ public class App : Application
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<MainWindow>();
             services.AddSingleton<ILogger, Logger>();
+            services.AddSingleton<IWindowManager, WindowManager>();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();

@@ -13,10 +13,4 @@ public partial class MainWindow  : Window
         InitializeComponent();
         _logger.LogInformation("MainWindow initialized");
     }
-
-    private void ExitApp_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _logger.LogInformation("Exiting app");
-        Close();
-    }
 }
