@@ -13,9 +13,35 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
     
-    <Grid RowDefinitions="20,*,*" ColumnDefinitions="*,*,*">
+    <Grid RowDefinitions="100,*,*" ColumnDefinitions="*,*,*">
+        <DockPanel  Grid.Row="0" Grid.Column="0">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header="New Playlist"
+                              InputGesture="Ctrl+N"/>
+                    <MenuItem Header="Load Playlist"
+                              InputGesture="Ctrl+L"/>/>
+                    <Separator/>
+                    <MenuItem Header="Exit"
+                              InputGesture="Ctrl+Q"/>
+                </MenuItem>
+            
+                <MenuItem Header="Edit">
+                    <MenuItem Header="Change Playlist"/>
+                </MenuItem>
+            
+                <MenuItem Header="Appearance"/>
+                <MenuItem Header="Help"
+                          InputGesture="F1"
+                          Command="{Binding HelpCommand}"/>
+            </Menu>
+        
+            <TextBlock Text="Основное содержимое" 
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </DockPanel>
         <ListBox BorderThickness="2" Background="#1f1e1e" CornerRadius="5" Name="SongsListBox" Grid.Column="1" Grid.Row="1">
-            <ListBoxItem Content="Cowboys From Hell"></ListBoxItem>
+            
         </ListBox>
     </Grid>
 

@@ -2,14 +2,7 @@
 
 namespace Avalonix.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public class MainWindowViewModel(ILogger logger) : ViewModelBase
 {
-    public MainWindowViewModel(ILogger logger)
-    {
-    }
-
-    public MainWindowViewModel()
-    {
-        
-    }
+    public void HelpCommand() => logger.LogDebug("Help");
 }
