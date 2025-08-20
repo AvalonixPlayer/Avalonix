@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -7,6 +6,7 @@ namespace Avalonix.API;
 
 public static class DiskManager
 {
+    public static readonly string Extension = ".avalonix"; 
     public static string AvalonixFolderPath
     {
         get
@@ -33,7 +33,7 @@ public static class DiskManager
 
     public static PlaylistData GetPlaylistData(string name)
     {
-        string path = Path.Combine(PlaylistsPath, name);
+        string path = Path.Combine(PlaylistsPath, name + Extension);
         string json = File.ReadAllText(path);
         
         var playlistData = JsonConvert.DeserializeObject<PlaylistData>(json);
@@ -42,11 +42,11 @@ public static class DiskManager
 
     public static void SavePlaylistData(PlaylistData playlistData)
     {
-        string path = Path.Combine(PlaylistsPath, playlistData.Name);
+        string path = Path.Combine(PlaylistsPath, playlistData.Name + Extension);
 
         var settings = new JsonSerializerSettings
         {
-            Formatting = Formatting.Indented
+            Formatting = Formatting.Indented,
         };
 
         string json = JsonConvert.SerializeObject(playlistData, settings);
@@ -56,14 +56,14 @@ public static class DiskManager
 
     public static void CreatePlaylist(PlaylistData playlistData)
     {
-        string path = Path.Combine(PlaylistsPath, playlistData.Name);
+        string path = Path.Combine(PlaylistsPath, playlistData.Name + Extension);
         File.Create(path).Close();
         SavePlaylistData(playlistData);
     }
 
     public static void RemovePlaylist(PlaylistData playlistData)
     {
-        string path = Path.Combine(PlaylistsPath, playlistData.Name);
+        string path = Path.Combine(PlaylistsPath, playlistData.Name + Extension);
         File.Delete(path);
     }
 }
