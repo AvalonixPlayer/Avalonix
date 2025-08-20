@@ -1,6 +1,15 @@
-﻿namespace Avalonix.ViewModels;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Avalonix.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting = "Welcome to Avalonia!";
+    public MainWindowViewModel(ILogger logger)
+    {
+    }
+
+    public MainWindowViewModel()
+    {
+        
+    }
 }
