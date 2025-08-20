@@ -1,19 +1,27 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Views;
 
-public partial class MainWindow : Window 
+public partial class MainWindow  : Window 
 {
-    public MainWindow(ILogger logger) 
+    private readonly ILogger<MainWindow> _logger;
+    public MainWindow(ILogger<MainWindow> logger)
     {
+        _logger = logger; 
         InitializeComponent();
-        logger.LogInformation("MainWindow initialized");
+        _logger.LogInformation("MainWindow initialized");
         SongsListBox.Items.Add(new ListBoxItem
         {
             Content = "Ls",
             CornerRadius = new CornerRadius(5)
         });
+    }
+
+    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+       _logger.LogInformation("MenuItem clicked"); 
     }
 }

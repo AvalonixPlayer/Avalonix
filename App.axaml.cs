@@ -28,6 +28,7 @@ public class App : Application
             services.AddSingleton<ILogger, Logger>();
         }).ConfigureLogging(log =>
         {
+            log.ClearProviders();
             log.AddProvider(new LoggerProvider());
         });
         

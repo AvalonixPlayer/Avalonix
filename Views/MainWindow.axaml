@@ -27,12 +27,11 @@
                 </MenuItem>
             
                 <MenuItem Header="Edit">
-                    <MenuItem Header="Change Playlist"/>
+                    <MenuItem Header="Change Playlist" Click="MenuItem_OnClick"/>
                 </MenuItem>
             
                 <MenuItem Header="Appearance"/>
                 <MenuItem Header="Help"
-                          InputGesture="F1"
                           Command="{Binding HelpCommand}"/>
             </Menu>
         
