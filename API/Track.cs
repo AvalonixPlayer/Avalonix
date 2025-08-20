@@ -37,6 +37,7 @@ public class Track(string path)
         short? year;
         string? lyric;
         string? duration;
+        
         using (var track = File.Create(path))
         {
             trackName = track.Tag.Title;
