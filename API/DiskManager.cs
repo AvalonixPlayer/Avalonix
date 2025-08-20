@@ -22,7 +22,7 @@ public static class DiskManager
     {
         get
         {
-            string path = Path.Combine(AvalonixFolderPath, ".playlists");
+            var path = Path.Combine(AvalonixFolderPath, ".playlists");
             if (!Path.Exists(path))
                 Directory.CreateDirectory(path);
             return path;
@@ -36,7 +36,7 @@ public static class DiskManager
         string path = Path.Combine(PlaylistsPath, name);
         string json = File.ReadAllText(path);
         
-        PlaylistData playlistData = JsonConvert.DeserializeObject<PlaylistData>(json);
+        var playlistData = JsonConvert.DeserializeObject<PlaylistData>(json);
         return playlistData;
     }
 
@@ -44,7 +44,7 @@ public static class DiskManager
     {
         string path = Path.Combine(PlaylistsPath, playlistData.Name);
 
-        JsonSerializerSettings settings = new JsonSerializerSettings
+        var settings = new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         };
