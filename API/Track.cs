@@ -1,11 +1,13 @@
 using System;
-using TagLib;
+using System.IO;
+using Avalonia.Media;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using File = TagLib.File;
 
 namespace Avalonix.API;
 
-[Serializable]
-public struct TrackData(
-    string trackPath,
+public struct TrackMetadata(
     string trackName,
     string? album,
     string? artist,
@@ -14,7 +16,6 @@ public struct TrackData(
     string? lyric,
     string? duration)
 {
-    public string TrackPath => trackPath;
     public string TrackName => trackName;
     public string? Album => album;
     public string? Artist => artist;
@@ -24,11 +25,19 @@ public struct TrackData(
     public string? Duration => duration;
 }
 
+public struct TrackData(
+    string trackPath)
+{
+    public string TrackPath => trackPath;
+}
+
 public class Track(string path)
 {
+    [JsonIgnore] public TrackMetadata TrackMetadata => GetTrackMetaData();
+    public string Path => path;
     public TrackData TrackData => GetTrackData();
 
-    public TrackData GetTrackData()
+    public TrackMetadata GetTrackMetaData()
     {
         string? trackName;
         string? album;
@@ -38,7 +47,7 @@ public class Track(string path)
         string? lyric;
         string? duration;
         
-        using (var track = File.Create(path))
+        using (var track = File.Create(TrackData.TrackPath))
         {
             trackName = track.Tag.Title;
             album = track.Tag.Album;
@@ -49,6 +58,12 @@ public class Track(string path)
             duration = track.Tag.Length;
         }
 
-        return new TrackData(path, trackName, album, artist, genre, year,lyric,duration);
+        return new TrackMetadata(trackName, album, artist, genre, year,lyric,duration);
     }
+
+    public TrackData GetTrackData()
+    {
+        return new TrackData(Path);
+    }
+    
 }

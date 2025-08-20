@@ -1,22 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Avalonix.API;
 
-[Serializable]
+
 public struct PlaylistData(string name)
 {
     public string Name => name;
-    public List<TrackData> Tracks = [];
+    [JsonInclude] public List<Track> Tracks = [];
 
-    public void AddTrack(TrackData song)
+    public void AddTrack(Track song)
     {
         Tracks.Add(song);
         Save();
     }
 
-    public void RemoveTrack(TrackData song)
+    public void RemoveTrack(TrackMetadata song)
     {
         foreach (var track in Tracks.Where(track => track.Equals(song)).ToList())
             Tracks.Remove(track);

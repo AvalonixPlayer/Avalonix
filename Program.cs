@@ -14,12 +14,15 @@ internal static class Program
         var playlist = new PlaylistData("test_playlist");
 
         DiskManager.CreatePlaylist(playlist);
-        playlist.AddTrack(new Track(@"F:\Плейлисты\Accept\Accept - Fast As A Shark.mp3").TrackData);
+        playlist.AddTrack(new Track(@"F:\Плейлисты\Accept\Accept - Fast As A Shark.mp3"));
         */
+        
 
         /* test Playlist loading
-        Console.WriteLine(DiskManager.GetPlaylistData("test_playlist").Tracks[0].Lyric);
+        Console.WriteLine(DiskManager.GetPlaylistData("test_playlist").Tracks[0].TrackMetadata.Lyric);
+        Console.WriteLine(DiskManager.GetPlaylistData("test_playlist").Tracks[0].TrackData.TrackPath);
         */
+        
         
         /* test Settings create
         var settings = new Settings();
