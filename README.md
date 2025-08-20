@@ -5,9 +5,6 @@
 
 ---
 
-> [!IMPORTANT]
-> The project will be ready for release soon
-
 ## Content
 
 - [About](#about)
@@ -18,7 +15,7 @@
 
 ## **About**
 
-**Avalonix** is a _**simple playlists player**_
+**Avalonix** is a _**simple playlists player**_ 
 
 ## **Features**
 
@@ -31,6 +28,7 @@
 - [**NAudio**](https://github.com/naudio/NAudio?tab=MIT-1-ov-file)
 - [**Newtonsoft.Json**](https://github.com/JamesNK/Newtonsoft.Json?tab=MIT-1-ov-file)
 - [**Avalonia**](https://github.com/AvaloniaUI/Avalonia?tab=MIT-1-ov-file)
+- [**NeoSimpleLogger**](https://github.com/ruzen42/simple-logger)
 
 ## **Building**
 
@@ -39,11 +37,15 @@
 
 ### Clone
 
-`git clone https://github.com/Nokskiy/Avalonix.git`
+```Bash
+git clone https://github.com/Nokskiy/Avalonix.git
+```
 
 ### Build
-
-`dotnet build`
+```Bash
+cd Avalonix/src
+dotnet build
+```
 
 ## **Contibuting**
 
