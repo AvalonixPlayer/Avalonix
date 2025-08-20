@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Microsoft.Extensions.Logging;
 
@@ -9,5 +10,10 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         logger.LogInformation("MainWindow initialized");
+        SongsListBox.Items.Add(new ListBoxItem
+        {
+            Content = "Ls",
+            CornerRadius = new CornerRadius(5)
+        });
     }
 }

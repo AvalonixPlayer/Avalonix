@@ -14,7 +14,9 @@
     </Design.DataContext>
     
     <Grid RowDefinitions="20,*,*" ColumnDefinitions="*,*,*">
-        <ListBox  Grid.Column="1" Grid.Row="1"></ListBox>
+        <ListBox BorderThickness="2" Background="Black" CornerRadius="5" Name="SongsListBox" Grid.Column="1" Grid.Row="1">
+            <ListBoxItem Content="Cowboys From Hell"></ListBoxItem>
+        </ListBox>
     </Grid>
 
 </Window>
