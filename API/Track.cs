@@ -11,9 +11,9 @@ public struct TrackData(
     string? artist,
     string? genre,
     int? year,
-    IPicture? cover,
     string? lyric,
-    string? duration)
+    string? duration,
+    IPicture? cover)
 {
     public string TrackPath => trackPath;
     public string TrackName => trackName;
@@ -21,9 +21,9 @@ public struct TrackData(
     public string? Artist => artist;
     public string? Genre => genre;
     public int? Year => year;
-    public IPicture? Cover => cover;
     public string? Lyric => lyric;
     public string? Duration => duration;
+    public IPicture? Cover => cover;
 }
 
 public class Track(string path)
@@ -47,11 +47,11 @@ public class Track(string path)
             artist = track.Tag.FirstPerformer;
             genre = track.Tag.FirstGenre;
             year = (int)track.Tag.Year;
-            cover = track.Tag.Pictures[0];
+            cover = track.Tag.Pictures.Length > 0 ? track.Tag.Pictures[0] : null!;
             lyric = track.Tag.Lyrics;
             duration = track.Tag.Length;
         }
 
-        return new TrackData(path, trackName, album, artist, genre, year, cover, lyric, duration);
+        return new TrackData(path, trackName, album, artist, genre, year,lyric,duration, cover);
     }
 }

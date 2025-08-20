@@ -35,7 +35,7 @@ public static class DiskManager
     {
         string path = Path.Combine(PlaylistsPath, name);
         string json = File.ReadAllText(path);
-
+        
         PlaylistData playlistData = JsonConvert.DeserializeObject<PlaylistData>(json);
         return playlistData;
     }
