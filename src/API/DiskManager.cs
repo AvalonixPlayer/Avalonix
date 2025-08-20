@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Avalonix.API;
 
@@ -35,15 +35,21 @@ public static class DiskManager
     {
         string path = Path.Combine(PlaylistsPath, name);
         string json = File.ReadAllText(path);
-
-        PlaylistData playlistData = JsonSerializer.Deserialize<PlaylistData>(json);
+        
+        PlaylistData playlistData = JsonConvert.DeserializeObject<PlaylistData>(json);
         return playlistData;
     }
     
     public static void SavePlaylistData(PlaylistData playlistData)
     {
         string path = Path.Combine(PlaylistsPath, playlistData.Name);
-        string json = JsonSerializer.Serialize(playlistData);
+        
+        JsonSerializerSettings settings = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented
+        };
+        
+        string json = JsonConvert.SerializeObject(playlistData,settings);
 
         File.WriteAllText(path, json);
     }
