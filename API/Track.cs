@@ -4,7 +4,7 @@ using TagLib;
 namespace Avalonix.API;
 
 [Serializable]
-public struct TrackData(
+public record struct TrackData(
     string trackPath,
     string trackName,
     string? album,

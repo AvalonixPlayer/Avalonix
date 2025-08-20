@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Avalonix.API;
 
@@ -7,7 +8,7 @@ namespace Avalonix.API;
 public struct PlaylistData(string name)
 { 
     public string Name => name;
-    public List<TrackData> Tracks = new List<TrackData>();
+    public List<TrackData> Tracks = [];
 
     public void AddTrack(TrackData song)
     {
@@ -17,12 +18,9 @@ public struct PlaylistData(string name)
 
     public void RemoveTrack(TrackData song)
     {
-        foreach (var track in Tracks)
+        foreach (var track in Tracks.Where(track => track.Equals(song)).ToList())
         {
-            if (track.Equals(song))
-            {
-                Tracks.Remove(track);
-            }
+            Tracks.Remove(track);
         }
     }
 }
