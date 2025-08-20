@@ -19,9 +19,4 @@ public partial class MainWindow  : Window
             CornerRadius = new CornerRadius(5)
         });
     }
-
-    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-       _logger.LogInformation("MenuItem clicked"); 
-    }
 }

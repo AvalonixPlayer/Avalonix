@@ -20,14 +20,16 @@
                     <MenuItem Header="New Playlist"
                               InputGesture="Ctrl+N"/>
                     <MenuItem Header="Load Playlist"
-                              InputGesture="Ctrl+L"/>/>
+                              InputGesture="Ctrl+L"/>
                     <Separator/>
                     <MenuItem Header="Exit"
-                              InputGesture="Ctrl+Q"/>
+                              InputGesture="Ctrl+Q"
+                              Command="{Binding ExitCommand}"/>
+                    
                 </MenuItem>
             
                 <MenuItem Header="Edit">
-                    <MenuItem Header="Change Playlist" Click="MenuItem_OnClick"/>
+                    <MenuItem Header="Change Playlist" />
                 </MenuItem>
             
                 <MenuItem Header="Appearance"/>
