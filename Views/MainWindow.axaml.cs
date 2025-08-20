@@ -1,4 +1,3 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.Extensions.Logging;
@@ -13,10 +12,11 @@ public partial class MainWindow  : Window
         _logger = logger; 
         InitializeComponent();
         _logger.LogInformation("MainWindow initialized");
-        SongsListBox.Items.Add(new ListBoxItem
-        {
-            Content = "Ls",
-            CornerRadius = new CornerRadius(5)
-        });
+    }
+
+    private void ExitApp_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _logger.LogInformation("Exiting app");
+        Close();
     }
 }

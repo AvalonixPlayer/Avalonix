@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using System;
-using System.Collections.Generic;
 using Avalonix.API;
 
 namespace Avalonix;
@@ -33,5 +32,6 @@ internal static class Program
     private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .LogToTrace()
             .WithInterFont();
 }

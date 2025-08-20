@@ -1,33 +1,14 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using ReactiveUI;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModels;
 
-public class MainWindowViewModel : ReactiveObject
+public class MainWindowViewModel  
 {
-    private readonly ILogger _logger;
-    
-    public MainWindowViewModel(ILogger logger)
+    private readonly ILogger<MainWindowViewModel> _logger;
+    public MainWindowViewModel(ILogger<MainWindowViewModel> logger)
     {
-        _logger = logger;
-        
-        HelpCommand = ReactiveCommand.CreateFromTask(async () => 
-        {
-            _logger.LogInformation("Help Button Click");
-            await Task.CompletedTask;
-        }, Observable.Return(true));
-        
-        ExitCommand = ReactiveCommand.Create(() => 
-        {
-            _logger.LogInformation("Exit Button Click");
-            Environment.Exit(0);
-        }, Observable.Return(true));
+        _logger = logger;     
     }
     
-    public ReactiveCommand<Unit, Unit> HelpCommand { get; }
-    public ReactiveCommand<Unit, Unit> ExitCommand { get; }
+    
 }
