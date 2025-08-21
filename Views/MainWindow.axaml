@@ -23,7 +23,7 @@
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
         </ListBox>
-        <Border Grid.Row="0" Grid.Column="1" CornerRadius="7" Background="#1f1f1f"></Border>
+        <Border Grid.Row="0" Grid.Column="1" CornerRadius="7" Background="#1f1f1f" Margin="20"></Border>
     </Grid>
 
 </Window>
