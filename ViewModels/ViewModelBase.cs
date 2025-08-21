@@ -2,4 +2,4 @@ using ReactiveUI;
 
 namespace Avalonix.ViewModels;
 
-public class ViewModelBase : ReactiveObject;
+public abstract class ViewModelBase : ReactiveObject;

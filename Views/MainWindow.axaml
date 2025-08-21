@@ -24,7 +24,7 @@
                     <Separator/>
                     <MenuItem Header="Exit"
                               InputGesture="Ctrl+Q"
-                              Click=""/>
+                              Click="ExitButton_OnClick"/>
                     
                 </MenuItem>
             
