@@ -13,8 +13,20 @@
         <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Green" SecondaryColor="LightGreen" />
         <Style Selector="ListBoxItem">
             <Setter Property="CornerRadius" Value="7"/>
+        </Style>
+        
+        <Style Selector="Border">
+            <Setter Property="CornerRadius" Value="7"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="#1f1f1f"/>
+        </Style>
+        
+        <Style Selector="ListBox">
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="#1f1f1f"/>
         </Style>
         <Style Selector="Button.gradient">
             <Setter Property="Background" Value="{DynamicResource GradientBrush}"/>
@@ -43,7 +55,6 @@
             <GradientStop Offset="1" Color="#22c55e"/>
         </LinearGradientBrush>
 
-        <!-- Дополнительные зеленые ресурсы -->
         <SolidColorBrush x:Key="GreenPrimary">#22c55e</SolidColorBrush>
         <SolidColorBrush x:Key="GreenLight">#86efac</SolidColorBrush>
         <SolidColorBrush x:Key="GreenDark">#15803d</SolidColorBrush>
