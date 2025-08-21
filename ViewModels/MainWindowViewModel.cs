@@ -1,6 +1,12 @@
-﻿namespace Avalonix.ViewModels;
+﻿using Avalonix.Services;
+using Microsoft.Extensions.Logging;
 
-public class MainWindowViewModel : ViewModelBase
+namespace Avalonix.ViewModels;
+
+public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager) 
+    : ViewModelBase
 {
-    public string Greeting = "Welcome to Avalonia!";
+    // Use in future
+    //private async Task ExitAsync() => await windowManager.CloseMainWindowAsync();
+
 }
