@@ -1,69 +1,51 @@
-using System;
-using System.IO;
-using Avalonia.Media;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using File = TagLib.File;
+using TagLib;
 
 namespace Avalonix.API;
 
-public struct TrackMetadata(
-    string trackName,
-    string? album,
-    string? artist,
-    string? genre,
-    short? year,
-    string? lyric,
-    string? duration)
+public class Track
 {
-    public string TrackName => trackName;
-    public string? Album => album;
-    public string? Artist => artist;
-    public string? Genre => genre;
-    public short? Year => year;
-    public string? Lyric => lyric;
-    public string? Duration => duration;
-}
+    public TrackData TrackData { get; set; }
+    [JsonIgnore] public TrackMetadata Metadata => new TrackMetadata(TrackData.Path);
 
-public struct TrackData(
-    string trackPath)
-{
-    public string TrackPath => trackPath;
-}
-
-public class Track(string path)
-{
-    [JsonIgnore] public TrackMetadata TrackMetadata => GetTrackMetaData();
-    public string Path => path;
-    public TrackData TrackData => GetTrackData();
-
-    public TrackMetadata GetTrackMetaData()
+    [JsonConstructor]
+    public Track()
     {
-        string? trackName;
-        string? album;
-        string? artist;
-        string? genre;
-        short? year;
-        string? lyric;
-        string? duration;
-        
-        using (var track = File.Create(TrackData.TrackPath))
+    }
+
+    public Track(string path) => TrackData = new TrackData(path);
+}
+
+public struct TrackData
+{
+    [JsonInclude] public string Path { get; set; }
+
+    public TrackData(string path) => Path = path;
+}
+
+public struct TrackMetadata
+{
+    public string TrackName { get; private set; }
+    public string? Album { get; private set; }
+    public string? Artist { get; private set; }
+    public string? Genre { get; private set; }
+    public short? Year { get; private set; }
+    public string? Lyric { get; private set; }
+    public string? Duration { get; private set; }
+
+    public TrackMetadata(string Path) => FillTrackMetaData(Path);
+
+    public void FillTrackMetaData(string Path)
+    {
+        using (var track = File.Create(Path))
         {
-            trackName = track.Tag.Title;
-            album = track.Tag.Album;
-            artist = track.Tag.FirstPerformer;
-            genre = track.Tag.FirstGenre;
-            year = (short)track.Tag.Year;
-            lyric = track.Tag.Lyrics;
-            duration = track.Tag.Length;
+            TrackName = track.Tag.Title;
+            Album = track.Tag.Album;
+            Artist = track.Tag.FirstPerformer;
+            Genre = track.Tag.FirstGenre;
+            Year = (short)track.Tag.Year;
+            Lyric = track.Tag.Lyrics;
+            Duration = track.Tag.Length;
         }
-
-        return new TrackMetadata(trackName, album, artist, genre, year,lyric,duration);
     }
-
-    public TrackData GetTrackData()
-    {
-        return new TrackData(Path);
-    }
-    
 }

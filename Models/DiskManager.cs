@@ -1,14 +1,15 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using Avalonia.Logging;
 
 namespace Avalonix.API;
 
 public static class DiskManager
 {
-    public static readonly string Extension = ".avalonix";
+    private static readonly string Extension = ".avalonix";
 
-    public static string AvalonixFolderPath
+    private static string AvalonixFolderPath
     {
         get
         {
@@ -30,17 +31,6 @@ public static class DiskManager
         }
     }
 
-    public static string CoversPath
-    {
-        get
-        {
-            var path = Path.Combine(AvalonixFolderPath, ".covers");
-            if (!Path.Exists(path))
-                Directory.CreateDirectory(path);
-            return path;
-        }
-    }
-
     public static string SettingsPath
     {
         get
@@ -54,72 +44,47 @@ public static class DiskManager
 
     public static string[] PlaylistsPaths => Directory.GetFiles(PlaylistsPath);
 
-    #region Playlists
-
-    public static PlaylistData GetPlaylistData(string name)
+    public static void SavePlaylist(Playlist playlist)
     {
-        string path = Path.Combine(PlaylistsPath, name + Extension);
-        string json = File.ReadAllText(path);
-
-        var playlistData = JsonSerializer.Deserialize<PlaylistData>(json);
-        return playlistData;
-    }
-
-    public static void SavePlaylistData(PlaylistData playlistData)
-    {
-        string path = Path.Combine(PlaylistsPath, playlistData.Name + Extension);
+        var path = Path.Combine(PlaylistsPath, playlist.Name + Extension);
+        if (!Path.Exists(path))
+        {
+            Console.WriteLine($"No playlist found with path {path}");
+            File.Create(path).Close();
+        }
 
         var opt = new JsonSerializerOptions
         {
             WriteIndented = true,
             IncludeFields = true
         };
-        
-        string json = JsonSerializer.Serialize(playlistData,opt);
+
+        var json = JsonSerializer.Serialize(playlist, opt);
 
         File.WriteAllText(path, json);
     }
 
-    public static void CreatePlaylist(PlaylistData playlistData)
+    public static Playlist GetPlaylist(string name)
     {
-        string path = Path.Combine(PlaylistsPath, playlistData.Name + Extension);
-        File.Create(path).Close();
-        SavePlaylistData(playlistData);
-    }
+        var path = Path.Combine(PlaylistsPath, name + Extension);
 
-    public static void RemovePlaylist(PlaylistData playlistData)
-    {
-        string path = Path.Combine(PlaylistsPath, playlistData.Name + Extension);
-        File.Delete(path);
-    }
-
-    #endregion
-
-    #region Settings
-
-    public static Settings GetSettings()
-    {
-        string path = Path.Combine(PlaylistsPath, SettingsPath);
-        string json = File.ReadAllText(path);
-
-        var settingsData = JsonSerializer.Deserialize<Settings>(json);
-        return settingsData;
-    }
-
-    public static void SaveSettings(Settings settings)
-    {
-        string path = Path.Combine(PlaylistsPath, SettingsPath);
+        if (!Path.Exists(path))
+        {
+            Console.WriteLine($"No playlist found with path {path}");
+            SavePlaylist(new Playlist(name));
+        }
+            
 
         var opt = new JsonSerializerOptions
         {
             WriteIndented = true,
             IncludeFields = true
         };
-        
-        string json = JsonSerializer.Serialize(settings,opt);
 
-        File.WriteAllText(path, json);
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<Playlist>(json, opt);
     }
 
-    #endregion
+    public static void CreatePlaylist(string name) =>
+        File.Create(Path.Combine(PlaylistsPath, name + Extension)).Close();
 }

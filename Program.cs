@@ -10,25 +10,18 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        /* test Playlist creating and song adding
-        var playlist = new PlaylistData("test_playlist");
-
-        DiskManager.CreatePlaylist(playlist);
-        playlist.AddTrack(new Track(@"F:\Плейлисты\Accept\Accept - Fast As A Shark.mp3"));
+        //DiskManager.SavePlaylist(new Playlist("test"));
+        //Console.WriteLine(DiskManager.GetPlaylist("test").Name);
+        /*
+        var playlist = DiskManager.GetPlaylist("test");
+        
+        playlist.AddTrack(new Track("F:\\Плейлисты\\Accept\\Accept - Fast As A Shark.mp3"));
+        DiskManager.SavePlaylist(playlist);
         */
         
-
-        /* test Playlist loading
-        Console.WriteLine(DiskManager.GetPlaylistData("test_playlist").Tracks[0].TrackMetadata.Lyric);
-        Console.WriteLine(DiskManager.GetPlaylistData("test_playlist").Tracks[0].TrackData.TrackPath);
-        */
+        Console.WriteLine(DiskManager.GetPlaylist("test").Tracks[0].TrackData.Path);
+        Console.WriteLine(DiskManager.GetPlaylist("test").Tracks[0].Metadata.Album);
         
-        
-        /* test Settings create
-        var settings = new Settings();
-        DiskManager.SaveSettings(settings);
-        */
-
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
