@@ -1,28 +1,15 @@
-﻿using System.Reactive;
-using System.Windows.Input;
+﻿using System.Threading.Tasks;
 using Avalonix.Services;
 using Microsoft.Extensions.Logging;
-using ReactiveUI;
 
 namespace Avalonix.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager)
+    : ViewModelBase
 {
-    private readonly ILogger<MainWindowViewModel> _logger;
-    private readonly IWindowManager _windowManager;
-
-    public MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager)
+    public async Task ExitButton_OnClick()
     {
-        _logger = logger;
-        _windowManager = windowManager;
-
-        ExitAppCommand = ReactiveCommand.Create(() =>
-        {
-            _logger.LogInformation("Exiting app");
-            _windowManager.CloseMainWindow();
-            return Unit.Default;
-        });
+        logger.LogInformation("Exit button clicked");
+        windowManager.CloseMainWindow(); 
     }
-
-    public ICommand ExitAppCommand { get; }
 }
