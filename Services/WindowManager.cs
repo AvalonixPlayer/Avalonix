@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -7,15 +8,26 @@ namespace Avalonix.Services;
 
 public class WindowManager(ILogger<WindowManager> logger) : IWindowManager
 {
-    public void CloseMainWindow()
+    private static void CloseMainWindow()
     {
-        logger.LogInformation("WindowManager: Closing app");
-        
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Shutdown();
         } 
-        // Another variant
-        // Environment.Exit(0);
+    }
+
+    public async Task CloseMainWindowAsync()
+    {
+        try
+        {
+            // Saving Data | NOT IMPLEMENTED
+            await Task.Delay(TimeSpan.FromSeconds(0));
+            CloseMainWindow();
+        }
+        catch (Exception ex)
+        {
+            logger.LogCritical("Error during closing: {ex}", ex);
+            CloseMainWindow();
+        }
     }
 }
