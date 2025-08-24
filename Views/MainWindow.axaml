@@ -10,19 +10,23 @@
         x:Class="Avalonix.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Avalonix Music Player">
+        Title="Avalonix - Main Window">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
     
-    <Grid RowDefinitions="500,*,Auto,Auto" ColumnDefinitions="300,*" Margin="10">
+    <Grid RowDefinitions="500,*,Auto,Auto" ColumnDefinitions="300,*">
         <ListBox Grid.Row="0" Grid.Column="0" Name="SongBox">
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
         </ListBox>
-        <Border Grid.Row="0" Grid.Column="1" ></Border>
+        <UniformGrid Rows="1" Columns="1" Grid.Row="0" Grid.Column="1">
+            <Border >
+                <!-- Ваш контент -->
+            </Border>
+        </UniformGrid>
     </Grid>
 </Window>

@@ -24,41 +24,9 @@
         
         <Style Selector="ListBox">
             <Setter Property="CornerRadius" Value="7"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="Margin" Value="5"/>
             <Setter Property="Background" Value="#1f1f1f"/>
         </Style>
         
-        <Style Selector="Button.gradient">
-            <Setter Property="Background" Value="{DynamicResource GradientBrush}"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="Padding" Value="20,10"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-
     </Application.Styles>
-    <Application.Resources>
-        <LinearGradientBrush x:Key="GradientBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Offset="0" Color="#22c55e"/>
-            <GradientStop Offset="1" Color="#4ade80"/>
-        </LinearGradientBrush>
 
-        <LinearGradientBrush x:Key="GradientHoverBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Offset="0" Color="#4ade80"/>
-            <GradientStop Offset="1" Color="#86efac"/>
-        </LinearGradientBrush>
-
-        <LinearGradientBrush x:Key="GradientPressedBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Offset="0" Color="#16a34a"/>
-            <GradientStop Offset="1" Color="#22c55e"/>
-        </LinearGradientBrush>
-
-        <SolidColorBrush x:Key="GreenPrimary">#22c55e</SolidColorBrush>
-        <SolidColorBrush x:Key="GreenLight">#86efac</SolidColorBrush>
-        <SolidColorBrush x:Key="GreenDark">#15803d</SolidColorBrush>
-        <SolidColorBrush x:Key="GreenShadow">#00000020</SolidColorBrush>
-    </Application.Resources>
 </Application>
