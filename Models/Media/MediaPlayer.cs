@@ -24,12 +24,13 @@ public class MediaPlayer
         Bass.BASS_ChannelPlay(_stream, false);
 
         Console.WriteLine($"Now playing {track.Metadata.TrackName}");
-
-        ChangeVolume(50);
     }
 
-    public void Stop() => 
+    public void Stop()
+    {
         Bass.BASS_ChannelFree(_stream);
+        Bass.BASS_StreamFree(_stream);
+    }
     
     public void Pause() =>
         Bass.BASS_ChannelPause(_stream);
