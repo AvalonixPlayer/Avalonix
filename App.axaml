@@ -11,7 +11,7 @@
   
     <Application.Styles>
         <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="LightGreen" SecondaryColor="LightGreen" />
-        <Style Selector="ListBox">
+        <Style Selector="ListBox" >
             <Setter Property="Background" Value="#212121"/>
             <Setter Property="CornerRadius" Value="12"/>
             <Setter Property="Padding" Value="5"/>

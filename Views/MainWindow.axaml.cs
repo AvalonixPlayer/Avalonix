@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonix.ViewModels;
@@ -22,5 +23,13 @@ public partial class MainWindow  : Window
     private void InitializeComponent() =>
         AvaloniaXamlLoader.Load(this);
 
-    public async void ExitButton_OnClick(object? sender, RoutedEventArgs e) => await _vm.ExitAsync();
+    public async void ExitButton_OnClick() => await _vm.ExitAsync();
+
+    private void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>
+        await _vm.PlaylistCreateWindow_Open();
 }
