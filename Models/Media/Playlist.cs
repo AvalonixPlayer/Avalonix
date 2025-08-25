@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using NeoSimpleLogger;
 
@@ -16,7 +17,7 @@ public class Playlist(string name)
     public void AddTrack(Track track) => PlaylistData.Tracks.Add(track);
     public void RemoveTrack(Track track) => PlaylistData.Tracks.Remove(track);
 
-    public void Save() => DiskManager.SavePlaylist(this);
+    public void Save() => new DiskManager().SavePlaylist(this);
     public void UpdateLastListenDate() => PlaylistData.LastListen = DateTime.Now.TimeOfDay;
 
     public void Play()

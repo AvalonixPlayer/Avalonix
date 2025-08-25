@@ -7,7 +7,7 @@ namespace Avalonix.API;
 public class MediaPlayer
 {
     private int _stream;
-    
+
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
 
     private readonly ILogger _logger;
@@ -27,7 +27,7 @@ public class MediaPlayer
             _logger.LogError("Could not create stream {TrackDataPath}", track.TrackData.Path);
             return;
         }
-        
+
         Bass.BASS_ChannelPlay(_stream, true);
 
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);

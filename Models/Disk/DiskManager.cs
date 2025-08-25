@@ -1,18 +1,17 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using Avalonia.Logging;
 using Microsoft.Extensions.Logging;
 using Logger = NeoSimpleLogger.Logger;
 
 namespace Avalonix.API;
 
-public static class DiskManager
+public class DiskManager : IDiskWriter, IDiskLoader
 {
-    private static readonly string Extension = ".avalonix";
-    private static readonly ILogger _logger = new Logger();
+    private readonly string Extension = ".avalonix";
+    private readonly ILogger _logger = new Logger();
 
-    private static string AvalonixFolderPath
+    private string AvalonixFolderPath
     {
         get
         {
@@ -23,7 +22,7 @@ public static class DiskManager
         }
     }
 
-    public static string PlaylistsPath
+    private string PlaylistsPath
     {
         get
         {
@@ -34,7 +33,7 @@ public static class DiskManager
         }
     }
 
-    public static string SettingsPath
+    private string SettingsPath
     {
         get
         {
@@ -45,38 +44,39 @@ public static class DiskManager
         }
     }
 
-    public static string[] PlaylistsPaths => Directory.GetFiles(PlaylistsPath);
+    private string[] PlaylistsPaths => Directory.GetFiles(PlaylistsPath);
 
-    public static void SavePlaylist(Playlist playlist)
+
+    public void SavePlaylist(Playlist playlist) =>
+        ((IDiskWriter)this).Write(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+
+    public Playlist GetPlaylist(string name) =>
+        ((IDiskLoader)this).Load<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+}
+
+public interface IDiskWriter
+{
+    public void Write<T>(T obj, string path)
     {
-        var path = Path.Combine(PlaylistsPath, playlist.Name + Extension);
-        if (!Path.Exists(path))
+        var opt = new JsonSerializerOptions
         {
-            _logger.LogWarning("No playlist found with path {Path}", path);
+            WriteIndented = true,
+            IncludeFields = true
+        };
+
+        if (!File.Exists(path))
             File.Create(path).Close();
-        }
 
-        var opt = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            IncludeFields = true
-        };
-
-        var json = JsonSerializer.Serialize(playlist, opt);
-
-        File.WriteAllText(path, json);
+        File.WriteAllText(path, JsonSerializer.Serialize(obj, opt));
     }
+}
 
-    public static Playlist GetPlaylist(string name)
+public interface IDiskLoader
+{
+    public T? Load<T>(string path)
     {
-        var path = Path.Combine(PlaylistsPath, name + Extension);
-
-        if (!Path.Exists(path))
-        {
-            _logger.LogWarning("No playlist found with path {Path}", path);
-            SavePlaylist(new Playlist(name));
-        }
-            
+        if (!File.Exists(path))
+            File.Create(path).Close();
 
         var opt = new JsonSerializerOptions
         {
@@ -84,10 +84,6 @@ public static class DiskManager
             IncludeFields = true
         };
 
-        var json = File.ReadAllText(path);
-        return JsonSerializer.Deserialize<Playlist>(json, opt);
+        return JsonSerializer.Deserialize<T>(File.ReadAllText(path), opt);
     }
-
-    public static void CreatePlaylist(string name) =>
-        File.Create(Path.Combine(PlaylistsPath, name + Extension)).Close();
 }
