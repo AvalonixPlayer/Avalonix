@@ -1,7 +1,8 @@
 ﻿using Avalonia;
 using System;
-using System.Collections.Generic;
 using Avalonix.API;
+using Microsoft.Extensions.Logging;
+using NeoSimpleLogger;
 
 namespace Avalonix;
 
@@ -10,6 +11,7 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        
         var playlist = DiskManager.GetPlaylist("test");
         /*
         //playlist.AddTrack(new Track("F:\\Плейлисты\\Accept\\Accept - Fast As A Shark.mp3"));
@@ -25,7 +27,7 @@ internal static class Program
         //DiskManager.SavePlaylist(playlist);
         */
         
-        var player = new MediaPlayer();
+        var player = new MediaPlayer(new Logger());
         player.Play(playlist.PlaylistData.Tracks[0]);
         player.Pause();
         player.Resume();

@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
 
 namespace Avalonix.API;
@@ -7,9 +7,13 @@ namespace Avalonix.API;
 public class MediaPlayer
 {
     private int _stream;
+    private readonly ILogger _logger;
 
-    public MediaPlayer() =>
+    public MediaPlayer(ILogger logger)
+    {
+        _logger = logger;
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+    }
 
     public void Play(Track track)
     {
@@ -17,13 +21,13 @@ public class MediaPlayer
 
         if (_stream == 0)
         {
-            Console.WriteLine($"Error: Could not create stream {track.TrackData.Path}");
+            _logger.LogError("Could not create stream {TrackDataPath}", track.TrackData.Path);
             return;
         }
 
         Bass.BASS_ChannelPlay(_stream, false);
 
-        Console.WriteLine($"Now playing {track.Metadata.TrackName}");
+        _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
     }
 
     public void Stop()
@@ -31,13 +35,13 @@ public class MediaPlayer
         Bass.BASS_ChannelFree(_stream);
         Bass.BASS_StreamFree(_stream);
     }
-    
+
     public void Pause() =>
         Bass.BASS_ChannelPause(_stream);
-    
+
     public void Resume() =>
         Bass.BASS_ChannelPlay(_stream, true);
-    
+
     public void ChangeVolume(int volume) => // the volume should be in the range from 0 to 100
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
 }

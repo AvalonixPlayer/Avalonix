@@ -2,12 +2,15 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Avalonia.Logging;
+using Microsoft.Extensions.Logging;
+using Logger = NeoSimpleLogger.Logger;
 
 namespace Avalonix.API;
 
 public static class DiskManager
 {
     private static readonly string Extension = ".avalonix";
+    private static readonly ILogger _logger = new Logger();
 
     private static string AvalonixFolderPath
     {
@@ -49,7 +52,7 @@ public static class DiskManager
         var path = Path.Combine(PlaylistsPath, playlist.Name + Extension);
         if (!Path.Exists(path))
         {
-            Console.WriteLine($"No playlist found with path {path}");
+            _logger.LogWarning("No playlist found with path {Path}", path);
             File.Create(path).Close();
         }
 
@@ -70,7 +73,7 @@ public static class DiskManager
 
         if (!Path.Exists(path))
         {
-            Console.WriteLine($"No playlist found with path {path}");
+            _logger.LogWarning("No playlist found with path {Path}", path);
             SavePlaylist(new Playlist(name));
         }
             
