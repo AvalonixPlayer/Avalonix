@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Avalonix.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.Services;
 using Microsoft.Extensions.Logging;
 
@@ -20,15 +21,16 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         }
     }
 
-    public async Task PlaylistCreateWindow_Open()
+    public async Task<PlaylistCreateWindow> PlaylistCreateWindow_Open()
     {
         try
         {
-            windowManager.PlaylistCreateWindow_Open();   
+            return await windowManager.PlaylistCreateWindow_Open();   
         }
         catch (Exception e)
         {  
             logger.LogError("Error while exiting app: {e}", e.Message);
+            throw new Exception("Error while exiting app");
         }
     }
 }
