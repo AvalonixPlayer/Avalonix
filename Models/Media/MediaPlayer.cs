@@ -7,6 +7,9 @@ namespace Avalonix.API;
 public class MediaPlayer
 {
     private int _stream;
+    
+    public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
+
     private readonly ILogger _logger;
 
     public MediaPlayer(ILogger logger)
@@ -24,8 +27,8 @@ public class MediaPlayer
             _logger.LogError("Could not create stream {TrackDataPath}", track.TrackData.Path);
             return;
         }
-
-        Bass.BASS_ChannelPlay(_stream, false);
+        
+        Bass.BASS_ChannelPlay(_stream, true);
 
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
     }
@@ -40,7 +43,7 @@ public class MediaPlayer
         Bass.BASS_ChannelPause(_stream);
 
     public void Resume() =>
-        Bass.BASS_ChannelPlay(_stream, true);
+        Bass.BASS_ChannelPlay(_stream, false);
 
     public void ChangeVolume(int volume) => // the volume should be in the range from 0 to 100
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
