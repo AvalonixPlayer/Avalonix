@@ -16,17 +16,12 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
     
-    <Grid RowDefinitions="500,*,Auto,Auto" ColumnDefinitions="300,*">
+    <Grid RowDefinitions="500,*,Auto,Auto" ColumnDefinitions="300,*" ShowGridLines="True" Margin="10">
         <ListBox Grid.Row="0" Grid.Column="0" Name="SongBox">
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
             <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
         </ListBox>
-        <UniformGrid Rows="1" Columns="1" Grid.Row="0" Grid.Column="1">
-            <Border >
-                <!-- Ваш контент -->
-            </Border>
-        </UniformGrid>
     </Grid>
 </Window>

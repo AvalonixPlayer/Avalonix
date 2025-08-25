@@ -14,12 +14,11 @@ internal static class Program
         
         //playlist.AddTrack(new Track("F:\\Плейлисты\\Accept\\Accept - Fast As A Shark.mp3"));
         
-        playlist.PlaylistData.Tracks[0].IncreaseRarity(1);
-        playlist.PlaylistData.Tracks[0].UpdateLastListenDate();
-        playlist.UpdateLastListenDate();
+        //playlist.PlaylistData.Tracks[0].IncreaseRarity(1);
+        //playlist.PlaylistData.Tracks[0].UpdateLastListenDate();
+        //playlist.UpdateLastListenDate();
         
-        
-        playlist.Save();
+        //playlist.Save();
         
         //Console.WriteLine(playlist.Tracks[0].TrackData.LastListen.Date);
         
