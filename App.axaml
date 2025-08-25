@@ -10,7 +10,12 @@
     </Application.DataTemplates>
   
     <Application.Styles>
-        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Green" SecondaryColor="LightGreen" />
+        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="LightGreen" SecondaryColor="LightGreen" />
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="#888a94"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="2"/>
+        </Style>
     </Application.Styles>
 
 </Application>
