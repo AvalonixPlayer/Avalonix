@@ -12,9 +12,17 @@
     <Application.Styles>
         <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="LightGreen" SecondaryColor="LightGreen" />
         <Style Selector="ListBox">
-            <Setter Property="Background" Value="#888a94"/>
+            <Setter Property="Background" Value="#212121"/>
             <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="MaxHeight" Value="70"/>
+            <Setter Property="MaxWidth" Value="70"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
         </Style>
     </Application.Styles>
 
