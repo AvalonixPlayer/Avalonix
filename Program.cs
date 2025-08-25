@@ -30,8 +30,7 @@ internal static class Program
         player.Play(playlist.PlaylistData.Tracks[0]);
         player.Pause();
         player.Resume();
-        
-        
+        player.Stop();
         
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
