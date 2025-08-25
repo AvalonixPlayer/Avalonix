@@ -11,7 +11,7 @@ internal static class Program
     public static void Main(string[] args)
     {
         var playlist = DiskManager.GetPlaylist("test");
-        
+        /*
         //playlist.AddTrack(new Track("F:\\Плейлисты\\Accept\\Accept - Fast As A Shark.mp3"));
         
         //playlist.PlaylistData.Tracks[0].IncreaseRarity(1);
@@ -23,6 +23,14 @@ internal static class Program
         //Console.WriteLine(playlist.Tracks[0].TrackData.LastListen.Date);
         
         //DiskManager.SavePlaylist(playlist);
+        */
+        
+        var player = new MediaPlayer();
+        player.Play(playlist.PlaylistData.Tracks[0]);
+        player.Pause();
+        player.Resume();
+        
+        
         
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
