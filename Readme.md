@@ -19,8 +19,11 @@
 # 🚀 **Usage**
 < In future>
 
-> [!IMPORTANT]
-> In dev
+# **Libraries used**
+- [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia) - for UI
+- [NeoSimpleLogger](https://github.com/ruzen42/simple-logger) - for logging
+- [taglib-sharp](https://github.com/mono/taglib-sharp) - for parse metadata from audio file
+- [bass.net](https://www.radio42.com/bass/) - for audio playing
 
 # **Contibuting**
 ***Your contribution*** is ***very important*** to us. Here's how you can help the project:
