@@ -52,6 +52,12 @@ public class DiskManager : IDiskWriter, IDiskLoader
 
     public Playlist GetPlaylist(string name) =>
         ((IDiskLoader)this).Load<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+
+    public void SaveSettings(Settings settings) =>
+        ((IDiskWriter)this).Write(settings, SettingsPath);
+
+    public Settings GetSettings() =>
+        ((IDiskLoader)this).Load<Settings>(SettingsPath);
 }
 
 public interface IDiskWriter
