@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Avalonix.API;
 
@@ -8,7 +7,7 @@ public class Playlist(string name)
 {
     public string Name => name;
 
-    public PlaylistData PlaylistData = new PlaylistData();
+    public PlaylistData PlaylistData = new();
 
     public void AddTrack(Track track) => PlaylistData.Tracks.Add(track);
     public void RemoveTrack(Track track) => PlaylistData.Tracks.Remove(track);

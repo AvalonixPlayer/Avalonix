@@ -7,14 +7,14 @@ namespace Avalonix.API;
 public class Track
 {
     public TrackData TrackData;
-    [JsonIgnore] public TrackMetadata Metadata => new TrackMetadata(TrackData.Path);
+    [JsonIgnore] public TrackMetadata Metadata => new(TrackData.Path);
 
     [JsonConstructor]
     public Track()
     {
     }
 
-    public Track(string path) => TrackData = new TrackData(path);
+    public Track(string path) => TrackData = new(path);
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;
 
