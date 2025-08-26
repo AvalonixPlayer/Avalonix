@@ -20,7 +20,7 @@ public class Playlist(string name, MediaPlayer player, IDiskManager disk)
                 PlaylistData.Tracks.Remove(PlaylistData.Tracks[i]);
     }
 
-    public async void Save() => await disk.SavePlaylist(this);
+    public async Task Save() => await disk.SavePlaylist(this);
     public void UpdateLastListenDate() => PlaylistData.LastListen = DateTime.Now.TimeOfDay;
 
     public async Task Play()
