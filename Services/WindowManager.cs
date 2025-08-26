@@ -2,12 +2,13 @@ using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
 namespace Avalonix.Services;
 
-public class WindowManager(ILogger<WindowManager> logger) : IWindowManager
+public class WindowManager(ILogger<WindowManager> logger, PlaylistCreateWindowViewModel _playlistCreateWindowViewModel) : IWindowManager
 {
     private static void CloseMainWindow()
     {
@@ -32,5 +33,5 @@ public class WindowManager(ILogger<WindowManager> logger) : IWindowManager
         }
     }
 
-    public async Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => new(logger);
+    public async Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => new(logger, _playlistCreateWindowViewModel);
 }
