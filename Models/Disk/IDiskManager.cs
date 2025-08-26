@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Avalonix.API;
+using Avalonix.Models.UserSettings;
 using Avalonix.Models.Media;
 
 namespace Avalonix.Models.Disk;

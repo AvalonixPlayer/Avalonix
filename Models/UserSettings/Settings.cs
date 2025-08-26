@@ -1,6 +1,6 @@
-namespace Avalonix.API;
+namespace Avalonix.Models.UserSettings;
 
 public class Settings
 {
-    public Theme Theme { get; set; }
+    public Theme.Theme Theme { get; set; }
 }

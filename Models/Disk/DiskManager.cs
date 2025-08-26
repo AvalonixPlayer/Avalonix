@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonix.API;
+using Avalonix.Models.UserSettings;
 using Avalonix.Models.Media;
 using Microsoft.Extensions.Logging;
 
