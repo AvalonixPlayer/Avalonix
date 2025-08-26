@@ -33,5 +33,5 @@ public class WindowManager(ILogger<WindowManager> logger, PlaylistCreateWindowVi
         }
     }
 
-    public async Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => new(logger, _playlistCreateWindowViewModel);
+    public Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => Task.FromResult(new PlaylistCreateWindow(logger, _playlistCreateWindowViewModel));
 }

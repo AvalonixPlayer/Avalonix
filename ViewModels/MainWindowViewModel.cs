@@ -29,8 +29,8 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         }
         catch (Exception e)
         {  
-            logger.LogError("Error while exiting app: {e}", e.Message);
-            throw new Exception("Error while exiting app");
+            logger.LogError("Error while opening PlaylistCreateWindow: {e}", e.Message);
+            return null!;
         }
     }
 }

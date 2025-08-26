@@ -32,6 +32,6 @@ public partial class MainWindow  : Window
 
     private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        (await _vm.PlaylistCreateWindow_Open()).ShowDialog(this);
+        await (await _vm.PlaylistCreateWindow_Open()).ShowDialog(this);
     }
 }

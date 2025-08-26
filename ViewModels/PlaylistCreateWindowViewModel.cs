@@ -63,7 +63,7 @@ public class PlaylistCreateWindowViewModel(
         }
     }
 
-    public async void CreatePlaylist(string playlistName, params List<ItemCollection> songs)
+    public async Task CreatePlaylist(string playlistName, params List<ItemCollection> songs)
     {
         var playlist = new Playlist(playlistName, player, diskManager)
         {
@@ -81,7 +81,6 @@ public class PlaylistCreateWindowViewModel(
         catch (Exception e)
         {
             logger.LogError(e, "Error saving playlist: {name}", playlistName);
-            throw;
         }
     }
 }

@@ -49,8 +49,6 @@ public partial class PlaylistCreateWindow : Window
         }
     }
 
-    private async void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-       _vm.CreatePlaylist(PlaylistName.Text, NewSongBox.Items); 
-    }
+    private async void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>
+       await _vm.CreatePlaylist(PlaylistName.Text!, NewSongBox.Items); 
 }

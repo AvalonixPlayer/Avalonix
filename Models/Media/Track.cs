@@ -11,12 +11,9 @@ public class Track
     [JsonIgnore] public TrackMetadata Metadata => new(TrackData.Path);
 
     [JsonConstructor]
-    public Track()
-    {
-    }
+    public Track() { }
 
-
-    public Track(string? path) => TrackData = new(path);
+    public Track(string? path) => TrackData = new TrackData(path!);
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;
 
@@ -41,18 +38,21 @@ public struct TrackMetadata
     public TimeSpan? Duration { get; private set; }
     public byte[]? Cover { get; set; }
 
-    public TrackMetadata(string Path) => FillTrackMetaData(Path);
+    public TrackMetadata(string path)
+    {
+        FillTrackMetaData(path);
+    }
 
     public void FillTrackMetaData(string Path)
     {
-        using var track = File.Create(Path);
-        TrackName = track.Tag.Title;
-        Album = track.Tag.Album;
-        Artist = track.Tag.FirstPerformer;
-        Genre = track.Tag.FirstGenre;
-        Year = (short)track.Tag.Year;
-        Lyric = track.Tag.Lyrics;
-        Duration = track.Properties.Duration;
-        Cover = track.Tag.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover).Data.Data;
+        using var track = File.Create(Path)!;
+        TrackName = track.Tag!.Title ?? "Song";
+        Album = track.Tag!.Album!;
+        Artist = track.Tag!.FirstPerformer!;
+        Genre = track.Tag!.FirstGenre!;
+        Year = (short)track.Tag!.Year;
+        Lyric = track.Tag!.Lyrics!;
+        Duration = track.Properties!.Duration!;
+        Cover = track.Tag!.Pictures!.FirstOrDefault(p => p.Type == PictureType.FrontCover)!.Data!.Data!;
     }
 }
