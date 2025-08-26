@@ -20,7 +20,7 @@
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
                     <Label Padding="10" CornerRadius="12">Playlist Name</Label> 
-                    <TextBox Height="30" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="   Playlist Name"/>
+                    <TextBox Name="PlaylistName" Padding="5" Height="30" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Playlist Name"/>
                 </StackPanel>
             </Border>
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">

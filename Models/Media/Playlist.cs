@@ -12,6 +12,7 @@ public class Playlist(string name)
 
     public PlaylistData PlaylistData = new();
     private readonly MediaPlayer _player = new(new Logger());
+    private DiskManager _diskManager = new();
 
     public void AddTrack(Track track) => PlaylistData.Tracks.Add(track);
 
@@ -22,7 +23,7 @@ public class Playlist(string name)
                 PlaylistData.Tracks.Remove(PlaylistData.Tracks[i]);
     }
 
-    public void Save() => new DiskManager().SavePlaylist(this);
+    public async void Save() => await _diskManager.SavePlaylist(this);
     public void UpdateLastListenDate() => PlaylistData.LastListen = DateTime.Now.TimeOfDay;
 
     public void Play()

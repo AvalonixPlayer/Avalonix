@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,23 +51,32 @@ public class PlaylistCreateWindowViewModel(ILogger<PlaylistCreateWindowViewModel
             logger.LogInformation("Selected {Count} files: " + filePaths, files.Count);
             return filePaths;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             logger.LogError("Error opening file dialog: {ex}", ex.Message);
             return null;
         }
     }
 
-    public void CreatePlaylist(string playlistName, params List<string> songs)
+    public async void CreatePlaylist(string playlistName, params List<ItemCollection> songs)
     {
         var playlist = new Playlist(playlistName)
         {
             PlaylistData = new PlaylistData
             {
-                Tracks = songs.Select(song => new Track(song)).ToList() 
+                Tracks = songs.Select(song => new Track(song.ToString())).ToList() 
             }
         };
-        playlist.Save();
-        playlist.Play();
+        
+        try
+        {
+            logger.LogDebug("Saving playlist: {name}", playlistName);
+            playlist.Save();
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error saving playlist: {name}", playlistName);
+            throw;
+        }
     }
 }

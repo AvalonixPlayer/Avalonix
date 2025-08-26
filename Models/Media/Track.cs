@@ -16,7 +16,7 @@ public class Track
     }
 
 
-    public Track(string path) => TrackData = new(path);
+    public Track(string? path) => TrackData = new(path);
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;
 
