@@ -33,6 +33,6 @@
                     </StackPanel>
                 </StackPanel>
             </Border> 
-            <Button HorizontalAlignment="Center">Create</Button>
+            <Button HorizontalAlignment="Center" Click="CreatePlaylistButton_OnClick">Create</Button>
         </StackPanel>
 </Window>

@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Microsoft.Extensions.Logging;
+using Avalonix.Models.Media;
 
 namespace Avalonix.ViewModels;
 
@@ -52,5 +55,18 @@ public class PlaylistCreateWindowViewModel(ILogger<PlaylistCreateWindowViewModel
             logger.LogError("Error opening file dialog: {ex}", ex.Message);
             return null;
         }
+    }
+
+    public void CreatePlaylist(string playlistName, params List<string> songs)
+    {
+        var playlist = new Playlist(playlistName)
+        {
+            PlaylistData = new PlaylistData
+            {
+                Tracks = songs.Select(song => new Track(song)).ToList() 
+            }
+        };
+        playlist.Save();
+        playlist.Play();
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using TagLib;
 
-namespace Avalonix.API;
+namespace Avalonix.Models.Media;
 
 public class Track
 {

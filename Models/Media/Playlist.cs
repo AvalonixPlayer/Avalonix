@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonix.Models.Disk;
 using NeoSimpleLogger;
 
-namespace Avalonix.API;
+namespace Avalonix.Models.Media;
 
 public class Playlist(string name)
 {

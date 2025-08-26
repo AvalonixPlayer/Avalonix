@@ -20,23 +20,22 @@
     
     <Grid RowDefinitions="500,*,Auto,Auto" ColumnDefinitions="300,*" Margin="10">
         <ListBox Grid.Row="0" Grid.Column="0" Name="SongBox">
-            <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
-            <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
-            <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
-            <ListBoxItem Content="A42EB1B0-5DD5-4B6B-8351-EEE9FE63620F"/>
         </ListBox>
-        
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom">
-            <Button Click="NewPlaylistButton_OnClick">New</Button> 
-            <Button>Remove</Button> 
-        </StackPanel>
+        <Border Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Button Click="NewPlaylistButton_OnClick">New</Button> 
+                <Button>Remove</Button> 
+            </StackPanel>
+        </Border> 
         
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Vertical" Grid.Row="1" Grid.Column="1">
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <Button Name="BackButton">Back</Button>
-                <Button Name="PauseButton">Pause</Button>
-                <Button Name="NextButton">Next</Button>
-            </StackPanel>
+            <Border>
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button Name="BackButton">Back</Button>
+                    <Button Name="PauseButton">Pause</Button>
+                    <Button Name="NextButton">Next</Button>
+                </StackPanel>
+            </Border>
             
             <Slider ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Background="DimGray"/> 
         </StackPanel>

@@ -48,4 +48,9 @@ public partial class PlaylistCreateWindow : Window
             _logger.LogError("Error when remove songs: {ex}", ex.Message);
         }
     }
+
+    private void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        
+    }
 }

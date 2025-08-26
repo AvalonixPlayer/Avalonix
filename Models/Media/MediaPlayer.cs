@@ -2,7 +2,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
 
-namespace Avalonix.API;
+namespace Avalonix.Models.Media;
 
 public class MediaPlayer
 {

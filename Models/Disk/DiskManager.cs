@@ -1,10 +1,12 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using Avalonix.API;
+using Avalonix.Models.Media;
 using Microsoft.Extensions.Logging;
 using Logger = NeoSimpleLogger.Logger;
 
-namespace Avalonix.API;
+namespace Avalonix.Models.Disk;
 
 public class DiskManager : IDiskWriter, IDiskLoader
 {
@@ -14,7 +16,7 @@ public class DiskManager : IDiskWriter, IDiskLoader
     {
         get
         {
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
             if (!Path.Exists(path))
                 Directory.CreateDirectory(path);
             return path;
