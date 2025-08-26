@@ -23,14 +23,11 @@ public class Track
     public void UpdateLastListenDate() => TrackData.LastListen = DateTime.Now.TimeOfDay;
 }
 
-public struct TrackData
+public struct TrackData(string path)
 {
-    public string Path { get; set; }
+    public string Path { get; set; } = path;
     public int Rarity { get; set; } = 0;
     public TimeSpan? LastListen { get; set; } = null!;
-
-    public TrackData(string path) =>
-        Path = path;
 }
 
 public struct TrackMetadata
