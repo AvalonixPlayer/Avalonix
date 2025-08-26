@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using Avalonix.Models.Disk;
 using Avalonix.Services;
 using Avalonix.ViewModels;
 using Avalonix.Views;
@@ -29,6 +30,7 @@ public class App : Application
             services.AddTransient<MainWindow>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
+            services.AddSingleton<DiskManager>();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();

@@ -1,9 +1,12 @@
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace Avalonix.Models.Disk;
 
 public interface IDiskWriter
 {
-    public void Write<T>(T obj, string path)
+    public async Task WriteAsync<T>(T obj, string path)
     {
         var opt = new JsonSerializerOptions
         {
@@ -14,7 +17,8 @@ public interface IDiskWriter
 
         if (!File.Exists(path))
             File.Create(path).Close();
+        
+        await File.WriteAllTextAsync(path, JsonSerializer.Serialize(obj, opt));
 
-        File.WriteAllText(path, JsonSerializer.Serialize(obj, opt));
     }
 }

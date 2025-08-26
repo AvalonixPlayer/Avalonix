@@ -11,14 +11,14 @@ public class Playlist(string name)
     public string Name => name;
 
     public PlaylistData PlaylistData = new();
-    private readonly MediaPlayer _player = new(new Logger());
-    private DiskManager _diskManager = new();
+    public MediaPlayer _player;
+    public DiskManager _diskManager;
 
     public void AddTrack(Track track) => PlaylistData.Tracks.Add(track);
 
     public void RemoveTrack(Track track)
     {
-        for(int i = 0; i < PlaylistData.Tracks.Count; i++)
+        for(var i = 0; i < PlaylistData.Tracks.Count; i++)
             if (PlaylistData.Tracks[i].TrackData.Path == track.TrackData.Path)
                 PlaylistData.Tracks.Remove(PlaylistData.Tracks[i]);
     }
@@ -26,17 +26,14 @@ public class Playlist(string name)
     public async void Save() => await _diskManager.SavePlaylist(this);
     public void UpdateLastListenDate() => PlaylistData.LastListen = DateTime.Now.TimeOfDay;
 
-    public void Play()
+    public async Task Play()
     {
-        Task.Run(() =>
+        foreach (var track in PlaylistData.Tracks)
         {
-            foreach (var track in PlaylistData.Tracks)
-            {
-                _player.Play(track);
-                while (!_player.IsFree)
-                    Task.Delay(1000).Wait();
-            }
-        });
+            _player.Play(track);
+            while (!_player.IsFree)
+                Task.Delay(1000).Wait();
+        }
     }
 
     public void Pause() =>
