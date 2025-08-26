@@ -25,6 +25,7 @@ public class App : Application
         host.ConfigureServices(services =>
         {
             services.AddTransient<MainWindowViewModel>();
+            services.AddTransient<PlaylistCreateWindowViewModel>();
             services.AddTransient<MainWindow>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
