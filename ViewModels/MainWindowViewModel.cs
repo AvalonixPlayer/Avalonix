@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Avalonix.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.Services;
+using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModels;

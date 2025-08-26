@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.SecondaryWindows.PlaylistCreateWindow;
+namespace Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
 public partial class PlaylistCreateWindow : Window
 {

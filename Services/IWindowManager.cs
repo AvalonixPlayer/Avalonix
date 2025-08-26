@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Avalonix.SecondaryWindows.PlaylistCreateWindow;
+using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
 namespace Avalonix.Services;
 

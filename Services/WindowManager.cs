@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Microsoft.Extensions.Logging;
-using Avalonix.SecondaryWindows.PlaylistCreateWindow;
+using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
 namespace Avalonix.Services;
 
