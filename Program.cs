@@ -1,9 +1,6 @@
 ﻿using Avalonia;
 using System;
-using System.Threading;
 using Avalonix.API;
-using Microsoft.Extensions.Logging;
-using NeoSimpleLogger;
 
 namespace Avalonix;
 

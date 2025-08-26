@@ -49,14 +49,24 @@ public class DiskManager : IDiskWriter, IDiskLoader
     public void SavePlaylist(Playlist playlist) =>
         ((IDiskWriter)this).Write(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
 
-    public Playlist GetPlaylist(string name) =>
-        ((IDiskLoader)this).Load<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+    public Playlist GetPlaylist(string name)
+    {
+        var result = ((IDiskLoader)this).Load<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+        if (result == null)
+            SavePlaylist(new Playlist(name));
+        return ((IDiskLoader)this).Load<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+    }
 
     public void SaveSettings(Settings settings) =>
         ((IDiskWriter)this).Write(settings, SettingsPath);
 
-    public Settings GetSettings() =>
-        ((IDiskLoader)this).Load<Settings>(SettingsPath);
+    public Settings GetSettings()
+    {
+        var result = ((IDiskLoader)this).Load<Settings>(SettingsPath);
+        if (result == null)
+            SaveSettings(new Settings());
+        return ((IDiskLoader)this).Load<Settings>(SettingsPath);
+    }
 }
 
 public interface IDiskWriter
@@ -90,15 +100,16 @@ public interface IDiskLoader
             IncludeFields = true,
             Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
-        
+
         try
         {
             return JsonSerializer.Deserialize<T>(File.ReadAllText(path), opt);
         }
         catch (Exception e)
         {
-            new Logger().LogError("invalid json");
+            new Logger().LogWarning("invalid json");
         }
+
         return default;
     }
 }
