@@ -1,16 +1,15 @@
-using System.Threading.Tasks;
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
-using static Avalonix.ViewModels.PlaylistCreateWindowViewModel;
 
 namespace Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
 public partial class PlaylistCreateWindow : Window
 {
     private readonly PlaylistCreateWindowViewModel _vm;
-    private ILogger _logger;
+    private readonly ILogger _logger;
     public PlaylistCreateWindow(ILogger logger, PlaylistCreateWindowViewModel vm)
     {
         _logger = logger;
@@ -21,6 +20,14 @@ public partial class PlaylistCreateWindow : Window
 
     private async void AddButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        await _vm.OpenTrackFileDialog(this);
+        try
+        {
+            var list = await _vm.OpenTrackFileDialog(this);
+            NewSongBox.Items.Add(list);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error when adding songs: {ex}", ex.Message);
+        }
     }
 }
