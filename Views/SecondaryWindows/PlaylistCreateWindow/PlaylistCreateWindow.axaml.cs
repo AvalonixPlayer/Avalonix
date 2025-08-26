@@ -24,10 +24,28 @@ public partial class PlaylistCreateWindow : Window
         {
             var list = await _vm.OpenTrackFileDialog(this);
             NewSongBox.Items.Add(list);
+            RemoveButton.IsEnabled = true;
         }
         catch (Exception ex)
         {
             _logger.LogError("Error when adding songs: {ex}", ex.Message);
+        }
+    }
+
+    private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var songs2remove = NewSongBox.SelectedItems!; 
+            NewSongBox.Items.Remove(songs2remove);
+            _logger.LogInformation("Removed songs: {songs}", songs2remove );
+            
+            if (NewSongBox.Items.Count == 0) 
+                RemoveButton.IsEnabled = false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error when remove songs: {ex}", ex.Message);
         }
     }
 }

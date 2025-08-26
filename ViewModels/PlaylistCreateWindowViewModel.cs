@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
+using DynamicData;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModels;
@@ -31,7 +32,7 @@ public class PlaylistCreateWindowViewModel(ILogger<PlaylistCreateWindowViewModel
             
             var files = await storageProvider.OpenFilePickerAsync(filePickerOptions);
             
-            if (files.Count == 0)
+            if (files.Count.Equals(0))
             {
                 logger.LogInformation("No files selected");
                 return null;

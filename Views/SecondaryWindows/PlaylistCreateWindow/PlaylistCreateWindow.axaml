@@ -29,7 +29,7 @@
                     <ListBox Height="300" Name="NewSongBox"></ListBox>
                     <StackPanel Orientation="Horizontal">
                         <Button Click="AddButton_OnClick">Add</Button>             
-                        <Button Name="RemoveButton" IsEnabled="False">Remove</Button>             
+                        <Button Click="RemoveButton_OnClick" Name="RemoveButton" IsEnabled="False">Remove</Button>             
                     </StackPanel>
                 </StackPanel>
             </Border> 
