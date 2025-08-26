@@ -10,7 +10,11 @@ using Avalonix.Models.Media;
 
 namespace Avalonix.ViewModels;
 
-public class PlaylistCreateWindowViewModel(ILogger<PlaylistCreateWindowViewModel> logger, IDiskManager diskManager, MediaPlayer player) : ViewModelBase
+public class PlaylistCreateWindowViewModel(
+    ILogger<PlaylistCreateWindowViewModel> logger,
+    IDiskManager diskManager, 
+    IMediaPlayer player) 
+    : ViewModelBase
 {
     public async Task<string[]?> OpenTrackFileDialog(Window parent)
     {

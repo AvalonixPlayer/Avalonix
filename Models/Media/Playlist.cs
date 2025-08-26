@@ -5,7 +5,7 @@ using Avalonix.Models.Disk;
 
 namespace Avalonix.Models.Media;
 
-public class Playlist(string name, MediaPlayer player, IDiskManager disk)
+public class Playlist(string name, IMediaPlayer player, IDiskManager disk)
 {
     public string Name => name;
 

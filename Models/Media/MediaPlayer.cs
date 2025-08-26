@@ -4,7 +4,7 @@ using Un4seen.Bass;
 
 namespace Avalonix.Models.Media;
 
-public class MediaPlayer
+public class MediaPlayer : IMediaPlayer
 {
     private int _stream;
 

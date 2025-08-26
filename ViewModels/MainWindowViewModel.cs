@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Avalonix.Models.Disk;
 using Avalonix.Services;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModels;
 
-public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager, DiskManager diskManager) 
+public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager) 
     : ViewModelBase
 {
     public async Task ExitAsync()
