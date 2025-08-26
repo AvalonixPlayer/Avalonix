@@ -2,6 +2,9 @@
 > In dev
 
 # **Avalonix**
+![GitHub repo size](https://img.shields.io/github/repo-size/Nokskiy/Avalonix?style=for-the-badge&logo=github&labelColor=purple&color=blue)
+![GitHub top language](https://img.shields.io/github/languages/top/Nokskiy/Avalonix?style=for-the-badge&labelColor=green)
+![GitHub last commit](https://img.shields.io/github/last-commit/Nokskiy/Avalonix?style=for-the-badge)
 
 # 📌 **About**
 
@@ -32,7 +35,7 @@
 - **Do [pull requests](https://github.com/Nokskiy/Avalonix/pulls)**
 
 # **License**
-[**GNU GENERAL PUBLIC LICENSE**](.\\LICENSE)
+[**LGPL-3.0 license**](.\\LICENSE)
 
 # **Authors**
 - [**Ruzen42**](https://github.com/ruzen42)
