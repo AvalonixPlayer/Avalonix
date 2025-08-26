@@ -9,9 +9,10 @@ public class Track
 {
     public TrackData TrackData;
     [JsonIgnore] public TrackMetadata Metadata => new(TrackData.Path);
-
-    [JsonConstructor]
-    public Track() { }
+    
+    public Track()
+    {
+    }
 
     public Track(string? path) => TrackData = new TrackData(path!);
 
@@ -35,17 +36,15 @@ public struct TrackMetadata
     public string? Genre { get; private set; }
     public short? Year { get; private set; }
     public string? Lyric { get; private set; }
-    public TimeSpan? Duration { get; private set; }
+    public TimeSpan Duration { get; private set; }
     public byte[]? Cover { get; set; }
 
-    public TrackMetadata(string path)
-    {
+    public TrackMetadata(string path) =>
         FillTrackMetaData(path);
-    }
 
-    public void FillTrackMetaData(string Path)
+    private void FillTrackMetaData(string Path)
     {
-        using var track = File.Create(Path)!;
+        var track = File.Create(Path)!;
         TrackName = track.Tag!.Title ?? "Song";
         Album = track.Tag!.Album!;
         Artist = track.Tag!.FirstPerformer!;

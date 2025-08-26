@@ -5,43 +5,77 @@ using Avalonix.Models.Disk;
 
 namespace Avalonix.Models.Media;
 
-public class Playlist(string name, IMediaPlayer player, IDiskManager disk)
+//хрень с конструктором опять
+public class Playlist
 {
-    public string Name => name;
+    public Playlist() { }
+
+    public Playlist(string name, IMediaPlayer player, IDiskManager disk)
+    {
+        Name = name;
+        Player = player;
+        Disk = disk;
+    }
+
+    private IMediaPlayer Player;
+    private IDiskManager Disk;
+    public string Name {get; set;}
 
     public PlaylistData PlaylistData = new();
 
-    public void AddTrack(Track track) => PlaylistData.Tracks.Add(track);
-
-    public void RemoveTrack(Track track)
+    public async Task AddTrack(Track track)
     {
-        for(var i = 0; i < PlaylistData.Tracks.Count; i++)
-            if (PlaylistData.Tracks[i].TrackData.Path == track.TrackData.Path)
-                PlaylistData.Tracks.Remove(PlaylistData.Tracks[i]);
+        PlaylistData.Tracks.Add(track);
+        await Save();
     }
 
-    public async Task Save() => await disk.SavePlaylist(this);
-    public void UpdateLastListenDate() => PlaylistData.LastListen = DateTime.Now.TimeOfDay;
+    public async Task RemoveTrack(Track track)
+    {
+        for (var i = 0; i < PlaylistData.Tracks.Count; i++)
+        {
+            if (PlaylistData.Tracks[i].TrackData.Path == track.TrackData.Path)
+                PlaylistData.Tracks.Remove(PlaylistData.Tracks[i]);
+            await Save();
+        }
+    }
+
+    public async Task Save() => await Disk.SavePlaylist(this);
 
     public async Task Play()
     {
         foreach (var track in PlaylistData.Tracks)
         {
-            player.Play(track);
-            while (!player.IsFree)
+            PlaylistData.LastListen = DateTime.Now.Date;
+
+            await Save();
+
+            Player.Play(track);
+
+            while (!Player.IsFree)
                 Task.Delay(1000).Wait();
         }
     }
 
     public void Pause() =>
-        player.Pause();
+        Player.Pause();
 
     public void Resume() =>
-        player.Resume();
+        Player.Resume();
 }
 
 public struct PlaylistData()
 {
     public List<Track> Tracks { get; init; } = [];
-    public TimeSpan? LastListen { get; set; } = null!;
+    public DateTime? LastListen { get; set; } = null!;
+
+    public TimeSpan? PlaylistDuration
+    {
+        get
+        {
+            TimeSpan totalTime = TimeSpan.Zero;
+            foreach (var track in Tracks)
+                totalTime += track.Metadata.Duration;
+            return totalTime;
+        }
+    }
 }
