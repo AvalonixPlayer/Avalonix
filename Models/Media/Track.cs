@@ -45,16 +45,14 @@ public struct TrackMetadata
 
     public void FillTrackMetaData(string Path)
     {
-        using (var track = File.Create(Path))
-        {
-            TrackName = track.Tag.Title;
-            Album = track.Tag.Album;
-            Artist = track.Tag.FirstPerformer;
-            Genre = track.Tag.FirstGenre;
-            Year = (short)track.Tag.Year;
-            Lyric = track.Tag.Lyrics;
-            Duration = track.Properties.Duration;
-            Cover = track.Tag.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover).Data.Data;
-        }
+        using var track = File.Create(Path);
+        TrackName = track.Tag.Title;
+        Album = track.Tag.Album;
+        Artist = track.Tag.FirstPerformer;
+        Genre = track.Tag.FirstGenre;
+        Year = (short)track.Tag.Year;
+        Lyric = track.Tag.Lyrics;
+        Duration = track.Properties.Duration;
+        Cover = track.Tag.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover).Data.Data;
     }
 }
