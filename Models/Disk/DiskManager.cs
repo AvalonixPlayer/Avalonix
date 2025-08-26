@@ -9,7 +9,6 @@ namespace Avalonix.API;
 public class DiskManager : IDiskWriter, IDiskLoader
 {
     private readonly string Extension = ".avalonix";
-    private readonly ILogger _logger = new Logger();
 
     private string AvalonixFolderPath
     {

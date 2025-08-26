@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using TagLib;
 
@@ -42,6 +43,7 @@ public struct TrackMetadata
     public short? Year { get; private set; }
     public string? Lyric { get; private set; }
     public TimeSpan? Duration { get; private set; }
+    public byte[]? Cover { get; set; }
 
     public TrackMetadata(string Path) => FillTrackMetaData(Path);
 
@@ -56,6 +58,7 @@ public struct TrackMetadata
             Year = (short)track.Tag.Year;
             Lyric = track.Tag.Lyrics;
             Duration = track.Properties.Duration;
+            Cover = track.Tag.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover).Data.Data;
         }
     }
 }
