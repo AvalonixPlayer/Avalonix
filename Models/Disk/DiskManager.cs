@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger) : IDiskWriter, IDiskLoader
+public class DiskManager(ILogger logger) : IDiskManager 
 {
     private readonly string _extension = ".avalonix";
 
@@ -44,8 +44,7 @@ public class DiskManager(ILogger logger) : IDiskWriter, IDiskLoader
         }
     }
 
-    private string[] PlaylistsPaths => Directory.GetFiles(PlaylistsPath);
-
+    public string[] PlaylistsPaths => Directory.GetFiles(PlaylistsPath);
 
     public async Task SavePlaylist(Playlist playlist)
     {
@@ -57,7 +56,7 @@ public class DiskManager(ILogger logger) : IDiskWriter, IDiskLoader
     {
         var result = await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + _extension));
         if (result != null) return result;
-        await SavePlaylist(new Playlist(name));
+        await SavePlaylist(new Playlist());
         result = await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + _extension));
         return result!; 
     }
