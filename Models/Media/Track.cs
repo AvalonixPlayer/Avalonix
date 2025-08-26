@@ -15,6 +15,7 @@ public class Track
     {
     }
 
+
     public Track(string path) => TrackData = new(path);
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;
@@ -28,10 +29,8 @@ public struct TrackData
     public int Rarity { get; set; } = 0;
     public TimeSpan? LastListen { get; set; } = null!;
 
-    public TrackData(string path)
-    {
+    public TrackData(string path) =>
         Path = path;
-    }
 }
 
 public struct TrackMetadata

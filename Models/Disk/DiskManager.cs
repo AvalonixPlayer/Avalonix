@@ -66,7 +66,8 @@ public interface IDiskWriter
         var opt = new JsonSerializerOptions
         {
             WriteIndented = true,
-            IncludeFields = true
+            IncludeFields = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
         if (!File.Exists(path))
@@ -86,9 +87,18 @@ public interface IDiskLoader
         var opt = new JsonSerializerOptions
         {
             WriteIndented = true,
-            IncludeFields = true
+            IncludeFields = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
-
-        return JsonSerializer.Deserialize<T>(File.ReadAllText(path), opt);
+        
+        try
+        {
+            return JsonSerializer.Deserialize<T>(File.ReadAllText(path), opt);
+        }
+        catch (Exception e)
+        {
+            new Logger().LogError("invalid json");
+        }
+        return default;
     }
 }

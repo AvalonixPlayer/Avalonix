@@ -13,7 +13,13 @@ public class Playlist(string name)
     private readonly MediaPlayer _player = new(new Logger());
 
     public void AddTrack(Track track) => PlaylistData.Tracks.Add(track);
-    public void RemoveTrack(Track track) => PlaylistData.Tracks.Remove(track);
+
+    public void RemoveTrack(Track track)
+    {
+        for(int i = 0; i < PlaylistData.Tracks.Count; i++)
+            if (PlaylistData.Tracks[i].TrackData.Path == track.TrackData.Path)
+                PlaylistData.Tracks.Remove(PlaylistData.Tracks[i]);
+    }
 
     public void Save() => new DiskManager().SavePlaylist(this);
     public void UpdateLastListenDate() => PlaylistData.LastListen = DateTime.Now.TimeOfDay;
