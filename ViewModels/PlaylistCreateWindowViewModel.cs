@@ -65,6 +65,8 @@ public class PlaylistCreateWindowViewModel(
 
     public async Task CreatePlaylist(string playlistName, params List<ItemCollection> songs)
     {
+        if (songs.Count == 0) return;
+        
         var playlist = new Playlist(playlistName, player, diskManager)
         {
             PlaylistData = new PlaylistData
@@ -75,7 +77,7 @@ public class PlaylistCreateWindowViewModel(
         
         try
         {
-            logger.LogDebug("Saving playlist: {name}", playlistName);
+            logger.LogInformation("Saving playlist: {name}", playlistName);
             await playlist.Save();
         }
         catch (Exception e)

@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
+using ReactiveUI;
 
 namespace Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
@@ -23,6 +25,7 @@ public partial class PlaylistCreateWindow : Window
         try
         {
             var list = await _vm.OpenTrackFileDialog(this);
+            if (list.Any(string.IsNullOrWhiteSpace)) return;
             NewSongBox.Items.Add(list);
             RemoveButton.IsEnabled = true;
         }
@@ -49,6 +52,18 @@ public partial class PlaylistCreateWindow : Window
         }
     }
 
-    private async void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>
-       await _vm.CreatePlaylist(PlaylistName.Text!, NewSongBox.Items); 
+    private async void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var name = PlaylistName.Text;
+            var items = NewSongBox.Items;
+            if (string.IsNullOrWhiteSpace(name) || items.Count <= 0) return;
+            await _vm.CreatePlaylist(name, items);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error when create playlist: {ex}", ex.Message);
+        }
+    }
 }

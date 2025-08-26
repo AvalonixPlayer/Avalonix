@@ -49,7 +49,7 @@ public class DiskManager(ILogger logger) : IDiskManager
     public async Task SavePlaylist(Playlist playlist)
     {
         await ((IDiskWriter)this).WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + _extension));
-        logger.LogInformation("Playlist saved");
+        logger.LogDebug("Playlist saved");
     }
 
     public async Task<Playlist> GetPlaylist(string name) =>
