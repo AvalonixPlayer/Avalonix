@@ -71,34 +71,3 @@ public class DiskManager : IDiskWriter, IDiskLoader
     }
 }
 
-
-        File.WriteAllText(path, JsonSerializer.Serialize(obj, opt));
-    }
-}
-
-public interface IDiskLoader
-{
-    public T? Load<T>(string path)
-    {
-        if (!File.Exists(path))
-            File.Create(path).Close();
-
-        var opt = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            IncludeFields = true,
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        };
-
-        try
-        {
-            return JsonSerializer.Deserialize<T>(File.ReadAllText(path), opt);
-        }
-        catch (Exception e)
-        {
-            new Logger().LogWarning("invalid json");
-        }
-
-        return default;
-    }
-}
