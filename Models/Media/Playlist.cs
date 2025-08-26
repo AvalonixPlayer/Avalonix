@@ -47,6 +47,6 @@ public class Playlist(string name)
 
 public struct PlaylistData()
 {
-    public List<Track> Tracks { get; set; } = [];
+    public List<Track> Tracks { get; init; } = [];
     public TimeSpan? LastListen { get; set; } = null!;
 }
