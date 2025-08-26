@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
-using DynamicData;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModels;
@@ -27,6 +26,7 @@ public class PlaylistCreateWindowViewModel(ILogger<PlaylistCreateWindowViewModel
                     FilePickerFileTypes.All
                 ]
             };
+            
 
             logger.LogInformation("Opening track file dialog");
             
