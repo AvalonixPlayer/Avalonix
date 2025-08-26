@@ -19,6 +19,5 @@ public interface IDiskWriter
             File.Create(path).Close();
         
         await File.WriteAllTextAsync(path, JsonSerializer.Serialize(obj, opt));
-
     }
 }

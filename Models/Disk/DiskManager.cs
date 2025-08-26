@@ -9,7 +9,7 @@ namespace Avalonix.Models.Disk;
 
 public class DiskManager(ILogger logger) : IDiskWriter, IDiskLoader
 {
-    private readonly string Extension = ".avalonix";
+    private readonly string _extension = ".avalonix";
 
     private string AvalonixFolderPath
     {
@@ -37,7 +37,7 @@ public class DiskManager(ILogger logger) : IDiskWriter, IDiskLoader
     {
         get
         {
-            var path = Path.Combine(AvalonixFolderPath, ".settings" + Extension);
+            var path = Path.Combine(AvalonixFolderPath, ".settings" + _extension);
             if (!Path.Exists(path))
                 File.Create(path).Close();
             return path;
@@ -49,16 +49,17 @@ public class DiskManager(ILogger logger) : IDiskWriter, IDiskLoader
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await ((IDiskWriter)this).WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+        await ((IDiskWriter)this).WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + _extension));
         logger.LogInformation("Playlist saved");
     }
 
     public async Task<Playlist> GetPlaylist(string name)
     {
-        var result = await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
-        if (result == null)
-            SavePlaylist(new Playlist(name));
-        return result; 
+        var result = await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + _extension));
+        if (result != null) return result;
+        await SavePlaylist(new Playlist(name));
+        result = await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + _extension));
+        return result!; 
     }
 
     public async Task SaveSettings(Settings settings)
@@ -70,9 +71,9 @@ public class DiskManager(ILogger logger) : IDiskWriter, IDiskLoader
     public async Task<Settings?> GetSettings()
     {
         var result = await ((IDiskLoader)this).LoadAsync<Settings>(SettingsPath);
-        if (result == null)
-            SaveSettings(new Settings());
-           result = await ((IDiskLoader)this).LoadAsync<Settings>(SettingsPath);
+        if (result != null) return result;
+        await SaveSettings(new Settings());
+        result = await ((IDiskLoader)this).LoadAsync<Settings>(SettingsPath);
         return result;
     }
 }
