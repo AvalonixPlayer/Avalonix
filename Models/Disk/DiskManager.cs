@@ -52,14 +52,8 @@ public class DiskManager(ILogger logger) : IDiskManager
         logger.LogInformation("Playlist saved");
     }
 
-    public async Task<Playlist> GetPlaylist(string name)
-    {
-        var result = await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + _extension));
-        if (result != null) return result;
-        await SavePlaylist(new Playlist());
-        result = await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + _extension));
-        return result!; 
-    }
+    public async Task<Playlist> GetPlaylist(string name) =>
+        (await ((IDiskLoader)this).LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + _extension)))!;
 
     public async Task SaveSettings(Settings settings)
     {
