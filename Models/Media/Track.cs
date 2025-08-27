@@ -9,7 +9,8 @@ public class Track
 {
     public TrackData TrackData;
     [JsonIgnore] public TrackMetadata Metadata => new(TrackData.Path);
-    
+
+    [JsonConstructor]
     public Track()
     {
     }

@@ -2,7 +2,6 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonix.ViewModels;
-using Microsoft.Extensions.Logging;
 
 namespace Avalonix;
 

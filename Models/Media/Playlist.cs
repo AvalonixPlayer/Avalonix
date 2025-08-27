@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 
@@ -8,17 +9,18 @@ namespace Avalonix.Models.Media;
 //хрень с конструктором опять
 public class Playlist
 {
+    [JsonConstructor]
     public Playlist() { }
 
     public Playlist(string name, IMediaPlayer player, IDiskManager disk)
     {
         Name = name;
-        Player = player;
-        Disk = disk;
+        _player = player;
+        _disk = disk;
     }
 
-    private IMediaPlayer Player;
-    private IDiskManager Disk;
+    private IMediaPlayer _player;
+    private IDiskManager _disk;
     public string Name {get; set;}
 
     public PlaylistData PlaylistData = new();
@@ -39,7 +41,7 @@ public class Playlist
         }
     }
 
-    public async Task Save() => await Disk.SavePlaylist(this);
+    public async Task Save() => await _disk.SavePlaylist(this);
 
     public async Task Play()
     {
@@ -49,18 +51,18 @@ public class Playlist
 
             await Save();
 
-            Player.Play(track);
+            _player.Play(track);
 
-            while (!Player.IsFree)
+            while (!_player.IsFree)
                 Task.Delay(1000).Wait();
         }
     }
 
     public void Pause() =>
-        Player.Pause();
+        _player.Pause();
 
     public void Resume() =>
-        Player.Resume();
+        _player.Resume();
 }
 
 public struct PlaylistData()
