@@ -32,6 +32,19 @@
 - [taglib-sharp](https://github.com/mono/taglib-sharp) - for parse metadata from audio file 🏷️
 - [bass.net](https://www.radio42.com/bass/) - for audio playing 🔊
 
+# 🔧 For Developers
+
+## Dependencies
+
+**BASS.dll** is required for audio processing. Download from [un4seen.com](https://www.un4seen.com/):
+
+- Windows x86 - bass.dll
+- Windows x64 - bass64.dll (rename to bass.dll)
+- Linux - libbass.so  
+- macOS - libbass.dylib
+
+Manual placement **required** - the library must be copied to your application's build output folder.
+
 # 🤝 **Contributing**
 ***Your contribution*** is ***very important*** to us. Here's how you can help the project:
 - 🐛 **Point out the [issues](https://github.com/Nokskiy/Avalonix/issues) you found**
