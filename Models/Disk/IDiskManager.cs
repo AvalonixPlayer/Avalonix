@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonix.Models.Media.MediaPlayerFiles;
 using Avalonix.Models.UserSettings;
 using Avalonix.Models.Media.PlaylistFiles;
 
@@ -9,7 +10,7 @@ namespace Avalonix.Models.Disk;
 public interface IDiskManager : IDiskWriter, IDiskLoader
 {
     Task SavePlaylist(Playlist playlist);
-    Task<Playlist> GetPlaylist(string name);
+    Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager);
     
     Task SaveSettings(Settings settings);
     Task<Settings?> GetSettings();

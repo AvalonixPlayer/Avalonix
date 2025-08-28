@@ -14,8 +14,8 @@ namespace Avalonix.ViewModels;
 
 public class PlaylistCreateWindowViewModel(
     ILogger<PlaylistCreateWindowViewModel> logger,
-    IDiskManager diskManager, 
-    IMediaPlayer player) 
+    IDiskManager diskManager,
+    IMediaPlayer player)
     : ViewModelBase
 {
     public async Task<string[]?> OpenTrackFileDialog(Window parent)
@@ -23,7 +23,7 @@ public class PlaylistCreateWindowViewModel(
         try
         {
             var storageProvider = parent.StorageProvider;
-            
+
             var filePickerOptions = new FilePickerOpenOptions
             {
                 Title = "Select Audio Files",
@@ -37,12 +37,12 @@ public class PlaylistCreateWindowViewModel(
                     FilePickerFileTypes.All
                 ]
             };
-            
+
 
             logger.LogInformation("Opening track file dialog");
-            
+
             var files = await storageProvider.OpenFilePickerAsync(filePickerOptions);
-            
+
             if (files.Count.Equals(0))
             {
                 logger.LogInformation("No files selected");
@@ -68,7 +68,7 @@ public class PlaylistCreateWindowViewModel(
     public async Task CreatePlaylist(string playlistName, params List<ItemCollection> songs)
     {
         if (songs.Count == 0) return;
-        
+
         var playlist = new Playlist(playlistName, player, diskManager)
         {
             PlaylistData = new PlaylistData
@@ -76,7 +76,7 @@ public class PlaylistCreateWindowViewModel(
                 Tracks = songs.Select(song => new Track(song.ToString())).ToList()
             }
         };
-        
+
         try
         {
             logger.LogInformation("Saving playlist: {name}", playlistName);
