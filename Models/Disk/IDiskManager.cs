@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Models.UserSettings;
-using Avalonix.Models.Media;
+using Avalonix.Models.Media.PlaylistFiles;
 
 namespace Avalonix.Models.Disk;
 

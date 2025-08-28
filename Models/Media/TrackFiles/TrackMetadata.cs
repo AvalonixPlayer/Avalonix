@@ -1,33 +1,8 @@
 using System;
 using System.Linq;
-using System.Text.Json.Serialization;
 using TagLib;
 
-namespace Avalonix.Models.Media;
-
-public class Track
-{
-    public TrackData TrackData;
-    [JsonIgnore] public TrackMetadata Metadata => new(TrackData.Path);
-
-    [JsonConstructor]
-    public Track()
-    {
-    }
-
-    public Track(string? path) => TrackData = new TrackData(path!);
-
-    public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;
-
-    public void UpdateLastListenDate() => TrackData.LastListen = DateTime.Now.TimeOfDay;
-}
-
-public struct TrackData(string path)
-{
-    public string Path { get; set; } = path;
-    public int Rarity { get; set; } = 0;
-    public TimeSpan? LastListen { get; set; } = null!;
-}
+namespace Avalonix.Models.Media.TrackFiles;
 
 public struct TrackMetadata
 {

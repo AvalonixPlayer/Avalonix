@@ -6,7 +6,9 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonix.Models.Disk;
 using Microsoft.Extensions.Logging;
-using Avalonix.Models.Media;
+using Avalonix.Models.Media.MediaPlayerFiles;
+using Avalonix.Models.Media.PlaylistFiles;
+using Avalonix.Models.Media.TrackFiles;
 
 namespace Avalonix.ViewModels;
 
@@ -71,7 +73,7 @@ public class PlaylistCreateWindowViewModel(
         {
             PlaylistData = new PlaylistData
             {
-                Tracks = songs.Select(song => new Track(song.ToString())).ToList() 
+                Tracks = songs.Select(song => new Track(song.ToString())).ToList()
             }
         };
         

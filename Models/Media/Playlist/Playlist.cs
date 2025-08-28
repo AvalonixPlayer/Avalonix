@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
+using Avalonix.Models.Media.MediaPlayerFiles;
+using Avalonix.Models.Media.TrackFiles;
 
-namespace Avalonix.Models.Media;
+namespace Avalonix.Models.Media.PlaylistFiles;
 
-//хрень с конструктором опять
 public class Playlist
 {
     [JsonConstructor]
@@ -19,8 +19,8 @@ public class Playlist
         _disk = disk;
     }
 
-    private IMediaPlayer _player;
-    private IDiskManager _disk;
+    private readonly IMediaPlayer _player;
+    private readonly IDiskManager _disk;
     public string Name {get; set;}
 
     public PlaylistData PlaylistData = new();
@@ -63,21 +63,4 @@ public class Playlist
 
     public void Resume() =>
         _player.Resume();
-}
-
-public struct PlaylistData()
-{
-    public List<Track> Tracks { get; init; } = [];
-    public DateTime? LastListen { get; set; } = null!;
-
-    public TimeSpan? PlaylistDuration
-    {
-        get
-        {
-            TimeSpan totalTime = TimeSpan.Zero;
-            foreach (var track in Tracks)
-                totalTime += track.Metadata.Duration;
-            return totalTime;
-        }
-    }
 }

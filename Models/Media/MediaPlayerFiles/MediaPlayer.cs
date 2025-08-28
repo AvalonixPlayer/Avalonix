@@ -1,8 +1,9 @@
 using System;
+using Avalonix.Models.Media.TrackFiles;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
 
-namespace Avalonix.Models.Media;
+namespace Avalonix.Models.Media.MediaPlayerFiles;
 
 public class MediaPlayer : IMediaPlayer
 {

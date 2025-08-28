@@ -5,7 +5,7 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using Avalonix.Models.Disk;
-using Avalonix.Models.Media;
+using Avalonix.Models.Media.MediaPlayerFiles;
 using Avalonix.Services;
 using Avalonix.ViewModels;
 using Avalonix.Views;

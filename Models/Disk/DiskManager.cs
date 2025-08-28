@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Models.UserSettings;
-using Avalonix.Models.Media;
+using Avalonix.Models.Media.PlaylistFiles;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;

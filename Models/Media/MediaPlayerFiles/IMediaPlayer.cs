@@ -1,4 +1,6 @@
-namespace Avalonix.Models.Media;
+using Avalonix.Models.Media.TrackFiles;
+
+namespace Avalonix.Models.Media.MediaPlayerFiles;
 
 public interface IMediaPlayer
 {
