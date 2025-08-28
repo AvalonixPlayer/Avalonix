@@ -31,7 +31,7 @@ public class DiskManager(ILogger logger) : IDiskManager
         logger.LogInformation("Settings saved");
     }
 
-    public async Task<Settings?> GetSettings()
+    public async Task<Settings> GetSettings()
     {
         var result = await IDM.LoadAsync<Settings>(IDM.SettingsPath);
         if (result != null) return result;

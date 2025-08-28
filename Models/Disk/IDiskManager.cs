@@ -13,7 +13,7 @@ public interface IDiskManager : IDiskWriter, IDiskLoader
     Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager);
     
     Task SaveSettings(Settings settings);
-    Task<Settings?> GetSettings();
+    Task<Settings> GetSettings();
     
     string _extension => ".avalonix";
     

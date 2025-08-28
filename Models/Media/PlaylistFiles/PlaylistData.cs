@@ -13,5 +13,5 @@ public struct PlaylistData()
         Tracks.Aggregate(TimeSpan.Zero, (current, track) => current + track.Metadata.Duration);
 
     public DateTime? LastListen { get; set; } = null!;
-    public int? Rarity { get; set; } = null!;
+    public int? Rarity { get; set; } = 0;
 }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayerFiles;
 using Avalonix.Models.Media.TrackFiles;
+using Avalonix.Models.UserSettings;
 using Microsoft.Extensions.Logging;
 using NeoSimpleLogger;
 
@@ -15,25 +16,28 @@ public class Playlist
     public Playlist()
     {
     }
+
     public Playlist(string name, IMediaPlayer player, IDiskManager disk)
     {
         Name = name;
         _player = player;
         _disk = disk;
     }
-    public void Initialize(string name, IMediaPlayer player, IDiskManager disk,ILogger logger)
+
+    public void Initialize(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
     {
         Name = name;
         _player = player;
         _disk = disk;
         _logger = logger;
+        _settings = _disk.GetSettings().Result;
     }
 
     private IMediaPlayer _player;
     private IDiskManager _disk;
     private ILogger _logger;
-
-    public string Name {get; set;}
+    private Settings _settings;
+    public string Name { get; set; }
 
     public PlaylistData PlaylistData = new();
 
@@ -52,30 +56,32 @@ public class Playlist
             await Save();
         }
     }
-    
+
 
     public async Task Save() => await _disk.SavePlaylist(this);
-    
+
     private void UpdateLastListen() => PlaylistData.LastListen = DateTime.Now.Date;
 
     private void UpdateRarity() => PlaylistData.Rarity += 1;
-    
+
     public async Task Play()
     {
         _logger.LogInformation($"Playlist {Name} has started");
-        
+
         foreach (var track in PlaylistData.Tracks)
         {
             UpdateLastListen();
             UpdateRarity();
-            
+
             await Save();
 
             _player.Play(track);
 
             while (!_player.IsFree)
-                Task.Delay(1000).Wait();
+                await Task.Delay(1000);
         }
+        if (_settings.Avalonix.Playlists.Loop)
+            _ = Play();
 
         _logger.LogInformation($"Playlist {Name} completed");
     }

@@ -10,7 +10,7 @@ namespace Avalonix;
 internal static class Program
 {
     [STAThread]
-    public static async Task Main(string[] args) =>
+    public static void Main(string[] args) =>
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
     private static AppBuilder BuildAvaloniaApp() =>
