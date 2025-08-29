@@ -5,10 +5,14 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
+using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 
 namespace Avalonix.Services;
 
-public class WindowManager(ILogger<WindowManager> logger, PlaylistCreateWindowViewModel playlistCreateWindowViewModel) : IWindowManager
+public class WindowManager(ILogger<WindowManager> logger,
+    PlaylistCreateWindowViewModel playlistCreateWindowViewModel, 
+    PlaylistSelectWindowViewModel playlistSelectWindowViewModel) 
+    : IWindowManager
 {
     private static void CloseMainWindow()
     {
@@ -34,4 +38,5 @@ public class WindowManager(ILogger<WindowManager> logger, PlaylistCreateWindowVi
     }
 
     public Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => Task.FromResult(new PlaylistCreateWindow(logger, playlistCreateWindowViewModel));
+    public Task<PlaylistSelectWindow> PlaylistSelectWindow_Open() => Task.FromResult(new PlaylistSelectWindow(logger, playlistSelectWindowViewModel));
 }

@@ -18,7 +18,7 @@ public class PlaylistCreateWindowViewModel(
     IMediaPlayer player)
     : ViewModelBase
 {
-    public async Task<string[]?> OpenTrackFileDialog(Window parent)
+    public async Task<string[]?> OpenTrackFileDialogAsync(Window parent)
     {
         try
         {
@@ -65,7 +65,7 @@ public class PlaylistCreateWindowViewModel(
         }
     }
 
-    public async Task CreatePlaylist(string playlistName, params List<ItemCollection> songs)
+    public async Task CreatePlaylistAsync(string playlistName, params List<ItemCollection> songs)
     {
         if (songs.Count == 0) return;
 

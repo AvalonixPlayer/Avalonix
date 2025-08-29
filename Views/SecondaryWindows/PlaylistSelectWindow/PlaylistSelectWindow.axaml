@@ -1,0 +1,35 @@
+<Window  xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:vm="using:Avalonix.ViewModels"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+         Width="300" Height="600" CanResize="False"
+         Background="Transparent"
+         TransparencyLevelHint="AcrylicBlur"
+         x:Class="Avalonix.Views.SecondaryWindows.PlaylistSelectWindow.PlaylistSelectWindow"
+         x:DataType="vm:PlaylistCreateWindowViewModel"
+         Icon="/Assets/avalonia-logo.ico"
+         Title="Avalonix - Playlist Select">
+    
+        <Design.DataContext>
+            <vm:PlaylistCreateWindowViewModel/>
+        </Design.DataContext>
+    
+        <StackPanel Margin="10">
+            <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
+                <StackPanel>
+                    <Label Padding="10" CornerRadius="12">Playlist Name</Label> 
+                    <TextBox Name="PlaylistName" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Playlist Name"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
+                <StackPanel>
+                    <Label Padding="10" CornerRadius="12">Songs</Label> 
+                    <ListBox Height="300" Name="NewSongBox"></ListBox>
+                    <StackPanel Orientation="Horizontal">
+                    </StackPanel>
+                </StackPanel>
+            </Border> 
+        </StackPanel>
+</Window>

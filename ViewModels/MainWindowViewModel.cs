@@ -21,7 +21,7 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         }
     }
 
-    public async Task<PlaylistCreateWindow> PlaylistCreateWindow_Open()
+    public async Task<PlaylistCreateWindow> PlaylistCreateButton_Open()
     {
         try
         {

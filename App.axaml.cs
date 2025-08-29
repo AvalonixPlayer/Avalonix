@@ -28,6 +28,7 @@ public class App : Application
         {
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<PlaylistCreateWindowViewModel>();
+            services.AddTransient<PlaylistSelectWindowViewModel>();
             services.AddTransient<MainWindow>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();

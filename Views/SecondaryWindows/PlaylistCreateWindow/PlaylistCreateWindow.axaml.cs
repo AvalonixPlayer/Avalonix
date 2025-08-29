@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
-using ReactiveUI;
 
 namespace Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
@@ -17,15 +16,15 @@ public partial class PlaylistCreateWindow : Window
         _logger = logger;
         _vm = vm;
         InitializeComponent();
-        logger.LogInformation("PlaylistCreateWindow opened");
+        _logger.LogInformation("PlaylistCreateWindow opened");
     }
 
     private async void AddButton_OnClick(object? sender, RoutedEventArgs e)
     {
         try
         {
-            var list = await _vm.OpenTrackFileDialog(this);
-            if (list.Any(string.IsNullOrWhiteSpace)) return;
+            var list = await _vm.OpenTrackFileDialogAsync(this);
+            if (list!.Any(string.IsNullOrWhiteSpace)) return;
             NewSongBox.Items.Add(list);
             RemoveButton.IsEnabled = true;
         }
@@ -39,9 +38,9 @@ public partial class PlaylistCreateWindow : Window
     {
         try
         {
-            var songs2remove = NewSongBox.SelectedItems!; 
-            NewSongBox.Items.Remove(songs2remove);
-            _logger.LogInformation("Removed songs: {songs}", songs2remove );
+            var songs2Remove = NewSongBox.SelectedItems!; 
+            NewSongBox.Items.Remove(songs2Remove);
+            _logger.LogInformation("Removed songs: {songs}", songs2Remove );
             
             if (NewSongBox.Items.Count == 0) 
                 RemoveButton.IsEnabled = false;
@@ -59,7 +58,7 @@ public partial class PlaylistCreateWindow : Window
             var name = PlaylistName.Text;
             var items = NewSongBox.Items;
             if (string.IsNullOrWhiteSpace(name) || items.Count <= 0) return;
-            await _vm.CreatePlaylist(name, items);
+            await _vm.CreatePlaylistAsync(name, items);
         }
         catch (Exception ex)
         {
