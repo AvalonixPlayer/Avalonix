@@ -8,7 +8,7 @@ using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
 namespace Avalonix.Services;
 
-public class WindowManager(ILogger<WindowManager> logger, PlaylistCreateWindowViewModel _playlistCreateWindowViewModel) : IWindowManager
+public class WindowManager(ILogger<WindowManager> logger, PlaylistCreateWindowViewModel playlistCreateWindowViewModel) : IWindowManager
 {
     private static void CloseMainWindow()
     {
@@ -33,5 +33,5 @@ public class WindowManager(ILogger<WindowManager> logger, PlaylistCreateWindowVi
         }
     }
 
-    public Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => Task.FromResult(new PlaylistCreateWindow(logger, _playlistCreateWindowViewModel));
+    public Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => Task.FromResult(new PlaylistCreateWindow(logger, playlistCreateWindowViewModel));
 }
