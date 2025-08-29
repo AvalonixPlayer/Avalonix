@@ -24,20 +24,20 @@ public class Playlist
         _disk = disk;
     }
 
-    public void Initialize(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
+    public async Task Initialize(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
     {
         Name = name;
         _player = player;
         _disk = disk;
         _logger = logger;
-        _settings = _disk.GetSettings().Result;
+        _settings = await _disk.GetSettings();
     }
 
     private IMediaPlayer _player;
     private IDiskManager _disk;
     private ILogger _logger;
     private Settings _settings;
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
     public PlaylistData PlaylistData = new();
 
