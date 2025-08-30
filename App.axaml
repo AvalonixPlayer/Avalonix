@@ -36,7 +36,6 @@
             <Setter Property="MaxHeight" Value="70"/>
             <Setter Property="MaxWidth" Value="100"/>
             <Setter Property="CornerRadius" Value="7"/>
-            <Setter Property="Padding" Value="2"/>
             <Setter Property="Margin" Value="2"/>
             <Setter Property="Background" Value="#33A9A9A9"/>
         </Style>

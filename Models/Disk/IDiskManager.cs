@@ -10,7 +10,7 @@ namespace Avalonix.Models.Disk;
 public interface IDiskManager : IDiskWriter, IDiskLoader
 {
     Task SavePlaylist(Playlist playlist);
-    Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager);
+    Task<Playlist> GetPlaylist(string name);
     
     Task SaveSettings(Settings settings);
     Task<Settings> GetSettings();

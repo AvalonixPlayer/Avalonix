@@ -27,7 +27,8 @@ public partial class MainWindow  : Window
 
     private void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _logger.LogInformation("Volume slider changed");
+        
     }
 
     private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>

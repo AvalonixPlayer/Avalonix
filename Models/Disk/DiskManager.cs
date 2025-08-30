@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger) : IDiskManager
+public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 {
     private IDiskManager IDM => this;
 
@@ -17,10 +17,10 @@ public class DiskManager(ILogger logger) : IDiskManager
         logger.LogDebug("Playlist saved");
     }
 
-    public async Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager)
+    public async Task<Playlist> GetPlaylist(string name)
     {
         var result = (await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension)))!;
-        result.Initialize(name, player, diskManager,logger);
+        result.Initialize(name, player, IDM,logger);
         return result;
     }
 

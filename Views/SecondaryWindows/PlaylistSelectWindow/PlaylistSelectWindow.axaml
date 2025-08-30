@@ -19,16 +19,12 @@
         <StackPanel Margin="10">
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
-                    <Label Padding="10" CornerRadius="12">Playlist Name</Label> 
-                    <TextBox Name="PlaylistName" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Playlist Name"/>
+                    <TextBox Name="SearchBox" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Search"/>
                 </StackPanel>
             </Border>
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
-                    <Label Padding="10" CornerRadius="12">Songs</Label> 
-                    <ListBox Height="300" Name="NewSongBox"></ListBox>
-                    <StackPanel Orientation="Horizontal">
-                    </StackPanel>
+                    <ListBox Height="300" Name="Playlists"></ListBox>
                 </StackPanel>
             </Border> 
         </StackPanel>

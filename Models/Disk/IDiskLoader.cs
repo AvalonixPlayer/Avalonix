@@ -20,11 +20,11 @@ public interface IDiskLoader
         };
         try
         {
-            return JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), opt);
+            return JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), opt)!;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            return default;
+            return default!;
         }
         
     }
