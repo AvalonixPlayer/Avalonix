@@ -1,6 +1,3 @@
 namespace Avalonix.ViewModels;
 
-public class PlaylistSelectWindowViewModel : ViewModelBase
-{
-    
-}
+public class PlaylistSelectWindowViewModel : ViewModelBase;

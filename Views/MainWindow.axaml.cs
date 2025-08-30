@@ -30,8 +30,9 @@ public partial class MainWindow  : Window
         throw new System.NotImplementedException();
     }
 
-    private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        await (await _vm.PlaylistCreateButton_Open()).ShowDialog(this);
-    }
+    private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>
+        await (await _vm.PlaylistCreateWindow_Open()).ShowDialog(this);
+
+    private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
+        await (await _vm.PlaylistSelectWindow_Open()).ShowDialog(this);
 }
