@@ -27,5 +27,6 @@
                     <ListBox Height="300" Name="Playlists"></ListBox>
                 </StackPanel>
             </Border> 
+            <Button Click="StartPlaylist_OnClick"></Button>
         </StackPanel>
 </Window>
