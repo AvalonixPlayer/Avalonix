@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayerFiles;
@@ -19,8 +20,8 @@ public class DiskManager(ILogger logger) : IDiskManager
 
     public async Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager)
     {
-        var result = (await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension)))!;
-        result.Initialize(name, player, diskManager,logger);
+        var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension));
+        await result.Initialize(name, player, diskManager, logger);
         return result;
     }
 
