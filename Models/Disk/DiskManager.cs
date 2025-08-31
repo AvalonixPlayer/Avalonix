@@ -48,7 +48,6 @@ public class DiskManager(ILogger logger) : IDiskManager
         return playlists.ToArray();
     }
 
-
     public async Task SaveSettings(Settings settings)
     {
         await IDM.WriteAsync(settings, IDM.SettingsPath);

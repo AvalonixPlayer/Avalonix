@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using TagLib;
 
 namespace Avalonix.Models.Media.TrackFiles;
@@ -29,5 +30,19 @@ public struct TrackMetadata
         Lyric = track.Tag!.Lyrics!;
         Duration = track.Properties!.Duration!;
         Cover = track.Tag!.Pictures!.FirstOrDefault(p => p.Type == PictureType.FrontCover)!.Data!.Data!;
+    }
+    
+    public override string ToString()
+    {
+        var result = new StringBuilder();
+        result.AppendLine($"TrackName: {TrackName}");
+        result.AppendLine($"Album: {Album}");
+        result.AppendLine($"Artist: {Artist}");
+        result.AppendLine($"Genre: {Genre}");
+        result.AppendLine($"Year: {Year}");
+        result.AppendLine($"Lyric: {Lyric}");
+        result.AppendLine($"Duration: {Duration}");
+        result.AppendLine($"Duration: {(Cover == null ? true : false)}");
+        return result.ToString();
     }
 }

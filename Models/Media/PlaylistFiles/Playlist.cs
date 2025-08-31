@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
@@ -67,7 +68,7 @@ public class Playlist
     {
         var random = new Random();
         var tracks = PlaylistData.Tracks;
-        if(_settings.Avalonix.Playlists.Shuffle)
+        if (_settings.Avalonix.Playlists.Shuffle)
             tracks = tracks.OrderBy(_ => random.Next()).ToList();
 
         _logger.LogInformation("Playlist {Name} has started", Name);
@@ -80,7 +81,7 @@ public class Playlist
             await Save();
 
             _player.Play(track);
-            
+
             while (!_player.IsFree)
                 await Task.Delay(1000);
         }
@@ -90,7 +91,7 @@ public class Playlist
         _logger.LogInformation("Playlist {Name} completed", Name);
     }
 
-    public void Stop() => 
+    public void Stop() =>
         _player.Stop();
 
     public void Pause() =>
@@ -98,4 +99,14 @@ public class Playlist
 
     public void Resume() =>
         _player.Resume();
+
+    public override string ToString()
+    {
+        var result = new StringBuilder();
+        result.AppendLine($"Name: {Name}");
+        result.AppendLine("Tracks: ");
+        foreach (var track in PlaylistData.Tracks)
+            result.AppendLine($"\t{track.TrackData.Path}");
+        return result.ToString();
+    }
 }
