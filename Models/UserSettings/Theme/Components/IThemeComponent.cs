@@ -4,5 +4,5 @@ namespace Avalonix.Models.UserSettings.Theme.Components;
 
 public interface IThemeComponent
 {
-    Color ButtonBackground { get; set; }
+    string ButtonBackground { get; set; }
 }

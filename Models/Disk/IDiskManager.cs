@@ -44,8 +44,18 @@ public interface IDiskManager : IDiskWriter, IDiskLoader
         get
         {
             var path = Path.Combine(AvalonixFolderPath, "settings" + _extension);
-            if (!Path.Exists(path))
+            if (!File.Exists(path))
                 File.Create(path).Close();
+            return path;
+        }
+    }
+    string ThemesPath
+    {
+        get
+        {
+            var path = Path.Combine(AvalonixFolderPath, "themes");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
             return path;
         }
     }

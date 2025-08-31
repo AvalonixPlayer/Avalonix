@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayerFiles;
 using Avalonix.Models.UserSettings;
 using Avalonix.Models.Media.PlaylistFiles;
+using Avalonix.Models.UserSettings.Theme;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
@@ -40,9 +41,10 @@ public class DiskManager(ILogger logger) : IDiskManager
         foreach (var file in files)
         {
             var playlist = await GetPlaylist(Path.GetFileNameWithoutExtension(file), player, diskManager);
-            if(playlist == null!) continue;
+            if (playlist == null!) continue;
             playlists.Add(playlist);
         }
+
         return playlists.ToArray();
     }
 
@@ -51,6 +53,27 @@ public class DiskManager(ILogger logger) : IDiskManager
     {
         await IDM.WriteAsync(settings, IDM.SettingsPath);
         logger.LogInformation("Settings saved");
+    }
+
+    public async Task CreateNewTheme(string name)
+    {
+        var theme = new Theme
+        {
+            Name = name
+        };
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM._extension));
+    }
+
+    public async Task SaveTheme(Theme theme)
+    {
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, theme.Name + IDM._extension));
+    }
+
+    public async Task<Theme> GetTheme(string name)
+    {
+        string path = Path.Combine(IDM.ThemesPath, name + IDM._extension);
+        var theme = await IDM.LoadAsync<Theme>(path);
+        return theme;
     }
 
     public async Task<Settings> GetSettings()
