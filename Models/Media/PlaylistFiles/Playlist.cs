@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
@@ -8,16 +7,22 @@ using Avalonix.Models.Media.MediaPlayerFiles;
 using Avalonix.Models.Media.TrackFiles;
 using Avalonix.Models.UserSettings;
 using Microsoft.Extensions.Logging;
-using NeoSimpleLogger;
 
 namespace Avalonix.Models.Media.PlaylistFiles;
 
 public class Playlist
 {
+    private IMediaPlayer _player = null!;
+    private IDiskManager _disk = null!;
+    private ILogger _logger = null!;
+    private Settings _settings = null!;
+    private readonly Random _random = new();
+    public string Name { get; private set; } = null!;
+
+    public PlaylistData PlaylistData = new();
+    
     [JsonConstructor]
-    public Playlist()
-    {
-    }
+    public Playlist() { }
 
     public Playlist(string name, IMediaPlayer player, IDiskManager disk)
     {
@@ -26,7 +31,7 @@ public class Playlist
         _disk = disk;
     }
 
-    public async Task Initialize(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
+    public async Task InitializeAsync(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
     {
         Name = name;
         _player = player;
@@ -34,14 +39,6 @@ public class Playlist
         _logger = logger;
         _settings = await _disk.GetSettings();
     }
-
-    private IMediaPlayer _player;
-    private IDiskManager _disk;
-    private ILogger _logger;
-    private Settings _settings;
-    public string Name { get; private set; }
-
-    public PlaylistData PlaylistData = new();
 
     public async Task AddTrack(Track track)
     {
@@ -66,10 +63,10 @@ public class Playlist
 
     public async Task Play()
     {
-        var random = new Random();
         var tracks = PlaylistData.Tracks;
-        if (_settings.Avalonix.Playlists.Shuffle)
-            tracks = tracks.OrderBy(_ => random.Next()).ToList();
+        
+        if(_settings.Avalonix.Playlists.Shuffle) // Randomize if Random is enabled
+            tracks = tracks.OrderBy(_ => _random.Next()).ToList();
 
         _logger.LogInformation("Playlist {Name} has started", Name);
 
@@ -81,7 +78,7 @@ public class Playlist
             await Save();
 
             _player.Play(track);
-
+            
             while (!_player.IsFree)
                 await Task.Delay(1000);
         }
@@ -91,7 +88,7 @@ public class Playlist
         _logger.LogInformation("Playlist {Name} completed", Name);
     }
 
-    public void Stop() =>
+    public void Stop() => 
         _player.Stop();
 
     public void Pause() =>
@@ -100,13 +97,4 @@ public class Playlist
     public void Resume() =>
         _player.Resume();
 
-    public override string ToString()
-    {
-        var result = new StringBuilder();
-        result.AppendLine($"Name: {Name}");
-        result.AppendLine("Tracks: ");
-        foreach (var track in PlaylistData.Tracks)
-            result.AppendLine($"\t{track.TrackData.Path}");
-        return result.ToString();
-    }
 }

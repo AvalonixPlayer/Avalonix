@@ -25,13 +25,13 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         try
         {
             var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM.Extension));
-            await result!.Initialize(name, player, IDM, logger);
+            await result?.InitializeAsync(name, player, IDM, logger)!;
             logger.LogDebug("Playlist get: {name}", name);
             return result;
         }
         catch (Exception ex)
         {
-            logger.LogError("Playlist error while get: {ex}", ex.Message);
+            logger.LogError("Playlist error while get: {ex}", ex);
             return null!;
         }
     }
@@ -58,10 +58,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 
     public async Task CreateNewTheme(string name)
     {
-        var theme = new Theme
-        {
-            Name = name
-        };
+        var theme = new Theme { Name = name };
         await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM.Extension));
     }
 
