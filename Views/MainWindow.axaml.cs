@@ -27,11 +27,13 @@ public partial class MainWindow  : Window
 
     private void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _logger.LogInformation("Volume slider changed");
+        
     }
 
-    private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e)
-    {
+    private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>
         await (await _vm.PlaylistCreateWindow_Open()).ShowDialog(this);
-    }
+
+    private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
+        await (await _vm.PlaylistSelectWindow_Open()).ShowDialog(this);
 }

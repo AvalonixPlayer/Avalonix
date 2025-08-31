@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayerFiles;
@@ -10,12 +11,13 @@ namespace Avalonix.Models.Disk;
 public interface IDiskManager : IDiskWriter, IDiskLoader
 {
     Task SavePlaylist(Playlist playlist);
-    Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager);
+    Task<Playlist> GetPlaylist(string name);
+    Task<List<Playlist>> GetAllPlaylists();
     
     Task SaveSettings(Settings settings);
     Task<Settings> GetSettings();
     
-    string _extension => ".avalonix";
+    string Extension => ".avalonix";
     
     string AvalonixFolderPath
     {
@@ -43,7 +45,7 @@ public interface IDiskManager : IDiskWriter, IDiskLoader
     {
         get
         {
-            var path = Path.Combine(AvalonixFolderPath, "settings" + _extension);
+            var path = Path.Combine(AvalonixFolderPath, "settings" + Extension);
             if (!File.Exists(path))
                 File.Create(path).Close();
             return path;

@@ -23,13 +23,23 @@
             <Setter Property="BorderBrush" Value="LightGreen"/>
             <Setter Property="Background" Value="#33212121"/>
         </Style>
+        
         <Style Selector="Button">
             <Setter Property="MaxHeight" Value="70"/>
             <Setter Property="MaxWidth" Value="70"/>
             <Setter Property="CornerRadius" Value="12"/>
             <Setter Property="Padding" Value="2"/>
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Margin" Value="2"/>
         </Style>
+        
+        <Style Selector="Button.h2">
+            <Setter Property="MaxHeight" Value="70"/>
+            <Setter Property="MaxWidth" Value="100"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Background" Value="#33A9A9A9"/>
+        </Style>
+        
         <Style Selector="Border">
             <Setter Property="Background" Value="#33A9A9A9"/>
             <Setter Property="CornerRadius" Value="12"/>

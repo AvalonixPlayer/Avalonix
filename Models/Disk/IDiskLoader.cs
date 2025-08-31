@@ -7,7 +7,7 @@ namespace Avalonix.Models.Disk;
 
 public interface IDiskLoader
 {
-    public async Task<T> LoadAsync<T>(string path)
+    public async Task<T?> LoadAsync<T>(string path)
     {
         if (!File.Exists(path))
         {
@@ -22,13 +22,14 @@ public interface IDiskLoader
             IncludeFields = true,
             Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
+        
         try
         {
-            return JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), opt);
+            return JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), opt)!;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            return default;
+            return default!;
         }
         
     }

@@ -10,42 +10,44 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger) : IDiskManager
+public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 {
     private IDiskManager IDM => this;
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await IDM.WriteAsync(playlist, Path.Combine(IDM.PlaylistsPath, playlist.Name + IDM._extension));
+        await IDM.WriteAsync(playlist, Path.Combine(IDM.PlaylistsPath, playlist.Name + IDM.Extension));
         logger.LogDebug("Playlist saved");
     }
 
-    public async Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager)
+    public async Task<Playlist> GetPlaylist(string name)
     {
         try
         {
-            var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension));
-            await result.Initialize(name, player, diskManager, logger);
+            var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM.Extension));
+            await result!.Initialize(name, player, IDM, logger);
+            logger.LogDebug("Playlist get: {name}", name);
             return result;
         }
-        catch
+        catch (Exception ex)
         {
+            logger.LogError("Playlist error while get: {ex}", ex.Message);
             return null!;
         }
     }
 
-    public async Task<Playlist[]> GetAllPlaylists(IMediaPlayer player, IDiskManager diskManager)
+    public async Task<List<Playlist>> GetAllPlaylists()
     {
-        var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM._extension}");
+        var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM.Extension}");
         var playlists = new List<Playlist>();
         foreach (var file in files)
         {
-            var playlist = await GetPlaylist(Path.GetFileNameWithoutExtension(file), player, diskManager);
+            var playlist = await GetPlaylist(Path.GetFileNameWithoutExtension(file));
             if (playlist == null!) continue;
             playlists.Add(playlist);
         }
 
-        return playlists.ToArray();
+        return playlists;
     }
 
     public async Task SaveSettings(Settings settings)
@@ -60,19 +62,19 @@ public class DiskManager(ILogger logger) : IDiskManager
         {
             Name = name
         };
-        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM._extension));
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM.Extension));
     }
 
     public async Task SaveTheme(Theme theme)
     {
-        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, theme.Name + IDM._extension));
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, theme.Name + IDM.Extension));
     }
 
     public async Task<Theme> GetTheme(string name)
     {
-        string path = Path.Combine(IDM.ThemesPath, name + IDM._extension);
+        var path = Path.Combine(IDM.ThemesPath, name + IDM.Extension);
         var theme = await IDM.LoadAsync<Theme>(path);
-        return theme;
+        return theme!;
     }
 
     public async Task<Settings> GetSettings()
@@ -81,6 +83,6 @@ public class DiskManager(ILogger logger) : IDiskManager
         if (result != null) return result;
         await SaveSettings(new Settings());
         result = await IDM.LoadAsync<Settings>(IDM.SettingsPath);
-        return result;
+        return result!;
     }
 }

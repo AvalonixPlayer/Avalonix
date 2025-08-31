@@ -3,12 +3,13 @@
 
 # **Avalonix** 🎵
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Nokskiy/Avalonix?style=for-the-badge&logo=github&labelColor=purple&color=blue)
-![GitHub top language](https://img.shields.io/github/languages/top/Nokskiy/Avalonix?style=for-the-badge&labelColor=green)
-![GitHub last commit](https://img.shields.io/github/last-commit/Nokskiy/Avalonix?style=for-the-badge&logo=github&labelColor=purple&color=green)
-![GitHub License](https://img.shields.io/github/license/Nokskiy/Avalonix?style=for-the-badge&color=Green&labelColor=yellow)
+![GitHub repo size](https://img.shields.io/github/repo-size/Nokskiy/Avalonix?style=for-the-badge&logo=github)
+![GitHub top language](https://img.shields.io/github/languages/top/Nokskiy/Avalonix?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/Cross_platform-blue?style=for-the-badge)
-![GitHub Repo stars](https://img.shields.io/github/stars/Nokskiy/Avalonix?style=for-the-badge&labelColor=green&color=red)
+
+![GitHub last commit](https://img.shields.io/github/last-commit/Nokskiy/Avalonix?style=for-the-badge&logo=github)
+![GitHub License](https://img.shields.io/github/license/Nokskiy/Avalonix?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/Nokskiy/Avalonix?style=for-the-badge&color=yellow)
 
 # 📌 **About**
 
