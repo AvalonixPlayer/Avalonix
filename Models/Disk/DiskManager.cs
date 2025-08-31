@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger) : IDiskManager
+public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 {
     private IDiskManager IDM => this;
 
@@ -20,12 +19,12 @@ public class DiskManager(ILogger logger) : IDiskManager
         logger.LogDebug("Playlist saved");
     }
 
-    public async Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager)
+    public async Task<Playlist> GetPlaylist(string name)
     {
         try
         {
             var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension));
-            await result.Initialize(name, player, diskManager, logger);
+            await result.Initialize(name, player, IDM, logger);
             return result;
         }
         catch
@@ -34,13 +33,13 @@ public class DiskManager(ILogger logger) : IDiskManager
         }
     }
 
-    public async Task<Playlist[]> GetAllPlaylists(IMediaPlayer player, IDiskManager diskManager)
+    public async Task<Playlist[]> GetAllPlaylists()
     {
         var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM._extension}");
         var playlists = new List<Playlist>();
         foreach (var file in files)
         {
-            var playlist = await GetPlaylist(Path.GetFileNameWithoutExtension(file), player, diskManager);
+            var playlist = await GetPlaylist(Path.GetFileNameWithoutExtension(file));
             if (playlist == null!) continue;
             playlists.Add(playlist);
         }
