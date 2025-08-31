@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await IDM.WriteAsync(playlist, Path.Combine(IDM.PlaylistsPath, playlist.Name + IDM._extension));
+        await IDM.WriteAsync(playlist, Path.Combine(IDM.PlaylistsPath, playlist.Name + IDM.Extension));
         logger.LogDebug("Playlist saved");
     }
 
@@ -23,24 +24,21 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
     {
         try
         {
-            var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension));
+            var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM.Extension));
             await result!.Initialize(name, player, IDM, logger);
+            logger.LogDebug("Playlist get: {name}", name);
             return result;
         }
-        catch
+        catch (Exception ex)
         {
-            logger.LogError("Playlist error while get: {name}", name);
+            logger.LogError("Playlist error while get: {ex}", ex.Message);
             return null!;
-        }
-        finally
-        {
-            logger.LogDebug("Playlist get: {name}", name);
         }
     }
 
     public async Task<List<Playlist>> GetAllPlaylists()
     {
-        var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM._extension}");
+        var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM.Extension}");
         var playlists = new List<Playlist>();
         foreach (var file in files)
         {
@@ -65,17 +63,17 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         {
             Name = name
         };
-        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM._extension));
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM.Extension));
     }
 
     public async Task SaveTheme(Theme theme)
     {
-        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, theme.Name + IDM._extension));
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, theme.Name + IDM.Extension));
     }
 
     public async Task<Theme> GetTheme(string name)
     {
-        var path = Path.Combine(IDM.ThemesPath, name + IDM._extension);
+        var path = Path.Combine(IDM.ThemesPath, name + IDM.Extension);
         var theme = await IDM.LoadAsync<Theme>(path);
         return theme!;
     }

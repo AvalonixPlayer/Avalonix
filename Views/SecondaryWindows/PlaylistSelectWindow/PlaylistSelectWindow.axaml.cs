@@ -32,14 +32,15 @@ public partial class PlaylistSelectWindow : Window
     {
         try
         {
-            var selectedPlaylist = PlaylistBox.SelectedItems!;
+            var selectedPlaylist = (List<string>)PlaylistBox.SelectedItems!;
             if (selectedPlaylist.Count == 0)
                 return;
-            var playlist = selectedPlaylist[0]!; 
+            var playlist = selectedPlaylist[0];
+            _ = _playlists.Find(p => p.Name == playlist)!.Play();
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            _logger.LogError("Error while starting playlist in SelectWindow: {ex}", exception.Message);
+            _logger.LogError("Error while starting playlist in SelectWindow: {ex}", ex.Message);
         }
     }
 
@@ -47,8 +48,11 @@ public partial class PlaylistSelectWindow : Window
     {
         var text = SearchBox.Text;
         if (string.IsNullOrWhiteSpace(text))
-            PlaylistBox.ItemsSource = _playlists.Select(p => p.Name).ToList();
-
+        {
+            PlaylistBox.ItemsSource = _playlists.Select(p => p.Name);
+            return;
+        }
+            
         PlaylistBox.ItemsSource = _playlists
             .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
             .Select(item => item.Name);
