@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayerFiles;
@@ -11,6 +12,7 @@ public interface IDiskManager : IDiskWriter, IDiskLoader
 {
     Task SavePlaylist(Playlist playlist);
     Task<Playlist> GetPlaylist(string name);
+    Task<List<Playlist>> GetAllPlaylists();
     
     Task SaveSettings(Settings settings);
     Task<Settings> GetSettings();

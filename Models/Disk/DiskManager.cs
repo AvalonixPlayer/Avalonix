@@ -24,7 +24,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         try
         {
             var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension));
-            await result.Initialize(name, player, IDM, logger);
+            await result!.Initialize(name, player, IDM, logger);
             return result;
         }
         catch
@@ -33,7 +33,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         }
     }
 
-    public async Task<Playlist[]> GetAllPlaylists()
+    public async Task<List<Playlist>> GetAllPlaylists()
     {
         var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM._extension}");
         var playlists = new List<Playlist>();
@@ -44,7 +44,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
             playlists.Add(playlist);
         }
 
-        return playlists.ToArray();
+        return playlists;
     }
 
 
