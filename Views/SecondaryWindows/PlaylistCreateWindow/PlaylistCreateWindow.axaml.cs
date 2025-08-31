@@ -23,9 +23,9 @@ public partial class PlaylistCreateWindow : Window
     {
         try
         {
-            var list = await _vm.OpenTrackFileDialogAsync(this);
-            if (list!.Any(string.IsNullOrWhiteSpace)) return;
-            NewSongBox.Items.Add(list);
+            var fileList = (await _vm.OpenTrackFileDialogAsync(this))!;
+            if (fileList.Any(string.IsNullOrWhiteSpace)) return;
+            NewSongBox.Items.Add(fileList);
             RemoveButton.IsEnabled = true;
         }
         catch (Exception ex)
@@ -42,7 +42,7 @@ public partial class PlaylistCreateWindow : Window
             NewSongBox.Items.Remove(songs2Remove);
             _logger.LogInformation("Removed songs: {songs}", songs2Remove );
             
-            if (NewSongBox.Items.Count == 0) 
+            if (NewSongBox.Items.Count.Equals(0)) 
                 RemoveButton.IsEnabled = false;
         }
         catch (Exception ex)

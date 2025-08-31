@@ -16,10 +16,7 @@ public class WindowManager(ILogger<WindowManager> logger,
 {
     private static void CloseMainWindow()
     {
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            desktop.Shutdown();
-        } 
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) desktop.Shutdown();
     }
 
     public async Task CloseMainWindowAsync()
@@ -27,12 +24,11 @@ public class WindowManager(ILogger<WindowManager> logger,
         try
         {
             // Saving Data | NOT IMPLEMENTED
-            await Task.Delay(TimeSpan.FromSeconds(0));
             CloseMainWindow();
         }
         catch (Exception ex)
         {
-            logger.LogCritical("Error during closing: {ex}", ex);
+            logger.LogCritical("Error during closing and saving: {ex}", ex);
             CloseMainWindow();
         }
     }
