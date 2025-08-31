@@ -29,7 +29,12 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         }
         catch
         {
+            logger.LogError("Playlist error while get: {name}", name);
             return null!;
+        }
+        finally
+        {
+            logger.LogDebug("Playlist get: {name}", name);
         }
     }
 
@@ -70,9 +75,9 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 
     public async Task<Theme> GetTheme(string name)
     {
-        string path = Path.Combine(IDM.ThemesPath, name + IDM._extension);
+        var path = Path.Combine(IDM.ThemesPath, name + IDM._extension);
         var theme = await IDM.LoadAsync<Theme>(path);
-        return theme;
+        return theme!;
     }
 
     public async Task<Settings> GetSettings()
@@ -81,6 +86,6 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         if (result != null) return result;
         await SaveSettings(new Settings());
         result = await IDM.LoadAsync<Settings>(IDM.SettingsPath);
-        return result;
+        return result!;
     }
 }

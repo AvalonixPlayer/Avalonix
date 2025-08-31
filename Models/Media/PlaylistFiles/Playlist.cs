@@ -98,4 +98,5 @@ public class Playlist
 
     public void Resume() =>
         _player.Resume();
+
 }

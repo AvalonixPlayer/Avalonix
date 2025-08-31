@@ -19,12 +19,12 @@
         <StackPanel Margin="10">
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
-                    <TextBox Name="SearchBox" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Search"/>
+                    <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Search"/>
                 </StackPanel>
             </Border>
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
-                    <ListBox Height="300" Name="Playlists"></ListBox>
+                    <ListBox Height="300" Name="PlaylistBox"></ListBox>
                 </StackPanel>
             </Border> 
             <Button Click="StartPlaylist_OnClick"></Button>
