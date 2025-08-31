@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
@@ -24,20 +25,20 @@ public class Playlist
         _disk = disk;
     }
 
-    public void Initialize(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
+    public async Task Initialize(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
     {
         Name = name;
         _player = player;
         _disk = disk;
         _logger = logger;
-        _settings = _disk.GetSettings().Result;
+        _settings = await _disk.GetSettings();
     }
 
     private IMediaPlayer _player;
     private IDiskManager _disk;
     private ILogger _logger;
     private Settings _settings;
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
     public PlaylistData PlaylistData = new();
 
@@ -50,11 +51,9 @@ public class Playlist
     public async Task RemoveTrack(Track track)
     {
         for (var i = 0; i < PlaylistData.Tracks.Count; i++)
-        {
             if (PlaylistData.Tracks[i].TrackData.Path == track.TrackData.Path)
                 PlaylistData.Tracks.Remove(PlaylistData.Tracks[i]);
-            await Save();
-        }
+        await Save();
     }
 
 
@@ -62,13 +61,18 @@ public class Playlist
 
     private void UpdateLastListen() => PlaylistData.LastListen = DateTime.Now.Date;
 
-    private void UpdateRarity() => PlaylistData.Rarity += 1;
+    private void UpdateRarity() => PlaylistData.Rarity++;
 
     public async Task Play()
     {
-        _logger.LogInformation($"Playlist {Name} has started");
+        var random = new Random();
+        var tracks = PlaylistData.Tracks;
+        if(_settings.Avalonix.Playlists.Shuffle)
+            tracks = tracks.OrderBy(_ => random.Next()).ToList();
 
-        foreach (var track in PlaylistData.Tracks)
+        _logger.LogInformation("Playlist {Name} has started", Name);
+
+        foreach (var track in tracks)
         {
             UpdateLastListen();
             UpdateRarity();
@@ -76,15 +80,18 @@ public class Playlist
             await Save();
 
             _player.Play(track);
-
+            
             while (!_player.IsFree)
                 await Task.Delay(1000);
         }
-        if (_settings.Avalonix.Playlists.Loop)
-            _ = Play();
 
-        _logger.LogInformation($"Playlist {Name} completed");
+        if (_settings.Avalonix.Playlists.Loop) await Play();
+
+        _logger.LogInformation("Playlist {Name} completed", Name);
     }
+
+    public void Stop() => 
+        _player.Stop();
 
     public void Pause() =>
         _player.Pause();

@@ -53,7 +53,7 @@ Manual placement **required** - the library must be copied to your application's
 - 🔀 **Do [pull requests](https://github.com/Nokskiy/Avalonix/pulls)**
 
 # 📄 **License**
-[**LGPL-3.0 license**](.\\LICENSE) ⚖️
+[**LGPL-3.0 license**](LICENSE) ⚖️
 
 # ✍️ **Authors**
 - [**Ruzen42**](https://github.com/ruzen42) 👨‍💻

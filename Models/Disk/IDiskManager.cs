@@ -32,7 +32,7 @@ public interface IDiskManager : IDiskWriter, IDiskLoader
     {
         get
         {
-            var path = Path.Combine(AvalonixFolderPath, ".playlists");
+            var path = Path.Combine(AvalonixFolderPath, "playlists");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             return path;
@@ -43,9 +43,19 @@ public interface IDiskManager : IDiskWriter, IDiskLoader
     {
         get
         {
-            var path = Path.Combine(AvalonixFolderPath, ".settings" + _extension);
-            if (!Path.Exists(path))
+            var path = Path.Combine(AvalonixFolderPath, "settings" + _extension);
+            if (!File.Exists(path))
                 File.Create(path).Close();
+            return path;
+        }
+    }
+    string ThemesPath
+    {
+        get
+        {
+            var path = Path.Combine(AvalonixFolderPath, "themes");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
             return path;
         }
     }

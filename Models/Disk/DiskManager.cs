@@ -1,13 +1,16 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayerFiles;
 using Avalonix.Models.UserSettings;
 using Avalonix.Models.Media.PlaylistFiles;
+using Avalonix.Models.UserSettings.Theme;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
+public class DiskManager(ILogger logger) : IDiskManager
 {
     private IDiskManager IDM => this;
 
@@ -17,11 +20,32 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         logger.LogDebug("Playlist saved");
     }
 
-    public async Task<Playlist> GetPlaylist(string name)
+    public async Task<Playlist> GetPlaylist(string name, IMediaPlayer player, IDiskManager diskManager)
     {
-        var result = (await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension)))!;
-        result.Initialize(name, player, IDM,logger);
-        return result;
+        try
+        {
+            var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM._extension));
+            await result.Initialize(name, player, diskManager, logger);
+            return result;
+        }
+        catch
+        {
+            return null!;
+        }
+    }
+
+    public async Task<Playlist[]> GetAllPlaylists(IMediaPlayer player, IDiskManager diskManager)
+    {
+        var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM._extension}");
+        var playlists = new List<Playlist>();
+        foreach (var file in files)
+        {
+            var playlist = await GetPlaylist(Path.GetFileNameWithoutExtension(file), player, diskManager);
+            if (playlist == null!) continue;
+            playlists.Add(playlist);
+        }
+
+        return playlists.ToArray();
     }
 
 
@@ -29,6 +53,27 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
     {
         await IDM.WriteAsync(settings, IDM.SettingsPath);
         logger.LogInformation("Settings saved");
+    }
+
+    public async Task CreateNewTheme(string name)
+    {
+        var theme = new Theme
+        {
+            Name = name
+        };
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM._extension));
+    }
+
+    public async Task SaveTheme(Theme theme)
+    {
+        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, theme.Name + IDM._extension));
+    }
+
+    public async Task<Theme> GetTheme(string name)
+    {
+        string path = Path.Combine(IDM.ThemesPath, name + IDM._extension);
+        var theme = await IDM.LoadAsync<Theme>(path);
+        return theme;
     }
 
     public async Task<Settings> GetSettings()

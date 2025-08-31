@@ -1,6 +1,6 @@
 namespace Avalonix.Models.UserSettings.AvalonixSettingsFiles;
 
-public struct AvalonixSettings
+public class AvalonixSettings
 {
     public Playlists Playlists { get; set; }
 }

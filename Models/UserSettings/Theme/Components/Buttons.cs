@@ -1,8 +1,11 @@
+using System.Text.Json.Serialization;
 using Avalonia.Media;
 
 namespace Avalonix.Models.UserSettings.Theme.Components;
 
-public struct Buttons() : IThemeComponent
+public class Buttons : IThemeComponent
 {
-    public Color ButtonBackground { get; set; } = Colors.Green;
+    [JsonConstructor]
+    public Buttons() {}
+    public string ButtonBackground { get; set; } = "#FF008000";
 }
