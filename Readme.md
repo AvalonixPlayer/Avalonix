@@ -6,8 +6,8 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Nokskiy/Avalonix?style=for-the-badge&logo=github)
 ![GitHub top language](https://img.shields.io/github/languages/top/Nokskiy/Avalonix?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/Cross_platform-blue?style=for-the-badge)
-
 ![GitHub last commit](https://img.shields.io/github/last-commit/Nokskiy/Avalonix?style=for-the-badge&logo=github)
+
 ![GitHub License](https://img.shields.io/github/license/Nokskiy/Avalonix?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Nokskiy/Avalonix?style=for-the-badge&color=yellow)
 ![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/Nokskiy%2FAvalonix?branch=main&style=for-the-badge)
