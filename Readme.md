@@ -10,8 +10,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/Nokskiy/Avalonix?style=for-the-badge&logo=github)
 ![GitHub License](https://img.shields.io/github/license/Nokskiy/Avalonix?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Nokskiy/Avalonix?style=for-the-badge&color=yellow)
-![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/Nokskiy%2FAvalonix?branch=main&style=flat-square)
-
+![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/Nokskiy%2FAvalonix?branch=main&style=for-the-badge)
 # 📌 **About**
 
 ***Avalonix*** is a ***simple***, ***user-friendly***, ***cross-platform*** playlist player 🎧
