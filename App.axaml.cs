@@ -32,7 +32,7 @@ public class App : Application
             services.AddTransient<MainWindow>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
-            services.AddSingleton<IDiskManager, DiskManager>();
+            services.AddSingleton<DiskManager>();
             services.AddSingleton<IMediaPlayer, MediaPlayer>();
         }).ConfigureLogging(log =>
         {
