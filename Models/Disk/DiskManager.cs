@@ -20,13 +20,13 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         logger.LogDebug("Playlist saved");
     }
 
-    public async Task<Playlist> GetPlaylist(string name)
+    public async Task<Playlist?> GetPlaylist(string name)
     {
         try
         {
             var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM.Extension));
             await result?.InitializeAsync(name, player, IDM, logger)!;
-            if(result == null!) logger.LogError("Playlist get error: {name}", name);
+            if (result == null!) logger.LogError("Playlist get error: {name}", name);
             else logger.LogDebug("Playlist get: {name}", name);
             return result;
         }
@@ -71,7 +71,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         var result = await IDM.LoadAsync<Theme>(Path.Combine(IDM.ThemesPath, name + IDM.Extension));
         return result ?? new Theme();
     }
-        
+
 
     public async Task<Settings> GetSettings()
     {
