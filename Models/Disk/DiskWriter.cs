@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Avalonix.Models.Disk;
 
-public interface IDiskWriter
+public class DiskWriter
 {
     public async Task WriteAsync<T>(T obj, string path)
     {

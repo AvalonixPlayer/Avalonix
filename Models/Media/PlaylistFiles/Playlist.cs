@@ -13,7 +13,7 @@ namespace Avalonix.Models.Media.PlaylistFiles;
 public class Playlist
 {
     private IMediaPlayer _player = null!;
-    private IDiskManager _disk = null!;
+    private DiskManager _disk = null!;
     private ILogger _logger = null!;
     private Settings _settings = null!;
     private readonly Random _random = new();
@@ -24,14 +24,14 @@ public class Playlist
     [JsonConstructor]
     public Playlist() { }
 
-    public Playlist(string name, IMediaPlayer player, IDiskManager disk)
+    public Playlist(string name, IMediaPlayer player, DiskManager disk)
     {
         Name = name;
         _player = player;
         _disk = disk;
     }
 
-    public async Task InitializeAsync(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
+    public async Task InitializeAsync(string name, IMediaPlayer player, DiskManager disk, ILogger logger)
     {
         Name = name;
         _player = player;

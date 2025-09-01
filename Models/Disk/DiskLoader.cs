@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 
 namespace Avalonix.Models.Disk;
 
-public interface IDiskLoader
+public class DiskLoader
 {
     public async Task<T?> LoadAsync<T>(string path)
     {
         if (!File.Exists(path))
             return default;
-            
 
         var opt = new JsonSerializerOptions
         {

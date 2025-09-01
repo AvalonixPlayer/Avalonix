@@ -10,13 +10,60 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
+public class DiskManager(ILogger logger, IMediaPlayer player)
 {
-    private IDiskManager IDM => this;
+    private readonly DiskLoader _loader = new();
+    private readonly DiskWriter _writer = new();
+
+    private const string Extension = ".avalonix";
+
+    private static string AvalonixFolderPath
+    {
+        get
+        {
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
+    }
+
+    private static string PlaylistsPath
+    {
+        get
+        {
+            var path = Path.Combine(AvalonixFolderPath, "playlists");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
+    }
+
+    private static string SettingsPath
+    {
+        get
+        {
+            var path = Path.Combine(AvalonixFolderPath, "settings" + Extension);
+            if (!File.Exists(path))
+                File.Create(path).Close();
+            return path;
+        }
+    }
+
+    private static string ThemesPath
+    {
+        get
+        {
+            var path = Path.Combine(AvalonixFolderPath, "themes");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
+    }
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await IDM.WriteAsync(playlist, Path.Combine(IDM.PlaylistsPath, playlist.Name + IDM.Extension));
+        await _writer.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
         logger.LogDebug("Playlist saved");
     }
 
@@ -24,8 +71,8 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
     {
         try
         {
-            var result = await IDM.LoadAsync<Playlist>(Path.Combine(IDM.PlaylistsPath, name + IDM.Extension));
-            await result?.InitializeAsync(name, player, IDM, logger)!;
+            var result = await _loader.LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+            await result?.InitializeAsync(name, player, this, logger)!;
             if (result == null!) logger.LogError("Playlist get error: {name}", name);
             else logger.LogDebug("Playlist get: {name}", name);
             return result;
@@ -39,7 +86,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 
     public async Task<List<Playlist>> GetAllPlaylists()
     {
-        var files = Directory.EnumerateFiles(IDM.PlaylistsPath, $"*{IDM.Extension}");
+        var files = Directory.EnumerateFiles(PlaylistsPath, $"*{Extension}");
         var playlists = new List<Playlist>();
         foreach (var file in files)
         {
@@ -53,32 +100,32 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 
     public async Task SaveSettings(Settings settings)
     {
-        await IDM.WriteAsync(settings, IDM.SettingsPath);
+        await _writer.WriteAsync(settings, SettingsPath);
         logger.LogInformation("Settings saved");
     }
 
     public async Task CreateNewTheme(string name)
     {
         var theme = new Theme { Name = name };
-        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, name + IDM.Extension));
+        await _writer.WriteAsync(theme, Path.Combine(ThemesPath, name + Extension));
     }
 
     public async Task SaveTheme(Theme theme) =>
-        await IDM.WriteAsync(theme, Path.Combine(IDM.ThemesPath, theme.Name + IDM.Extension));
+        await _writer.WriteAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
 
     public async Task<Theme> GetTheme(string name)
     {
-        var result = await IDM.LoadAsync<Theme>(Path.Combine(IDM.ThemesPath, name + IDM.Extension));
+        var result = await _loader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
         return result ?? new Theme();
     }
 
 
     public async Task<Settings> GetSettings()
     {
-        var result = await IDM.LoadAsync<Settings>(IDM.SettingsPath);
+        var result = await _loader.LoadAsync<Settings>(SettingsPath);
         if (result != null) return result;
         await SaveSettings(new Settings());
-        result = await IDM.LoadAsync<Settings>(IDM.SettingsPath);
+        result = await _loader.LoadAsync<Settings>(SettingsPath);
         return result!;
     }
 }
