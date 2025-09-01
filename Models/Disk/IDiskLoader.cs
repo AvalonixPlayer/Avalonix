@@ -10,10 +10,7 @@ public interface IDiskLoader
     public async Task<T?> LoadAsync<T>(string path)
     {
         if (!File.Exists(path))
-        {
-            Console.WriteLine("File not found: " + path);
             return default;
-        }
             
 
         var opt = new JsonSerializerOptions
@@ -29,7 +26,7 @@ public interface IDiskLoader
         }
         catch (Exception)
         {
-            return default!;
+            return default;
         }
         
     }
