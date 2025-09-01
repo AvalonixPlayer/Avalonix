@@ -7,7 +7,7 @@ namespace Avalonix.Models.Media.PlaylistFiles;
 
 public struct PlaylistData()
 {
-    public List<Track> Tracks { get; init; } = [];
+    public List<Track> Tracks { get; set; } = [];
 
     public TimeSpan? PlaylistDuration =>
         Tracks.Aggregate(TimeSpan.Zero, (current, track) => current + track.Metadata.Duration);

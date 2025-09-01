@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -20,9 +21,11 @@ public class Playlist
     public string Name { get; private set; } = null!;
 
     public PlaylistData PlaylistData = new();
-    
+
     [JsonConstructor]
-    public Playlist() { }
+    public Playlist()
+    {
+    }
 
     public Playlist(string name, IMediaPlayer player, DiskManager disk)
     {
@@ -54,6 +57,23 @@ public class Playlist
         await Save();
     }
 
+    public async Task RemoveDuplicativeTracks()
+    {
+        var uniquePaths = new HashSet<string>();
+        var tracksToKeep = new List<Track>();
+
+        foreach (var track in PlaylistData.Tracks)
+        {
+            if (uniquePaths.Add(track.TrackData.Path)) // Add возвращает true если путь уникальный
+            {
+                tracksToKeep.Add(track);
+            }
+        }
+
+        PlaylistData.Tracks = tracksToKeep;
+        await Save();
+    }
+
 
     public async Task Save() => await _disk.SavePlaylist(this);
 
@@ -64,8 +84,8 @@ public class Playlist
     public async Task Play()
     {
         var tracks = PlaylistData.Tracks;
-        
-        if(_settings.Avalonix.Playlists.Shuffle) // Randomize if Random is enabled
+
+        if (_settings.Avalonix.Playlists.Shuffle) // Randomize if Random is enabled
             tracks = tracks.OrderBy(_ => _random.Next()).ToList();
 
         _logger.LogInformation("Playlist {Name} has started", Name);
@@ -78,7 +98,7 @@ public class Playlist
             await Save();
 
             _player.Play(track);
-            
+
             while (!_player.IsFree)
                 await Task.Delay(1000);
         }
@@ -88,7 +108,7 @@ public class Playlist
         _logger.LogInformation("Playlist {Name} completed", Name);
     }
 
-    public void Stop() => 
+    public void Stop() =>
         _player.Stop();
 
     public void Pause() =>
@@ -96,5 +116,4 @@ public class Playlist
 
     public void Resume() =>
         _player.Resume();
-
 }
