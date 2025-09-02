@@ -86,10 +86,8 @@ public class Playlist
         if (flags == SortPlaylistTrackFlags.Artist)
             SortByArtist();
 
-        void SortByArtist()
-        {
-            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList();
-        }
+        void SortByArtist() => PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList();
+        
         await Save();
     }
 
