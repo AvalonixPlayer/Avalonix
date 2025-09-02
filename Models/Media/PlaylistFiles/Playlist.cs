@@ -81,6 +81,18 @@ public class Playlist
         await Save();
     }
 
+    public async Task SortTracks(SortPlaylistTrackFlags flags)
+    {
+        if (flags == SortPlaylistTrackFlags.Artist)
+            SortByArtist();
+
+        void SortByArtist()
+        {
+            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList();
+        }
+        await Save();
+    }
+
 
     public async Task Save() => await _disk.SavePlaylist(this);
 
