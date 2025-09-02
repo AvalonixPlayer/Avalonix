@@ -49,6 +49,13 @@ public class Playlist
         await Save();
     }
 
+    public async Task AddOtherPlaylistsContaints(Playlist[] otherPlaylists)
+    {
+        foreach (var playlist in otherPlaylists)
+            playlist.PlaylistData.Tracks.ForEach(track => PlaylistData.Tracks.Add(track));
+        await Save();
+    }
+
     public async Task RemoveTrack(Track track)
     {
         for (var i = 0; i < PlaylistData.Tracks.Count; i++)
