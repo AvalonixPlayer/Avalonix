@@ -84,9 +84,17 @@ public class Playlist
     public async Task SortTracks(SortPlaylistTrackFlags flags)
     {
         if (flags == SortPlaylistTrackFlags.Artist)
-            SortByArtist();
-
-        void SortByArtist() => PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList();
+            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList();
+        if (flags == SortPlaylistTrackFlags.ArtistInverted)
+            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).Reverse().ToList();
+        if (flags == SortPlaylistTrackFlags.Year)
+            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).ToList();
+        if (flags == SortPlaylistTrackFlags.YearInverted)
+            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).Reverse().ToList();
+        if (flags == SortPlaylistTrackFlags.Durration)
+            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).ToList();
+        if (flags == SortPlaylistTrackFlags.DurrationInverted)
+            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).Reverse().ToList();
         
         await Save();
     }

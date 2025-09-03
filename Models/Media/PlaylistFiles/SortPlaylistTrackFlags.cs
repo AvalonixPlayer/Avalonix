@@ -2,8 +2,12 @@ using System;
 
 namespace Avalonix.Models.Media.PlaylistFiles;
 
-[Flags]
 public enum SortPlaylistTrackFlags
 {
-    Artist
+    Artist = 0,
+    ArtistInverted = 0,
+    Year = 0,
+    YearInverted = 0,
+    Durration = 0,
+    DurrationInverted = 0,
 }
