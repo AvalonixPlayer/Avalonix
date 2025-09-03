@@ -110,7 +110,7 @@ public class Playlist
         track.IncreaseRarity(1);  
     } 
 
-    public async Task Play()
+    public async Task Play(int startSong = 0)
     {
         var tracks = PlaylistData.Tracks;
 
@@ -119,7 +119,7 @@ public class Playlist
 
         _logger.LogInformation("Playlist {Name} has started", Name);
 
-        for (int i = 0;i < tracks.Count;i++)
+        for (var i = _settings.Avalonix.Playlists.Shuffle ? startSong : 0;i < tracks.Count;i++)
         {
             var track = tracks[i];
             
