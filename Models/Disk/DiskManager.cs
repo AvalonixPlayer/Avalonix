@@ -82,6 +82,13 @@ public class DiskManager(ILogger logger, IMediaPlayer player)
         }
     }
 
+    public void RemovePlaylist(string name)
+    {
+        logger.LogInformation("Removing playlist {name}",name);
+        File.Delete(Path.Combine(PlaylistsPath, name + Extension));
+        logger.LogInformation("Playlist {name} was been removed",name);
+    }
+
     public async Task<List<Playlist>> GetAllPlaylists()
     {
         var files = Directory.EnumerateFiles(PlaylistsPath, $"*{Extension}");

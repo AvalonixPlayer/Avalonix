@@ -108,7 +108,7 @@ public class Playlist
     {
         PlaylistData.Rarity++;
         track.IncreaseRarity(1);  
-    } 
+    }
 
     public async Task Play(int startSong = 0)
     {
