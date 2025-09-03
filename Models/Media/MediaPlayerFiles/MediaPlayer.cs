@@ -46,6 +46,9 @@ public class MediaPlayer : IMediaPlayer
     public void Resume() =>
         Bass.BASS_ChannelPlay(_stream, false);
 
+    public void Reset() =>
+        Bass.BASS_ChannelPlay(_stream, true);
+    
     public void ChangeVolume(int volume) => // the volume should be in the range from 0 to 100
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
 }
