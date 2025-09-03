@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskLoader
+public static class DiskLoader
 {
-    public async Task<T?> LoadAsync<T>(string path)
+    public static async Task<T?> LoadAsync<T>(string path)
     {
         if (!File.Exists(path))
             return default;

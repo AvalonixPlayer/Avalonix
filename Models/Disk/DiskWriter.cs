@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskWriter
+public static class DiskWriter
 {
-    public async Task WriteAsync<T>(T obj, string path)
+    public static async Task WriteAsync<T>(T obj, string path)
     {
         var opt = new JsonSerializerOptions
         {

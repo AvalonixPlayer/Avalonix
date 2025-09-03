@@ -12,8 +12,6 @@ namespace Avalonix.Models.Disk;
 
 public class DiskManager(ILogger logger, IMediaPlayer player)
 {
-    private readonly DiskLoader _loader = new();
-    private readonly DiskWriter _writer = new();
 
     private const string Extension = ".avalonix";
 
@@ -63,7 +61,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player)
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await _writer.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+        await DiskWriter.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
         logger.LogDebug("Playlist saved");
     }
 
@@ -71,7 +69,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player)
     {
         try
         {
-            var result = await _loader.LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+            var result = await DiskLoader.LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
             await result?.InitializeAsync(name, player, this, logger)!;
             if (result == null!) logger.LogError("Playlist get error: {name}", name);
             else logger.LogDebug("Playlist get: {name}", name);
@@ -100,32 +98,32 @@ public class DiskManager(ILogger logger, IMediaPlayer player)
 
     public async Task SaveSettings(Settings settings)
     {
-        await _writer.WriteAsync(settings, SettingsPath);
+        await DiskWriter.WriteAsync(settings, SettingsPath);
         logger.LogInformation("Settings saved");
     }
 
     public async Task CreateNewTheme(string name)
     {
         var theme = new Theme { Name = name };
-        await _writer.WriteAsync(theme, Path.Combine(ThemesPath, name + Extension));
+        await DiskWriter.WriteAsync(theme, Path.Combine(ThemesPath, name + Extension));
     }
 
     public async Task SaveTheme(Theme theme) =>
-        await _writer.WriteAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
+        await DiskWriter.WriteAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
 
     public async Task<Theme> GetTheme(string name)
     {
-        var result = await _loader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
+        var result = await DiskLoader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
         return result ?? new Theme();
     }
 
 
     public async Task<Settings> GetSettings()
     {
-        var result = await _loader.LoadAsync<Settings>(SettingsPath);
+        var result = await DiskLoader.LoadAsync<Settings>(SettingsPath);
         if (result != null) return result;
         await SaveSettings(new Settings());
-        result = await _loader.LoadAsync<Settings>(SettingsPath);
+        result = await DiskLoader.LoadAsync<Settings>(SettingsPath);
         return result!;
     }
 }
