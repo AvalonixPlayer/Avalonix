@@ -62,7 +62,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player)
     public async Task SavePlaylist(Playlist playlist)
     {
         await DiskWriter.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
-        logger.LogDebug("Playlist saved");
+        logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
     public async Task<Playlist?> GetPlaylist(string name)
