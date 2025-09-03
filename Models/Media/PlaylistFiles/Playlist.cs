@@ -104,21 +104,27 @@ public class Playlist
 
     private void UpdateLastListen() => PlaylistData.LastListen = DateTime.Now.Date;
 
-    private void UpdateRarity() => PlaylistData.Rarity++;
+    private void UpdateRarity(ref Track track)
+    {
+        PlaylistData.Rarity++;
+        track.IncreaseRarity(1);  
+    } 
 
     public async Task Play()
     {
         var tracks = PlaylistData.Tracks;
 
-        if (_settings.Avalonix.Playlists.Shuffle) // Randomize if Random is enabled
+        if (_settings.Avalonix.Playlists.Shuffle)
             tracks = tracks.OrderBy(_ => _random.Next()).ToList();
 
         _logger.LogInformation("Playlist {Name} has started", Name);
 
-        foreach (var track in tracks)
+        for (int i = 0;i < tracks.Count;i++)
         {
+            var track = tracks[i];
+            
             UpdateLastListen();
-            UpdateRarity();
+            UpdateRarity(ref track);
 
             await Save();
 
