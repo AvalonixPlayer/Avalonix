@@ -10,9 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger, IMediaPlayer player)
+public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
 {
-
     private const string Extension = ".avalonix";
 
     private static string AvalonixFolderPath
