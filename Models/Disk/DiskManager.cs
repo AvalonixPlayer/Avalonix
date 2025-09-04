@@ -10,58 +10,53 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
-public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
+public class DiskManager : IDiskManager
 {
     private const string Extension = ".avalonix";
 
-    private static string AvalonixFolderPath
-    {
-        get
-        {
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            return path;
-        }
-    }
+    private static string AvalonixFolderPath { get; } =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
 
-    private static string PlaylistsPath
-    {
-        get
-        {
-            var path = Path.Combine(AvalonixFolderPath, "playlists");
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            return path;
-        }
-    }
+    private static string PlaylistsPath { get; } =
+        Path.Combine(AvalonixFolderPath, "playlists");
 
-    private static string SettingsPath
+    private static string SettingsPath { get; } =
+        Path.Combine(AvalonixFolderPath, "settings" + Extension);
+
+    private static string ThemesPath { get; } =
+        Path.Combine(AvalonixFolderPath, "themes");
+
+    private readonly ILogger _logger;
+    private readonly IMediaPlayer _player;
+
+    public DiskManager(ILogger logger, IMediaPlayer player)
     {
-        get
+        _logger = logger;
+        _player = player;
+
+        CheckDirectory(AvalonixFolderPath);
+        CheckDirectory(PlaylistsPath);
+        CheckDirectory(ThemesPath);
+        CheckFile(SettingsPath);
+        return;
+
+        void CheckFile(string path)
         {
-            var path = Path.Combine(AvalonixFolderPath, "settings" + Extension);
             if (!File.Exists(path))
                 File.Create(path).Close();
-            return path;
         }
-    }
 
-    private static string ThemesPath
-    {
-        get
+        void CheckDirectory(string path)
         {
-            var path = Path.Combine(AvalonixFolderPath, "themes");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            return path;
         }
     }
 
     public async Task SavePlaylist(Playlist playlist)
     {
         await DiskWriter.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
-        logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
+        _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
     public async Task<Playlist?> GetPlaylist(string name)
@@ -69,23 +64,23 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
         try
         {
             var result = await DiskLoader.LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
-            await result?.InitializeAsync(name, player, this, logger)!;
-            if (result == null!) logger.LogError("Playlist get error: {name}", name);
-            else logger.LogDebug("Playlist get: {name}", name);
+            await result?.InitializeAsync(name, _player, this, _logger)!;
+            if (result == null!) _logger.LogError("Playlist get error: {name}", name);
+            else _logger.LogDebug("Playlist get: {name}", name);
             return result;
         }
         catch (Exception ex)
         {
-            logger.LogError("Playlist error while get: {ex}", ex);
+            _logger.LogError("Playlist error while get: {ex}", ex);
             return null!;
         }
     }
 
     public void RemovePlaylist(string name)
     {
-        logger.LogInformation("Removing playlist {name}",name);
+        _logger.LogInformation("Removing playlist {name}", name);
         File.Delete(Path.Combine(PlaylistsPath, name + Extension));
-        logger.LogInformation("Playlist {name} was been removed",name);
+        _logger.LogInformation("Playlist {name} was been removed", name);
     }
 
     public async Task<List<Playlist>> GetAllPlaylists()
@@ -105,7 +100,7 @@ public class DiskManager(ILogger logger, IMediaPlayer player) : IDiskManager
     public async Task SaveSettings(Settings settings)
     {
         await DiskWriter.WriteAsync(settings, SettingsPath);
-        logger.LogInformation("Settings saved");
+        _logger.LogInformation("Settings saved");
     }
 
     public async Task CreateNewTheme(string name)
