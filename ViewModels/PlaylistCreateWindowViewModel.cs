@@ -73,7 +73,7 @@ public class PlaylistCreateWindowViewModel(
         {
             PlaylistData = new PlaylistData
             {
-                Tracks = songs.Select(song => new Track(song.ToString())).ToList()
+                Tracks = songs.Select(song => new Track(song.Text)).ToList()
             }
         };
 
