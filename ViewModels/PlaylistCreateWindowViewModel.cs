@@ -73,9 +73,10 @@ public class PlaylistCreateWindowViewModel(
         {
             PlaylistData = new PlaylistData
             {
-                Tracks = songs.Select(song => new Track(song.Text)).ToList()
+                Tracks = songs.Select(song => new Track().ToList()
             }
         };
+        await playlist.InitializeAsync(playlistName, player, diskManager,logger);
 
         try
         {
@@ -84,7 +85,7 @@ public class PlaylistCreateWindowViewModel(
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Error saving playlist: {name}", playlistName);
+            logger.LogError(e, "Error saving playlist: {e}", e);
         }
     }
 }

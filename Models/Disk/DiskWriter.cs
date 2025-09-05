@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -17,7 +18,16 @@ public static class DiskWriter
 
         if (!File.Exists(path))
             File.Create(path).Close();
+
+        try
+        {
+            await File.WriteAllTextAsync(path, JsonSerializer.Serialize(obj, opt));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
         
-        await File.WriteAllTextAsync(path, JsonSerializer.Serialize(obj, opt));
     }
 }

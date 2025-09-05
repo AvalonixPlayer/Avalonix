@@ -25,7 +25,9 @@ public partial class PlaylistCreateWindow : Window
         {
             var fileList = (await _vm.OpenTrackFileDialogAsync(this))!;
             if (fileList.Any(string.IsNullOrWhiteSpace)) return;
-            NewSongBox.Items.Add(fileList);
+            foreach (var i in fileList)
+                NewSongBox.Items.Add(i);
+            
             RemoveButton.IsEnabled = true;
         }
         catch (Exception ex)
@@ -62,7 +64,7 @@ public partial class PlaylistCreateWindow : Window
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error when create playlist: {ex}", ex.Message);
+            _logger.LogError("Error when create playlist: {ex}", ex);
         }
     }
 }
