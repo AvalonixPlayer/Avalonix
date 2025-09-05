@@ -54,10 +54,10 @@ public class Playlist
     {
         foreach (var otherPlaylist in otherPlaylists)
             _logger.LogDebug("{Playlist1} merged with {playlist2}", Name, otherPlaylist.Name);
-        
+
         var result = this;
-        
-        foreach (var playlist in otherPlaylists)
+
+        for (var i = 0; i < otherPlaylists.Length; i++)
             result.PlaylistData.Tracks.ForEach(track => PlaylistData.Tracks.Add(track));
         return result;
     }
