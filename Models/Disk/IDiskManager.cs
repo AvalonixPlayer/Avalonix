@@ -1,6 +1,3 @@
 namespace Avalonix.Models.Disk;
 
-public interface IDiskManager
-{
-    
-}
+public interface IDiskManager;
