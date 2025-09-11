@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -11,6 +12,8 @@ public partial class PlaylistCreateWindow : Window
 {
     private readonly PlaylistCreateWindowViewModel _vm;
     private readonly ILogger _logger;
+    private readonly List<string> _tracks = new ();
+        
     public PlaylistCreateWindow(ILogger logger, PlaylistCreateWindowViewModel vm)
     {
         _logger = logger;
@@ -24,9 +27,13 @@ public partial class PlaylistCreateWindow : Window
         try
         {
             var fileList = (await _vm.OpenTrackFileDialogAsync(this))!;
+            foreach (var file in fileList)
+                Console.WriteLine(file);
+            
             if (fileList.Any(string.IsNullOrWhiteSpace)) return;
             foreach (var i in fileList)
-                NewSongBox.Items.Add(i);
+                _tracks.Add(i);
+            Console.WriteLine(1);
             
             RemoveButton.IsEnabled = true;
         }
@@ -58,7 +65,7 @@ public partial class PlaylistCreateWindow : Window
         try
         {
             var name = PlaylistName.Text;
-            var items = NewSongBox.Items;
+            var items = _tracks;
             if (string.IsNullOrWhiteSpace(name) || items.Count <= 0) return;
             await _vm.CreatePlaylistAsync(name, items);
         }

@@ -65,15 +65,15 @@ public class PlaylistCreateWindowViewModel(
         }
     }
 
-    public async Task CreatePlaylistAsync(string playlistName, params List<ItemCollection> songs)
+    public async Task CreatePlaylistAsync(string playlistName, List<string> tracksPaths)
     {
-        if (songs.Count == 0) return;
+        if (tracksPaths.Count == 0) return;
 
         var playlist = new Playlist(playlistName, player, diskManager)
         {
             PlaylistData = new PlaylistData
             {
-                //Tracks = songs.Select(song => new Track().ToList()
+                Tracks = tracksPaths.Select(path => new Track(path)).ToList()
             }
         };
         await playlist.InitializeAsync(playlistName, player, diskManager,logger);
