@@ -73,7 +73,7 @@ public class PlaylistCreateWindowViewModel(
         {
             PlaylistData = new PlaylistData
             {
-                Tracks = songs.Select(song => new Track().ToList()
+                //Tracks = songs.Select(song => new Track().ToList()
             }
         };
         await playlist.InitializeAsync(playlistName, player, diskManager,logger);
