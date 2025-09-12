@@ -14,7 +14,7 @@ namespace Avalonix.ViewModels;
 
 public class PlaylistCreateWindowViewModel(
     ILogger<PlaylistCreateWindowViewModel> logger,
-    DiskManager diskManager,
+    IDiskManager diskManager,
     IMediaPlayer player)
     : ViewModelBase
 {

@@ -5,7 +5,7 @@ using Avalonix.Models.Media.PlaylistFiles;
 
 namespace Avalonix.ViewModels;
 
-public class PlaylistSelectWindowViewModel(DiskManager dm) : ViewModelBase
+public class PlaylistSelectWindowViewModel(IDiskManager idiskManager) : ViewModelBase
 {
-    public async Task<List<Playlist>> GetPlaylists() => await dm.GetAllPlaylists();
+    public async Task<List<Playlist>> GetPlaylists() => await idiskManager.GetAllPlaylists();
 }

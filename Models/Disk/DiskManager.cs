@@ -13,6 +13,8 @@ namespace Avalonix.Models.Disk;
 public class DiskManager : IDiskManager
 {
     private const string Extension = ".avalonix";
+    private readonly IDiskWriter _diskWriter;
+    private readonly IDiskLoader _diskLoader;
 
     private static string AvalonixFolderPath { get; } =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
@@ -29,9 +31,11 @@ public class DiskManager : IDiskManager
     private readonly ILogger _logger;
     private readonly IMediaPlayer _player;
 
-    public DiskManager(ILogger logger, IMediaPlayer player)
+    public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader)
     {
         _logger = logger;
+        _diskWriter = diskWriter; 
+        _diskLoader = diskLoader; 
         _player = player;
 
         CheckDirectory(AvalonixFolderPath);
@@ -55,7 +59,7 @@ public class DiskManager : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await DiskWriter.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+        await _diskWriter.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
@@ -63,7 +67,7 @@ public class DiskManager : IDiskManager
     {
         try
         {
-            var result = await DiskLoader.LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+            var result = await _diskLoader.LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
             await result?.InitializeAsync(name, _player, this, _logger)!;
             if (result == null!) _logger.LogError("Playlist get error: {name}", name);
             else _logger.LogDebug("Playlist get: {name}", name);
@@ -99,32 +103,32 @@ public class DiskManager : IDiskManager
 
     public async Task SaveSettings(Settings settings)
     {
-        await DiskWriter.WriteAsync(settings, SettingsPath);
+        await _diskWriter.WriteAsync(settings, SettingsPath);
         _logger.LogInformation("Settings saved");
     }
 
     public async Task CreateNewTheme(string name)
     {
         var theme = new Theme { Name = name };
-        await DiskWriter.WriteAsync(theme, Path.Combine(ThemesPath, name + Extension));
+        await _diskWriter.WriteAsync(theme, Path.Combine(ThemesPath, name + Extension));
     }
 
     public async Task SaveTheme(Theme theme) =>
-        await DiskWriter.WriteAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
+        await _diskWriter.WriteAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
 
-    public async Task<Theme> GetTheme(string name)
+    public async Task<Theme?> GetTheme(string name)
     {
-        var result = await DiskLoader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
-        return result ?? new Theme();
+        var result = await _diskLoader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
+        return result;
     }
 
 
     public async Task<Settings> GetSettings()
     {
-        var result = await DiskLoader.LoadAsync<Settings>(SettingsPath);
+        var result = await _diskLoader.LoadAsync<Settings>(SettingsPath);
         if (result != null) return result;
         await SaveSettings(new Settings());
-        result = await DiskLoader.LoadAsync<Settings>(SettingsPath);
+        result = await _diskLoader.LoadAsync<Settings>(SettingsPath);
         return result!;
     }
 }
