@@ -32,11 +32,11 @@ public partial class PlaylistSelectWindow : Window
     {
         try
         {
-            var selectedPlaylist = (List<string>)PlaylistBox.SelectedItems!;
+            var selectedPlaylist = PlaylistBox.SelectedItems!;
             if (selectedPlaylist.Count == 0)
                 return;
             var playlist = selectedPlaylist[0];
-            _ = _playlists.Find(p => p.Name == playlist)!.Play();
+            _ = _playlists.Find(p => ReferenceEquals(p.Name, playlist))!.Play();
         }
         catch (Exception ex)
         {
@@ -44,17 +44,6 @@ public partial class PlaylistSelectWindow : Window
         }
     }
 
-    private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        var text = SearchBox.Text;
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            PlaylistBox.ItemsSource = _playlists.Select(p => p.Name);
-            return;
-        }
-            
-        PlaylistBox.ItemsSource = _playlists
-            .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
-            .Select(item => item.Name);
-    }
+    private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e) =>
+        PlaylistSelectWindowViewModel.SearchPlaylists(SearchBox.Text!, _playlists, ref PlaylistBox);     
 }
