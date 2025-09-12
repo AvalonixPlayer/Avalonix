@@ -12,7 +12,6 @@ public partial class PlaylistCreateWindow : Window
 {
     private readonly PlaylistCreateWindowViewModel _vm;
     private readonly ILogger _logger;
-    private readonly List<string> _tracks = new ();
         
     public PlaylistCreateWindow(ILogger logger, PlaylistCreateWindowViewModel vm)
     {
@@ -32,7 +31,7 @@ public partial class PlaylistCreateWindow : Window
             
             if (fileList.Any(string.IsNullOrWhiteSpace)) return;
             foreach (var i in fileList)
-                _tracks.Add(i);
+                NewSongBox.Items.Add(i);
             Console.WriteLine(1);
             
             RemoveButton.IsEnabled = true;
@@ -65,7 +64,7 @@ public partial class PlaylistCreateWindow : Window
         try
         {
             var name = PlaylistName.Text;
-            var items = _tracks;
+            var items = NewSongBox.Items.OfType<string>().ToList();
             if (string.IsNullOrWhiteSpace(name) || items.Count <= 0) return;
             await _vm.CreatePlaylistAsync(name, items);
         }

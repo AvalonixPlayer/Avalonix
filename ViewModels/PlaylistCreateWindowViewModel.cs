@@ -51,9 +51,7 @@ public class PlaylistCreateWindowViewModel(
 
             var filePaths = new string[files.Count];
             for (var i = 0; i < files.Count; i++)
-            {
                 filePaths[i] = files[i].Path.LocalPath;
-            }
 
             logger.LogInformation("Selected {Count} files: " + filePaths, files.Count);
             return filePaths;
