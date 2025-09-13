@@ -23,7 +23,7 @@ public partial class PlaylistSelectWindow : Window
         _logger.LogInformation("PlaylistCreateWindow opened");
         
         _playlists = Task.Run(async () => await _vm.GetPlaylists()).GetAwaiter().GetResult();
-        _playlists.ForEach(item => _logger.LogDebug(item.Name));
+        _playlists.ForEach(playlist => _logger.LogDebug(playlist.Name));
         var result = _playlists.Select(p => p.Name).ToList();
         PlaylistBox.ItemsSource = result;
     }
