@@ -52,7 +52,7 @@ public partial class PlaylistSelectWindow : Window
             PlaylistBox.ItemsSource = _playlists.Select(p => p.Name);
             return;
         }
-        
+            
         PlaylistBox.ItemsSource = _playlists
             .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
             .Select(item => item.Name);
