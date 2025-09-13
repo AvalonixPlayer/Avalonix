@@ -10,8 +10,8 @@ using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 namespace Avalonix.Services;
 
 public class WindowManager(ILogger<WindowManager> logger,
-    PlaylistCreateWindowViewModel playlistCreateWindowViewModel, 
-    PlaylistSelectWindowViewModel playlistSelectWindowViewModel) 
+    IPlaylistCreateWindowViewModel playlistCreateWindowViewModel, 
+    IPlaylistSelectWindowViewModel playlistSelectWindowViewModel) 
     : IWindowManager
 {
     private static void CloseMainWindow()

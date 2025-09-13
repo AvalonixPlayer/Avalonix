@@ -10,9 +10,9 @@ namespace Avalonix.Views;
 public partial class MainWindow  : Window 
 {
     private readonly ILogger<MainWindow> _logger;
-    private readonly MainWindowViewModel _vm;
+    private readonly IMainWindowViewModel _vm;
 
-    public MainWindow(ILogger<MainWindow> logger, MainWindowViewModel vm)
+    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm)
     {
         _logger = logger;
         _vm = vm;

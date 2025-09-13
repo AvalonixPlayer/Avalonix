@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace Avalonix.ViewModels;
 
 public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager)
-    : ViewModelBase
+    : ViewModelBase, IMainWindowViewModel
 {
     public async Task ExitAsync()
     {

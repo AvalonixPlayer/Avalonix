@@ -16,7 +16,7 @@ public class PlaylistCreateWindowViewModel(
     ILogger<PlaylistCreateWindowViewModel> logger,
     IDiskManager diskManager,
     IMediaPlayer player)
-    : ViewModelBase
+    : ViewModelBase, IPlaylistCreateWindowViewModel
 {
     public async Task<string[]?> OpenTrackFileDialogAsync(Window parent)
     {

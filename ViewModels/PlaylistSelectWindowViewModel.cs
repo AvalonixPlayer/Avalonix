@@ -8,11 +8,12 @@ using Avalonix.Models.Media.PlaylistFiles;
 
 namespace Avalonix.ViewModels;
 
-public class PlaylistSelectWindowViewModel(IDiskManager idiskManager) : ViewModelBase
+public class PlaylistSelectWindowViewModel(IDiskManager idiskManager) 
+    : ViewModelBase, IPlaylistSelectWindowViewModel
 {
     public async Task<List<Playlist>> GetPlaylists() => await idiskManager.GetAllPlaylists();
 
-    public static void SearchPlaylists(string text, List<Playlist> playlists, ref ListBox playlistBox)
+    public void SearchPlaylists(string text, List<Playlist> playlists, ref ListBox playlistBox)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
