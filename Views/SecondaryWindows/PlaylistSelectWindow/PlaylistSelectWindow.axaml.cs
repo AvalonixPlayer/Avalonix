@@ -13,9 +13,9 @@ namespace Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 public partial class PlaylistSelectWindow : Window
 {
     private readonly ILogger _logger;
-    private readonly PlaylistSelectWindowViewModel _vm;
+    private readonly IPlaylistSelectWindowViewModel _vm;
     private readonly List<Playlist> _playlists;
-    public PlaylistSelectWindow(ILogger logger, PlaylistSelectWindowViewModel vm)
+    public PlaylistSelectWindow(ILogger logger, IPlaylistSelectWindowViewModel vm)
     {
         InitializeComponent();
         _logger = logger;

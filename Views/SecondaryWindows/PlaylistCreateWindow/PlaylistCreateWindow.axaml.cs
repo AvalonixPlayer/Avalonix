@@ -10,10 +10,10 @@ namespace Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
 public partial class PlaylistCreateWindow : Window
 {
-    private readonly PlaylistCreateWindowViewModel _vm;
+    private readonly IPlaylistCreateWindowViewModel _vm;
     private readonly ILogger _logger;
         
-    public PlaylistCreateWindow(ILogger logger, PlaylistCreateWindowViewModel vm)
+    public PlaylistCreateWindow(ILogger logger, IPlaylistCreateWindowViewModel vm)
     {
         _logger = logger;
         _vm = vm;
