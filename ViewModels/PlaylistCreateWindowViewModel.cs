@@ -67,7 +67,7 @@ public class PlaylistCreateWindowViewModel(
     {
         if (tracksPaths.Count == 0) return;
 
-        var playlist = new Playlist(playlistName, player, diskManager)
+        var playlist = new Playlist
         {
             PlaylistData = new PlaylistData
             {

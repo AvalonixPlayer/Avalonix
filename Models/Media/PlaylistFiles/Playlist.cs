@@ -27,20 +27,12 @@ public class Playlist
     {
     }
 
-    public Playlist(string name, IMediaPlayer player, IDiskManager disk)
-    {
-        Name = name;
-        _player = player;
-        _disk = disk;
-    }
-
     public async Task InitializeAsync(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
     {
         Name = name;
         _player = player;
         _disk = disk;
         _logger = logger;
-        _settings = await _disk.GetSettings();
     }
 
     public async Task AddTrack(Track track)
