@@ -13,12 +13,12 @@ namespace Avalonix.Models.Media.PlaylistFiles;
 
 public class Playlist
 {
-    private IMediaPlayer _player = null!;
-    private IDiskManager _disk = null!;
-    private ILogger _logger = null!;
+    public IMediaPlayer Player { get; init; } = null!;
+    public IDiskManager Disk { get; init; } = null!;
+    public ILogger Logger { get; init; } = null!;
     private Settings _settings = null!;
     private readonly Random _random = new();
-    public string Name { get; private set; } = null!;
+    public string Name { get; init; } = null!;
 
     public PlaylistData PlaylistData = new();
 
@@ -27,17 +27,9 @@ public class Playlist
     {
     }
 
-    public async Task InitializeAsync(string name, IMediaPlayer player, IDiskManager disk, ILogger logger)
-    {
-        Name = name;
-        _player = player;
-        _disk = disk;
-        _logger = logger;
-    }
-
     public async Task AddTrack(Track track)
     {
-        _logger.LogDebug("{TrackName} added into {playlist}", track.Metadata.TrackName, Name);
+        Logger.LogDebug("{TrackName} added into {playlist}", track.Metadata.TrackName, Name);
         PlaylistData.Tracks.Add(track);
         await Save();
     }
@@ -45,7 +37,7 @@ public class Playlist
     public Playlist MergePlaylist(Playlist[] otherPlaylists)
     {
         foreach (var otherPlaylist in otherPlaylists)
-            _logger.LogDebug("{Playlist1} merged with {playlist2}", Name, otherPlaylist.Name);
+            Logger.LogDebug("{Playlist1} merged with {playlist2}", Name, otherPlaylist.Name);
 
         var result = this;
 
@@ -92,19 +84,19 @@ public class Playlist
 
     public async Task Save()
     {
-        _logger.LogDebug("Playlist saved {playlistName}", Name);
-        await _disk.SavePlaylist(this);
+        Logger.LogDebug("Playlist saved {playlistName}", Name);
+        await Disk.SavePlaylist(this);
     }
 
     private void UpdateLastListen()
     {
-        _logger.LogDebug("Updated last listen info of playlist {playlistName}", Name);
+        Logger.LogDebug("Updated last listen info of playlist {playlistName}", Name);
         PlaylistData.LastListen = DateTime.Now.Date;
     }
 
     private void UpdateRarity(ref Track track)
     {
-        _logger.LogDebug("Updated rarity of playlist {playlistName} and track {trackName} in it", Name,
+        Logger.LogDebug("Updated rarity of playlist {playlistName} and track {trackName} in it", Name,
             track.Metadata.TrackName);
         PlaylistData.Rarity++;
         track.IncreaseRarity(1);
@@ -117,7 +109,7 @@ public class Playlist
         if (_settings.Avalonix.Playlists.Shuffle)
             tracks = tracks.OrderBy(_ => _random.Next()).ToList();
 
-        _logger.LogDebug("Playlist {Name} has started", Name);
+        Logger.LogDebug("Playlist {Name} has started", Name);
 
         for (var i = _settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < tracks.Count; i++)
         {
@@ -128,32 +120,32 @@ public class Playlist
 
             await Save();
 
-            _player.Play(track);
+            Player.Play(track);
 
-            while (!_player.IsFree)
+            while (!Player.IsFree)
                 await Task.Delay(1000);
         }
 
         if (_settings.Avalonix.Playlists.Loop) await Play();
 
-        _logger.LogDebug("Playlist {Name} completed", Name);
+        Logger.LogDebug("Playlist {Name} completed", Name);
     }
 
     public void Stop()
     {
-        _logger.LogDebug("Playlist stopped");
-        _player.Stop();
+        Logger.LogDebug("Playlist stopped");
+        Player.Stop();
     }
 
     public void Pause()
     {
-        _logger.LogDebug("Playlist paused");
-        _player.Pause();
+        Logger.LogDebug("Playlist paused");
+        Player.Pause();
     }
 
     public void Resume()
     {
-        _logger.LogDebug("Playlist resumed");
-        _player.Resume();
+        Logger.LogDebug("Playlist resumed");
+        Player.Resume();
     }
 }
