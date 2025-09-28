@@ -69,12 +69,15 @@ public class PlaylistCreateWindowViewModel(
 
         var playlist = new Playlist
         {
+            Name = playlistName,
+            Disk = diskManager,
+            Logger = logger,
+            Player = player,
             PlaylistData = new PlaylistData
             {
                 Tracks = tracksPaths.Select(path => new Track(path)).ToList()
             }
         };
-        await playlist.InitializeAsync(playlistName, player, diskManager,logger);
 
         try
         {
