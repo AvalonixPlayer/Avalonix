@@ -11,12 +11,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.PlaylistFiles;
 
-public class Playlist
+public class Playlist : ILoadWithDependency
 {
-    public IMediaPlayer Player { get; init; } = null!;
-    public IDiskManager Disk { get; init; } = null!;
-    public ILogger Logger { get; init; } = null!;
-    private Settings _settings = null!;
+    [JsonIgnore]
+    public IMediaPlayer Player { get; set; } = null!;
+    [JsonIgnore]
+    public IDiskManager Disk { get; set; } = null!;
+    [JsonIgnore]
+    public ILogger Logger { get; set; } = null!;
+    [JsonIgnore]
+    public Settings Settings { get; set; } = null!;
+
     private readonly Random _random = new();
     public string Name { get; init; } = null!;
 
@@ -25,6 +30,14 @@ public class Playlist
     [JsonConstructor]
     public Playlist()
     {
+    }
+    
+    public void LoadWithDependency(object[] parameters)
+    {
+        Player = (IMediaPlayer)parameters[0];
+        Disk = (IDiskManager)parameters[1];
+        Logger = (ILogger)parameters[2];
+        Settings = new Settings();
     }
 
     public async Task AddTrack(Track track)
@@ -105,13 +118,13 @@ public class Playlist
     public async Task Play(int startSong = 0)
     {
         var tracks = PlaylistData.Tracks;
-
-        if (_settings.Avalonix.Playlists.Shuffle)
+        
+        if (Settings.Avalonix.Playlists.Shuffle)
             tracks = tracks.OrderBy(_ => _random.Next()).ToList();
-
+        
         Logger.LogDebug("Playlist {Name} has started", Name);
 
-        for (var i = _settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < tracks.Count; i++)
+        for (var i = Settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < tracks.Count; i++)
         {
             var track = tracks[i];
 
@@ -126,7 +139,7 @@ public class Playlist
                 await Task.Delay(1000);
         }
 
-        if (_settings.Avalonix.Playlists.Loop) await Play();
+        if (Settings.Avalonix.Playlists.Loop) await Play();
 
         Logger.LogDebug("Playlist {Name} completed", Name);
     }

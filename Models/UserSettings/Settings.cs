@@ -6,5 +6,5 @@ namespace Avalonix.Models.UserSettings;
 public class Settings
 {
     [JsonIgnore] public Theme.Theme Theme { get; set; }
-    public AvalonixSettings Avalonix { get; set; }
+    public AvalonixSettings Avalonix { get; set; } = new AvalonixSettings();
 }

@@ -23,7 +23,7 @@ public partial class PlaylistSelectWindow : Window
         _logger.LogInformation("PlaylistCreateWindow opened");
         
         _playlists = Task.Run(async () => await _vm.GetPlaylists()).GetAwaiter().GetResult();
-        _playlists.ForEach(playlist => _logger.LogDebug(playlist.Name));
+        
         var result = _playlists.Select(p => p.Name).ToList();
         PlaylistBox.ItemsSource = result;
     }
@@ -32,11 +32,13 @@ public partial class PlaylistSelectWindow : Window
     {
         try
         {
+            /*
             var selectedPlaylist = (List<string>)PlaylistBox.SelectedItems!;
             if (selectedPlaylist.Count == 0)
                 return;
             var playlist = selectedPlaylist[0];
-            _ = _playlists.Find(p => p.Name == playlist)!.Play();
+            */
+            _ = _playlists[0].Play();
         }
         catch (Exception ex)
         {
