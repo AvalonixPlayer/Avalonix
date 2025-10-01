@@ -34,8 +34,8 @@ public class DiskManager : IDiskManager
     public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader)
     {
         _logger = logger;
-        _diskWriter = diskWriter; 
-        _diskLoader = diskLoader; 
+        _diskWriter = diskWriter;
+        _diskLoader = diskLoader;
         _player = player;
 
         CheckDirectory(AvalonixFolderPath);
@@ -67,7 +67,9 @@ public class DiskManager : IDiskManager
     {
         try
         {
-            var result = await _diskLoader.LoadAsync<Playlist>(Path.Combine(PlaylistsPath, name + Extension));
+            var result =
+                await _diskLoader.LoadAsyncWhithDependensies<Playlist>(Path.Combine(PlaylistsPath, name + Extension),
+                    [_player, this, _logger,GetSettings()]);
             if (result == null!) _logger.LogError("Playlist get error: {name}", name);
             else _logger.LogDebug("Playlist get: {name}", name);
             return result;
