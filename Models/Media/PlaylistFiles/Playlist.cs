@@ -34,10 +34,17 @@ public class Playlist : ILoadWithDependency
     
     public void LoadWithDependency(object[] parameters)
     {
-        Player = (IMediaPlayer)parameters[0];
-        Disk = (IDiskManager)parameters[1];
-        Logger = (ILogger)parameters[2];
-        Settings = new Settings();
+		try
+		{
+        	Player = (IMediaPlayer)parameters[0];
+        	Disk = (IDiskManager)parameters[1];
+        	Logger = (ILogger)parameters[2];
+        	Settings = new Settings();
+		}
+		catch (Exception ex)
+		{
+        	Logger.LogError("Error while load playlist with dependency: {ex}", ex.Message);
+		}
     }
 
     public async Task AddTrack(Track track)

@@ -9,7 +9,7 @@ using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 
 namespace Avalonix.Services;
 
-public class WindowManager(ILogger logger,
+public class WindowManager(ILogger<WindowManager> logger,
     IPlaylistCreateWindowViewModel playlistCreateWindowViewModel, 
     IPlaylistSelectWindowViewModel playlistSelectWindowViewModel) 
     : IWindowManager
