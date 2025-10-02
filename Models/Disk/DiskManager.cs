@@ -59,7 +59,7 @@ public class DiskManager : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await _diskWriter.WriteAsync(playlist, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+        await _diskWriter.WriteAsync(playlist.PlaylistData, Path.Combine(PlaylistsPath, playlist.Name + Extension));
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
@@ -67,12 +67,11 @@ public class DiskManager : IDiskManager
     {
         try
         {
-            var result =
-                await _diskLoader.LoadAsyncWhithDependensies<Playlist>(Path.Combine(PlaylistsPath, name + Extension),
-                    [_player, this, _logger,GetSettings()]);
-            if (result == null!) _logger.LogError("Playlist get error: {name}", name);
+            var playlistData =
+                await _diskLoader.LoadAsync<PlaylistData>(Path.Combine(PlaylistsPath, name + Extension));
+            if (playlistData == null!) _logger.LogError("Playlist get error: {name}", name);
             else _logger.LogDebug("Playlist get: {name}", name);
-            return result;
+            return new Playlist(name, playlistData!, _player, this, _logger);
         }
         catch (Exception ex)
         {

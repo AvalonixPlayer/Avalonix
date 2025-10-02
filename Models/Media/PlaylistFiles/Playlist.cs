@@ -11,33 +11,25 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.PlaylistFiles;
 
-public class Playlist : ILoadWithDependency
+public class Playlist
 {
-    [JsonIgnore]
-    public IMediaPlayer Player { get; set; } = null!;
-    [JsonIgnore]
-    public IDiskManager Disk { get; set; } = null!;
-    [JsonIgnore]
-    public ILogger Logger { get; set; } = null!;
-    [JsonIgnore]
-    public Settings Settings { get; set; } = null!;
-
-    private readonly Random _random = new();
-    public string Name { get; init; } = null!;
-
-    public PlaylistData PlaylistData = new();
-
-    [JsonConstructor]
-    public Playlist()
-    {
-    }
+    public string Name { get; init; }
+    public PlaylistData PlaylistData { get; init; }
+    public IMediaPlayer Player { get; init; }
+    public IDiskManager Disk { get; init; }
+    public ILogger Logger { get; init; }
+    public Settings Settings { get; init; } = new Settings();
     
-    public void LoadWithDependency(object[] parameters)
+    private readonly Random _random = new();
+
+
+    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger)
     {
-        Player = (IMediaPlayer)parameters[0];
-        Disk = (IDiskManager)parameters[1];
-        Logger = (ILogger)parameters[2];
-        Settings = new Settings();
+        Name = name;
+        PlaylistData = playlistData;
+        Player = player;
+        Disk = disk;
+        Logger = logger;
     }
 
     public async Task AddTrack(Track track)
@@ -118,10 +110,10 @@ public class Playlist : ILoadWithDependency
     public async Task Play(int startSong = 0)
     {
         var tracks = PlaylistData.Tracks;
-        
+
         if (Settings.Avalonix.Playlists.Shuffle)
             tracks = tracks.OrderBy(_ => _random.Next()).ToList();
-        
+
         Logger.LogDebug("Playlist {Name} has started", Name);
 
         for (var i = Settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < tracks.Count; i++)
