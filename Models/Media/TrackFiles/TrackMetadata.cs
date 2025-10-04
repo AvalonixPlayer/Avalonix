@@ -38,7 +38,7 @@ public struct TrackMetadata
         Year = track.Tag!.Year;
         Lyric = track.Tag!.Lyrics!;
         Duration = track.Properties!.Duration;
-        Cover = track.Tag!.Pictures!.FirstOrDefault(p => p.Type == PictureType.FrontCover)!.Data!.Data!;
+        //Cover = track.Tag!.Pictures!.FirstOrDefault(p => p.Type == PictureType.FrontCover)!.Data!.Data!;
     }
 
     public void RewriteTags(TrackMetadata newMetadata)
