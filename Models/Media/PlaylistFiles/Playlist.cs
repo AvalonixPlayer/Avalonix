@@ -19,6 +19,7 @@ public class Playlist
     public IDiskManager Disk { get; init; }
     public ILogger Logger { get; init; }
     public Settings Settings { get; init; } = new Settings();
+    public PlayQueue PlayQueue {get; init;}
     
     private readonly Random _random = new();
 
@@ -30,6 +31,9 @@ public class Playlist
         Player = player;
         Disk = disk;
         Logger = logger;
+        PlayQueue = new PlayQueue(Settings, _random);
+        
+        PlayQueue.FillQueue(PlaylistData);
     }
 
     public async Task AddTrack(Track track)
@@ -106,19 +110,15 @@ public class Playlist
         PlaylistData.Rarity++;
         track.IncreaseRarity(1);
     }
-
+    
     public async Task Play(int startSong = 0)
     {
-        var tracks = PlaylistData.Tracks;
-
-        if (Settings.Avalonix.Playlists.Shuffle)
-            tracks = tracks.OrderBy(_ => _random.Next()).ToList();
-
         Logger.LogDebug("Playlist {Name} has started", Name);
 
-        for (var i = Settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < tracks.Count; i++)
+        for (var i = Settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < PlayQueue.Tracks.Count; i++)
         {
-            var track = tracks[i];
+            PlayQueue.PlayingIndex = i;
+            var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
 
             UpdateLastListen();
             UpdateRarity(ref track);
@@ -130,12 +130,31 @@ public class Playlist
             while (!Player.IsFree)
                 await Task.Delay(1000);
         }
-
+        PlayQueue.FillQueue(PlaylistData);
         if (Settings.Avalonix.Playlists.Loop) await Play();
 
         Logger.LogDebug("Playlist {Name} completed", Name);
     }
 
+    public void NextTrack()
+    {
+        if (PlayQueue.PlayingIndex + 1 >= PlayQueue.Tracks.Count)
+        {
+            _ = Play(PlayQueue.PlayingIndex);
+            PlayQueue.FillQueue(PlaylistData);
+        }
+        else
+            _ = Play(PlayQueue.PlayingIndex + 1);
+    }
+    
+    public void BackTrack()
+    {
+        if (PlayQueue.PlayingIndex - 1 <= 0)
+            _ = Play(0);
+        else
+            _ = Play(PlayQueue.PlayingIndex - 1);
+    }
+    
     public void Stop()
     {
         Logger.LogDebug("Playlist stopped");
