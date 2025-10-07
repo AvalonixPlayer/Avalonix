@@ -20,11 +20,6 @@ public partial class MainWindow  : Window
         _logger.LogInformation("MainWindow initialized");
     }
 
-    private void InitializeComponent() =>
-        AvaloniaXamlLoader.Load(this);
-
-    public async void ExitButton_OnClick() => await _vm.ExitAsync();
-
     private void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         _logger.LogInformation("Volume slider changed");

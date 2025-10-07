@@ -12,16 +12,12 @@ public class PlaylistSelectWindowViewModel(IDiskManager idiskManager)
     : ViewModelBase, IPlaylistSelectWindowViewModel
 {
     public async Task<List<Playlist>> GetPlaylists() => await idiskManager.GetAllPlaylists();
+    public List<Playlist> SearchPlaylists(string text, List<Playlist> playlists) =>
+        string.IsNullOrWhiteSpace(text) ? playlists : playlists.Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
-    public void SearchPlaylists(string text, List<Playlist> playlists, ref ListBox playlistBox)
+    public async Task PlayPlaylist(Playlist playlist)
     {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            playlistBox.ItemsSource = playlists.Select(p => p.Name);
-        }
-            
-        playlistBox.ItemsSource = playlists
-            .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
-            .Select(item => item.Name).ToList();
+        // and change main window
+        await playlist.Play();
     }
 }

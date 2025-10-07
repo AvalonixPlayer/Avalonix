@@ -19,7 +19,6 @@ namespace Avalonix;
 public class App : Application
 {
     private static IServiceProvider? ServiceProvider { get; set; }
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
     {

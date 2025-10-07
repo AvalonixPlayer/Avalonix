@@ -39,22 +39,16 @@ public partial class PlaylistSelectWindow : Window
             return;
         }
             
-        PlaylistBox.ItemsSource = _playlists
-            .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
-            .Select(item => item.Name);
+        PlaylistBox.ItemsSource = _vm.SearchPlaylists(text, _playlists);
     }
 
-    private void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
+    private async void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
     {
         try
         {
-            /*
-            var selectedPlaylist = (List<string>)PlaylistBox.SelectedItems!;
-            if (selectedPlaylist.Count == 0)
-                return;
-            var playlist = selectedPlaylist[0];
-            */
-            _ = _playlists[0].Play();
+            var trueSender = (ListBox)sender!;
+            
+            await _vm.PlayPlaylist(_playlists[0]);
         }
         catch (Exception ex)
         {
