@@ -29,7 +29,22 @@ public partial class PlaylistSelectWindow : Window
         PlaylistBox.ItemsSource = result;
     }
 
-    private void StartPlaylist_OnClick(object? sender, RoutedEventArgs e)
+
+    private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        var text = SearchBox.Text;
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            PlaylistBox.ItemsSource = _playlists.Select(p => p.Name);
+            return;
+        }
+            
+        PlaylistBox.ItemsSource = _playlists
+            .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
+            .Select(item => item.Name);
+    }
+
+    private void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
     {
         try
         {
@@ -45,19 +60,5 @@ public partial class PlaylistSelectWindow : Window
         {
             _logger.LogError("Error while starting playlist in SelectWindow: {ex}", ex.Message);
         }
-    }
-
-    private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        var text = SearchBox.Text;
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            PlaylistBox.ItemsSource = _playlists.Select(p => p.Name);
-            return;
-        }
-            
-        PlaylistBox.ItemsSource = _playlists
-            .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
-            .Select(item => item.Name);
     }
 }

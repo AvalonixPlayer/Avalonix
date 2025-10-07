@@ -1,12 +1,6 @@
 ﻿#define DEBUG
 using Avalonia;
 using System;
-using System.Threading.Tasks;
-using Avalonix.Models.Disk;
-using Avalonix.Models.Media.MediaPlayerFiles;
-using Avalonix.Models.Media.PlaylistFiles;
-using Avalonix.Models.Media.TrackFiles;
-using NeoSimpleLogger;
 
 namespace Avalonix;
 
