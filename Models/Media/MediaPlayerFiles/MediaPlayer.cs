@@ -31,7 +31,7 @@ public class MediaPlayer : IMediaPlayer
         }
         
         Bass.BASS_ChannelPlay(_stream, true);
-
+        
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
     }
 
