@@ -13,10 +13,15 @@ public class Track
     {
     }
 
-    public Track(string? path)
+    public Track(string path)
     {
-        TrackData = new TrackData(path!);
+        TrackData = new TrackData(path);
         Metadata = new(TrackData.Path);
+    }
+
+    public void Initialize()
+    {
+        Metadata = new TrackMetadata(TrackData.Path);
     }
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;

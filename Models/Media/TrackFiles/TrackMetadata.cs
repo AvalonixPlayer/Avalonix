@@ -13,7 +13,7 @@ public struct TrackMetadata
     public string? Album { get; set; }
     public string? MediaFileFormat { get; set; }
     public string? Artist { get; set; }
-    public string Genre { get; set; }
+    public string? Genre { get; set; }
     public uint? Year { get; set; }
     public string? Lyric { get; set; }
     public TimeSpan Duration { get; set; }
@@ -29,8 +29,9 @@ public struct TrackMetadata
 
     private void FillTrackMetaData()
     {
+        Console.WriteLine(1);
         var track = File.Create(_path)!;
-        TrackName = track.Tag!.Title ?? "Song";
+        TrackName = track.Tag!.Title;
         MediaFileFormat = Path.GetExtension(_path);
         Album = track.Tag!.Album!;
         Artist = track.Tag!.FirstPerformer!;

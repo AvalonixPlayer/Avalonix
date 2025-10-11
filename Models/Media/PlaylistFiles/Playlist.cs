@@ -33,6 +33,9 @@ public class Playlist
         Logger = logger;
         PlayQueue = new PlayQueue(Settings, _random);
         
+        foreach (var track in PlaylistData.Tracks)
+            track.Initialize();
+        
         PlayQueue.FillQueue(PlaylistData);
     }
 
@@ -157,18 +160,21 @@ public class Playlist
     
     public void Stop()
     {
+        Player.Stop();
         Logger.LogDebug("Playlist stopped");
         Player.Stop();
     }
 
     public void Pause()
     {
+        Player.Pause();
         Logger.LogDebug("Playlist paused");
         Player.Pause();
     }
 
     public void Resume()
     {
+        Player.Resume();
         Logger.LogDebug("Playlist resumed");
         Player.Resume();
     }
