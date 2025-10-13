@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Avalonix.Models.Media.Playlist;
+using Avalonix.Services;
 
 namespace Avalonix.ViewModels;
 
@@ -10,35 +11,26 @@ public interface IPlaylistActionStrategy
     Task ExecuteAsync(Playlist playlist);
 }
 
-public class PlayPlaylistStrategy : IPlaylistActionStrategy
+public class PlayPlaylistStrategy(IPlaylistManager playlistManager) : IPlaylistActionStrategy
 {
     public string WindowTitle => "Select a playlist to play";
     public string ActionButtonText => "Play";
     
-    public async Task ExecuteAsync(Playlist playlist)
-    {
-        await playlist.Play();
-    }
+    public async Task ExecuteAsync(Playlist playlist) => await playlistManager.StartPlaylistAsync(playlist);
 }
 
-public class EditPlaylistStrategy : IPlaylistActionStrategy
+public class EditPlaylistStrategy(IPlaylistManager playlistManager): IPlaylistActionStrategy
 {
     public string WindowTitle => "Select a playlist to edit";
     public string ActionButtonText => "edit";
     
-    public async Task ExecuteAsync(Playlist playlist)
-    {
-        await Task.CompletedTask; 
-    }
+    public async Task ExecuteAsync(Playlist playlist) => await playlistManager.EditPlaylistAsync(playlist);
 }
 
-public class DeletePlaylistStrategy : IPlaylistActionStrategy
+public class DeletePlaylistStrategy(IPlaylistManager playlistManager) : IPlaylistActionStrategy
 {
     public string WindowTitle => "Select a playlist to delete";
     public string ActionButtonText => "delete";
     
-    public async Task ExecuteAsync(Playlist playlist)
-    {
-        await Task.CompletedTask; 
-    }
+    public async Task ExecuteAsync(Playlist playlist) => await playlistManager.DeletePlaylistAsync(playlist);
 }
