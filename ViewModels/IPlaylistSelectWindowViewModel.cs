@@ -11,5 +11,7 @@ public interface IPlaylistSelectWindowViewModel
 {
     Task<List<Playlist>> GetPlaylists();
     List<Playlist> SearchPlaylists(string text, List<Playlist> playlists);
-    Task PlayPlaylist(Playlist playlist);
+    Task HandlePlaylistSelection(Playlist playlist);
+    string WindowTitle { get; }
+    string ActionButtonText { get; }
 }
