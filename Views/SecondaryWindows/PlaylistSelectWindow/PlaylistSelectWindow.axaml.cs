@@ -46,7 +46,8 @@ public partial class PlaylistSelectWindow : Window
     {
         try
         {
-            var trueSender = (ListBox)sender!;
+            var castedSender = (ListBox)sender!;
+            _logger.LogInformation(castedSender.SelectedItem?.ToString());
             
             await _vm.PlayPlaylist(_playlists[0]);
         }
