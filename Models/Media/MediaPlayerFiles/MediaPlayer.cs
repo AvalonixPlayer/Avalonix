@@ -21,16 +21,17 @@ public class MediaPlayer : IMediaPlayer
 
     public void Play(Track track)
     {
+        Bass.BASS_StreamFree(_stream);
         _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
-
+        
         if (_stream == 0)
         {
             _logger.LogError("Could not create stream {TrackDataPath}", track.TrackData.Path);
             return;
         }
-
+        
         Bass.BASS_ChannelPlay(_stream, true);
-
+        
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
     }
 
