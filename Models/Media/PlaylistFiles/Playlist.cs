@@ -11,40 +11,32 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.PlaylistFiles;
 
-public class Playlist : ILoadWithDependency
+public class Playlist
 {
-    [JsonIgnore]
-    public IMediaPlayer Player { get; set; } = null!;
-    [JsonIgnore]
-    public IDiskManager Disk { get; set; } = null!;
-    [JsonIgnore]
-    public ILogger Logger { get; set; } = null!;
-    [JsonIgnore]
-    public Settings Settings { get; set; } = null!;
-
-    private readonly Random _random = new();
-    public string Name { get; init; } = null!;
-
-    public PlaylistData PlaylistData = new();
-
-    [JsonConstructor]
-    public Playlist()
-    {
-    }
+    public string Name { get; init; }
+    public PlaylistData PlaylistData { get; init; }
+    public IMediaPlayer Player { get; init; }
+    public IDiskManager Disk { get; init; }
+    public ILogger Logger { get; init; }
+    public Settings Settings { get; init; } = new Settings();
+    public PlayQueue PlayQueue {get; init;}
     
-    public void LoadWithDependency(object[] parameters)
+    private readonly Random _random = new();
+
+
+    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger)
     {
-		try
-		{
-        	Player = (IMediaPlayer)parameters[0];
-        	Disk = (IDiskManager)parameters[1];
-        	Logger = (ILogger)parameters[2];
-        	Settings = new Settings();
-		}
-		catch (Exception ex)
-		{
-        	Logger.LogError("Error while load playlist with dependency: {ex}", ex.Message);
-		}
+        Name = name;
+        PlaylistData = playlistData;
+        Player = player;
+        Disk = disk;
+        Logger = logger;
+        PlayQueue = new PlayQueue(Settings, _random);
+        
+        foreach (var track in PlaylistData.Tracks)
+            track.Initialize();
+        
+        PlayQueue.FillQueue(PlaylistData);
     }
 
     public async Task AddTrack(Track track)
@@ -121,19 +113,15 @@ public class Playlist : ILoadWithDependency
         PlaylistData.Rarity++;
         track.IncreaseRarity(1);
     }
-
+    
     public async Task Play(int startSong = 0)
     {
-        var tracks = PlaylistData.Tracks;
-        
-        if (Settings.Avalonix.Playlists.Shuffle)
-            tracks = tracks.OrderBy(_ => _random.Next()).ToList();
-        
         Logger.LogDebug("Playlist {Name} has started", Name);
 
-        for (var i = Settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < tracks.Count; i++)
+        for (var i = Settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < PlayQueue.Tracks.Count; i++)
         {
-            var track = tracks[i];
+            PlayQueue.PlayingIndex = i;
+            var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
 
             UpdateLastListen();
             UpdateRarity(ref track);
@@ -145,26 +133,48 @@ public class Playlist : ILoadWithDependency
             while (!Player.IsFree)
                 await Task.Delay(1000);
         }
-
+        PlayQueue.FillQueue(PlaylistData);
         if (Settings.Avalonix.Playlists.Loop) await Play();
 
         Logger.LogDebug("Playlist {Name} completed", Name);
     }
 
+    public void NextTrack()
+    {
+        if (PlayQueue.PlayingIndex + 1 >= PlayQueue.Tracks.Count)
+        {
+            _ = Play(PlayQueue.PlayingIndex);
+            PlayQueue.FillQueue(PlaylistData);
+        }
+        else
+            _ = Play(PlayQueue.PlayingIndex + 1);
+    }
+    
+    public void BackTrack()
+    {
+        if (PlayQueue.PlayingIndex - 1 <= 0)
+            _ = Play(0);
+        else
+            _ = Play(PlayQueue.PlayingIndex - 1);
+    }
+    
     public void Stop()
     {
+        Player.Stop();
         Logger.LogDebug("Playlist stopped");
         Player.Stop();
     }
 
     public void Pause()
     {
+        Player.Pause();
         Logger.LogDebug("Playlist paused");
         Player.Pause();
     }
 
     public void Resume()
     {
+        Player.Resume();
         Logger.LogDebug("Playlist resumed");
         Player.Resume();
     }

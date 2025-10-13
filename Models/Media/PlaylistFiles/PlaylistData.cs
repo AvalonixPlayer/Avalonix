@@ -5,7 +5,7 @@ using Avalonix.Models.Media.TrackFiles;
 
 namespace Avalonix.Models.Media.PlaylistFiles;
 
-public struct PlaylistData()
+public class PlaylistData
 {
     public List<Track> Tracks { get; set; } = [];
 

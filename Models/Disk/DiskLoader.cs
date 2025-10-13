@@ -31,25 +31,4 @@ public class DiskLoader(ILogger logger) : IDiskLoader
             return default;
         }
     }
-
-    public async Task<T?> LoadAsyncWhithDependensies<T>(string path, object[] dependencies)
-        where T : ILoadWithDependency
-    {
-        if (!File.Exists(path))
-            return default;
-
-        try
-        {
-            var result =
-                JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path),
-                    _jsonSerializerOptions)!;
-            result.LoadWithDependency(dependencies);
-            return result;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Failed to load json: " + ex.Message);
-            return default;
-        }
-    }
 }
