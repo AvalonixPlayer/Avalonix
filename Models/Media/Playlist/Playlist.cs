@@ -30,7 +30,7 @@ public class Playlist
         Player = player;
         Disk = disk;
         Logger = logger;
-        PlayQueue = new PlayQueue(Settings, _random);
+        PlayQueue = new PlayQueue(Settings, _random, PlaylistData.Tracks);
         
         foreach (var track in PlaylistData.Tracks)
             track.Initialize();
@@ -84,9 +84,9 @@ public class Playlist
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).ToList();
         if (flags == SortPlaylistTrackFlags.YearInverted)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).Reverse().ToList();
-        if (flags == SortPlaylistTrackFlags.Durration)
+        if (flags == SortPlaylistTrackFlags.Duration)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).ToList();
-        if (flags == SortPlaylistTrackFlags.DurrationInverted)
+        if (flags == SortPlaylistTrackFlags.DurationInverted)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).Reverse().ToList();
 
         await Save();

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Avalonix.Models.Media.PlaylistFiles;
+using Avalonix.Models.Media.Playlist;
 
 namespace Avalonix.ViewModels;
 
@@ -12,8 +12,8 @@ public interface IPlaylistActionStrategy
 
 public class PlayPlaylistStrategy : IPlaylistActionStrategy
 {
-    public string WindowTitle => "Выберите плейлист для воспроизведения";
-    public string ActionButtonText => "Воспроизвести";
+    public string WindowTitle => "Select a playlist to play";
+    public string ActionButtonText => "Play";
     
     public async Task ExecuteAsync(Playlist playlist)
     {
@@ -23,8 +23,8 @@ public class PlayPlaylistStrategy : IPlaylistActionStrategy
 
 public class EditPlaylistStrategy : IPlaylistActionStrategy
 {
-    public string WindowTitle => "Выберите плейлист для редактирования";
-    public string ActionButtonText => "Редактировать";
+    public string WindowTitle => "Select a playlist to edit";
+    public string ActionButtonText => "edit";
     
     public async Task ExecuteAsync(Playlist playlist)
     {
@@ -34,8 +34,8 @@ public class EditPlaylistStrategy : IPlaylistActionStrategy
 
 public class DeletePlaylistStrategy : IPlaylistActionStrategy
 {
-    public string WindowTitle => "Выберите плейлист для удаления";
-    public string ActionButtonText => "Удалить";
+    public string WindowTitle => "Select a playlist to delete";
+    public string ActionButtonText => "delete";
     
     public async Task ExecuteAsync(Playlist playlist)
     {
