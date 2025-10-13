@@ -7,15 +7,16 @@ using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonix.Services;
 
 namespace Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 
 public partial class PlaylistSelectWindow : Window
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<WindowManager> _logger;
     private readonly IPlaylistSelectWindowViewModel _vm;
     private readonly List<Playlist> _playlists;
-    public PlaylistSelectWindow(ILogger logger, IPlaylistSelectWindowViewModel vm)
+    public PlaylistSelectWindow(ILogger<WindowManager> logger, IPlaylistSelectWindowViewModel vm)
     {
         InitializeComponent();
         _logger = logger;
@@ -28,23 +29,6 @@ public partial class PlaylistSelectWindow : Window
         PlaylistBox.ItemsSource = result;
     }
 
-    private void StartPlaylist_OnClick(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            /*
-            var selectedPlaylist = (List<string>)PlaylistBox.SelectedItems!;
-            if (selectedPlaylist.Count == 0)
-                return;
-            var playlist = selectedPlaylist[0];
-            */
-            _ = _playlists[0].Play();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error while starting playlist in SelectWindow: {ex}", ex.Message);
-        }
-    }
 
     private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
@@ -55,8 +39,21 @@ public partial class PlaylistSelectWindow : Window
             return;
         }
             
-        PlaylistBox.ItemsSource = _playlists
-            .Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase))
-            .Select(item => item.Name);
+        PlaylistBox.ItemsSource = _vm.SearchPlaylists(text, _playlists);
+    }
+
+    private async void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
+    {
+        try
+        {
+            var castedSender = (ListBox)sender!;
+            _logger.LogInformation(castedSender.SelectedItem?.ToString());
+            
+            await _vm.PlayPlaylist(_playlists[0]);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error while starting playlist in SelectWindow: {ex}", ex.Message);
+        }
     }
 }

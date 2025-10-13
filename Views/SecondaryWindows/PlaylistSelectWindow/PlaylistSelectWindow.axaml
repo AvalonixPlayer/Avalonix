@@ -20,13 +20,8 @@
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
                     <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Search"/>
-                </StackPanel>
-            </Border>
-            <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
-                <StackPanel>
-                    <ListBox Height="300" Name="PlaylistBox"></ListBox>
+                    <ListBox Height="300" Name="PlaylistBox" SelectionChanged="StartSelectedPlaylist"></ListBox>
                 </StackPanel>
             </Border> 
-            <Button Click="StartPlaylist_OnClick"></Button>
         </StackPanel>
 </Window>

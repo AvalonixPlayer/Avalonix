@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonix.Services;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -11,9 +12,9 @@ namespace Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 public partial class PlaylistCreateWindow : Window
 {
     private readonly IPlaylistCreateWindowViewModel _vm;
-    private readonly ILogger _logger;
+    private readonly ILogger<WindowManager> _logger;
         
-    public PlaylistCreateWindow(ILogger logger, IPlaylistCreateWindowViewModel vm)
+    public PlaylistCreateWindow(ILogger<WindowManager> logger, IPlaylistCreateWindowViewModel vm)
     {
         _logger = logger;
         _vm = vm;
