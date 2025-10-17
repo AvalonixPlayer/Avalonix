@@ -1,5 +1,7 @@
-using ReactiveUI;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonix.ViewModels;
 
-public abstract class ViewModelBase : ReactiveObject;
+public class ViewModelBase : ObservableObject
+{
+}

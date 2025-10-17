@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -43,14 +42,12 @@ public partial class PlaylistSelectWindow : Window
         PlaylistBox.ItemsSource = _vm.SearchPlaylists(text, _playlists);
     }
 
-    private async void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
+    private void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
     {
         try
         {
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
-            
-            await _vm.PlayPlaylist(_playlists[0]);
         }
         catch (Exception ex)
         {

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.UserSettings;
-using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.Models.UserSettings.Theme;
 using Microsoft.Extensions.Logging;
 
@@ -81,11 +80,12 @@ public class DiskManager : IDiskManager
         }
     }
 
-    public void RemovePlaylist(string name)
+    public Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
         File.Delete(Path.Combine(PlaylistsPath, name + Extension));
         _logger.LogInformation("Playlist {name} was been removed", name);
+        return Task.CompletedTask;
     }
 
     public async Task<List<Playlist>> GetAllPlaylists()

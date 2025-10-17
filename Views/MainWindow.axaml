@@ -3,54 +3,18 @@
         xmlns:vm="using:Avalonix.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-        Width="800" Height="600" CanMaximize="True"
-        MinHeight="600" MaxHeight="1000"
-        MinWidth="800" MaxWidth="1200"
-        Background="Transparent"
-        TransparencyLevelHint="AcrylicBlur"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Avalonix.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Avalonix - Main Window">
+        Title="Avalonix">
 
     <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    
-    <Grid RowDefinitions="500,*,Auto,Auto" ColumnDefinitions="300,*" Margin="10">
-        <Border Grid.Row="0" Grid.Column="0">
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button> 
-                    <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button> 
-                </StackPanel>
-                <ListBox Height="400" Name="SongBox">
-                </ListBox>
-            </StackPanel>
-        </Border>
-        <Border Grid.Row="1" Grid.Column="0">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Button>
-                    <Image Source="../Assets/buttons/new.png"/>
-                </Button> 
-                <Button>
-                    <Image Source="../Assets/buttons/remove.png"/>
-                </Button> 
-            </StackPanel>
-        </Border> 
-        
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Vertical" Grid.Row="1" Grid.Column="1">
-            <Border>
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Name="BackButton">Back</Button>
-                    <Button Name="PauseButton">Pause</Button>
-                    <Button Name="NextButton">Next</Button>
-                </StackPanel>
-            </Border>
-            
-            <Slider ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Background="DimGray"/> 
-        </StackPanel>
-        <Border Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="12"/>
-    </Grid>
+
+    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
 </Window>
