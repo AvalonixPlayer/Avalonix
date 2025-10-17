@@ -24,6 +24,7 @@ public class PlaylistManager(IMediaPlayer player, IDiskManager diskManager, ILog
     public async Task EditPlaylist(Playlist playlist) => await playlist.Save();
 
     public async Task CreatePlaylist(Playlist playlist) => await playlist.Save();
+    public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.Name);
 
     public async Task StartPlaylist(Playlist playlist) => await playlist.Play();
 }

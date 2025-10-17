@@ -10,5 +10,6 @@ public interface IPlaylistManager
     Playlist ConstructPlaylist(string title, List<Track> tracks);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
+    void DeletePlaylist(Playlist playlist);
     Task StartPlaylist(Playlist playlist);
 }
