@@ -5,20 +5,20 @@ using System.Text;
 using TagLib;
 using File = TagLib.File;
 
-namespace Avalonix.Models.Media.TrackFiles;
+namespace Avalonix.Models.Media.Track;
 
-public struct TrackMetadata
+public record TrackMetadata
 {
-    public string? TrackName { get; set; }
-    public string? Album { get; set; }
-    public string? MediaFileFormat { get; set; }
-    public string? Artist { get; set; }
-    public string? Genre { get; set; }
-    public uint? Year { get; set; }
-    public string? Lyric { get; set; }
-    public TimeSpan Duration { get; set; }
-    public byte[]? Cover { get; set; }
-    private string _path;
+    public string? TrackName { get; private set; }
+    public string? Album { get; private set; }
+    public string? MediaFileFormat { get; private set; }
+    public string? Artist { get; private set; }
+    public string? Genre { get; private set; }
+    public uint? Year { get; private set; }
+    public string? Lyric { get; private set; }
+    public TimeSpan Duration { get; private set; }
+    public byte[]? Cover { get; private set; }
+    private readonly string _path;
 
     public TrackMetadata(string path)
     {
@@ -29,8 +29,7 @@ public struct TrackMetadata
 
     private void FillTrackMetaData()
     {
-        Console.WriteLine(1);
-        var track = File.Create(_path)!;
+        var track = File.Create(_path);
         TrackName = track.Tag!.Title;
         MediaFileFormat = Path.GetExtension(_path);
         Album = track.Tag!.Album!;
@@ -39,7 +38,7 @@ public struct TrackMetadata
         Year = track.Tag!.Year;
         Lyric = track.Tag!.Lyrics!;
         Duration = track.Properties!.Duration;
-        //Cover = track.Tag!.Pictures!.FirstOrDefault(p => p.Type == PictureType.FrontCover)!.Data!.Data!;
+        Cover = track.Tag!.Pictures!.FirstOrDefault(p => p.Type == PictureType.FrontCover)!.Data!.Data!;
     }
 
     public void RewriteTags(TrackMetadata newMetadata)
@@ -67,7 +66,7 @@ public struct TrackMetadata
         result.AppendLine($"Year: {Year}");
         result.AppendLine($"Lyric: {Lyric}");
         result.AppendLine($"Duration: {Duration}");
-        result.AppendLine($"Duration: {(Cover == null ? true : false)}");
+        result.AppendLine($"Cover: {Cover == null}");
         return result.ToString();
     }
 }

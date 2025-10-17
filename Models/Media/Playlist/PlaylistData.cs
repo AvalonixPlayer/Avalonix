@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Avalonix.Models.Media.TrackFiles;
 
-namespace Avalonix.Models.Media.PlaylistFiles;
+namespace Avalonix.Models.Media.Playlist;
 
 public class PlaylistData
 {
-    public List<Track> Tracks { get; set; } = [];
+    public List<Track.Track> Tracks { get; set; } = [];
 
     public TimeSpan? PlaylistDuration =>
         Tracks.Aggregate(TimeSpan.Zero, (current, track) => current + track.Metadata.Duration);

@@ -7,6 +7,7 @@ using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonix.Models.Media.Playlist;
 using Avalonix.Services;
 
 namespace Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;

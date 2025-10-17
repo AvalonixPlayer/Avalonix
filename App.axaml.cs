@@ -5,7 +5,7 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using Avalonix.Models.Disk;
-using Avalonix.Models.Media.MediaPlayerFiles;
+using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Services;
 using Avalonix.ViewModels;
 using Avalonix.Views;
@@ -56,11 +56,8 @@ public class App : Application
     private static void DisableAvaloniaDataAnnotationValidation()
     {
         var dataValidationPluginsToRemove =
-            BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
+            BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>();
 
-        foreach (var plugin in dataValidationPluginsToRemove)
-        {
-            BindingPlugins.DataValidators.Remove(plugin);
-        }
+        dataValidationPluginsToRemove.ToList().ForEach(plugin => BindingPlugins.DataValidators.Remove(plugin));
     }
 }

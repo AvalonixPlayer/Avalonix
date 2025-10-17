@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonix.Models.Disk;
+using Avalonix.Models.Media.MediaPlayer;
 using Microsoft.Extensions.Logging;
-using Avalonix.Models.Media.MediaPlayerFiles;
+using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.PlaylistFiles;
-using Avalonix.Models.Media.TrackFiles;
+using Avalonix.Models.Media.Track;
 
 namespace Avalonix.ViewModels;
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.Models.UserSettings;
 using Avalonix.Models.UserSettings.Theme;

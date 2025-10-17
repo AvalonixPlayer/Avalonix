@@ -1,25 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
-using Avalonix.Models.Media.MediaPlayerFiles;
-using Avalonix.Models.Media.TrackFiles;
+using Avalonix.Models.Media.MediaPlayer;
+using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.Models.UserSettings;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Models.Media.PlaylistFiles;
+namespace Avalonix.Models.Media.Playlist;
 
 public class Playlist
 {
     public string Name { get; init; }
     public PlaylistData PlaylistData { get; init; }
-    public IMediaPlayer Player { get; init; }
-    public IDiskManager Disk { get; init; }
-    public ILogger Logger { get; init; }
-    public Settings Settings { get; init; } = new Settings();
-    public PlayQueue PlayQueue {get; init;}
+    private IMediaPlayer Player { get; init; }
+    private IDiskManager Disk { get; init; }
+    private ILogger Logger { get; init; }
+    private Settings Settings { get; init; } = new();
+    private PlayQueue PlayQueue {get; init;}
     
     private readonly Random _random = new();
 
@@ -39,7 +38,7 @@ public class Playlist
         PlayQueue.FillQueue(PlaylistData);
     }
 
-    public async Task AddTrack(Track track)
+    public async Task AddTrack(Track.Track track)
     {
         Logger.LogDebug("{TrackName} added into {playlist}", track.Metadata.TrackName, Name);
         PlaylistData.Tracks.Add(track);
@@ -58,7 +57,7 @@ public class Playlist
         return result;
     }
 
-    public async Task RemoveTrack(Track track)
+    public async Task RemoveTrack(Track.Track track)
     {
         for (var i = 0; i < PlaylistData.Tracks.Count; i++)
             if (PlaylistData.Tracks[i].TrackData.Path == track.TrackData.Path)
@@ -106,7 +105,7 @@ public class Playlist
         PlaylistData.LastListen = DateTime.Now.Date;
     }
 
-    private void UpdateRarity(ref Track track)
+    private void UpdateRarity(ref Track.Track track)
     {
         Logger.LogDebug("Updated rarity of playlist {playlistName} and track {trackName} in it", Name,
             track.Metadata.TrackName);

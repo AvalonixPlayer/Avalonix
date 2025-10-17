@@ -1,9 +1,8 @@
 using System;
-using Avalonix.Models.Media.TrackFiles;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
 
-namespace Avalonix.Models.Media.MediaPlayerFiles;
+namespace Avalonix.Models.Media.MediaPlayer;
 
 public class MediaPlayer : IMediaPlayer
 {
@@ -19,7 +18,7 @@ public class MediaPlayer : IMediaPlayer
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
     }
 
-    public void Play(Track track)
+    public void Play(Track.Track track)
     {
         Bass.BASS_StreamFree(_stream);
         _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
