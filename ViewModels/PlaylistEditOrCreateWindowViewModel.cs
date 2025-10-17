@@ -8,6 +8,7 @@ using Avalonix.Models.Media.MediaPlayer;
 using Microsoft.Extensions.Logging;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.PlaylistFiles;
+using Avalonix.Models.Media.Track;
 using Avalonix.ViewModels.Strategy;
 
 namespace Avalonix.ViewModels;
@@ -66,8 +67,10 @@ public class PlaylistEditOrCreateWindowViewModel(
 
     public async Task ExecuteActionAsync(string playlistName, List<string> tracksPaths)
     {
-        var playlist 
+        var playlistData = new PlaylistData { Tracks = new List<Track>() };
+        foreach (var trackPath in tracksPaths)
+            playlistData.Tracks.Add(new Track { TrackData = new TrackData(trackPath) });
+        var playlist = new Playlist(playlistName, playlistData, player, diskManager, logger);
         await strategy.ExecuteAsync(playlist);
     }
-
 }

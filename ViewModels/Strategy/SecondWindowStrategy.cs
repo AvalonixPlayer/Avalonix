@@ -6,10 +6,10 @@ namespace Avalonix.ViewModels.Strategy;
 
 public interface ISecondWindowStrategy
 {
-    public string WindowTitle { get; }
-    public string ActionButtonText { get; }
+    string WindowTitle { get; }
+    string ActionButtonText { get; }
     
-    public Task ExecuteAsync(Playlist playlist);
+    Task ExecuteAsync(Playlist playlist);
 }
 
 public class CreatePlaylistWindowStrategy(IPlaylistManager playlistManager) : ISecondWindowStrategy

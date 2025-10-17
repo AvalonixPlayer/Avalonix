@@ -9,6 +9,7 @@ using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Services;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.ViewModels;
+using Avalonix.ViewModels.Strategy;
 using Avalonix.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +30,11 @@ public class App : Application
             services.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
             services.AddTransient<IPlaylistEditOrCreateWindowViewModel, PlaylistEditOrCreateWindowViewModel>();
             services.AddTransient<IPlaylistSelectWindowViewModel, PlaylistSelectWindowViewModel>();
+            services.AddTransient<ISecondWindowStrategy, CreatePlaylistWindowStrategy>();
+            services.AddTransient<ISecondWindowStrategy, EditPlaylistWindowStrategy>();
+            services.AddTransient<ISecondWindowStrategy, SelectAndDeletePlaylistWindowStrategy>();
+            services.AddTransient<ISecondWindowStrategy, SelectAndPlayPlaylistWindowStrategy>();
+            services.AddTransient<ISecondWindowStrategy, SelectAndEditPlaylistWindowStrategy>();
             services.AddTransient<MainWindow>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
@@ -42,10 +48,10 @@ public class App : Application
             log.ClearProviders();
             log.AddProvider(new LoggerProvider());
         });
-        
+
         var hostBuilder = host.Build();
         ServiceProvider = hostBuilder.Services;
-        
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             DisableAvaloniaDataAnnotationValidation();

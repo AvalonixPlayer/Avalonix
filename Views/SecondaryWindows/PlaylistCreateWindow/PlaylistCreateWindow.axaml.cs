@@ -67,7 +67,7 @@ public partial class PlaylistCreateWindow : Window
             var name = PlaylistName.Text;
             var items = NewSongBox.Items.OfType<string>().ToList();
             if (string.IsNullOrWhiteSpace(name) || items.Count <= 0) return;
-            await _vm.ExecuteAsync(name, items);
+            await _vm.ExecuteActionAsync(name, items);
         }
         catch (Exception ex)
         {
