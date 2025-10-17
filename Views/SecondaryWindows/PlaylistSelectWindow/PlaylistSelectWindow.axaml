@@ -8,12 +8,12 @@
          Background="Transparent"
          TransparencyLevelHint="AcrylicBlur"
          x:Class="Avalonix.Views.SecondaryWindows.PlaylistSelectWindow.PlaylistSelectWindow"
-         x:DataType="vm:PlaylistCreateWindowViewModel"
+         x:DataType="vm:PlaylistEditOrCreateWindowViewModel"
          Icon="/Assets/avalonia-logo.ico"
          Title="Avalonix - Playlist Select">
     
         <Design.DataContext>
-            <vm:PlaylistCreateWindowViewModel/>
+            <vm:PlaylistEditOrCreateWindowViewModel/>
         </Design.DataContext>
     
         <StackPanel Margin="10">

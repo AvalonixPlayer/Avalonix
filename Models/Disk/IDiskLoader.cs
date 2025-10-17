@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
-using Avalonix.Models;
+
+namespace Avalonix.Models.Disk;
 
 public interface IDiskLoader
 {

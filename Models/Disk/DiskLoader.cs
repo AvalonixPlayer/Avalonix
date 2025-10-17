@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Avalonix.Models.Media.PlaylistFiles;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;

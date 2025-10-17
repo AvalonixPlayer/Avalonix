@@ -7,6 +7,7 @@ using Avalonia.Markup.Xaml;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Services;
+using Avalonix.Services.PlaylistManager;
 using Avalonix.ViewModels;
 using Avalonix.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,7 @@ public class App : Application
         host.ConfigureServices(services =>
         {
             services.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
-            services.AddTransient<IPlaylistCreateWindowViewModel, PlaylistCreateWindowViewModel>();
+            services.AddTransient<IPlaylistEditOrCreateWindowViewModel, PlaylistEditOrCreateWindowViewModel>();
             services.AddTransient<IPlaylistSelectWindowViewModel, PlaylistSelectWindowViewModel>();
             services.AddTransient<MainWindow>();
             services.AddSingleton<ILogger, Logger>();
@@ -35,6 +36,7 @@ public class App : Application
             services.AddSingleton<IDiskLoader, DiskLoader>();
             services.AddSingleton<IDiskWriter, DiskWriter>();
             services.AddSingleton<IMediaPlayer, MediaPlayer>();
+            services.AddSingleton<IPlaylistManager, PlaylistManager>();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();

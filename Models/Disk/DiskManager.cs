@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.UserSettings;
-using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.Models.UserSettings.Theme;
 using Microsoft.Extensions.Logging;
 

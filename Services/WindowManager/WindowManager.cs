@@ -10,7 +10,7 @@ using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 namespace Avalonix.Services;
 
 public class WindowManager(ILogger<WindowManager> logger,
-    IPlaylistCreateWindowViewModel playlistCreateWindowViewModel, 
+    IPlaylistEditOrCreateWindowViewModel playlistEditOrCreateWindowViewModel, 
     IPlaylistSelectWindowViewModel playlistSelectWindowViewModel) 
     : IWindowManager
 {
@@ -33,6 +33,6 @@ public class WindowManager(ILogger<WindowManager> logger,
         }
     }
 
-    public Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => Task.FromResult(new PlaylistCreateWindow(logger, playlistCreateWindowViewModel));
+    public Task<PlaylistCreateWindow> PlaylistCreateWindow_Open() => Task.FromResult(new PlaylistCreateWindow(logger, playlistEditOrCreateWindowViewModel));
     public Task<PlaylistSelectWindow> PlaylistSelectWindow_Open() => Task.FromResult(new PlaylistSelectWindow(logger, playlistSelectWindowViewModel));
 }

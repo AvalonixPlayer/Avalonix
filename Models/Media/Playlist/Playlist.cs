@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.Playlist;
 
-public class Playlist
+public record Playlist
 {
     public string Name { get; init; }
     public PlaylistData PlaylistData { get; init; }
@@ -18,7 +18,7 @@ public class Playlist
     private IDiskManager Disk { get; init; }
     private ILogger Logger { get; init; }
     private Settings Settings { get; init; } = new();
-    private PlayQueue PlayQueue {get; init;}
+    private PlayQueue PlayQueue { get; init;}
     
     private readonly Random _random = new();
 
@@ -32,8 +32,7 @@ public class Playlist
         Logger = logger;
         PlayQueue = new PlayQueue(Settings, _random);
         
-        foreach (var track in PlaylistData.Tracks)
-            track.Initialize();
+        PlaylistData.Tracks.ForEach(track => track.Initialize());
         
         PlayQueue.FillQueue(PlaylistData);
     }
@@ -74,7 +73,7 @@ public class Playlist
         await Save();
     }
 
-    public async Task SortTracks(SortPlaylistTrackFlags flags)
+    public void SortTracks(SortPlaylistTrackFlags flags)
     {
         if (flags == SortPlaylistTrackFlags.Artist)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList();
@@ -88,8 +87,6 @@ public class Playlist
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).ToList();
         if (flags == SortPlaylistTrackFlags.DurrationInverted)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).Reverse().ToList();
-
-        await Save();
     }
 
 

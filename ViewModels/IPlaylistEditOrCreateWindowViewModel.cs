@@ -4,8 +4,8 @@ using Avalonia.Controls;
 
 namespace Avalonix.ViewModels;
 
-public interface IPlaylistCreateWindowViewModel
+public interface IPlaylistEditOrCreateWindowViewModel
 {
     Task<string[]?> OpenTrackFileDialogAsync(Window parent);
-    Task CreatePlaylistAsync(string playlistName, List<string> tracksPaths);
+    Task ExecuteActionAsync(string playlistName, List<string> tracksPaths);
 }
