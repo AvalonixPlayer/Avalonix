@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -9,14 +7,14 @@ using Avalonix.Models.Media.MediaPlayer;
 using Microsoft.Extensions.Logging;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.PlaylistFiles;
-using Avalonix.Models.Media.Track;
 
 namespace Avalonix.ViewModels;
 
 public class PlaylistCreateWindowViewModel(
     ILogger<PlaylistCreateWindowViewModel> logger,
     IDiskManager diskManager,
-    IMediaPlayer player)
+    IMediaPlayer player,
+    )
     : ViewModelBase, IPlaylistCreateWindowViewModel
 {
     public async Task<string[]?> OpenTrackFileDialogAsync(Window parent)
@@ -64,21 +62,10 @@ public class PlaylistCreateWindowViewModel(
         }
     }
 
-    public async Task CreatePlaylistAsync(string playlistName, List<string> tracksPaths)
+    public Task HandlePlaylistSelection(Playlist playlist)
     {
-        if (tracksPaths.Count == 0) return;
-
-        var playlistData = new PlaylistData { Tracks = tracksPaths.Select(path => new Track(path)).ToList() };
-        var playlist = new Playlist(playlistName, playlistData, player, diskManager, logger);
-
-        try
-        {
-            logger.LogInformation("Saving playlist: {name}", playlistName);
-            await playlist.Save();
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Error saving playlist: {e}", e);
-        }
     }
+
+    public string WindowTitle { get; }
+    public string ActionButtonText { get; }
 }
