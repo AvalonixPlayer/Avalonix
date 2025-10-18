@@ -7,15 +7,18 @@ namespace Avalonix.Models.Media.Playlist;
 
 public class PlaylistData
 {
+    private List<Track.Track> _tracks = [];
+
     public List<Track.Track> Tracks
     {
         get
         {
             if (ObserveDirectory)
                 UpdateTracksByDirectoryObserving();
-            return FiltratedTracks();
+            TracksFiltration();
+            return _tracks;
         }
-        set { }
+        set => _tracks = value;
     }
 
     public TimeSpan? PlaylistDuration =>
@@ -23,29 +26,27 @@ public class PlaylistData
 
     public DateTime? LastListen { get; set; } = null!;
     public int? Rarity { get; set; } = 0;
-    public bool ObserveDirectory { get; set; } = false;
-    public string? ObservingDirectory { get; set; } = null!;
+    public bool ObserveDirectory { get; set; } = true;
+    public string? ObservingDirectory { get; set; } = @"F:\Плейлисты\Linkin park";
 
     private void UpdateTracksByDirectoryObserving()
     {
         if (!Directory.Exists(ObservingDirectory)) return;
 
-        var extensions = "*.mp3;*.flac;*.m4a;*.wav;*.waw";
-        var files = Directory.EnumerateFiles(ObservingDirectory, extensions, SearchOption.AllDirectories);
+        var extensions = new[] { "*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw" };
+        var files = extensions.SelectMany(ext => 
+            Directory.EnumerateFiles(ObservingDirectory, ext, SearchOption.AllDirectories));
 
-        var result = new List<Track.Track>();
-
-        var currentPaths = Tracks.Select(track => track.TrackData.Path).ToList();
+        var currentPaths = _tracks.Select(track => track.TrackData.Path).ToList();
 
         foreach (var file in files)
             if (!currentPaths.Contains(file))
-                Tracks.Add(new Track.Track(file));
-        Tracks = result;
+                _tracks.Add(new Track.Track(file));
     }
 
     private void TracksFiltration() =>
-        Tracks = Tracks.Where(track => File.Exists(track.TrackData.Path)).ToList();
+        _tracks = _tracks.Where(track => File.Exists(track.TrackData.Path)).ToList();
 
     private List<Track.Track> FiltratedTracks() =>
-        Tracks.Where(track => File.Exists(track.TrackData.Path)).ToList();
+        _tracks.Where(track => File.Exists(track.TrackData.Path)).ToList();
 }
