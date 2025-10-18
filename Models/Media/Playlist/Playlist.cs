@@ -32,8 +32,6 @@ public record Playlist
         Logger = logger;
         PlayQueue = new PlayQueue(Settings, _random);
         
-        PlaylistData.Tracks.ForEach(track => track.Initialize());
-        
         PlayQueue.FillQueue(PlaylistData);
     }
 

@@ -69,7 +69,9 @@ public class PlaylistEditOrCreateWindowViewModel(
     {
         var playlistData = new PlaylistData { Tracks = new List<Track>() };
         foreach (var trackPath in tracksPaths)
-            playlistData.Tracks.Add(new Track { TrackData = new TrackData(trackPath) });
+        {
+            playlistData.Tracks.Add(new Track(trackPath));
+        }
         var playlist = new Playlist(playlistName, playlistData, player, diskManager, logger);
         await strategy.ExecuteAsync(playlist);
     }

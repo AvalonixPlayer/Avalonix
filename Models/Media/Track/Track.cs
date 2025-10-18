@@ -6,7 +6,7 @@ namespace Avalonix.Models.Media.Track;
 public class Track
 {
     public TrackData TrackData;
-    [JsonIgnore] public TrackMetadata Metadata;
+    [JsonIgnore] public TrackMetadata Metadata => new TrackMetadata(TrackData.Path);
 
     [JsonConstructor]
     public Track()
@@ -15,13 +15,7 @@ public class Track
 
     public Track(string path)
     {
-        TrackData = new TrackData(path);
-        Metadata = new(TrackData.Path);
-    }
-
-    public void Initialize()
-    {
-        Metadata = new TrackMetadata(TrackData.Path);
+        TrackData = new (path);
     }
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;
