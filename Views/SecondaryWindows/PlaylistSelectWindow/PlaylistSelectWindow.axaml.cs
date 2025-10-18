@@ -49,7 +49,6 @@ public partial class PlaylistSelectWindow : Window
         {
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
-            Console.WriteLine(_playlists[0].PlaylistData.Tracks[0].TrackData.Path);
             await _vm.PlayPlaylist(_playlists[0]);
         }
         catch (Exception ex)
