@@ -40,12 +40,12 @@ public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistMana
     }
 }
 
-public class SelectAndPlayPlaylistWindowStrategy() : ISecondWindowStrategy
+public class SelectAndPlayPlaylistWindowStrategy(IPlaylistManager playlistManager) : ISecondWindowStrategy
 {
     public string WindowTitle => "Play a playlist";
     public string ActionButtonText => "Play";
 
-    public async Task ExecuteAsync(Playlist playlist) => await playlist.Play();
+    public async Task ExecuteAsync(Playlist playlist) => await playlistManager.StartPlaylist(playlist); 
 }
 
 public class SelectAndEditPlaylistWindowStrategy(IPlaylistManager playlistManager) : ISecondWindowStrategy
