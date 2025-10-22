@@ -9,14 +9,14 @@ using Microsoft.Extensions.Logging;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.Models.Media.Track;
+using Avalonix.Services.PlaylistManager;
 using Avalonix.ViewModels.Strategy;
 
 namespace Avalonix.ViewModels;
 
 public class PlaylistEditOrCreateWindowViewModel(
-    ILogger<PlaylistEditOrCreateWindowViewModel> logger,
-    IDiskManager diskManager,
-    IMediaPlayer player,
+    ILogger<PlaylistEditOrCreateWindowViewModel> logger, 
+    IPlaylistManager playlistManager,  
     ISecondWindowStrategy strategy)
     : ViewModelBase, IPlaylistEditOrCreateWindowViewModel
 {
@@ -65,14 +65,10 @@ public class PlaylistEditOrCreateWindowViewModel(
         }
     }
 
-    public async Task ExecuteActionAsync(string playlistName, List<string> tracksPaths)
+    public async Task ExecuteAsync(string playlistName, List<Track> tracksPaths)
     {
-        var playlistData = new PlaylistData { Tracks = new List<Track>() };
-        foreach (var trackPath in tracksPaths)
-        {
-            playlistData.Tracks.Add(new Track(trackPath));
-        }
-        var playlist = new Playlist(playlistName, playlistData, player, diskManager, logger);
+        var playlist = playlistManager.ConstructPlaylist(playlistName, tracksPaths);
         await strategy.ExecuteAsync(playlist);
     }
+
 }
