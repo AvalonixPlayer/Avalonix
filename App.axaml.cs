@@ -37,7 +37,6 @@ public class App : Application
             services.AddTransient<ISecondWindowStrategy, SelectAndPlayPlaylistWindowStrategy>();
             services.AddTransient<ISecondWindowStrategy, SelectAndEditPlaylistWindowStrategy>();
             services.AddTransient<MainWindow>();
-            services.AddSingleton<Settings>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IDiskManager, DiskManager>();
