@@ -8,8 +8,8 @@ namespace Avalonix.Models.Media.Playlist;
 public class PlayQueue(Settings settings, Random random)
 {
     public int PlayingIndex { get; set; }
-    public List<Track.Track> Tracks { get; private set; }
-    private Settings _settings = settings;
+    public List<Track.Track> Tracks { get; private set; } = null!;
+    private Settings Settings => settings;
 
     public void FillQueue(PlaylistData playlistData)
     {

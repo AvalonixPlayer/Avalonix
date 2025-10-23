@@ -6,6 +6,7 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
+using Avalonix.Models.UserSettings;
 using Avalonix.Services;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.ViewModels;
@@ -36,6 +37,7 @@ public class App : Application
             services.AddTransient<ISecondWindowStrategy, SelectAndPlayPlaylistWindowStrategy>();
             services.AddTransient<ISecondWindowStrategy, SelectAndEditPlaylistWindowStrategy>();
             services.AddTransient<MainWindow>();
+            services.AddSingleton<Settings>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IDiskManager, DiskManager>();

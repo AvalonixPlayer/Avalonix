@@ -71,7 +71,7 @@ public class DiskManager : IDiskManager
                 await _diskLoader.LoadAsync<PlaylistData>(Path.Combine(PlaylistsPath, name + Extension));
             if (playlistData == null!) _logger.LogError("Playlist get error: {name}", name);
             else _logger.LogDebug("Playlist get: {name}", name);
-            return new Playlist(name, playlistData!, _player, this, _logger);
+            return new Playlist(name, playlistData!, _player, this, _logger, await GetSettings());
         }
         catch (Exception ex)
         {

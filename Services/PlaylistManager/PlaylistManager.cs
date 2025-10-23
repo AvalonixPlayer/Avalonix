@@ -18,7 +18,8 @@ public class PlaylistManager(IMediaPlayer player, IDiskManager diskManager, ILog
             LastListen = null,
             Rarity = 0 
         };
-        return new Playlist(title, playlistData, player, diskManager, logger);
+        var settings = diskManager.GetSettings().GetAwaiter().GetResult();
+        return new Playlist(title, playlistData, player, diskManager, logger, settings);
     }
 
     public async Task EditPlaylist(Playlist playlist) => await playlist.Save();
