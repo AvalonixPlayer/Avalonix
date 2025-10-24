@@ -113,7 +113,7 @@ public record Playlist
     {
         Logger.LogDebug("Playlist {Name} has started", Name);
 
-        for (var i = Settings.Avalonix.Playlists.Shuffle ? startSong : 0; i < PlayQueue.Tracks.Count; i++)
+        for (var i = startSong; i < PlayQueue.Tracks.Count; i++)
         {
             PlayQueue.PlayingIndex = i;
             var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
@@ -137,7 +137,7 @@ public record Playlist
 
     public void NextTrack()
     {
-        if (PlayQueue.PlayingIndex + 1 >= PlayQueue.Tracks.Count)
+        if (PlayQueue.PlayingIndex>= PlayQueue.Tracks.Count)
         {
             _ = Play(PlayQueue.PlayingIndex);
             PlayQueue.FillQueue(PlaylistData);
@@ -174,4 +174,7 @@ public record Playlist
         Logger.LogDebug("Playlist resumed");
         Player.Resume();
     }
+
+    public bool Paused() =>
+        Player.IsPaused;
 }

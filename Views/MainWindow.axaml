@@ -43,9 +43,9 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Vertical" Grid.Row="1" Grid.Column="1">
             <Border>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Name="BackButton">Back</Button>
-                    <Button Name="PauseButton">Pause</Button>
-                    <Button Name="NextButton">Next</Button>
+                    <Button Name="BackButton" Click="PlayTrackBefore">Back</Button>
+                    <Button Name="PauseButton" Click="Pause">Pause</Button>
+                    <Button Name="NextButton" Click="PlayNextTrack">Next</Button>
                 </StackPanel>
             </Border>
             

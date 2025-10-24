@@ -11,6 +11,7 @@ public class MediaPlayer : IMediaPlayer
     private int _stream;
 
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
+    public bool IsPaused => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_PAUSED;
 
     private readonly ILogger _logger;
     private readonly ISettingsManager _settingsManager;

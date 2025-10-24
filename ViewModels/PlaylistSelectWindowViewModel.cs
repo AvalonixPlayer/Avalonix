@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.Playlist;
+using Avalonix.Services.PlaylistManager;
 
 namespace Avalonix.ViewModels;
 
-public class PlaylistSelectWindowViewModel(IDiskManager idiskManager) : ViewModelBase, IPlaylistSelectWindowViewModel
+public class PlaylistSelectWindowViewModel(IDiskManager idiskManager, IPlaylistManager playlistManager) : ViewModelBase, IPlaylistSelectWindowViewModel
 {
     public async Task<List<Playlist>> GetPlaylists() => await idiskManager.GetAllPlaylists();
     public List<Playlist> SearchPlaylists(string text, List<Playlist> playlists) =>
@@ -16,6 +17,6 @@ public class PlaylistSelectWindowViewModel(IDiskManager idiskManager) : ViewMode
     public async Task PlayPlaylist(Playlist playlist)
     {
         // and change main window
-        await playlist.Play();
+        await playlistManager.StartPlaylist(playlist);
     }
 }

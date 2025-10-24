@@ -7,9 +7,14 @@ namespace Avalonix.Services.PlaylistManager;
 
 public interface IPlaylistManager
 {
+    Playlist PlayingPlaylist { get; set; }
     Playlist ConstructPlaylist(string title, List<Track> tracks);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
     void DeletePlaylist(Playlist playlist);
     Task StartPlaylist(Playlist playlist);
+    void PausePlaylist();
+    void ResumePlaylist();
+    void NextTrack();
+    void TrackBefore();
 }
