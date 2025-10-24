@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
 
@@ -11,10 +13,13 @@ public class MediaPlayer : IMediaPlayer
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
 
     private readonly ILogger _logger;
+    private readonly ISettingsManager _settingsManager;
 
-    public MediaPlayer(ILogger logger)
+    public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
         _logger = logger;
+        _settingsManager = settingsManager;
+        
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
     }
 
@@ -49,6 +54,11 @@ public class MediaPlayer : IMediaPlayer
     public void Reset() =>
         Bass.BASS_ChannelPlay(_stream, true);
     
-    public void ChangeVolume(int volume) => // the volume should be in the range from 0 to 100
+    public async Task ChangeVolume(int volume)
+    {
+        var settings = await _settingsManager.GetSettings();
+        settings.Avalonix.Volume = volume;
+        await _settingsManager.SaveSettings(settings);
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
+    }
 }

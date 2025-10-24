@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Avalonix.Models.Disk;
 using Avalonix.Models.UserSettings.AvalonixSettingsFiles;
 
 namespace Avalonix.Models.UserSettings;

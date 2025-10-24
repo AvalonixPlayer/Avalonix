@@ -4,11 +4,12 @@ using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
+using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.PlaylistManager;
 
-public class PlaylistManager(IMediaPlayer player, IDiskManager diskManager, ILogger logger) : IPlaylistManager
+public class PlaylistManager(IMediaPlayer player, IDiskManager diskManager, ILogger logger, ISettingsManager settingsManager) : IPlaylistManager
 {
     public Playlist ConstructPlaylist(string title, List<Track> tracks)
     {
@@ -18,7 +19,7 @@ public class PlaylistManager(IMediaPlayer player, IDiskManager diskManager, ILog
             LastListen = null,
             Rarity = 0 
         };
-        var settings = diskManager.GetSettings().GetAwaiter().GetResult();
+        var settings = settingsManager.GetSettings().GetAwaiter().GetResult();
         return new Playlist(title, playlistData, player, diskManager, logger, settings);
     }
 

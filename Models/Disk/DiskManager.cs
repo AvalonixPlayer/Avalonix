@@ -6,42 +6,41 @@ using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.UserSettings;
 using Avalonix.Models.UserSettings.Theme;
+using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Disk;
 
 public class DiskManager : IDiskManager
 {
-    private const string Extension = ".avalonix";
+    public const string Extension = ".avalonix";
+    public static string AvalonixFolderPath =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
+    
     private readonly IDiskWriter _diskWriter;
     private readonly IDiskLoader _diskLoader;
-
-    private static string AvalonixFolderPath { get; } =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
-
+    
     private static string PlaylistsPath { get; } =
         Path.Combine(AvalonixFolderPath, "playlists");
-
-    private static string SettingsPath { get; } =
-        Path.Combine(AvalonixFolderPath, "settings" + Extension);
 
     private static string ThemesPath { get; } =
         Path.Combine(AvalonixFolderPath, "themes");
 
     private readonly ILogger _logger;
     private readonly IMediaPlayer _player;
+    private ISettingsManager _settingsManager;
 
-    public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader)
+    public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader, ISettingsManager settingsManager)
     {
         _logger = logger;
         _diskWriter = diskWriter;
         _diskLoader = diskLoader;
         _player = player;
+        _settingsManager = settingsManager;
 
         CheckDirectory(AvalonixFolderPath);
         CheckDirectory(PlaylistsPath);
         CheckDirectory(ThemesPath);
-        CheckFile(SettingsPath);
         return;
 
         void CheckFile(string path)
@@ -71,7 +70,7 @@ public class DiskManager : IDiskManager
                 await _diskLoader.LoadAsync<PlaylistData>(Path.Combine(PlaylistsPath, name + Extension));
             if (playlistData == null!) _logger.LogError("Playlist get error: {name}", name);
             else _logger.LogDebug("Playlist get: {name}", name);
-            return new Playlist(name, playlistData!, _player, this, _logger, await GetSettings());
+            return new Playlist(name, playlistData!, _player, this, _logger, await _settingsManager.GetSettings());
         }
         catch (Exception ex)
         {
@@ -101,12 +100,6 @@ public class DiskManager : IDiskManager
         return playlists;
     }
 
-    public async Task SaveSettings(Settings settings)
-    {
-        await _diskWriter.WriteAsync(settings, SettingsPath);
-        _logger.LogInformation("Settings saved");
-    }
-
     public async Task CreateNewTheme(string name)
     {
         var theme = new Theme { Name = name };
@@ -120,15 +113,5 @@ public class DiskManager : IDiskManager
     {
         var result = await _diskLoader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
         return result;
-    }
-
-
-    public async Task<Settings> GetSettings()
-    {
-        var result = await _diskLoader.LoadAsync<Settings>(SettingsPath);
-        if (result != null) return result;
-        await SaveSettings(new Settings());
-        result = await _diskLoader.LoadAsync<Settings>(SettingsPath);
-        return result!;
     }
 }

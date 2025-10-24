@@ -9,6 +9,7 @@ using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.UserSettings;
 using Avalonix.Services;
 using Avalonix.Services.PlaylistManager;
+using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Avalonix.ViewModels.Strategy;
 using Avalonix.Views;
@@ -37,6 +38,7 @@ public class App : Application
             services.AddTransient<ISecondWindowStrategy, SelectAndPlayPlaylistWindowStrategy>();
             services.AddTransient<ISecondWindowStrategy, SelectAndEditPlaylistWindowStrategy>();
             services.AddTransient<MainWindow>();
+            services.AddSingleton<ISettingsManager, SettingsManager>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IDiskManager, DiskManager>();

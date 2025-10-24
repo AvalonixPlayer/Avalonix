@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -11,19 +12,21 @@ public partial class MainWindow  : Window
 {
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
+    private readonly IMediaPlayer _player;
 
-    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm)
+    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm, IMediaPlayer player)
     {
         _logger = logger;
         _vm = vm;
+        _player = player;
         InitializeComponent();
         _logger.LogInformation("MainWindow initialized");
     }
 
-    private void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        _logger.LogInformation("Volume slider changed");
-        
+        _logger.LogInformation($"Volume changed: {e.OldValue} -> {e.NewValue}");
+        await _player.ChangeVolume((int)e.NewValue);
     }
 
     private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>

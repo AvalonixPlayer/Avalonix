@@ -13,9 +13,7 @@ public interface IDiskManager
     Task<Playlist?> GetPlaylist(string name);
     void RemovePlaylist(string name);
     Task<List<Playlist>> GetAllPlaylists();
-    Task SaveSettings(Settings settings);
     Task CreateNewTheme(string name);
     Task SaveTheme(Theme theme);
     Task<Theme?> GetTheme(string name);
-    Task<Settings> GetSettings();
 }
