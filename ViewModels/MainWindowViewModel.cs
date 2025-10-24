@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Avalonix.Services;
+using Avalonix.Services.SettingsManager;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 using Microsoft.Extensions.Logging;
