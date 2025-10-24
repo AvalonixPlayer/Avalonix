@@ -26,7 +26,9 @@ public partial class MainWindow  : Window
         _playlistManager = playlistManager;
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () =>
-            VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
+        {
+            VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume;
+        });
         
         _logger.LogInformation("MainWindow initialized");
     }
