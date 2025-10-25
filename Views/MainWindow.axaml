@@ -43,12 +43,17 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Vertical" Grid.Row="1" Grid.Column="1">
             <Border>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Name="BackButton" Click="PlayTrackBefore">Back</Button>
-                    <Button Name="PauseButton" Click="Pause">Pause</Button>
-                    <Button Name="NextButton" Click="PlayNextTrack">Next</Button>
+                    <Button Name="BackButton" Click="PlayTrackBefore">
+                        <Image Source="../Assets/buttons/back.png"/>
+                    </Button>
+                    <Button Name="PauseButton" Click="Pause">
+                        <Image Source="../Assets/buttons/pause.png"/>
+                    </Button>
+                    <Button Name="NextButton" Click="PlayNextTrack">
+                        <Image Source="../Assets/buttons/next.png"/>
+                    </Button>
                 </StackPanel>
             </Border>
-            
             <Slider ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Background="DimGray"/> 
         </StackPanel>
         <Border Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="12"/>

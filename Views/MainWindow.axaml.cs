@@ -2,14 +2,14 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
-
+using Avalonia.Platform;
 namespace Avalonix.Views;
 
 public partial class MainWindow  : Window 
@@ -42,10 +42,20 @@ public partial class MainWindow  : Window
     private void Pause(object sender, RoutedEventArgs e)
     {
         if(_playlistManager.PlayingPlaylist == null!) return;
-        if(!_playlistManager.PlayingPlaylist.Paused())
+        if (!_playlistManager.PlayingPlaylist.Paused())
+        {
+            var uri = new Uri("avares://Avalonix/Assets/buttons/play.png");
+            var bitmap = new Bitmap(AssetLoader.Open(uri));
+            PauseButton.Content = new Image{Source = bitmap};
             _playlistManager.PausePlaylist();
+        }
         else
+        {
+            var uri = new Uri("avares://Avalonix/Assets/buttons/pause.png");
+            var bitmap = new Bitmap(AssetLoader.Open(uri));
+            PauseButton.Content = new Image{Source = bitmap};
             _playlistManager.ResumePlaylist();
+        }
     }
     
     private void PlayNextTrack(object sender, RoutedEventArgs e) =>
