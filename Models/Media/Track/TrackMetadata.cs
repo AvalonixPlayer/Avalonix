@@ -1,8 +1,6 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
-using TagLib;
 using File = TagLib.File;
 
 namespace Avalonix.Models.Media.Track;
@@ -38,7 +36,6 @@ public record TrackMetadata
         Year = track.Tag!.Year;
         Lyric = track.Tag!.Lyrics!;
         Duration = track.Properties!.Duration;
-        Cover = track.Tag!.Pictures!.FirstOrDefault(p => p.Type == PictureType.FrontCover)!.Data!.Data!;
     }
 
     public void RewriteTags(TrackMetadata newMetadata)
@@ -51,7 +48,6 @@ public record TrackMetadata
         tag.Genres = [newMetadata.Genre];
         tag.Lyrics = newMetadata.Lyric;
         tag.Year = newMetadata.Year ?? 0;
-        //tag.Pictures = newMetadata.Cover;
         file.Save();
     }
     

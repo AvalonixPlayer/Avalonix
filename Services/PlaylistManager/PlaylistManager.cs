@@ -5,6 +5,7 @@ using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
+using Avalonix.Models.UserSettings;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
@@ -22,7 +23,7 @@ public class PlaylistManager(IMediaPlayer player, IDiskManager diskManager, ILog
             LastListen = null,
             Rarity = 0 
         };
-        var settings = settingsManager.GetSettings().GetAwaiter().GetResult();
+        var settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
         return new Playlist(title, playlistData, player, diskManager, logger, settings);
     }
 

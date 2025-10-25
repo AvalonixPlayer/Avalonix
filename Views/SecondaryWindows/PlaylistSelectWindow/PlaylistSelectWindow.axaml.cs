@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -24,7 +22,7 @@ public partial class PlaylistSelectWindow : Window
         _vm = vm;
         _logger.LogInformation("PlaylistCreateWindow opened");
         
-        _playlists = Task.Run(async () => await _vm.GetPlaylists()).GetAwaiter().GetResult();
+        _playlists = Task.Run(async () => await _vm.GetPlaylists()).Result;
         
         var result = _playlists.Select(p => p.Name).ToList();
         PlaylistBox.ItemsSource = result;
@@ -49,7 +47,8 @@ public partial class PlaylistSelectWindow : Window
         {
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
-            await _vm.PlayPlaylist(_playlists[0]);
+            var selectedPlaylist = _playlists.FirstOrDefault(p => p.Name == castedSender.SelectedItem?.ToString());
+            await _vm.PlayPlaylist(selectedPlaylist!);
         }
         catch (Exception ex)
         {

@@ -21,13 +21,10 @@ public class PlaylistData
         set => _tracks = value;
     }
 
-    public TimeSpan? PlaylistDuration =>
-        Tracks.Aggregate(TimeSpan.Zero, (current, track) => current + track.Metadata.Duration);
-
-    public DateTime? LastListen { get; set; } = null!;
+    public DateTime? LastListen { get; set; }
     public int? Rarity { get; set; } = 0;
     public bool ObserveDirectory { get; set; } = true;
-    public string? ObservingDirectory { get; set; } = @"F:\Плейлисты\Linkin park";
+    public string? ObservingDirectory { get; set; }
 
     private void UpdateTracksByDirectoryObserving()
     {

@@ -22,7 +22,6 @@ public record Playlist
 
     private readonly Random _random = new();
 
-
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger, Settings settings)
     {
         Name = name;

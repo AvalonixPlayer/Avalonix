@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services;
 using Avalonix.ViewModels;
@@ -28,13 +29,10 @@ public partial class PlaylistCreateWindow : Window
         try
         {
             var fileList = (await _vm.OpenTrackFileDialogAsync(this))!;
-            foreach (var file in fileList)
-                Console.WriteLine(file);
             
             if (fileList.Any(string.IsNullOrWhiteSpace)) return;
             foreach (var i in fileList)
                 NewSongBox.Items.Add(i);
-            Console.WriteLine(1);
             
             RemoveButton.IsEnabled = true;
         }
@@ -72,7 +70,6 @@ public partial class PlaylistCreateWindow : Window
             List<Track> tracks = [];
             
             items.ForEach(item => tracks.Add(new Track(item)));
-            
             await _vm.ExecuteAsync(name, tracks);
         }
         catch (Exception ex)
