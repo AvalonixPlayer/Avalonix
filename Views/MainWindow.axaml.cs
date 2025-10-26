@@ -25,7 +25,7 @@ public partial class MainWindow : Window
     
     private DispatcherTimer _timer;
     
-    private string? _currentTrackPath = null;
+    private string? _currentTrackPath;
 
     private readonly Image _playButtonImage = new()
     {
@@ -49,12 +49,12 @@ public partial class MainWindow : Window
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () => VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume );
         
-        var timer = new DispatcherTimer();
+        _timer = new DispatcherTimer();
 
-        timer.Interval = TimeSpan.FromMilliseconds(100);
-        timer.Tick += UpdatePauseButtonImage;
-        timer.Tick += UpdateAlbumCover;
-        timer.Start();
+        _timer.Interval = TimeSpan.FromMilliseconds(100);
+        _timer.Tick += UpdatePauseButtonImage;
+        _timer.Tick += UpdateAlbumCover;
+        _timer.Start();
         
         _logger.LogInformation("MainWindow initialized");
     }
