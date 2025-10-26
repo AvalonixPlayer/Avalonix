@@ -68,4 +68,10 @@ public class MediaPlayer : IMediaPlayer
         await _settingsManager.SaveSettings(settings);
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
     }
+
+    public double GetPosition() =>
+        Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE) / Bass.BASS_ChannelBytes2Seconds(_stream, 1);
+    
+    public void SetPosition(double position) =>
+        Bass.BASS_ChannelSetPosition(_stream, Bass.BASS_ChannelSeconds2Bytes(_stream, position));
 }
