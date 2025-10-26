@@ -17,6 +17,8 @@ public class MediaPlayer : IMediaPlayer
 
     private readonly ILogger _logger;
     private readonly ISettingsManager _settingsManager;
+    
+    public Track.Track? CurrentTrack { get; private set; }
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
@@ -31,6 +33,7 @@ public class MediaPlayer : IMediaPlayer
 
     public void Play(Track.Track track)
     {
+        CurrentTrack = track;
         Bass.BASS_StreamFree(_stream);
         _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
         

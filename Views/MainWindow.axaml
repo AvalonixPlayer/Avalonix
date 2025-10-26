@@ -56,6 +56,8 @@
             </Border>
             <Slider ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Background="DimGray"/> 
         </StackPanel>
-        <Border Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="12"/>
+        <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="12">
+            <Image Source=""/>
+        </Border>
     </Grid>
 </Window>

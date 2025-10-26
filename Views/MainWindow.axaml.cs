@@ -1,7 +1,10 @@
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonix.Models.Media.MediaPlayer;
@@ -19,14 +22,18 @@ public partial class MainWindow : Window
     private readonly IMainWindowViewModel _vm;
     private readonly IMediaPlayer _player;
     private readonly IPlaylistManager _playlistManager;
+    
+    private DispatcherTimer _timer;
+    
+    private string? _currentTrackPath = null;
 
-    private readonly Image _playButtonImage = new Image
+    private readonly Image _playButtonImage = new()
     {
         Source =
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/play.png")))
     };
 
-    private readonly Image _pauseButtonImage = new Image
+    private readonly Image _pauseButtonImage = new()
     {
         Source =
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/pause.png")))
@@ -40,12 +47,15 @@ public partial class MainWindow : Window
         _player = player;
         _playlistManager = playlistManager;
         InitializeComponent();
-        UpdatePauseButtonImage();
-        Dispatcher.UIThread.Post(async void () =>
-        {
-            VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume;
-        });
+        Dispatcher.UIThread.Post(async void () => VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume );
+        
+        var timer = new DispatcherTimer();
 
+        timer.Interval = TimeSpan.FromMilliseconds(100);
+        timer.Tick += UpdatePauseButtonImage;
+        timer.Tick += UpdateAlbumCover;
+        timer.Start();
+        
         _logger.LogInformation("MainWindow initialized");
     }
 
@@ -76,21 +86,45 @@ public partial class MainWindow : Window
     private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
         await (await _vm.PlaylistSelectWindow_Open()).ShowDialog(this);
 
-    private void UpdatePauseButtonImage()
+    private void UpdatePauseButtonImage(object? sender, EventArgs e)
     {
-        var timer = new DispatcherTimer();
+        if (!_player.IsPaused)
+            PauseButton.Content = _pauseButtonImage;
+        else
+            PauseButton.Content = _playButtonImage;
+    }
 
-        timer.Interval = TimeSpan.FromMilliseconds(100);
-        timer.Tick += Update;
-        timer.Start();
-        return;
+    private void UpdateAlbumCover(object? sender, EventArgs e)
+    {
+        var currentTrack = _player.CurrentTrack;
+        var currentPath = currentTrack?.TrackData.Path;
+        
+        if (_currentTrackPath == currentPath)
+            return;
 
-        void Update(object? sender, EventArgs e)
+        _currentTrackPath = currentPath;
+
+        var coverData = currentTrack?.Metadata.Cover;
+    
+        if (coverData == null || coverData.Length == 0)
         {
-            if (!_player.IsPaused)
-                PauseButton.Content = _pauseButtonImage;
-            else
-                PauseButton.Content = _playButtonImage;
+            AlbumCover.Child = null;
+            return;
+        }
+
+        try
+        {
+            using var memoryStream = new MemoryStream(coverData);
+            AlbumCover.Child = new Image 
+            { 
+                Source = new Bitmap(memoryStream),
+                Stretch = Stretch.UniformToFill
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error loading cover: {Error}", ex.Message);
+            AlbumCover.Child = null;
         }
     }
 }
