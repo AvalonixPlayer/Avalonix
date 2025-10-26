@@ -10,26 +10,42 @@ using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
+
 namespace Avalonix.Views;
 
-public partial class MainWindow  : Window 
+public partial class MainWindow : Window
 {
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
     private readonly IMediaPlayer _player;
     private readonly IPlaylistManager _playlistManager;
-    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm, IMediaPlayer player, ISettingsManager settingsManager, IPlaylistManager playlistManager)
+
+    private readonly Image _playButtonImage = new Image
+    {
+        Source =
+            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/play.png")))
+    };
+
+    private readonly Image _pauseButtonImage = new Image
+    {
+        Source =
+            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/pause.png")))
+    };
+
+    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm, IMediaPlayer player,
+        ISettingsManager settingsManager, IPlaylistManager playlistManager)
     {
         _logger = logger;
         _vm = vm;
         _player = player;
         _playlistManager = playlistManager;
         InitializeComponent();
+        UpdatePauseButtonImage();
         Dispatcher.UIThread.Post(async void () =>
         {
             VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume;
         });
-        
+
         _logger.LogInformation("MainWindow initialized");
     }
 
@@ -41,23 +57,13 @@ public partial class MainWindow  : Window
 
     private void Pause(object sender, RoutedEventArgs e)
     {
-        if(_playlistManager.PlayingPlaylist == null!) return;
+        if (_playlistManager.PlayingPlaylist == null!) return;
         if (!_playlistManager.PlayingPlaylist.Paused())
-        {
-            var uri = new Uri("avares://Avalonix/Assets/buttons/play.png");
-            var bitmap = new Bitmap(AssetLoader.Open(uri));
-            PauseButton.Content = new Image{Source = bitmap};
             _playlistManager.PausePlaylist();
-        }
         else
-        {
-            var uri = new Uri("avares://Avalonix/Assets/buttons/pause.png");
-            var bitmap = new Bitmap(AssetLoader.Open(uri));
-            PauseButton.Content = new Image{Source = bitmap};
             _playlistManager.ResumePlaylist();
-        }
     }
-    
+
     private void PlayNextTrack(object sender, RoutedEventArgs e) =>
         _playlistManager.NextTrack();
 
@@ -69,4 +75,22 @@ public partial class MainWindow  : Window
 
     private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
         await (await _vm.PlaylistSelectWindow_Open()).ShowDialog(this);
+
+    private void UpdatePauseButtonImage()
+    {
+        var timer = new DispatcherTimer();
+
+        timer.Interval = TimeSpan.FromMilliseconds(100);
+        timer.Tick += Update;
+        timer.Start();
+        return;
+
+        void Update(object? sender, EventArgs e)
+        {
+            if (!_player.IsPaused)
+                PauseButton.Content = _pauseButtonImage;
+            else
+                PauseButton.Content = _playButtonImage;
+        }
+    }
 }
