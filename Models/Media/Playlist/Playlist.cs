@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
@@ -20,6 +21,7 @@ public record Playlist
     private PlayQueue PlayQueue { get; }
 
     private readonly Random _random = new();
+    private CancellationTokenSource? _cancellationTokenSource;
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger, Settings settings)
     {
@@ -109,28 +111,50 @@ public record Playlist
 
     public async Task Play(int startSong = 0)
     {
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
         Logger.LogDebug("Playlist {Name} has started", Name);
 
         for (var i = startSong; i < PlayQueue.Tracks.Count; i++)
         {
+            if (cancellationToken.IsCancellationRequested)
+                break;
+
             PlayQueue.PlayingIndex = i;
             var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
 
             UpdateLastListen();
             UpdateRarity(ref track);
-
             await Save();
 
             Player.Play(track);
+            
+            while (!Player.IsFree && !cancellationToken.IsCancellationRequested)
+                await Task.Delay(1000, cancellationToken);
 
-            while (!Player.IsFree)
-                await Task.Delay(1000);
+            if (cancellationToken.IsCancellationRequested)
+                break;
+        }
+
+        if (!cancellationToken.IsCancellationRequested)
+        {
+            PlayQueue.FillQueue(PlaylistData);
+            if (Settings.Avalonix.Playlists.Loop) 
+                await Play();
         }
 
         PlayQueue.FillQueue(PlaylistData);
         if (Settings.Avalonix.Playlists.Loop) await Play();
 
         Logger.LogDebug("Playlist {Name} completed", Name);
+    }
+    
+    public void Stop()
+    {
+        _cancellationTokenSource?.Cancel();
+        Player.Stop();
+        Logger.LogDebug("Playlist stopped");
     }
 
     public void NextTrack()
@@ -144,30 +168,19 @@ public record Playlist
             _ = Play(PlayQueue.PlayingIndex + 1);
     }
 
-    public void BackTrack()
-    {
+    public void BackTrack() =>
         _ = PlayQueue.PlayingIndex - 1 <= 0 ? Play(0) : Play(PlayQueue.PlayingIndex - 1);
-    }
-
-    public void Stop()
-    {
-        Player.Stop();
-        Logger.LogDebug("Playlist stopped");
-        Player.Stop();
-    }
 
     public void Pause()
     {
         Player.Pause();
         Logger.LogDebug("Playlist paused");
-        Player.Pause();
     }
 
     public void Resume()
     {
         Player.Resume();
         Logger.LogDebug("Playlist resumed");
-        Player.Resume();
     }
 
     public bool Paused() =>

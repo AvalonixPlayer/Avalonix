@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
@@ -17,6 +18,7 @@ public class PlaylistManager(
     : IPlaylistManager
 {
     public Playlist? PlayingPlaylist { get; set; }
+    private CancellationTokenSource _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
     public Track? CurrentTrack { get; } = player.CurrentTrack;
 
@@ -39,8 +41,18 @@ public class PlaylistManager(
 
     public async Task StartPlaylist(Playlist playlist)
     {
+        _globalCancellationTokenSource?.Cancel();
+        _globalCancellationTokenSource = new CancellationTokenSource();
+        
+        if (PlayingPlaylist != null)
+        {
+            PlayingPlaylist.Stop();
+            PlayingPlaylist = null;
+        }
+
         PlayingPlaylist = playlist;
-        await playlist.Play();
+
+        _ = Task.Run(async () => await PlayingPlaylist.Play());
     }
 
     public async Task ChangeVolume(uint volume) => await player.ChangeVolume(volume);
