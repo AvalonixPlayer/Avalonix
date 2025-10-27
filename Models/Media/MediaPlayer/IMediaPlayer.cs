@@ -12,5 +12,5 @@ public interface IMediaPlayer
     void Stop();
     void Pause();
     void Resume();
-    Task ChangeVolume(int volume); 
+    Task ChangeVolume(uint volume); 
 }

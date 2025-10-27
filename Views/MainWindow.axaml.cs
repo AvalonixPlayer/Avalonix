@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
@@ -20,10 +19,9 @@ public partial class MainWindow : Window
 {
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
-    private readonly IMediaPlayer _player;
     private readonly IPlaylistManager _playlistManager;
     
-    private DispatcherTimer _timer;
+    private readonly DispatcherTimer _timer;
     
     private string? _currentTrackPath;
 
@@ -44,14 +42,12 @@ public partial class MainWindow : Window
     {
         _logger = logger;
         _vm = vm;
-        _player = player;
         _playlistManager = playlistManager;
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () => VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume );
         
-        _timer = new DispatcherTimer();
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
 
-        _timer.Interval = TimeSpan.FromMilliseconds(100);
         _timer.Tick += UpdatePauseButtonImage;
         _timer.Tick += UpdateAlbumCover;
         _timer.Start();
@@ -61,8 +57,8 @@ public partial class MainWindow : Window
 
     private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        _logger.LogInformation($"Volume changed: {e.OldValue} -> {e.NewValue}");
-        await _player.ChangeVolume((int)e.NewValue);
+        _logger.LogInformation("Volume changed: {EOldValue} -> {ENewValue}", e.OldValue, e.NewValue);
+        await _playlistManager.ChangeVolume(Convert.ToUInt32(e.NewValue));
     }
 
     private void Pause(object sender, RoutedEventArgs e)
@@ -86,17 +82,12 @@ public partial class MainWindow : Window
     private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
         await (await _vm.PlaylistSelectWindow_Open()).ShowDialog(this);
 
-    private void UpdatePauseButtonImage(object? sender, EventArgs e)
-    {
-        if (!_player.IsPaused)
-            PauseButton.Content = _pauseButtonImage;
-        else
-            PauseButton.Content = _playButtonImage;
-    }
+    private void UpdatePauseButtonImage(object? sender, EventArgs e) =>
+        PauseButton.Content = !_playlistManager.IsPaused ? _pauseButtonImage : _playButtonImage;
 
     private void UpdateAlbumCover(object? sender, EventArgs e)
     {
-        var currentTrack = _player.CurrentTrack;
+        var currentTrack = _playlistManager.CurrentTrack;
         var currentPath = currentTrack?.TrackData.Path;
         
         if (_currentTrackPath == currentPath)

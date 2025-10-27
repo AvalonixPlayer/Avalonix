@@ -63,7 +63,7 @@ public class MediaPlayer : IMediaPlayer
     public void Reset() =>
         Bass.BASS_ChannelPlay(_stream, true);
     
-    public async Task ChangeVolume(int volume)
+    public async Task ChangeVolume(uint volume)
     {
         var settings = await _settingsManager.GetSettings();
         settings.Avalonix.Volume = volume;

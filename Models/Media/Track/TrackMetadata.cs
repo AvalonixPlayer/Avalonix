@@ -36,12 +36,10 @@ public record TrackMetadata
         Year = track.Tag!.Year;
         Lyric = track.Tag!.Lyrics!;
         Duration = track.Properties!.Duration;
-        if (track.Tag.Pictures != null && track.Tag.Pictures.Length > 0)
-        {
-            var picture = track.Tag.Pictures[0];
-            if (picture != null && picture.Data != null && picture.Data.Data != null && picture.Data.Data.Length > 0)
-                Cover = picture.Data.Data;
-        }
+        if (track.Tag.Pictures is not { Length: > 0 }) return;
+        var picture = track.Tag.Pictures[0];
+        if (picture != null && picture.Data != null && picture.Data.Data != null && picture.Data.Data.Length > 0)
+            Cover = picture.Data.Data;
     }
 
     public void RewriteTags(TrackMetadata newMetadata)

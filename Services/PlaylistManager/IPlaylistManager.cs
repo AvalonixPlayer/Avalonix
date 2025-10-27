@@ -7,7 +7,9 @@ namespace Avalonix.Services.PlaylistManager;
 
 public interface IPlaylistManager
 {
-    Playlist PlayingPlaylist { get; set; }
+    Playlist? PlayingPlaylist { get; set; }
+    Track? CurrentTrack { get; }
+    bool IsPaused { get; }
     Playlist ConstructPlaylist(string title, List<Track> tracks);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
@@ -17,4 +19,5 @@ public interface IPlaylistManager
     void ResumePlaylist();
     void NextTrack();
     void TrackBefore();
+    Task ChangeVolume(uint volume);
 }
