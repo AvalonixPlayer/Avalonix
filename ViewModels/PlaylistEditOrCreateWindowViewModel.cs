@@ -7,7 +7,6 @@ using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
 using Microsoft.Extensions.Logging;
 using Avalonix.Models.Media.Playlist;
-using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.ViewModels.Strategy;

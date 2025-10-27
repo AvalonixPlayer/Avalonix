@@ -1,6 +1,4 @@
-using System;
-
-namespace Avalonix.Models.Media.PlaylistFiles;
+namespace Avalonix.Models.Media.Playlist;
 
 public enum SortPlaylistTrackFlags
 {

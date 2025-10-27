@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
-using Avalonix.Models.Media.PlaylistFiles;
 using Avalonix.Models.UserSettings;
 using Microsoft.Extensions.Logging;
 
