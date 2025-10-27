@@ -19,30 +19,29 @@ public class PlaylistEditOrCreateWindowViewModel(
     ISecondWindowStrategy strategy)
     : ViewModelBase, IPlaylistEditOrCreateWindowViewModel
 {
+    private readonly FilePickerOpenOptions _filePickerOptions = new()
+    {
+        Title = "Select Audio Files",
+        AllowMultiple = true,
+        FileTypeFilter =
+        [
+            new FilePickerFileType("Audio Files")
+            {
+                Patterns = ["*.mp3", "*.flac", "*.wav", "*.waw"] // Only tested formats
+            },
+            FilePickerFileTypes.All
+        ]
+    };
+    
     public async Task<string[]?> OpenTrackFileDialogAsync(Window parent)
     {
         try
         {
             var storageProvider = parent.StorageProvider;
 
-            var filePickerOptions = new FilePickerOpenOptions
-            {
-                Title = "Select Audio Files",
-                AllowMultiple = true,
-                FileTypeFilter =
-                [
-                    new FilePickerFileType("Audio Files")
-                    {
-                        Patterns = ["*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw"]
-                    },
-                    FilePickerFileTypes.All
-                ]
-            };
-
-
             logger.LogInformation("Opening track file dialog");
 
-            var files = await storageProvider.OpenFilePickerAsync(filePickerOptions);
+            var files = await storageProvider.OpenFilePickerAsync(_filePickerOptions);
 
             if (files.Count.Equals(0))
             {
@@ -69,5 +68,4 @@ public class PlaylistEditOrCreateWindowViewModel(
         var playlist = playlistManager.ConstructPlaylist(playlistName, tracksPaths);
         await strategy.ExecuteAsync(playlist);
     }
-
 }
