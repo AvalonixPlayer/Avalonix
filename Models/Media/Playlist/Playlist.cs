@@ -80,9 +80,9 @@ public record Playlist
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).ToList();
         if (flags == SortPlaylistTrackFlags.YearInverted)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).Reverse().ToList();
-        if (flags == SortPlaylistTrackFlags.Durration)
+        if (flags == SortPlaylistTrackFlags.Duration)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).ToList();
-        if (flags == SortPlaylistTrackFlags.DurrationInverted)
+        if (flags == SortPlaylistTrackFlags.DurationInverted)
             PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).Reverse().ToList();
     }
 
@@ -146,10 +146,7 @@ public record Playlist
 
     public void BackTrack()
     {
-        if (PlayQueue.PlayingIndex - 1 <= 0)
-            _ = Play(0);
-        else
-            _ = Play(PlayQueue.PlayingIndex - 1);
+        _ = PlayQueue.PlayingIndex - 1 <= 0 ? Play(0) : Play(PlayQueue.PlayingIndex - 1);
     }
 
     public void Stop()
