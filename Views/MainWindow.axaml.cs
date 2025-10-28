@@ -12,6 +12,7 @@ using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
 using Avalonix.Services.WindowManager;
+using DynamicData;
 
 namespace Avalonix.Views;
 
@@ -124,4 +125,6 @@ public partial class MainWindow : Window
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e) => _windowManager.AboutWindow_Open().ShowDialog(this);
+
+    private void SnuffleButton_OnClick(object? sender, RoutedEventArgs e) => _playlistManager.ResetSnuffle();
 }

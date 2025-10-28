@@ -39,6 +39,7 @@
                     <Image Source="../Assets/buttons/remove.png"/>
                 </Button> 
                 <Button Click="AboutButton_OnClick" Content="?"/> 
+                <Button Click="SnuffleButton_OnClick" Content="?/*"/> 
             </StackPanel>
         </Border> 
         

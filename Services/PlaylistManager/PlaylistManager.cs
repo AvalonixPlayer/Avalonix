@@ -6,6 +6,7 @@ using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
+using Avalonix.Models.UserSettings;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
@@ -22,6 +23,15 @@ public class PlaylistManager(
     private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
     public Track? CurrentTrack { get; } = player.CurrentTrack;
+    private readonly Settings _settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
+
+    public void ResetSnuffle()
+    {
+        logger.LogDebug("Changing shuffle mode");
+        _settings.Avalonix.Playlists = _settings.Avalonix.Playlists 
+            with { Shuffle = !_settings.Avalonix.Playlists.Shuffle };
+    }
+
     public event Action<bool> PlaybackStateChanged
     {
         add => player.PlaybackStateChanged += value;
@@ -42,8 +52,7 @@ public class PlaylistManager(
             LastListen = null,
             Rarity = 0 
         };
-        var settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
-        return new Playlist(title, playlistData, player, diskManager, logger, settings);
+        return new Playlist(title, playlistData, player, diskManager, logger, _settings);
     }
 
     public async Task EditPlaylist(Playlist playlist) => await playlist.Save();
@@ -108,4 +117,5 @@ public class PlaylistManager(
     public void NextTrack() => PlayingPlaylist?.NextTrack();
 
     public void TrackBefore() => PlayingPlaylist?.BackTrack();
+    
 }

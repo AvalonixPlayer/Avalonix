@@ -21,6 +21,7 @@ public interface IPlaylistManager
     void NextTrack();
     void TrackBefore();
     Task ChangeVolume(uint volume);
+    void ResetSnuffle();
     event Action<bool> PlaybackStateChanged;
     event Action TrackChanged;
 }
