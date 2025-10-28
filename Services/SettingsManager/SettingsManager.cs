@@ -30,7 +30,7 @@ public class SettingsManager(IDiskWriter writer,IDiskLoader loader,ILogger logge
         }
         catch (Exception e)
         {
-            logger.LogWarning(e.ToString());
+            logger.LogWarning("Catch warning while getting settings: {Ex}", e.Message);
             throw;
         }
     }

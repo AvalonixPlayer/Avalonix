@@ -38,7 +38,7 @@ public record TrackMetadata
         Duration = track.Properties!.Duration;
         if (track.Tag.Pictures is not { Length: > 0 }) return;
         var picture = track.Tag.Pictures[0];
-        if (picture != null && picture.Data != null && picture.Data.Data != null && picture.Data.Data.Length > 0)
+        if (picture != null && picture.Data != null && picture.Data.Data is { Length: > 0 })
             Cover = picture.Data.Data;
     }
 

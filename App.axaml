@@ -13,28 +13,29 @@
         <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="LightGreen" SecondaryColor="LightGreen" />
         <Style Selector="ListBox">
             <Setter Property="Background" Value="#cc212121"/>
-            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="CornerRadius" Value="7"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
         
         <Style Selector="ListBoxItem">
-            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="CornerRadius" Value="7"/>
             <Setter Property="BorderBrush" Value="LightGreen"/>
             <Setter Property="Background" Value="#33212121"/>
         </Style>
         
         <Style Selector="Button">
             <Setter Property="MaxHeight" Value="70"/>
-            <Setter Property="MaxWidth" Value="70"/>
-            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="60"/>
+            <Setter Property="CornerRadius" Value="7"/>
             <Setter Property="Padding" Value="2"/>
             <Setter Property="Margin" Value="2"/>
         </Style>
         
         <Style Selector="Button.h2">
-            <Setter Property="MaxHeight" Value="70"/>
-            <Setter Property="MaxWidth" Value="100"/>
+            <Setter Property="MaxHeight" Value="90"/>
+            <Setter Property="Width" Value="90"/>
             <Setter Property="CornerRadius" Value="7"/>
             <Setter Property="Margin" Value="2"/>
             <Setter Property="Background" Value="#33A9A9A9"/>
@@ -42,10 +43,10 @@
         
         <Style Selector="Border">
             <Setter Property="Background" Value="#33A9A9A9"/>
-            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="CornerRadius" Value="7"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderBrush" Value="AliceBlue"/>
         </Style>
     </Application.Styles>
-
 </Application>

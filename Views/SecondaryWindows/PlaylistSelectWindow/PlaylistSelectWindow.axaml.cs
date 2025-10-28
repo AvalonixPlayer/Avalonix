@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Services;
+using Avalonix.Services.WindowManager;
 
 namespace Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 

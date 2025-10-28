@@ -5,7 +5,7 @@ namespace Avalonix.Models.Media.Track;
 
 public struct TrackData(string path)
 {
-    public string Path { get; init;  } = path;
+    public string Path { get; } = path;
     public int Rarity { get; set; } = 0;
     public TimeSpan? LastListen { get; set; } = null!;
 

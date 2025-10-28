@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services;
+using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 

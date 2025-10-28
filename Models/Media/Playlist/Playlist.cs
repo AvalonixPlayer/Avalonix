@@ -75,18 +75,22 @@ public record Playlist
 
     public void SortTracks(SortPlaylistTrackFlags flags)
     {
-        if (flags == SortPlaylistTrackFlags.Artist)
-            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList();
-        if (flags == SortPlaylistTrackFlags.ArtistInverted)
-            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).Reverse().ToList();
-        if (flags == SortPlaylistTrackFlags.Year)
-            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).ToList();
-        if (flags == SortPlaylistTrackFlags.YearInverted)
-            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).Reverse().ToList();
-        if (flags == SortPlaylistTrackFlags.Duration)
-            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).ToList();
-        if (flags == SortPlaylistTrackFlags.DurationInverted)
-            PlaylistData.Tracks = PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).Reverse().ToList();
+        PlaylistData.Tracks = flags switch
+        {
+            SortPlaylistTrackFlags.Artist => PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist).ToList(),
+            SortPlaylistTrackFlags.ArtistInverted => PlaylistData.Tracks.OrderBy(track => track.Metadata.Artist)
+                .Reverse()
+                .ToList(),
+            SortPlaylistTrackFlags.Year => PlaylistData.Tracks.OrderBy(track => track.Metadata.Year).ToList(),
+            SortPlaylistTrackFlags.YearInverted => PlaylistData.Tracks.OrderBy(track => track.Metadata.Year)
+                .Reverse()
+                .ToList(),
+            SortPlaylistTrackFlags.Duration => PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration).ToList(),
+            SortPlaylistTrackFlags.DurationInverted => PlaylistData.Tracks.OrderBy(track => track.Metadata.Duration)
+                .Reverse()
+                .ToList(),
+            _ => PlaylistData.Tracks
+        };
     }
 
 
