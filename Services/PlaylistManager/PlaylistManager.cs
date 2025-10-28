@@ -22,7 +22,7 @@ public class PlaylistManager(
     public Playlist? PlayingPlaylist { get; set; }
     private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
-    public Track? CurrentTrack { get; } = player.CurrentTrack;
+    public Track? CurrentTrack => player.CurrentTrack;
     private readonly Settings _settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
 
     public void ResetSnuffle()
