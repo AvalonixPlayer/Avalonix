@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.UserSettings;
+using Avalonix.Models.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.Playlist;
@@ -17,14 +18,14 @@ public record Playlist
     private IMediaPlayer Player { get; }
     private IDiskManager Disk { get; }
     private ILogger Logger { get; }
-    private Settings Settings { get; }
+    private PlaySettings Settings { get; }
     private PlayQueue PlayQueue { get; }
 
     private readonly Random _random = new();
     private CancellationTokenSource? _cancellationTokenSource;
     public bool Paused => Player.IsPaused;
 
-    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger, Settings settings)
+    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger, PlaySettings settings)
     {
         Name = name;
         PlaylistData = playlistData;
@@ -145,12 +146,12 @@ public record Playlist
         if (!cancellationToken.IsCancellationRequested)
         {
             PlayQueue.FillQueue(PlaylistData);
-            if (Settings.Avalonix.Playlists.Loop) 
+            if (Settings.Loop) 
                 await Play();
         }
 
         PlayQueue.FillQueue(PlaylistData);
-        if (Settings.Avalonix.Playlists.Loop) await Play();
+        if (Settings.Loop) await Play();
 
         Logger.LogDebug("Playlist {Name} completed", Name);
     }
