@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
@@ -11,7 +12,8 @@ namespace Avalonix.Services;
 
 public class WindowManager(ILogger<WindowManager> logger,
     IPlaylistEditOrCreateWindowViewModel playlistEditOrCreateWindowViewModel, 
-    IPlaylistSelectWindowViewModel playlistSelectWindowViewModel) 
+    IPlaylistSelectWindowViewModel playlistSelectWindowViewModel,
+    ISettingsManager settingsManager) 
     : IWindowManager
 {
     private static void CloseMainWindow()
@@ -23,7 +25,8 @@ public class WindowManager(ILogger<WindowManager> logger,
     {
         try
         {
-            // Saving Data | NOT IMPLEMENTED
+            var settings = await settingsManager.GetSettings();
+            await settingsManager.SaveSettings(settings);
             CloseMainWindow();
         }
         catch (Exception ex)

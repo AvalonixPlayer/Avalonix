@@ -68,7 +68,6 @@ public class MediaPlayer : IMediaPlayer
         var settings = await _settingsManager.GetSettings();
         settings.Avalonix.Volume = volume;
         _currentVolume = volume / 100F;
-        await _settingsManager.SaveSettings(settings);
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
     }
 
