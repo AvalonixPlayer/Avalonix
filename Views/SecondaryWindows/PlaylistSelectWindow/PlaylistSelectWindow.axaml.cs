@@ -38,8 +38,8 @@ public partial class PlaylistSelectWindow : Window
             PlaylistBox.ItemsSource = _playlists.Select(p => p.Name);
             return;
         }
-            
-        PlaylistBox.ItemsSource = _vm.SearchPlaylists(text, _playlists);
+        var stringPlaylists = _vm.SearchPlaylists(text, _playlists).Select(p => p.Name).ToList();
+        PlaylistBox.ItemsSource = stringPlaylists;
     }
 
     private async void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -30,7 +31,7 @@ public class PlaylistEditOrCreateWindowViewModel(
         ]
     };
     
-    public async Task<string[]?> OpenTrackFileDialogAsync(Window parent)
+    public async Task<List<string>?> OpenTrackFileDialogAsync(Window parent)
     {
         try
         {
@@ -51,7 +52,7 @@ public class PlaylistEditOrCreateWindowViewModel(
                 filePaths[i] = files[i].Path.LocalPath;
 
             logger.LogInformation("Selected {Count} files: " + filePaths, files.Count);
-            return filePaths;
+            return filePaths.ToList();
         }
         catch (Exception ex)
         {

@@ -22,8 +22,17 @@ public class PlaylistManager(
     private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
     public Track? CurrentTrack { get; } = player.CurrentTrack;
-    public event Action<bool>? PlaybackStateChanged; 
-    public event Action? TrackChanged;
+    public event Action<bool> PlaybackStateChanged
+    {
+        add => player.PlaybackStateChanged += value;
+        remove => player.PlaybackStateChanged -= value;
+    }
+    
+    public event Action TrackChanged
+    {
+        add => player.TrackChanged += value;
+        remove => player.TrackChanged -= value;
+    }
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks)
     {
@@ -42,33 +51,61 @@ public class PlaylistManager(
     public async Task CreatePlaylist(Playlist playlist) => await playlist.Save();
     public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.Name);
 
-    public async Task StartPlaylist(Playlist playlist)
+    public Task StartPlaylist(Playlist playlist)
     {
-        if (_globalCancellationTokenSource != null) await _globalCancellationTokenSource.CancelAsync();
+        ArgumentNullException.ThrowIfNull(playlist);
+
+        try
+        {
+            _globalCancellationTokenSource?.Cancel();
+        }
+        catch (ObjectDisposedException) { /* ignore */ }
+        finally
+        {
+            _globalCancellationTokenSource?.Dispose();
+        }
+
         _globalCancellationTokenSource = new CancellationTokenSource();
-        
+
         if (PlayingPlaylist != null)
         {
-            PlayingPlaylist.Stop();
+            try
+            {
+                PlayingPlaylist.Stop();
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Error stopping previous playlist");
+            }
+
             PlayingPlaylist = null;
         }
 
         PlayingPlaylist = playlist;
 
-        _ = Task.Run(async () => await PlayingPlaylist.Play());
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await PlayingPlaylist.Play().ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) { /* expected on cancel */ }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Playlist play failed");
+            }
+        });
+
+        return Task.CompletedTask;
     }
 
     public async Task ChangeVolume(uint volume) => await player.ChangeVolume(volume);
 
-    public void PausePlaylist() =>
-        PlayingPlaylist?.Pause();
+    public void PausePlaylist() => PlayingPlaylist?.Pause();
     
-    public void ResumePlaylist() =>
-        PlayingPlaylist?.Resume();
+    public void ResumePlaylist() => PlayingPlaylist?.Resume();
     
-    public void NextTrack() =>
-        PlayingPlaylist?.NextTrack();
+    public void NextTrack() => PlayingPlaylist?.NextTrack();
 
-    public void TrackBefore() =>
-        PlayingPlaylist?.BackTrack();
+    public void TrackBefore() => PlayingPlaylist?.BackTrack();
 }

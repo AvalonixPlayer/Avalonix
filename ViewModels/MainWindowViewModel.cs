@@ -22,29 +22,29 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         }
     }
 
-    public async Task<PlaylistCreateWindow> PlaylistCreateWindow_Open()
+    public Task<PlaylistCreateWindow> PlaylistCreateWindow_Open()
     {
         try
         {
-            return await windowManager.PlaylistCreateWindow_Open();
+            return Task.FromResult(windowManager.PlaylistCreateWindow_Open());
         }
         catch (Exception e)
         {
             logger.LogError("Error while opening PlaylistCreateWindow: {e}", e.Message);
-            return null!;
+            return Task.FromResult<PlaylistCreateWindow>(null!);
         }
     }
     
-    public async Task<PlaylistSelectWindow> PlaylistSelectWindow_Open()
+    public Task<PlaylistSelectWindow> PlaylistSelectWindow_Open()
     {
         try
         {
-            return await windowManager.PlaylistSelectWindow_Open();
+            return Task.FromResult(windowManager.PlaylistSelectWindow_Open());
         }
         catch (Exception e)
         {
             logger.LogError("Error while opening PlaylistSelectWindow: {e}", e.Message);
-            return null!;
+            return Task.FromResult<PlaylistSelectWindow>(null!);
         }
     }
 }

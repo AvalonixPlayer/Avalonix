@@ -7,6 +7,6 @@ namespace Avalonix.Services.WindowManager;
 public interface IWindowManager
 {
     Task CloseMainWindowAsync();
-    Task<PlaylistCreateWindow> PlaylistCreateWindow_Open();
-    Task<PlaylistSelectWindow> PlaylistSelectWindow_Open();
+    PlaylistCreateWindow PlaylistCreateWindow_Open();
+    PlaylistSelectWindow PlaylistSelectWindow_Open();
 }

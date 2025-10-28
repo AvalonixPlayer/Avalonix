@@ -7,6 +7,6 @@ namespace Avalonix.ViewModels;
 
 public interface IPlaylistEditOrCreateWindowViewModel
 {
-    Task<string[]?> OpenTrackFileDialogAsync(Window parent);
+    Task<List<string>?> OpenTrackFileDialogAsync(Window parent);
     Task ExecuteAsync(string playlistName, List<Track> tracksPaths);
 }

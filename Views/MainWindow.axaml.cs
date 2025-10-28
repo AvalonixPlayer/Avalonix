@@ -6,7 +6,6 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
@@ -21,6 +20,7 @@ public partial class MainWindow : Window
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
     private readonly IPlaylistManager _playlistManager;
+    private readonly IWindowManager _windowManager; 
 
     private readonly Image _playButtonImage = new()
     {
@@ -34,13 +34,14 @@ public partial class MainWindow : Window
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/pause.png")))
     };
 
-    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm, IMediaPlayer player,
-        ISettingsManager settingsManager, IPlaylistManager playlistManager)
+    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
+        ISettingsManager settingsManager, IPlaylistManager playlistManager, IWindowManager windowManager)
     {
         _logger = logger;
         _vm = vm;
         _playlistManager = playlistManager;
-        
+        _windowManager = windowManager;
+
         _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
         _playlistManager.TrackChanged += UpdateAlbumCover;
         InitializeComponent();
@@ -49,9 +50,7 @@ public partial class MainWindow : Window
         _logger.LogInformation("MainWindow initialized");
     }
 
-    protected sealed override void OnClosed(EventArgs e)
-    {
-    }
+    protected sealed override async void OnClosed(EventArgs e) => await _windowManager.CloseMainWindowAsync();
 
     private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {

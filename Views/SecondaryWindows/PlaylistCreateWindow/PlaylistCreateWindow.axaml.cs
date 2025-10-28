@@ -28,11 +28,11 @@ public partial class PlaylistCreateWindow : Window
     {
         try
         {
-            var fileList = (await _vm.OpenTrackFileDialogAsync(this))!;
+            var fileList = (await _vm.OpenTrackFileDialogAsync(this).ConfigureAwait(false))!;
             
             if (fileList.Any(string.IsNullOrWhiteSpace)) return;
-            foreach (var i in fileList)
-                NewSongBox.Items.Add(i);
+            
+            fileList.ToList().ForEach(item => NewSongBox.Items.Add(item));
             
             RemoveButton.IsEnabled = true;
         }
