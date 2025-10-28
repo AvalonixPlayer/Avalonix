@@ -28,8 +28,8 @@ public class PlaylistManager(
     public void ResetSnuffle()
     {
         logger.LogDebug("Changing shuffle mode");
-        _settings.Avalonix.Playlists = _settings.Avalonix.Playlists 
-            with { Shuffle = !_settings.Avalonix.Playlists.Shuffle };
+        _settings.Avalonix.PlaySettings = _settings.Avalonix.PlaySettings 
+            with { Shuffle = !_settings.Avalonix.PlaySettings.Shuffle };
     }
 
     public event Action<bool> PlaybackStateChanged

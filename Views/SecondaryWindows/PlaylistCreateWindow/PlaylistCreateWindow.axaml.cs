@@ -31,7 +31,7 @@ public partial class PlaylistCreateWindow : Window
     {
         try
         {
-            var fileList = (await _vm.OpenTrackFileDialogAsync(this).ConfigureAwait(false))!;
+            var fileList = (await _vm.OpenTrackFileDialogAsync(this))!;
             
             if (fileList.Any(string.IsNullOrWhiteSpace)) return;
             

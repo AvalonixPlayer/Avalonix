@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Avalonix.Models.Media.Track;
 
-public struct TrackData(string path)
+public class TrackData(string path)
 {
     public string Path { get; } = path;
     public int Rarity { get; set; } = 0;
