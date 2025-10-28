@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace Avalonix.Models.Media.MediaPlayer;
@@ -12,5 +13,6 @@ public interface IMediaPlayer
     void Stop();
     void Pause();
     void Resume();
-    Task ChangeVolume(uint volume); 
+    Task ChangeVolume(uint volume);
+    event Action<bool> PlaybackStateChanged;
 }

@@ -19,6 +19,8 @@ public class MediaPlayer : IMediaPlayer
     private readonly ISettingsManager _settingsManager;
     
     public Track.Track? CurrentTrack { get; private set; }
+    
+    public event Action<bool>? PlaybackStateChanged;
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
@@ -46,6 +48,8 @@ public class MediaPlayer : IMediaPlayer
         Bass.BASS_ChannelPlay(_stream, true);
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, _currentVolume);
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
+        
+        PlaybackStateChanged?.Invoke(false);
     }
 
     public void Stop()
@@ -54,15 +58,24 @@ public class MediaPlayer : IMediaPlayer
         Bass.BASS_StreamFree(_stream);
     }
 
-    public void Pause() =>
+    public void Pause()
+    {
         Bass.BASS_ChannelPause(_stream);
+        PlaybackStateChanged?.Invoke(true);
+    }
 
-    public void Resume() =>
+    public void Resume()
+    {
         Bass.BASS_ChannelPlay(_stream, false);
+        PlaybackStateChanged?.Invoke(false);
+    }
 
-    public void Reset() =>
+    public void Reset()
+    {
+        PlaybackStateChanged?.Invoke(false);
         Bass.BASS_ChannelPlay(_stream, true);
-    
+    }
+
     public async Task ChangeVolume(uint volume)
     {
         var settings = await _settingsManager.GetSettings();
