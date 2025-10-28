@@ -20,8 +20,7 @@ public partial class MainWindow : Window
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
     private readonly IPlaylistManager _playlistManager;
-    
-    private string? _currentTrackPath;
+    private readonly IMediaPlayer _mediaPlayer;
 
     private readonly Image _playButtonImage = new()
     {
@@ -41,9 +40,10 @@ public partial class MainWindow : Window
         _logger = logger;
         _vm = vm;
         _playlistManager = playlistManager;
+        _mediaPlayer = player;
         
-        player.PlaybackStateChanged += UpdatePauseButtonImage;
-        
+        _mediaPlayer.PlaybackStateChanged += UpdatePauseButtonImage;
+        _mediaPlayer.TrackChanged += UpdateAlbumCover;
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () => VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume );
         
@@ -89,13 +89,12 @@ public partial class MainWindow : Window
 
     private void UpdateAlbumCover()
     {
-        var currentTrack = _playlistManager.CurrentTrack;
-        var currentPath = currentTrack?.TrackData.Path;
-        
-        if (_currentTrackPath == currentPath)
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(UpdateAlbumCover);
             return;
-
-        _currentTrackPath = currentPath;
+        }
+        var currentTrack = _mediaPlayer.CurrentTrack;
 
         var coverData = currentTrack?.Metadata.Cover;
     

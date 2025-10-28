@@ -22,8 +22,6 @@ public record Playlist
 
     private readonly Random _random = new();
     private CancellationTokenSource? _cancellationTokenSource;
-    
-    public event Action? TrackChanged;
     public bool Paused => Player.IsPaused;
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger, Settings settings)
@@ -132,8 +130,6 @@ public record Playlist
             await Save();
 
             Player.Play(track);
-            
-            TrackChanged?.Invoke();
             
             while (!Player.IsFree && !cancellationToken.IsCancellationRequested)
                 await Task.Delay(1000, cancellationToken);

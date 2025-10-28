@@ -21,6 +21,7 @@ public class MediaPlayer : IMediaPlayer
     public Track.Track? CurrentTrack { get; private set; }
     
     public event Action<bool>? PlaybackStateChanged;
+    public event Action? TrackChanged;
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
@@ -50,6 +51,7 @@ public class MediaPlayer : IMediaPlayer
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
         
         PlaybackStateChanged?.Invoke(false);
+        TrackChanged?.Invoke();
     }
 
     public void Stop()
