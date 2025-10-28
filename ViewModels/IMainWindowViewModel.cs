@@ -7,6 +7,6 @@ namespace Avalonix.ViewModels;
 public interface IMainWindowViewModel
 {
     Task ExitAsync();
-    Task<PlaylistCreateWindow> PlaylistCreateWindow_Open();
-    Task<PlaylistSelectWindow> PlaylistSelectWindow_Open();
+    PlaylistCreateWindow PlaylistCreateWindow_Open();
+    PlaylistSelectWindow PlaylistSelectWindow_Open();
 }

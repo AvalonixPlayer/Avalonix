@@ -43,12 +43,6 @@ public class DiskManager : IDiskManager
         CheckDirectory(ThemesPath);
         return;
 
-        void CheckFile(string path)
-        {
-            if (!File.Exists(path))
-                File.Create(path).Close();
-        }
-
         void CheckDirectory(string path)
         {
             if (!Directory.Exists(path))

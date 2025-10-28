@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
+using Avalonix.Views.SecondaryWindows.AboutWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 using Microsoft.Extensions.Logging;
@@ -38,4 +39,5 @@ public class WindowManager(ILogger<WindowManager> logger,
 
     public PlaylistCreateWindow PlaylistCreateWindow_Open() => new(logger, playlistEditOrCreateWindowViewModel);
     public PlaylistSelectWindow PlaylistSelectWindow_Open() => new(logger, playlistSelectWindowViewModel);
+    public AboutWindow AboutWindow_Open() => new(logger, "v1.0.0");
 }
