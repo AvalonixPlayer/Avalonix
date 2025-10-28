@@ -52,7 +52,8 @@ public class PlaylistManager(
             LastListen = null,
             Rarity = 0 
         };
-        return new Playlist(title, playlistData, player, diskManager, logger, _settings);
+        var settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
+        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }
 
     public async Task EditPlaylist(Playlist playlist) => await playlist.Save();
