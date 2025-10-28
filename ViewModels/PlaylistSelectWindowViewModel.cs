@@ -8,9 +8,9 @@ using Avalonix.Services.PlaylistManager;
 
 namespace Avalonix.ViewModels;
 
-public class PlaylistSelectWindowViewModel(IDiskManager idiskManager, IPlaylistManager playlistManager) : ViewModelBase, IPlaylistSelectWindowViewModel
+public class PlaylistSelectWindowViewModel(IDiskManager diskManager, IPlaylistManager playlistManager) : ViewModelBase, IPlaylistSelectWindowViewModel
 {
-    public async Task<List<Playlist>> GetPlaylists() => await idiskManager.GetAllPlaylists();
+    public async Task<List<Playlist>> GetPlaylists() => await diskManager.GetAllPlaylists();
     public List<Playlist> SearchPlaylists(string text, List<Playlist> playlists) =>
         string.IsNullOrWhiteSpace(text) ? playlists : playlists.Where(item => item.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
 

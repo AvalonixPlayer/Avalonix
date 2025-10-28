@@ -10,6 +10,7 @@ using Avalonix.Models.UserSettings;
 using Avalonix.Services;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
+using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels;
 using Avalonix.ViewModels.Strategy;
 using Avalonix.Views;

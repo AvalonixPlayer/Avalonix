@@ -18,7 +18,7 @@ public class PlaylistManager(
     : IPlaylistManager
 {
     public Playlist? PlayingPlaylist { get; set; }
-    private CancellationTokenSource _globalCancellationTokenSource;
+    private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
     public Track? CurrentTrack { get; } = player.CurrentTrack;
 
@@ -41,7 +41,7 @@ public class PlaylistManager(
 
     public async Task StartPlaylist(Playlist playlist)
     {
-        _globalCancellationTokenSource?.Cancel();
+        if (_globalCancellationTokenSource != null) await _globalCancellationTokenSource.CancelAsync();
         _globalCancellationTokenSource = new CancellationTokenSource();
         
         if (PlayingPlaylist != null)
