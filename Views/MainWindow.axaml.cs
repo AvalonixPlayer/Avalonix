@@ -123,8 +123,5 @@ public partial class MainWindow : Window
         }
     }
 
-    private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _windowManager.AboutWindow_Open().ShowDialog(this);
-    }
+    private void AboutButton_OnClick(object? sender, RoutedEventArgs e) => _windowManager.AboutWindow_Open().ShowDialog(this);
 }
