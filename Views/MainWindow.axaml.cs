@@ -74,10 +74,10 @@ public partial class MainWindow : Window
         _playlistManager.TrackBefore();
 
     private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>
-        await (await _vm.PlaylistCreateWindow_Open()).ShowDialog(this);
+        await _vm.PlaylistCreateWindow_Open().ShowDialog(this);
 
     private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
-        await (await _vm.PlaylistSelectWindow_Open()).ShowDialog(this);
+        await _vm.PlaylistSelectWindow_Open().ShowDialog(this);
 
     private void UpdatePauseButtonImage(bool pause)
     {
@@ -121,5 +121,10 @@ public partial class MainWindow : Window
             _logger.LogError("Error loading cover: {Error}", ex.Message);
             AlbumCover.Child = null;
         }
+    }
+
+    private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _windowManager.AboutWindow_Open().ShowDialog(this);
     }
 }

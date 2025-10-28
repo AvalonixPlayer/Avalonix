@@ -13,13 +13,14 @@
          Title="Avalonix - Playlist Create">
     
         <Design.DataContext>
+            <!-- ReSharper disable Xaml.ConstructorWarning -->
             <vm:PlaylistEditOrCreateWindowViewModel/>
         </Design.DataContext>
     
         <StackPanel Margin="10">
             <Border Background="#33A9A9A9" Padding="5" Margin="5">
                 <StackPanel>
-                    <Label Padding="10">Playlist Name</Label> 
+                    <Label Padding="10" Name="NameLabel">Playlist Name</Label> 
                     <TextBox Name="PlaylistName" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="7" Watermark="Playlist Name"/>
                 </StackPanel>
             </Border>
@@ -31,7 +32,7 @@
                         <Button Width="125" Click="AddButton_OnClick">Add</Button>             
                         <Button Width="125" HorizontalAlignment="Left" Click="RemoveButton_OnClick" Name="RemoveButton" IsEnabled="False">Remove</Button>             
                     </StackPanel>
-                    <Button Width="260" Click="CreatePlaylistButton_OnClick">Create</Button>
+                    <Button Width="260" Click="CreatePlaylistButton_OnClick" Name="MainActionButton">Default</Button>
                 </StackPanel>
             </Border> 
         </StackPanel>

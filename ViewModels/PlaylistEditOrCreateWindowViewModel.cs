@@ -12,8 +12,8 @@ using Avalonix.ViewModels.Strategy;
 namespace Avalonix.ViewModels;
 
 public class PlaylistEditOrCreateWindowViewModel(
-    ILogger<PlaylistEditOrCreateWindowViewModel> logger, 
-    IPlaylistManager playlistManager,  
+    ILogger<PlaylistEditOrCreateWindowViewModel> logger,
+    IPlaylistManager playlistManager,
     ISecondWindowStrategy strategy)
     : ViewModelBase, IPlaylistEditOrCreateWindowViewModel
 {
@@ -30,7 +30,9 @@ public class PlaylistEditOrCreateWindowViewModel(
             FilePickerFileTypes.All
         ]
     };
-    
+
+    public ISecondWindowStrategy Strategy => strategy;
+
     public async Task<List<string>?> OpenTrackFileDialogAsync(Window parent)
     {
         try
@@ -51,7 +53,7 @@ public class PlaylistEditOrCreateWindowViewModel(
             for (var i = 0; i < files.Count; i++)
                 filePaths[i] = files[i].Path.LocalPath;
 
-            logger.LogInformation("Selected {Count} files: " + filePaths, files.Count);
+            logger.LogInformation("Selected {Count} files: {filepaths}", files.Count, filePaths);
             return filePaths.ToList();
         }
         catch (Exception ex)
@@ -64,6 +66,6 @@ public class PlaylistEditOrCreateWindowViewModel(
     public async Task ExecuteAsync(string playlistName, List<Track> tracksPaths)
     {
         var playlist = playlistManager.ConstructPlaylist(playlistName, tracksPaths);
-        await strategy.ExecuteAsync(playlist);
+        await Strategy.ExecuteAsync(playlist); 
     }
 }
