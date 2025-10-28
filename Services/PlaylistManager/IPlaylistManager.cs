@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.Playlist;
@@ -20,4 +21,6 @@ public interface IPlaylistManager
     void NextTrack();
     void TrackBefore();
     Task ChangeVolume(uint volume);
+    event Action<bool> PlaybackStateChanged;
+    event Action TrackChanged;
 }

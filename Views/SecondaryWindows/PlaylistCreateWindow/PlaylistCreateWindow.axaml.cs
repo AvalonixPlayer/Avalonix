@@ -71,6 +71,7 @@ public partial class PlaylistCreateWindow : Window
             
             items.ForEach(item => tracks.Add(new Track(item)));
             await _vm.ExecuteAsync(name, tracks);
+            Close();
         }
         catch (Exception ex)
         {

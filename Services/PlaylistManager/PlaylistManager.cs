@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ public class PlaylistManager(
     private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
     public Track? CurrentTrack { get; } = player.CurrentTrack;
+    public event Action<bool>? PlaybackStateChanged; 
+    public event Action? TrackChanged;
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks)
     {

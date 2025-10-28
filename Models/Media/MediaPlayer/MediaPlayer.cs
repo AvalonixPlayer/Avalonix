@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Threading;
-using Avalonix.Models.UserSettings;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
@@ -12,8 +11,6 @@ public class MediaPlayer : IMediaPlayer
 {
     private int _stream;
     private float _currentVolume = 1.0f;
-    private readonly ISettingsManager _settingsManager;
-    private Settings _settings; 
     private readonly ILogger _logger;
 
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
@@ -28,13 +25,9 @@ public class MediaPlayer : IMediaPlayer
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
         _logger = logger;
-        _settingsManager = settingsManager;
-        _settings = _settingsManager.GetSettings().ConfigureAwait(false).GetAwaiter().GetResult();
-        
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-        
         Dispatcher.UIThread.Post(async void () =>
-            _currentVolume = (await _settingsManager.GetSettings()).Avalonix.Volume / 100F);
+            _currentVolume = (await settingsManager.GetSettings()).Avalonix.Volume / 100F);
     }
 
     public void Play(Track.Track track)
@@ -81,11 +74,11 @@ public class MediaPlayer : IMediaPlayer
         Bass.BASS_ChannelPlay(_stream, true);
     }
 
-    public async Task ChangeVolume(uint volume)
+    public Task ChangeVolume(uint volume)
     {
-        _settings.Avalonix.Volume = volume;
         _currentVolume = volume / 100F;
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
+        return Task.CompletedTask;
     }
 
     public double GetPosition() =>

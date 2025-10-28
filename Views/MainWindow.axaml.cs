@@ -12,6 +12,7 @@ using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
+using Avalonix.Services.WindowManager;
 
 namespace Avalonix.Views;
 
@@ -20,7 +21,6 @@ public partial class MainWindow : Window
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
     private readonly IPlaylistManager _playlistManager;
-    private readonly IMediaPlayer _mediaPlayer;
 
     private readonly Image _playButtonImage = new()
     {
@@ -40,14 +40,17 @@ public partial class MainWindow : Window
         _logger = logger;
         _vm = vm;
         _playlistManager = playlistManager;
-        _mediaPlayer = player;
         
-        _mediaPlayer.PlaybackStateChanged += UpdatePauseButtonImage;
-        _mediaPlayer.TrackChanged += UpdateAlbumCover;
+        _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
+        _playlistManager.TrackChanged += UpdateAlbumCover;
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () => VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume );
         
         _logger.LogInformation("MainWindow initialized");
+    }
+
+    protected sealed override void OnClosed(EventArgs e)
+    {
     }
 
     private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
@@ -94,7 +97,8 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(UpdateAlbumCover);
             return;
         }
-        var currentTrack = _mediaPlayer.CurrentTrack;
+
+        var currentTrack = _playlistManager.CurrentTrack; 
 
         var coverData = currentTrack?.Metadata.Cover;
     
