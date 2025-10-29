@@ -26,8 +26,7 @@
                     <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button> 
                     <Button Click="SelectPlaylist_OnClick" HorizontalAlignment="Left" Classes="h2">Select</Button> 
                 </StackPanel>
-                <ListBox Height="400" Name="SongBox">
-                </ListBox>
+                <ListBox Height="400" Name="SongBox"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Height="70">

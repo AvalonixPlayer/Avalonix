@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
@@ -21,7 +22,7 @@ public partial class MainWindow : Window
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
     private readonly IPlaylistManager _playlistManager;
-    private readonly IWindowManager _windowManager; 
+    private readonly IWindowManager _windowManager;
 
     private readonly Image _playButtonImage = new()
     {
@@ -44,10 +45,14 @@ public partial class MainWindow : Window
         _windowManager = windowManager;
 
         _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
+
         _playlistManager.TrackChanged += UpdateAlbumCover;
+        _playlistManager.TrackChanged += UpdateSongBox;
+
         InitializeComponent();
-        Dispatcher.UIThread.Post(async void () => VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume );
-        
+        Dispatcher.UIThread.Post(async void () =>
+            VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
+
         _logger.LogInformation("MainWindow initialized");
     }
 
@@ -80,6 +85,45 @@ public partial class MainWindow : Window
     private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
         await _vm.PlaylistSelectWindow_Open().ShowDialog(this);
 
+    private void UpdateSongBox()
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(UpdateSongBox);
+            return;
+        }
+
+        if (_playlistManager.PlayingPlaylist?.PlayQueue.Tracks == null)
+        {
+            _logger.LogError("Play queue is empty");
+            return;
+        }
+
+        SongBox.ItemsSource =
+            _playlistManager.PlayingPlaylist.PlayQueue.Tracks.Select(x => x.Metadata.TrackName).ToList();
+        
+        SongBox.LayoutUpdated += LayoutHandler;
+        return;
+
+        void LayoutHandler(object? s, EventArgs e)
+        {
+            SongBox.LayoutUpdated -= LayoutHandler;
+
+            ResetAllSongsColorsToDefaultColor();
+
+            if (SongBox.ContainerFromIndex(_playlistManager.PlayingPlaylist.PlayQueue.PlayingIndex) is ListBoxItem
+                listBoxItem)
+                listBoxItem.Foreground = Brushes.Red;
+        }
+    }
+
+    private void ResetAllSongsColorsToDefaultColor()
+    {
+        for (var i = 0; i < SongBox.ItemCount; i++)
+            if (SongBox.ContainerFromIndex(i) is ListBoxItem listBoxItem)
+                listBoxItem.Foreground = Brushes.White;
+    }
+
     private void UpdatePauseButtonImage(bool pause)
     {
         if (!Dispatcher.UIThread.CheckAccess())
@@ -87,6 +131,7 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(() => UpdatePauseButtonImage(pause));
             return;
         }
+
         PauseButton.Content = pause ? _playButtonImage : _pauseButtonImage;
     }
 
@@ -98,10 +143,10 @@ public partial class MainWindow : Window
             return;
         }
 
-        var currentTrack = _playlistManager.CurrentTrack; 
+        var currentTrack = _playlistManager.CurrentTrack;
 
         var coverData = currentTrack?.Metadata.Cover;
-    
+
         if (coverData == null || coverData.Length == 0)
         {
             AlbumCover.Child = null;
@@ -111,8 +156,8 @@ public partial class MainWindow : Window
         try
         {
             using var memoryStream = new MemoryStream(coverData);
-            AlbumCover.Child = new Image 
-            { 
+            AlbumCover.Child = new Image
+            {
                 Source = new Bitmap(memoryStream),
                 Stretch = Stretch.UniformToFill
             };
@@ -124,7 +169,8 @@ public partial class MainWindow : Window
         }
     }
 
-    private void AboutButton_OnClick(object? sender, RoutedEventArgs e) => _windowManager.AboutWindow_Open().ShowDialog(this);
+    private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
+        _windowManager.AboutWindow_Open().ShowDialog(this);
 
     private void SnuffleButton_OnClick(object? sender, RoutedEventArgs e) => _playlistManager.ResetSnuffle();
 }

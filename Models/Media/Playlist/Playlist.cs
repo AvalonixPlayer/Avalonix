@@ -19,7 +19,7 @@ public record Playlist
     private IDiskManager Disk { get; }
     private ILogger Logger { get; }
     private PlaySettings Settings { get; }
-    private PlayQueue PlayQueue { get; }
+    public PlayQueue PlayQueue { get; }
 
     private readonly Random _random = new();
     private CancellationTokenSource? _cancellationTokenSource;
