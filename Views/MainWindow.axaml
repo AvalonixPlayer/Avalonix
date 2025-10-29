@@ -58,6 +58,7 @@
                     </StackPanel>
                 </Border>
                 <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" ClipToBounds="True" Name="VolumeSlider" Width="120" Height="30"/>
+                <Slider HorizontalAlignment="Right" ClipToBounds="True" Name="TrackPositionSlider" Width="120" Height="30"/>
             </StackPanel>
         </Border>
         <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="7">

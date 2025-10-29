@@ -14,6 +14,8 @@ public interface IMediaPlayer
     void Pause();
     void Resume();
     Task ChangeVolume(uint volume);
+    double GetPosition();
+    void SetPosition(double position);
     event Action<bool> PlaybackStateChanged;
     event Action TrackChanged;
 }

@@ -19,6 +19,7 @@ public class PlaylistManager(
     ISettingsManager settingsManager) 
     : IPlaylistManager
 {
+    public IMediaPlayer MediaPlayer => player;
     public Playlist? PlayingPlaylist { get; set; }
     private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
