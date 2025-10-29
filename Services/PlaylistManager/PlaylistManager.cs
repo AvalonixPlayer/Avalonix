@@ -14,7 +14,7 @@ namespace Avalonix.Services.PlaylistManager;
 
 public class PlaylistManager(
     IMediaPlayer player, 
-    IDiskManager diskManager, 
+    IDiskManager diskManager,
     ILogger logger, 
     ISettingsManager settingsManager) 
     : IPlaylistManager
@@ -61,7 +61,7 @@ public class PlaylistManager(
     public async Task CreatePlaylist(Playlist playlist) => await playlist.Save();
     public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.Name);
 
-    public Task StartPlaylist(Playlist playlist)
+    public async Task StartPlaylist(Playlist playlist)
     {
         ArgumentNullException.ThrowIfNull(playlist);
 
@@ -81,7 +81,7 @@ public class PlaylistManager(
         {
             try
             {
-                PlayingPlaylist.Stop();
+                await PlayingPlaylist.Stop();
             }
             catch (Exception ex)
             {
@@ -105,8 +105,6 @@ public class PlaylistManager(
                 logger.LogError(ex, "Playlist play failed");
             }
         });
-
-        return Task.CompletedTask;
     }
 
     public async Task ChangeVolume(uint volume) => await player.ChangeVolume(volume);

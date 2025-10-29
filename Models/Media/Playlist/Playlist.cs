@@ -138,7 +138,6 @@ public record Playlist
 
                 UpdateLastListen();
                 UpdateRarity(ref track);
-                await Save();
 
                 Player.Play(track);
             
@@ -163,8 +162,9 @@ public record Playlist
         }
     }
     
-    public void Stop()
+    public async Task Stop()
     {
+        await Save();
         _cancellationTokenSource?.Cancel();
         Player.Stop();
         Logger.LogDebug("Playlist stopped");
