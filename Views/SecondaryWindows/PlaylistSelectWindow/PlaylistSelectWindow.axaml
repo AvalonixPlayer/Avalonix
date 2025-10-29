@@ -3,17 +3,18 @@
          xmlns:vm="using:Avalonix.ViewModels"
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:playlistEditOrCreate="clr-namespace:Avalonix.ViewModels.PlaylistEditOrCreate"
          mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
          Width="300" Height="400" CanResize="False"
          Background="Transparent"
          TransparencyLevelHint="AcrylicBlur"
          x:Class="Avalonix.Views.SecondaryWindows.PlaylistSelectWindow.PlaylistSelectWindow"
-         x:DataType="vm:PlaylistEditOrCreateWindowViewModel"
+         x:DataType="playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel"
          Icon="/Assets/avalonia-logo.ico"
          Title="Avalonix - Playlist Select">
     
         <Design.DataContext>
-            <vm:PlaylistEditOrCreateWindowViewModel/>
+            <playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel/>
         </Design.DataContext>
     
         <StackPanel Margin="10">

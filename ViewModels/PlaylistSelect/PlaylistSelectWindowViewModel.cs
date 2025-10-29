@@ -6,7 +6,7 @@ using Avalonix.Models.Disk;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Services.PlaylistManager;
 
-namespace Avalonix.ViewModels;
+namespace Avalonix.ViewModels.PlaylistSelect;
 
 public class PlaylistSelectWindowViewModel(IDiskManager diskManager, IPlaylistManager playlistManager) : ViewModelBase, IPlaylistSelectWindowViewModel
 {

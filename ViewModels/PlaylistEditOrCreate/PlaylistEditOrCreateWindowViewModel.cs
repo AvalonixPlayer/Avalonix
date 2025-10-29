@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
-using Microsoft.Extensions.Logging;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.ViewModels.Strategy;
+using Microsoft.Extensions.Logging;
 
-namespace Avalonix.ViewModels;
+namespace Avalonix.ViewModels.PlaylistEditOrCreate;
 
 public class PlaylistEditOrCreateWindowViewModel(
     ILogger<PlaylistEditOrCreateWindowViewModel> logger,

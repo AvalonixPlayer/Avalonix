@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonix.Models.Media.Track;
 using Avalonix.ViewModels.Strategy;
 
-namespace Avalonix.ViewModels;
+namespace Avalonix.ViewModels.PlaylistEditOrCreate;
 
 public interface IPlaylistEditOrCreateWindowViewModel
 {

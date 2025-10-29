@@ -3,6 +3,7 @@
         xmlns:vm="using:Avalonix.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:main="clr-namespace:Avalonix.ViewModels.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="800" Height="600" CanMaximize="True"
         MinHeight="600" MaxHeight="1000"
@@ -10,18 +11,17 @@
         Background="Transparent"
         TransparencyLevelHint="AcrylicBlur"
         x:Class="Avalonix.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
+        x:DataType="main:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Avalonix - Main Window">
 
-    <Design.DataContext>
-        <!-- ReSharper disable Xaml.ConstructorWarning -->
-        <vm:MainWindowViewModel/>
+    <Design.DataContext> 
+        <main:MainWindowViewModel/> 
     </Design.DataContext>
     
-    <Grid RowDefinitions="500,*,Auto,Auto" ColumnDefinitions="300,*" Margin="10">
+    <Grid RowDefinitions="*,*,Auto,Auto" ColumnDefinitions="300,*" ShowGridLines="True" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal">
                     <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button> 
                     <Button Click="SelectPlaylist_OnClick" HorizontalAlignment="Left" Classes="h2">Select</Button> 
@@ -43,7 +43,11 @@
         </Border> 
         
         <Border Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Height="70">
-            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Horizontal" >
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal" >
+                <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
+                    <Label FontSize="26" FontWeight="DemiBold" Content="Master Of Puppets"/>
+                    <Label FontSize="14" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray" Content="Metallica"/>
+                </StackPanel>
                 <Border VerticalAlignment="Bottom" Height="70" Background="#1A696969">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Button Name="BackButton" Click="PlayTrackBefore">
@@ -63,5 +67,6 @@
         <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="7">
             <Image Source=""/>
         </Border>
+        <Border MaxHeight="100" Grid.Column="1" Grid.Row="0"></Border>
     </Grid>
 </Window>

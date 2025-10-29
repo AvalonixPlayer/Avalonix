@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Services;
 using Avalonix.Services.WindowManager;
+using Avalonix.ViewModels.PlaylistSelect;
 
 namespace Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 

@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="Avalonix.Views.SecondaryWindows.ShowTrackWindow.ShowTrackWindow"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="500" Height="250" 
+        Background="Transparent"
+        TransparencyLevelHint="AcrylicBlur"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Avalonix - ">
+        <StackPanel Orientation="Vertical">
+                <Border>
+                        <Image Source="../../../Assets/avalonia-logo.ico"/>
+                </Border>
+                <Label FontWeight="DemiBold">Song Name</Label>
+                <Label FontSize="13" FontWeight="Light">Song Name</Label>
+        </StackPanel>
+</Window>

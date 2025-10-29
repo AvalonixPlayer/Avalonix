@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.Playlist;
 
-namespace Avalonix.ViewModels;
+namespace Avalonix.ViewModels.PlaylistSelect;
 
 public interface IPlaylistSelectWindowViewModel
 {
