@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
+using Avalonix.Models.Media.Track;
 using Avalonix.Views.SecondaryWindows.AboutWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
+using Avalonix.Views.SecondaryWindows.ShowTrackWindow;
 
 namespace Avalonix.Services.WindowManager;
 
@@ -11,4 +13,5 @@ public interface IWindowManager
     PlaylistCreateWindow PlaylistCreateWindow_Open();
     PlaylistSelectWindow PlaylistSelectWindow_Open();
     AboutWindow AboutWindow_Open();
+    ShowTrackWindow ShowTrackWindow_Open(Track track);
 }

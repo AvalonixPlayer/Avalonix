@@ -16,9 +16,9 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         {
             await windowManager.CloseMainWindowAsync();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            logger.LogError("Error while exiting app: {e}", e.Message);
+            logger.LogError("Error while exiting app: {e}", ex.Message);
         }
     }
 
@@ -28,9 +28,9 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         {
             return windowManager.PlaylistCreateWindow_Open();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            logger.LogError("Error while opening PlaylistCreateWindow: {e}", e.Message);
+            logger.LogError("Error while opening PlaylistCreateWindow: {e}", ex.Message);
             return null!;
         }
     }
@@ -41,9 +41,9 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         {
             return windowManager.PlaylistSelectWindow_Open();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            logger.LogError("Error while opening PlaylistSelectWindow: {e}", e.Message);
+            logger.LogError("Error while opening PlaylistSelectWindow: {e}", ex.Message);
             return null!;
         }
     }

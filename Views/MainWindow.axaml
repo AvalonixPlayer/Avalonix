@@ -1,13 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Avalonix.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:main="clr-namespace:Avalonix.ViewModels.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-        Width="800" Height="600" CanMaximize="True"
+        Width="1000" Height="600" CanMaximize="True"
         MinHeight="600" MaxHeight="1000"
-        MinWidth="800" MaxWidth="1200"
+        MinWidth="1000" MaxWidth="1200"
         Background="Transparent"
         TransparencyLevelHint="AcrylicBlur"
         x:Class="Avalonix.Views.MainWindow"
@@ -19,14 +18,14 @@
         <main:MainWindowViewModel/> 
     </Design.DataContext>
     
-    <Grid RowDefinitions="*,*,Auto,Auto" ColumnDefinitions="300,*" ShowGridLines="True" Margin="10">
+    <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="True" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
             <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal">
                     <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button> 
                     <Button Click="SelectPlaylist_OnClick" HorizontalAlignment="Left" Classes="h2">Select</Button> 
                 </StackPanel>
-                <ListBox Height="400" Name="SongBox"/>
+                <ListBox MinHeight="400" VerticalAlignment="Stretch" Name="SongBox"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Height="70">
@@ -62,11 +61,11 @@
                     </StackPanel>
                 </Border>
                 <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" ClipToBounds="True" Name="VolumeSlider" Width="120" Height="30"/>
+                <Button Click="OpenTrackButton_OnClick"></Button>
             </StackPanel>
         </Border>
         <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="7">
             <Image Source=""/>
         </Border>
-        <Border MaxHeight="100" Grid.Column="1" Grid.Row="0"></Border>
     </Grid>
 </Window>

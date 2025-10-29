@@ -13,7 +13,6 @@ using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
 using Avalonix.Services.WindowManager;
-using DynamicData;
 
 namespace Avalonix.Views;
 
@@ -60,17 +59,23 @@ public partial class MainWindow : Window
 
     private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        _logger.LogInformation("Volume changed: {EOldValue} -> {ENewValue}", e.OldValue, e.NewValue);
         await _playlistManager.ChangeVolume(Convert.ToUInt32(e.NewValue));
+        _logger.LogInformation("Volume changed: {EOldValue} -> {ENewValue}", e.OldValue, e.NewValue);
     }
 
     private void Pause(object sender, RoutedEventArgs e)
     {
-        if (_playlistManager.PlayingPlaylist == null!) return;
-        if (!_playlistManager.PlayingPlaylist.Paused)
-            _playlistManager.PausePlaylist();
-        else
+        var playingPlaylist = _playlistManager.PlayingPlaylist;
+        if (playingPlaylist == null) return;
+    
+        if (playingPlaylist.Paused)
+        {
             _playlistManager.ResumePlaylist();
+        }
+        else
+        {
+            _playlistManager.PausePlaylist();
+        }
     }
 
     private void PlayNextTrack(object sender, RoutedEventArgs e) =>
@@ -99,8 +104,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        SongBox.ItemsSource =
-            _playlistManager.PlayingPlaylist.PlayQueue.Tracks.Select(x => x.Metadata.TrackName).ToList();
+        SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
+            .Select(x => x.Metadata.TrackName).ToList();
     }
 
     private void UpdatePauseButtonImage(bool pause)
@@ -152,4 +157,10 @@ public partial class MainWindow : Window
         _windowManager.AboutWindow_Open().ShowDialog(this);
 
     private void SnuffleButton_OnClick(object? sender, RoutedEventArgs e) => _playlistManager.ResetSnuffle();
+
+    private async void OpenTrackButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var currentTrack = _playlistManager.CurrentTrack;
+        if (currentTrack != null) await _windowManager.ShowTrackWindow_Open(currentTrack).ShowDialog(this);
+    }
 }

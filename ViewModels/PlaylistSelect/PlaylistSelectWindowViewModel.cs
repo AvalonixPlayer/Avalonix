@@ -14,8 +14,7 @@ public class PlaylistSelectWindowViewModel(IDiskManager diskManager, IPlaylistMa
     public List<Playlist> SearchPlaylists(string text, List<Playlist> playlists) =>
         string.IsNullOrWhiteSpace(text) ? playlists : playlists.
             Where(item => item.Name.
-                Contains(text, StringComparison.CurrentCultureIgnoreCase)).
-            ToList();
+                Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
     public async Task PlayPlaylist(Playlist playlist) => await playlistManager.StartPlaylist(playlist);
 }
