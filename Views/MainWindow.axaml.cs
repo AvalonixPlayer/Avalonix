@@ -101,27 +101,6 @@ public partial class MainWindow : Window
 
         SongBox.ItemsSource =
             _playlistManager.PlayingPlaylist.PlayQueue.Tracks.Select(x => x.Metadata.TrackName).ToList();
-        
-        SongBox.LayoutUpdated += LayoutHandler;
-        return;
-
-        void LayoutHandler(object? s, EventArgs e)
-        {
-            SongBox.LayoutUpdated -= LayoutHandler;
-
-            ResetAllSongsColorsToDefaultColor();
-
-            if (SongBox.ContainerFromIndex(_playlistManager.PlayingPlaylist.PlayQueue.PlayingIndex) is ListBoxItem
-                listBoxItem)
-                listBoxItem.Foreground = Brushes.Red;
-        }
-    }
-
-    private void ResetAllSongsColorsToDefaultColor()
-    {
-        for (var i = 0; i < SongBox.ItemCount; i++)
-            if (SongBox.ContainerFromIndex(i) is ListBoxItem listBoxItem)
-                listBoxItem.Foreground = Brushes.White;
     }
 
     private void UpdatePauseButtonImage(bool pause)
