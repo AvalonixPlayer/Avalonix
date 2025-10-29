@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.Models.Media.Track;
+using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels.PlaylistEditOrCreate;
 using Avalonix.ViewModels.PlaylistSelect;
+using Avalonix.ViewModels.Strategy;
 using Avalonix.Views.SecondaryWindows.AboutWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
@@ -14,10 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.WindowManager;
 
-public class WindowManager(ILogger<WindowManager> logger,
-    IPlaylistEditOrCreateWindowViewModel playlistEditOrCreateWindowViewModel, 
-    IPlaylistSelectWindowViewModel playlistSelectWindowViewModel,
-    ISettingsManager settingsManager) 
+public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlaylistManager playlistManager) 
     : IWindowManager
 {
     private static void CloseMainWindow()
@@ -40,8 +39,32 @@ public class WindowManager(ILogger<WindowManager> logger,
         }
     }
 
-    public PlaylistCreateWindow PlaylistCreateWindow_Open() => new(logger, playlistEditOrCreateWindowViewModel);
-    public PlaylistSelectWindow PlaylistSelectWindow_Open() => new(logger, playlistSelectWindowViewModel);
+    private PlaylistCreateWindow PlaylistCreateWindow_Open(ISecondWindowStrategy strategy)
+    {
+        var vm = new PlaylistEditOrCreateWindowViewModel(logger, playlistManager, strategy);
+        return new PlaylistCreateWindow(logger, vm);
+    }
+    
+    public PlaylistSelectWindow PlaylistSelectToPlayWindow_Open() =>
+        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager)); 
+    public PlaylistSelectWindow PlaylistSelectToDeleteWindow_Open() =>
+        PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager)); 
+    public PlaylistSelectWindow PlaylistSelectToEditWindow_Open() =>
+        PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager)); 
+    public PlaylistCreateWindow PlaylistCreateWindow_Open() =>
+        PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
+
+    public PlaylistSelectWindow PlaylistSelectWindow_Open() => 
+        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager));
+
+    public PlaylistCreateWindow PlaylistEditWindow_Open() =>
+        PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
+
+    private PlaylistSelectWindow PlaylistSelectWindow_Open(ISecondWindowStrategy strategy)
+    {
+        var vm = new PlaylistSelectWindowViewModel(playlistManager, strategy);   
+        return new PlaylistSelectWindow(logger, vm);
+    }
     public AboutWindow AboutWindow_Open() => new(logger, "v1.0.0");
 
     public ShowTrackWindow ShowTrackWindow_Open(Track track) => new(logger, track);

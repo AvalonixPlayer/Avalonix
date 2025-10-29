@@ -36,11 +36,6 @@ public class App : Application
             services.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
             services.AddTransient<IPlaylistEditOrCreateWindowViewModel, PlaylistEditOrCreateWindowViewModel>();
             services.AddTransient<IPlaylistSelectWindowViewModel, PlaylistSelectWindowViewModel>();
-            services.AddTransient<ISecondWindowStrategy, CreatePlaylistWindowStrategy>();
-            services.AddTransient<ISecondWindowStrategy, EditPlaylistWindowStrategy>();
-            services.AddTransient<ISecondWindowStrategy, SelectAndDeletePlaylistWindowStrategy>();
-            services.AddTransient<ISecondWindowStrategy, SelectAndPlayPlaylistWindowStrategy>();
-            services.AddTransient<ISecondWindowStrategy, SelectAndEditPlaylistWindowStrategy>();
             services.AddTransient<MainWindow>();
             services.AddSingleton<ISettingsManager, SettingsManager>();
             services.AddSingleton<ILogger, Logger>();

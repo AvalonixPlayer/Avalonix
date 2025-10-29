@@ -44,6 +44,8 @@ public class PlaylistManager(
         remove => player.TrackChanged -= value;
     }
 
+    public async Task<List<Playlist>> GetAllPlaylists() => await diskManager.GetAllPlaylists(); 
+
     public Playlist ConstructPlaylist(string title, List<Track> tracks)
     {
         var playlistData = new PlaylistData

@@ -24,4 +24,5 @@ public interface IPlaylistManager
     void ResetSnuffle();
     event Action<bool> PlaybackStateChanged;
     event Action TrackChanged;
+    Task<List<Playlist>> GetAllPlaylists();
 }

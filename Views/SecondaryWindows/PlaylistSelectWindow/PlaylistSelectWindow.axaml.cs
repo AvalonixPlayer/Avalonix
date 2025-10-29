@@ -50,7 +50,7 @@ public partial class PlaylistSelectWindow : Window
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
             var selectedPlaylist = _playlists.FirstOrDefault(p => p.Name == castedSender.SelectedItem?.ToString());
-            await _vm.PlayPlaylist(selectedPlaylist!);
+            await _vm.ExecuteAction(selectedPlaylist!);
         }
         catch (Exception ex)
         {

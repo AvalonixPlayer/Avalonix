@@ -6,13 +6,14 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.PlaylistManager;
+using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels.Strategy;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModels.PlaylistEditOrCreate;
 
 public class PlaylistEditOrCreateWindowViewModel(
-    ILogger<PlaylistEditOrCreateWindowViewModel> logger,
+    ILogger<WindowManager> logger,
     IPlaylistManager playlistManager,
     ISecondWindowStrategy strategy)
     : ViewModelBase, IPlaylistEditOrCreateWindowViewModel
