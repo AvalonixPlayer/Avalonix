@@ -28,6 +28,8 @@ public partial class PlaylistSelectWindow : Window
         
         var result = _playlists.Select(p => p.Name).ToList();
         PlaylistBox.ItemsSource = result;
+        Title += _vm.Strategy.WindowTitle;
+        SearchBox.Watermark = _vm.Strategy.ActionButtonText;
     }
 
 
@@ -43,7 +45,7 @@ public partial class PlaylistSelectWindow : Window
         PlaylistBox.ItemsSource = stringPlaylists;
     }
 
-    private async void StartSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
+    private async void ActionSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
     {
         try
         {
@@ -51,6 +53,7 @@ public partial class PlaylistSelectWindow : Window
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
             var selectedPlaylist = _playlists.FirstOrDefault(p => p.Name == castedSender.SelectedItem?.ToString());
             await _vm.ExecuteAction(selectedPlaylist!);
+            Close();
         }
         catch (Exception ex)
         {

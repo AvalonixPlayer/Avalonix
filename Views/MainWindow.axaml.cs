@@ -160,7 +160,26 @@ public partial class MainWindow : Window
 
     private async void OpenTrackButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var currentTrack = _playlistManager.CurrentTrack;
-        if (currentTrack != null) await _windowManager.ShowTrackWindow_Open(currentTrack).ShowDialog(this);
+        try
+        {
+            var currentTrack = _playlistManager.CurrentTrack;
+            if (currentTrack != null) await _windowManager.ShowTrackWindow_Open(currentTrack).ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error opening track: {Error}", ex.Message);
+        }
+    }
+
+    private async void DeletePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await _windowManager.PlaylistDeleteWindow_Open().ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error opening track: {Error}", ex.Message);
+        }
     }
 }

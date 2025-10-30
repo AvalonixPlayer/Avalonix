@@ -14,4 +14,5 @@ public interface IWindowManager
     PlaylistSelectWindow PlaylistSelectWindow_Open();
     AboutWindow AboutWindow_Open();
     ShowTrackWindow ShowTrackWindow_Open(Track track);
+    PlaylistSelectWindow PlaylistDeleteWindow_Open();
 }

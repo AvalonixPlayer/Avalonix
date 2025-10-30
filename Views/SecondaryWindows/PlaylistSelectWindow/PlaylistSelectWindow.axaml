@@ -1,6 +1,5 @@
 <Window  xmlns="https://github.com/avaloniaui"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         xmlns:vm="using:Avalonix.ViewModels"
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:playlistEditOrCreate="clr-namespace:Avalonix.ViewModels.PlaylistEditOrCreate"
@@ -21,7 +20,7 @@
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
                     <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Search"/>
-                    <ListBox Height="300" Name="PlaylistBox" SelectionChanged="StartSelectedPlaylist"></ListBox>
+                    <ListBox Height="300" Name="PlaylistBox" SelectionChanged="ActionSelectedPlaylist"></ListBox>
                 </StackPanel>
             </Border> 
         </StackPanel>

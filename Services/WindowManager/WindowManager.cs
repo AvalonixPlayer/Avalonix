@@ -44,11 +44,15 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
         var vm = new PlaylistEditOrCreateWindowViewModel(logger, playlistManager, strategy);
         return new PlaylistCreateWindow(logger, vm);
     }
-    
+
+    private PlaylistSelectWindow PlaylistSelectWindow_Open(ISecondWindowStrategy strategy)
+    {
+        var vm = new PlaylistSelectWindowViewModel(playlistManager, strategy);
+        return new PlaylistSelectWindow(logger, vm);
+    }
+
     public PlaylistSelectWindow PlaylistSelectToPlayWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager)); 
-    public PlaylistSelectWindow PlaylistSelectToDeleteWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager)); 
     public PlaylistSelectWindow PlaylistSelectToEditWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager)); 
     public PlaylistCreateWindow PlaylistCreateWindow_Open() =>
@@ -60,12 +64,9 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
     public PlaylistCreateWindow PlaylistEditWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
 
-    private PlaylistSelectWindow PlaylistSelectWindow_Open(ISecondWindowStrategy strategy)
-    {
-        var vm = new PlaylistSelectWindowViewModel(playlistManager, strategy);   
-        return new PlaylistSelectWindow(logger, vm);
-    }
     public AboutWindow AboutWindow_Open() => new(logger, "v1.0.0");
 
     public ShowTrackWindow ShowTrackWindow_Open(Track track) => new(logger, track);
+    public PlaylistSelectWindow PlaylistDeleteWindow_Open() => 
+        PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager)); 
 }

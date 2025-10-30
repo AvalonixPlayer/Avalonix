@@ -23,7 +23,8 @@
             <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal">
                     <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button> 
-                    <Button Click="SelectPlaylist_OnClick" HorizontalAlignment="Left" Classes="h2">Select</Button> 
+                    <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button> 
+                    <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button> 
                 </StackPanel>
                 <ListBox MinHeight="400" MaxHeight="1000" VerticalAlignment="Stretch" Name="SongBox"/>
             </StackPanel>
