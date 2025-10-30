@@ -2,8 +2,33 @@
         xmlns:themes="clr-namespace:ShadUI;assembly=ShadUI"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <Border Padding="20">
-            <!-- Add Controls for Previewer Here -->
+        <Border Padding="20" Background="#1E1E1E">
+        <StackPanel Spacing="10">
+            <TextBlock Text="Avalonix v1.0.0" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,10"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Default" FontSize="15" Width="95"/>
+                <Button Classes="h2" Content="Alternative" Width="120"/>
+            </StackPanel>
+
+            <TextBox Watermark="Enter text here..."/>
+
+            <ListBox Width="200">
+                <ListBoxItem>Item 1</ListBoxItem>
+                <ListBoxItem>Item 2</ListBoxItem>
+                <ListBoxItem>Item 3</ListBoxItem>
+            </ListBox>
+
+            <ComboBox SelectedIndex="0">
+                <ComboBoxItem>Option 1</ComboBoxItem>
+                <ComboBoxItem>Option 2</ComboBoxItem>
+            </ComboBox>
+
+            <CheckBox Content="Check me"/>
+            <RadioButton Content="Option A"/>
+            <Slider Minimum="0" Maximum="100" Value="40"/>
+            <ProgressBar Minimum="0" Maximum="100" Value="60"/>
+        </StackPanel>
         </Border>
     </Design.PreviewWith>
 
@@ -45,6 +70,14 @@
         <Setter Property="CornerRadius" Value="7"/>
         <Setter Property="Padding" Value="12"/>
         <Setter Property="Margin" Value="2"/>
+    </Style>
+    
+    <Style Selector="Button:pointerover">
+        <Setter Property="Background" Value="#662F4F4F"/>
+    </Style>
+    
+    <Style Selector="Button.h2:pointerover">
+        <Setter Property="Background" Value="#03A9A9A9"/>
     </Style>
         
     <Style Selector="Button.h2">

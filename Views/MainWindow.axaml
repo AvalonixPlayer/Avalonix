@@ -14,7 +14,7 @@
         <main:MainWindowViewModel/> 
     </Design.DataContext>
     
-    <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="True" Margin="10">
+    <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="False" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
             <StackPanel Classes="vertical">
                 <StackPanel Classes="horizontal">
@@ -40,19 +40,15 @@
                     <Label Name="TrackName" FontSize="23" FontWeight="DemiBold" Content=""/>
                     <Label Name="ArtistName" FontSize="10" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"/>
                 </StackPanel>
-                <Border Height="70" Background="#1A696969">
-                    <StackPanel Classes="center">
-                        <Button Name="BackButton" Click="PlayTrackBefore"><Image Source="../Assets/buttons/back.png"/></Button>
-                        <Button Name="PauseButton" Click="Pause"><Image Source="../Assets/buttons/pause.png"/></Button>
-                        <Button Name="NextButton" Click="PlayNextTrack"><Image Source="../Assets/buttons/next.png"/></Button>
-                    </StackPanel>
-                </Border>
-                <Border Background="#1A696969" Height="70">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
-                        <Label FontWeight="DemiBold" Content="Volume"/>
-                        <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Height="30" Background="Gold" CornerRadius="7" Width="120"/>
-                    </StackPanel>
-                </Border>
+                <StackPanel Classes="center">
+                    <Button Name="BackButton" Click="PlayTrackBefore"><Image Source="../Assets/buttons/back.png"/></Button>
+                    <Button Name="PauseButton" Click="Pause"><Image Source="../Assets/buttons/pause.png"/></Button>
+                    <Button Name="NextButton" Click="PlayNextTrack"><Image Source="../Assets/buttons/next.png"/></Button>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                    <Label FontWeight="DemiBold" HorizontalContentAlignment="Center" Content="Volume"/>
+                    <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Height="30" Width="120"/>
+                </StackPanel>
                 <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
             </StackPanel>
         </Border>
