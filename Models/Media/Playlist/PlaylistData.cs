@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Avalonix.Models.Media.Playlist;
 
@@ -21,10 +22,10 @@ public class PlaylistData
         set => _tracks = value;
     }
 
-    public DateTime? LastListen { get; set; }
-    public int? Rarity { get; set; } = 0;
-    public bool ObserveDirectory { get; set; } = true;
-    public string? ObservingDirectory { get; set; }
+    [JsonInclude] public DateTime? LastListen { get; set; }
+    [JsonInclude] public int? Rarity { get; set; } = 0;
+    [JsonInclude] public bool ObserveDirectory { get; set; } = true;
+    [JsonInclude] public string? ObservingDirectory { get; set; }
 
     private void UpdateTracksByDirectoryObserving()
     {
