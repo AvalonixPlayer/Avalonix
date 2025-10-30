@@ -26,7 +26,7 @@
                     <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button> 
                     <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button> 
                 </StackPanel>
-                <ListBox MinHeight="600" MaxHeight="1000" VerticalAlignment="Stretch"  Name="SongBox"/>
+                <ListBox MinHeight="600" MaxHeight="600" VerticalAlignment="Stretch"  Name="SongBox"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Height="70">
