@@ -8,6 +8,13 @@
     </Design.PreviewWith>
 
     <themes:ShadTheme/>
+    
+    <Style Selector="Window">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TransparencyLevelHint" Value="AcrylicBlur"/>
+        <Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
+    </Style>
+
     <Style Selector="ListBox">
         <Setter Property="Background" Value="#ac212121"/>
         <Setter Property="CornerRadius" Value="7"/>
@@ -20,13 +27,20 @@
         <Setter Property="BorderBrush" Value="LightGreen"/>
         <Setter Property="Background" Value="#33212121"/>
     </Style>
+
+    <Style Selector="TextBox">
+        <Setter Property="BorderBrush" Value="DimGray"/>
+        <Setter Property="Background" Value="#33A9A9A9"/>
+        <Setter Property="CornerRadius" Value="7"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
         
     <Style Selector="Button">
         <Setter Property="MaxHeight" Value="70"/>
         <Setter Property="Height" Value="60"/>
         <Setter Property="Width" Value="60"/>
         <Setter Property="BorderBrush" Value="AliceBlue"/>
-        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Background" Value="#4D2F4F4F"/>
         <Setter Property="CornerRadius" Value="7"/>
         <Setter Property="Padding" Value="12"/>
@@ -48,5 +62,21 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="BorderBrush" Value="AliceBlue"/>
+    </Style>
+
+    <Style Selector="StackPanel.vertical">
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style Selector="StackPanel.horizontal">
+        <Setter Property="Orientation" Value="Horizontal"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+
+    <Style Selector="StackPanel.center">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Orientation" Value="Horizontal"/>
     </Style>
 </Styles>

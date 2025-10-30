@@ -5,15 +5,13 @@
         x:Class="Avalonix.Views.SecondaryWindows.ShowTrackWindow.ShowTrackWindow"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="500" Height="250" 
-        Background="Transparent"
-        TransparencyLevelHint="AcrylicBlur"
-        Icon="/Assets/avalonia-logo.ico"
         Title="Avalonix - ">
-        <StackPanel Orientation="Vertical">
-                <Border>
-                        <Image Source="../../../Assets/avalonia-logo.ico"/>
-                </Border>
-                <Label FontWeight="DemiBold">Song Name</Label>
-                <Label FontSize="13" FontWeight="Light">Song Name</Label>
-        </StackPanel>
+        
+    <StackPanel Classes="vertical">
+        <Border>
+            <Image Source="../../../Assets/avalonia-logo.ico"/>
+        </Border>
+        <Label FontWeight="DemiBold">Song Name</Label>
+        <Label FontSize="13" FontWeight="Light">Song Name</Label>
+    </StackPanel>
 </Window>

@@ -1,28 +1,26 @@
-<Window  xmlns="https://github.com/avaloniaui"
-         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-         Width="500" Height="250" 
-         Background="Transparent"
-         TransparencyLevelHint="AcrylicBlur"
-         x:Class="Avalonix.Views.SecondaryWindows.AboutWindow.AboutWindow"
-         Icon="/Assets/avalonia-logo.ico"
-         Title="Avalonix - About">
-        <StackPanel Orientation="Vertical">
-            <Border Margin="10" Padding="5" VerticalAlignment="Stretch">
-                <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
-                    <Label FontSize="40" FontWeight="ExtraBold">Avalonix</Label>
-                    <Border Background="Black">
-                        <Image Source="../../../../Assets/avalonia-logo.ico" Height="100" Width="100"/>
-                    </Border>
-                </StackPanel>
-            </Border>
-            <Border Padding="5" Margin="10" VerticalAlignment="Bottom">
-                <StackPanel Orientation="Horizontal">
-                    <Label Name="VersionLabel">Default</Label>
-                    <HyperlinkButton Click="OpenUrlButton_OnClick" VerticalAlignment="Bottom">Avalonix source code</HyperlinkButton>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        Width="500" Height="250" 
+        x:Class="Avalonix.Views.SecondaryWindows.AboutWindow.AboutWindow"
+        Title="Avalonix - About">
+        
+    <StackPanel Classes="vertical">
+        <Border Margin="10">
+            <StackPanel Classes="vertical">
+                <Label FontSize="40" FontWeight="ExtraBold">Avalonix</Label>
+                <Border Background="Black">
+                    <Image Source="../../../../Assets/avalonia-logo.ico" Height="100" Width="100"/>
+                </Border>
+            </StackPanel>
+        </Border>
+        <Border Padding="5" Margin="10" VerticalAlignment="Bottom">
+            <StackPanel Classes="horizontal">
+                <Label Name="VersionLabel">Default</Label>
+                <HyperlinkButton Click="OpenUrlButton_OnClick">Avalonix source code</HyperlinkButton>
+            </StackPanel>
+        </Border>
+    </StackPanel>
 </Window>

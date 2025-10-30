@@ -1,40 +1,37 @@
-<Window  xmlns="https://github.com/avaloniaui"
-         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:playlistEditOrCreate="clr-namespace:Avalonix.ViewModels.PlaylistEditOrCreate"
-         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-         Width="300" Height="700" CanResize="False"
-         Background="Transparent"
-         TransparencyLevelHint="AcrylicBlur"
-         x:Class="Avalonix.Views.SecondaryWindows.PlaylistCreateWindow.PlaylistCreateWindow"
-         x:DataType="playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel"
-         Icon="/Assets/avalonia-logo.ico"
-         Title="Avalonix - ">
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:playlistEditOrCreate="clr-namespace:Avalonix.ViewModels.PlaylistEditOrCreate"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        Width="300" Height="700" CanResize="False"
+        x:Class="Avalonix.Views.SecondaryWindows.PlaylistCreateWindow.PlaylistCreateWindow"
+        x:DataType="playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel"
+        Title="Avalonix - ">
     
-        <Design.DataContext>
-            <playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel/>
-        </Design.DataContext>
+    <Design.DataContext>
+        <playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel/>
+    </Design.DataContext>
     
-        <StackPanel Margin="10">
-            <Border>
-                <StackPanel>
-                    <Label Padding="10" Name="NameLabel">Playlist Name</Label> 
-                    <TextBox Name="PlaylistName" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="7" Watermark="Playlist Name"/>
+    <StackPanel Margin="10">
+        <Border>
+            <StackPanel>
+                <Label Padding="10" Name="NameLabel">Playlist Name</Label> 
+                <TextBox Name="PlaylistName" Height="50" Watermark="Playlist Name"/>
+            </StackPanel>
+        </Border>
+        <Border Padding="5" Margin="5">
+            <StackPanel>
+                <Label Padding="10">Songs</Label> 
+                <ListBox Height="300" Name="NewSongBox"></ListBox>
+                <CheckBox Name="ObserveDirectory">Observe directory</CheckBox>
+                <TextBox Name="ObservingDirectory" IsEnabled="False"></TextBox>
+                <StackPanel Classes="horizontal">
+                    <Button Width="125" Click="AddButton_OnClick">Add</Button>
+                    <Button Width="125" Click="RemoveButton_OnClick" Name="RemoveButton" IsEnabled="False">Remove</Button>             
                 </StackPanel>
-            </Border>
-            <Border Background="#33A9A9A9" Padding="5" Margin="5">
-                <StackPanel>
-                    <Label Padding="10">Songs</Label> 
-                    <ListBox Height="300" Name="NewSongBox"></ListBox>
-                    <CheckBox Name="ObserveDirectory">Observe directory</CheckBox>
-                    <TextBox Name="ObservingDirectory" IsEnabled="False"></TextBox>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Width="125" Click="AddButton_OnClick">Add</Button>
-                        <Button Width="125" HorizontalAlignment="Left" Click="RemoveButton_OnClick" Name="RemoveButton" IsEnabled="False">Remove</Button>             
-                    </StackPanel>
-                    <Button Width="260" Click="ActionPlaylistButton_OnClick" Name="MainActionButton">Default</Button>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                <Button Width="260" Click="ActionPlaylistButton_OnClick" Name="MainActionButton">Default</Button>
+            </StackPanel>
+        </Border>
+    </StackPanel>
 </Window>

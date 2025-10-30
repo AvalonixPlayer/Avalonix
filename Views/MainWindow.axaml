@@ -6,11 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="980" Height="600" CanMaximize="True"
         MinHeight="800" MinWidth="980" 
-        Background="Transparent"
-        TransparencyLevelHint="AcrylicBlur"
         x:Class="Avalonix.Views.MainWindow"
         x:DataType="main:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
         Title="Avalonix - Main Window">
 
     <Design.DataContext> 
@@ -19,48 +16,38 @@
     
     <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="True" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
-            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
-                <StackPanel Orientation="Horizontal">
+            <StackPanel Classes="vertical">
+                <StackPanel Classes="horizontal">
                     <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button> 
                     <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button> 
                     <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button> 
                 </StackPanel>
-                <ListBox MinHeight="600" MaxHeight="600" VerticalAlignment="Stretch"  Name="SongBox"/>
+                <ListBox MinHeight="600" MaxHeight="600" Name="SongBox"/>
             </StackPanel>
         </Border>
-        <Border Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Height="70">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Button>
-                    <Image Source="../Assets/buttons/new.png"/>
-                </Button> 
-                <Button>
-                    <Image Source="../Assets/buttons/remove.png"/>
-                </Button> 
+        <Border Grid.Row="1" Grid.Column="0" Height="70">
+            <StackPanel Classes="horizontal">
+                <Button><Image Source="../Assets/buttons/new.png"/></Button> 
+                <Button><Image Source="../Assets/buttons/remove.png"/></Button> 
                 <Button Click="AboutButton_OnClick" Content="?"/> 
                 <Button Click="SnuffleButton_OnClick" Content="?/*"/> 
             </StackPanel>
         </Border> 
         
-        <Border Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Height="70">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal" >
+        <Border Grid.Row="1" Grid.Column="1" Height="70">
+            <StackPanel Classes="center">
                 <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
                     <Label Name="TrackName" FontSize="23" FontWeight="DemiBold" Content=""/>
                     <Label Name="ArtistName" FontSize="10" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"/>
                 </StackPanel>
-                <Border Height="70" VerticalAlignment="Bottom" Background="#1A696969">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button Name="BackButton" Click="PlayTrackBefore">
-                            <Image Source="../Assets/buttons/back.png"/>
-                        </Button>
-                        <Button Name="PauseButton" Click="Pause">
-                            <Image Source="../Assets/buttons/pause.png"/>
-                        </Button>
-                        <Button Name="NextButton" Click="PlayNextTrack">
-                            <Image Source="../Assets/buttons/next.png"/>
-                        </Button>
+                <Border Height="70" Background="#1A696969">
+                    <StackPanel Classes="center">
+                        <Button Name="BackButton" Click="PlayTrackBefore"><Image Source="../Assets/buttons/back.png"/></Button>
+                        <Button Name="PauseButton" Click="Pause"><Image Source="../Assets/buttons/pause.png"/></Button>
+                        <Button Name="NextButton" Click="PlayNextTrack"><Image Source="../Assets/buttons/next.png"/></Button>
                     </StackPanel>
                 </Border>
-                <Border Background="#1A696969" Height="70" VerticalAlignment="Bottom">
+                <Border Background="#1A696969" Height="70">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
                         <Label FontWeight="DemiBold" Content="Volume"/>
                         <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Height="30" Background="Gold" CornerRadius="7" Width="120"/>
@@ -69,7 +56,7 @@
                 <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
             </StackPanel>
         </Border>
-        <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="7">
+        <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121">
             <Image Source="../Assets/avalonia-logo.ico"/>
         </Border>
     </Grid>
