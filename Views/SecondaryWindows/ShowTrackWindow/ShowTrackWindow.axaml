@@ -9,7 +9,7 @@
         
     <StackPanel Classes="vertical">
         <Border>
-            <Image Source="../../../Assets/avalonia-logo.ico"/>
+            <Image Source="avares://Avalonix/Assets/avalonia-logo.ico"/>
         </Border>
         <Label FontWeight="DemiBold">Song Name</Label>
         <Label FontSize="13" FontWeight="Light">Song Name</Label>
