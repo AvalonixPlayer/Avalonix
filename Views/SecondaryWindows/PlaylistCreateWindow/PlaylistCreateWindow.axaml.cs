@@ -25,7 +25,7 @@ public partial class PlaylistCreateWindow : Window
         _logger.LogInformation("PlaylistCreateWindow opened");
         MainActionButton.Content = _vm.Strategy.ActionButtonText;
         NameLabel.Content = _vm.Strategy.WindowTitle;
-        Title = _vm.Strategy.WindowTitle;
+        Title += _vm.Strategy.WindowTitle;
     }
 
     private async void AddButton_OnClick(object? sender, RoutedEventArgs e)

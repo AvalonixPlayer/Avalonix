@@ -11,7 +11,7 @@
          x:Class="Avalonix.Views.SecondaryWindows.PlaylistCreateWindow.PlaylistCreateWindow"
          x:DataType="playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel"
          Icon="/Assets/avalonia-logo.ico"
-         Title="Avalonix - Playlist Create">
+         Title="Avalonix - ">
     
         <Design.DataContext>
             <playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel/>

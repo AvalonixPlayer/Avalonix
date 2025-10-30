@@ -5,7 +5,7 @@
         xmlns:main="clr-namespace:Avalonix.ViewModels.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="980" Height="600" CanMaximize="True"
-        MinHeight="600" MaxHeight="1000"
+        MinHeight="800" MaxHeight="1000"
         MinWidth="980" MaxWidth="1200"
         Background="Transparent"
         TransparencyLevelHint="AcrylicBlur"
@@ -26,7 +26,7 @@
                     <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button> 
                     <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button> 
                 </StackPanel>
-                <ListBox MinHeight="400" MaxHeight="1000" VerticalAlignment="Stretch" Name="SongBox"/>
+                <ListBox MinHeight="600" MaxHeight="1000" VerticalAlignment="Stretch"  Name="SongBox"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Height="70">

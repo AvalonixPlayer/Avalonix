@@ -30,7 +30,7 @@ public class EditPlaylistWindowStrategy(IPlaylistManager playlistManager) : ISec
 
 public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistManager) : ISecondWindowStrategy
 {
-    public string WindowTitle => "Delete a playlist";
+    public string WindowTitle => " to delete";
     public string ActionButtonText => "Playlist name to delete";
 
     public Task ExecuteAsync(Playlist playlist)
@@ -42,7 +42,7 @@ public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistMana
 
 public class SelectAndPlayPlaylistWindowStrategy(IPlaylistManager playlistManager) : ISecondWindowStrategy
 {
-    public string WindowTitle => "Play a playlist";
+    public string WindowTitle => " to play";
     public string ActionButtonText => "Playlist name to play";
 
     public async Task ExecuteAsync(Playlist playlist) => await playlistManager.StartPlaylist(playlist); 
@@ -50,7 +50,7 @@ public class SelectAndPlayPlaylistWindowStrategy(IPlaylistManager playlistManage
 
 public class SelectAndEditPlaylistWindowStrategy(IPlaylistManager playlistManager) : ISecondWindowStrategy
 {
-    public string WindowTitle => "Edit a playlist";
+    public string WindowTitle => "to edit";
     public string ActionButtonText => "Playlist name to edit";
 
     public async Task ExecuteAsync(Playlist playlist) => await playlistManager.EditPlaylist(playlist);    
