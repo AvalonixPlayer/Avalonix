@@ -77,9 +77,9 @@ public partial class PlaylistCreateWindow : Window
         try
         {
             var name = PlaylistName.Text;
+            if(string.IsNullOrEmpty(name)) return;
             var items = NewSongBox.Items.OfType<string>().ToList();
             List<Track> tracks = [];
-            
             items.ForEach(item => tracks.Add(new Track(item)));
             await _vm.ExecuteAsync(name, tracks, ObservingDirectory.Text);
             Close();
