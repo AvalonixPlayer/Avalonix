@@ -44,12 +44,12 @@
                     <Button Name="BackButton" Click="PlayTrackBefore"><Image Source="../Assets/buttons/back.png"/></Button>
                     <Button Name="PauseButton" Click="Pause"><Image Source="../Assets/buttons/pause.png"/></Button>
                     <Button Name="NextButton" Click="PlayNextTrack"><Image Source="../Assets/buttons/next.png"/></Button>
+                    <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
-                    <Label FontWeight="DemiBold" HorizontalContentAlignment="Center" Content="Volume"/>
-                    <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Height="30" Width="120"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Spacing="0" Margin="0">
+                    <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume"/>
+                    <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Background="Transparent" Height="30" Width="150"/>
                 </StackPanel>
-                <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
             </StackPanel>
         </Border>
         <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121">
