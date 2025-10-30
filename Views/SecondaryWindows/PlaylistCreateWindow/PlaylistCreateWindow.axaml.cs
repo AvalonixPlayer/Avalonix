@@ -72,7 +72,7 @@ public partial class PlaylistCreateWindow : Window
         }
     }
 
-    private async void CreatePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void ActionPlaylistButton_OnClick(object? sender, RoutedEventArgs e)
     {
         try
         {

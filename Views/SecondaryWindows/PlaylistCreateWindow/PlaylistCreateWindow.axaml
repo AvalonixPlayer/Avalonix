@@ -33,7 +33,7 @@
                         <Button Width="125" Click="AddButton_OnClick">Add</Button>
                         <Button Width="125" HorizontalAlignment="Left" Click="RemoveButton_OnClick" Name="RemoveButton" IsEnabled="False">Remove</Button>             
                     </StackPanel>
-                    <Button Width="260" Click="CreatePlaylistButton_OnClick" Name="MainActionButton">Default</Button>
+                    <Button Width="260" Click="ActionPlaylistButton_OnClick" Name="MainActionButton">Default</Button>
                 </StackPanel>
             </Border>
         </StackPanel>
