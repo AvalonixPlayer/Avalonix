@@ -45,8 +45,8 @@
         <Border Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Height="70">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal" >
                 <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
-                    <Label FontSize="26" FontWeight="DemiBold" Content="Master Of Puppets"/>
-                    <Label FontSize="14" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray" Content="Metallica"/>
+                    <Label Name="TrackName" FontSize="26" FontWeight="DemiBold" Content="Master Of Puppets"/>
+                    <Label Name="ArtistName" FontSize="14" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray" Content="Metallica"/>
                 </StackPanel>
                 <Border VerticalAlignment="Bottom" Height="70" Background="#1A696969">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">

@@ -47,6 +47,7 @@ public partial class MainWindow : Window
 
         _playlistManager.TrackChanged += UpdateAlbumCover;
         _playlistManager.TrackChanged += UpdateSongBox;
+        _playlistManager.TrackChanged += UpdateTrackInfo;
 
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () =>
@@ -151,6 +152,17 @@ public partial class MainWindow : Window
             _logger.LogError("Error loading cover: {Error}", ex.Message);
             AlbumCover.Child = null;
         }
+    }
+
+    private void UpdateTrackInfo()
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(UpdateTrackInfo);
+            return;
+        }
+        TrackName.Content = _playlistManager.CurrentTrack?.Metadata.TrackName;
+        ArtistName.Content = _playlistManager.CurrentTrack?.Metadata.Artist;
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
