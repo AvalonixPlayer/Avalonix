@@ -46,14 +46,17 @@ public class PlaylistManager(
 
     public async Task<List<Playlist>> GetAllPlaylists() => await diskManager.GetAllPlaylists(); 
 
-    public Playlist ConstructPlaylist(string title, List<Track> tracks)
+    public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
     {
         var playlistData = new PlaylistData
         {
             Tracks = tracks,
             LastListen = null,
-            Rarity = 0 
+            ObserveDirectory = observingDirectory is not null,
+            ObservingDirectory = observingDirectory
         };
+        
+        Console.WriteLine(observingDirectory is null);
         var settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
         return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }

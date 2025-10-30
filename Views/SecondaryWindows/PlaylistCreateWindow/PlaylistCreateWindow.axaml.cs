@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonix.Models.Media.Track;
@@ -26,6 +27,14 @@ public partial class PlaylistCreateWindow : Window
         MainActionButton.Content = _vm.Strategy.ActionButtonText;
         NameLabel.Content = _vm.Strategy.WindowTitle;
         Title += _vm.Strategy.WindowTitle;
+        ObserveDirectory.IsCheckedChanged += ObserveDirectoryCheckedChanged;
+    }
+
+    private void ObserveDirectoryCheckedChanged(object? sender, RoutedEventArgs routedEventArgs)
+    {
+        var isChecked = ((CheckBox)routedEventArgs.Source!).IsChecked;
+        if (isChecked != null)
+            ObservingDirectory.IsVisible = isChecked.Value;
     }
 
     private async void AddButton_OnClick(object? sender, RoutedEventArgs e)
@@ -69,12 +78,10 @@ public partial class PlaylistCreateWindow : Window
         {
             var name = PlaylistName.Text;
             var items = NewSongBox.Items.OfType<string>().ToList();
-            if (string.IsNullOrWhiteSpace(name) || items.Count <= 0) return;
-
             List<Track> tracks = [];
             
             items.ForEach(item => tracks.Add(new Track(item)));
-            await _vm.ExecuteAsync(name, tracks);
+            await _vm.ExecuteAsync(name, tracks, ObservingDirectory.Text);
             Close();
         }
         catch (Exception ex)
