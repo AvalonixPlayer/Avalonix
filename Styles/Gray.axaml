@@ -2,9 +2,9 @@
         xmlns:themes="clr-namespace:ShadUI;assembly=ShadUI"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <Border Padding="20" Background="Black">
+        <Border Padding="20" Background="#424652">
         <StackPanel Spacing="10">
-            <TextBlock Text="Avalonix v1.0.0 - Gray Theme" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,10" Foreground="WhiteSmoke"/>
+            <TextBlock Text="Avalonix v1.0.0 - Silver Palette" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,10" Foreground="#BFC3C2"/>
 
             <StackPanel Orientation="Horizontal">
                 <Button Content="Default" FontSize="15" Width="95"/>
@@ -24,8 +24,8 @@
                 <ComboBoxItem>Option 2</ComboBoxItem>
             </ComboBox>
 
-            <CheckBox Content="Check me" Foreground="WhiteSmoke"/>
-            <RadioButton Content="Option A" Foreground="WhiteSmoke"/>
+            <CheckBox Content="Check me" Foreground="#BFC3C2"/>
+            <RadioButton Content="Option A" Foreground="#BFC3C2"/>
             <Slider Minimum="0" Maximum="100" Value="40"/>
             <ProgressBar Minimum="0" Maximum="100" Value="60"/>
         </StackPanel>
@@ -35,24 +35,23 @@
     <themes:ShadTheme/>
     
     <Style Selector="Window">
-        <Setter Property="Background" Value="DimGray"/>
-        <Setter Property="TransparencyLevelHint" Value="AcrylicBlur"/>
+        <Setter Property="Background" Value="#424652"/>
         <Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
     </Style>
 
     <Style Selector="ListBox">
-        <Setter Property="Background" Value="DarkGray"/>
-        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Background" Value="#5C6070"/>
+        <Setter Property="CornerRadius" Value="7"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="Margin" Value="5"/>
-        <Setter Property="BorderBrush" Value="Gray"/>
+        <Setter Property="BorderBrush" Value="#848896"/>
     </Style>
         
     <Style Selector="ListBoxItem">
-        <Setter Property="CornerRadius" Value="0"/>
-        <Setter Property="BorderBrush" Value="DimGray"/>
-        <Setter Property="Background" Value="DarkGray"/>
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Setter Property="CornerRadius" Value="7"/>
+        <Setter Property="BorderBrush" Value="#8F94A2"/>
+        <Setter Property="Background" Value="#6B7080"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.3"/>
@@ -62,23 +61,23 @@
     </Style>
 
     <Style Selector="ListBoxItem:pointerover">
-        <Setter Property="Background" Value="Gray"/>
-        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="Background" Value="#7A8091"/>
+        <Setter Property="BorderBrush" Value="#ABA9AB"/>
     </Style>
 
     <Style Selector="ListBoxItem:selected">
-        <Setter Property="Background" Value="LightGray"/>
-        <Setter Property="BorderBrush" Value="White"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Background" Value="#8F94A2"/>
+        <Setter Property="BorderBrush" Value="#BFC3C2"/>
+        <Setter Property="Foreground" Value="#424652"/>
     </Style>
 
     <Style Selector="TextBox">
-        <Setter Property="BorderBrush" Value="Gray"/>
-        <Setter Property="Background" Value="DarkGray"/>
-        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="BorderBrush" Value="#848896"/>
+        <Setter Property="Background" Value="#5C6070"/>
+        <Setter Property="CornerRadius" Value="7"/>
         <Setter Property="Padding" Value="5"/>
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
-        <Setter Property="CaretBrush" Value="LightGray"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
+        <Setter Property="CaretBrush" Value="#ABA9AB"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.2"/>
@@ -89,8 +88,8 @@
     </Style>
 
     <Style Selector="TextBox:focus">
-        <Setter Property="Background" Value="Gray"/>
-        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="Background" Value="#6B7080"/>
+        <Setter Property="BorderBrush" Value="#ABA9AB"/>
         <Setter Property="BorderThickness" Value="2"/>
     </Style>
         
@@ -98,13 +97,13 @@
         <Setter Property="MaxHeight" Value="70"/>
         <Setter Property="Height" Value="60"/>
         <Setter Property="Width" Value="60"/>
-        <Setter Property="BorderBrush" Value="DimGray"/>
+        <Setter Property="BorderBrush" Value="#8F94A2"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="DarkGray"/>
-        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Background" Value="#6B7080"/>
+        <Setter Property="CornerRadius" Value="7"/>
         <Setter Property="Padding" Value="12"/>
         <Setter Property="Margin" Value="2"/>
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.25"/>
@@ -115,37 +114,37 @@
     </Style>
     
     <Style Selector="Button:pointerover">
-        <Setter Property="Background" Value="Gray"/>
-        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="Background" Value="#7A8091"/>
+        <Setter Property="BorderBrush" Value="#ABA9AB"/>
         <Setter Property="RenderTransform" Value="scale(1.08)"/>
     </Style>
 
     <Style Selector="Button:pressed">
-        <Setter Property="Background" Value="LightGray"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Background" Value="#8F94A2"/>
+        <Setter Property="Foreground" Value="#424652"/>
         <Setter Property="RenderTransform" Value="scale(0.95)"/>
     </Style>
     
     <Style Selector="Button.h2:pointerover">
-        <Setter Property="Background" Value="Gray"/>
-        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="Background" Value="#848896"/>
+        <Setter Property="BorderBrush" Value="#BFC3C2"/>
         <Setter Property="RenderTransform" Value="scale(1.1)"/>
     </Style>
 
     <Style Selector="Button.h2:pressed">
-        <Setter Property="Background" Value="LightGray"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Background" Value="#9E9DA0"/>
+        <Setter Property="Foreground" Value="#424652"/>
         <Setter Property="RenderTransform" Value="scale(0.92)"/>
     </Style>
         
     <Style Selector="Button.h2">
         <Setter Property="MaxHeight" Value="90"/>
         <Setter Property="Width" Value="90"/>
-        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="CornerRadius" Value="7"/>
         <Setter Property="Margin" Value="2"/>
-        <Setter Property="Background" Value="Gray"/>
-        <Setter Property="BorderBrush" Value="DimGray"/>
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Setter Property="Background" Value="#7A8091"/>
+        <Setter Property="BorderBrush" Value="#8F94A2"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.25"/>
@@ -155,11 +154,11 @@
     </Style>
         
     <Style Selector="Border">
-        <Setter Property="Background" Value="DarkGray"/>
-        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Background" Value="#5C6070"/>
+        <Setter Property="CornerRadius" Value="7"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="Margin" Value="5"/>
-        <Setter Property="BorderBrush" Value="Gray"/>
+        <Setter Property="BorderBrush" Value="#848896"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.3"/>
@@ -169,9 +168,9 @@
     </Style>
 
     <Style Selector="ComboBox">
-        <Setter Property="Background" Value="DarkGray"/>
-        <Setter Property="BorderBrush" Value="Gray"/>
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Setter Property="Background" Value="#6B7080"/>
+        <Setter Property="BorderBrush" Value="#848896"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.25"/>
@@ -181,12 +180,12 @@
     </Style>
 
     <Style Selector="ComboBox:pointerover">
-        <Setter Property="Background" Value="Gray"/>
-        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="Background" Value="#7A8091"/>
+        <Setter Property="BorderBrush" Value="#ABA9AB"/>
     </Style>
 
     <Style Selector="CheckBox">
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Foreground" Duration="0:0:0.2"/>
@@ -195,11 +194,11 @@
     </Style>
 
     <Style Selector="CheckBox:pointerover">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="#ABA9AB"/>
     </Style>
 
     <Style Selector="RadioButton">
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Foreground" Duration="0:0:0.2"/>
@@ -208,11 +207,11 @@
     </Style>
 
     <Style Selector="RadioButton:pointerover">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="#ABA9AB"/>
     </Style>
 
     <Style Selector="Slider">
-        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Foreground" Value="#848896"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Foreground" Duration="0:0:0.2"/>
@@ -221,12 +220,12 @@
     </Style>
 
     <Style Selector="Slider:pointerover">
-        <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="Foreground" Value="#ABA9AB"/>
     </Style>
 
     <Style Selector="ProgressBar">
-        <Setter Property="Background" Value="DarkGray"/>
-        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Background" Value="#6B7080"/>
+        <Setter Property="Foreground" Value="#8F94A2"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Foreground" Duration="0:0:0.5"/>
@@ -251,6 +250,6 @@
     </Style>
 
     <Style Selector="TextBlock">
-        <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Setter Property="Foreground" Value="#BFC3C2"/>
     </Style>
 </Styles>
