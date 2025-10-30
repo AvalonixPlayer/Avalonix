@@ -34,7 +34,7 @@ public partial class PlaylistCreateWindow : Window
     {
         var isChecked = ((CheckBox)routedEventArgs.Source!).IsChecked;
         if (isChecked != null)
-            ObservingDirectory.IsVisible = isChecked.Value;
+            ObservingDirectory.IsEnabled = isChecked.Value;
     }
 
     private async void AddButton_OnClick(object? sender, RoutedEventArgs e)

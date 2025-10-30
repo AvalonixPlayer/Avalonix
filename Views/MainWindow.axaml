@@ -5,8 +5,7 @@
         xmlns:main="clr-namespace:Avalonix.ViewModels.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="980" Height="600" CanMaximize="True"
-        MinHeight="800" MaxHeight="1000"
-        MinWidth="980" MaxWidth="1200"
+        MinHeight="800" MinWidth="980" 
         Background="Transparent"
         TransparencyLevelHint="AcrylicBlur"
         x:Class="Avalonix.Views.MainWindow"
@@ -45,10 +44,10 @@
         <Border Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Height="70">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal" >
                 <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
-                    <Label Name="TrackName" FontSize="26" FontWeight="DemiBold" Content="Master Of Puppets"/>
-                    <Label Name="ArtistName" FontSize="14" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray" Content="Metallica"/>
+                    <Label Name="TrackName" FontSize="23" FontWeight="DemiBold" Content=""/>
+                    <Label Name="ArtistName" FontSize="10" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"/>
                 </StackPanel>
-                <Border VerticalAlignment="Bottom" Height="70" Background="#1A696969">
+                <Border Height="70" VerticalAlignment="Bottom" Background="#1A696969">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Button Name="BackButton" Click="PlayTrackBefore">
                             <Image Source="../Assets/buttons/back.png"/>
@@ -61,8 +60,13 @@
                         </Button>
                     </StackPanel>
                 </Border>
-                <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" ClipToBounds="True" Name="VolumeSlider" Width="120" Height="30"/>
-                <Button Click="OpenTrackButton_OnClick"></Button>
+                <Border Background="#1A696969" Height="70" VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                        <Label FontWeight="DemiBold" Content="Volume"/>
+                        <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Height="30" Background="Gold" CornerRadius="7" Width="120"/>
+                    </StackPanel>
+                </Border>
+                <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
             </StackPanel>
         </Border>
         <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="7">

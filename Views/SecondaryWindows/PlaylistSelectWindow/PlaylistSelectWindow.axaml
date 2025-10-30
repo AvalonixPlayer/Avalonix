@@ -4,7 +4,7 @@
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:playlistEditOrCreate="clr-namespace:Avalonix.ViewModels.PlaylistEditOrCreate"
          mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-         Width="300" Height="400" CanResize="False"
+         Width="300" Height="600" CanResize="False"
          Background="Transparent"
          TransparencyLevelHint="AcrylicBlur"
          x:Class="Avalonix.Views.SecondaryWindows.PlaylistSelectWindow.PlaylistSelectWindow"
@@ -19,8 +19,8 @@
         <StackPanel Margin="10">
             <Border Background="#33A9A9A9" CornerRadius="12" Padding="5" Margin="5">
                 <StackPanel>
-                    <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Padding="5" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Search"/>
-                    <ListBox Height="300" Name="PlaylistBox" SelectionChanged="ActionSelectedPlaylist"></ListBox>
+                    <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Height="50" BorderBrush="DimGray" Background="#33A9A9A9" CornerRadius="12" Watermark="Search"/>
+                    <ListBox Height="500" Name="PlaylistBox" SelectionChanged="ActionSelectedPlaylist"></ListBox>
                 </StackPanel>
             </Border> 
         </StackPanel>
