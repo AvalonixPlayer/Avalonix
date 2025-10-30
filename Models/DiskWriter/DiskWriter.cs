@@ -2,11 +2,12 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonix.Models.Disk;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Models.Disk;
+namespace Avalonix.Models.DiskWriter;
 
-public class DiskLoader(ILogger logger) : IDiskLoader
+public class DiskWriter(ILogger logger) : IDiskWriter
 {
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
@@ -14,20 +15,19 @@ public class DiskLoader(ILogger logger) : IDiskLoader
         IncludeFields = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
-
-    public async Task<T?> LoadAsync<T>(string path)
+    
+    public async Task WriteAsync<T>(T obj, string path)
     {
         if (!File.Exists(path))
-            return default;
+            File.Create(path).Close();
 
         try
         {
-            return JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), _jsonSerializerOptions)!;
+            await File.WriteAllTextAsync(path, JsonSerializer.Serialize(obj, _jsonSerializerOptions));
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.LogError("Failed to load json: " + ex.Message);
-            return default;
+            logger.LogError("Error while writing json: " + e.Message);
         }
     }
 }

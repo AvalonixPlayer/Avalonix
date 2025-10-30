@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonix.Models.Disk.DiskLoader;
+using Avalonix.Models.DiskWriter;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
-using Avalonix.Models.UserSettings;
 using Avalonix.Models.UserSettings.Theme;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Models.Disk;
+namespace Avalonix.Models.Disk.DiskManager;
 
 public class DiskManager : IDiskManager
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
+using Avalonix.Models.Disk.DiskManager;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.UserSettings;
 using Avalonix.Models.UserSettings.AvalonixSettingsFiles;
