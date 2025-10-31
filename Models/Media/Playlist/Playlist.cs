@@ -120,7 +120,7 @@ public record Playlist
     {
         while (true)
         {
-            await _cancellationTokenSource?.CancelAsync()!;
+            _cancellationTokenSource?.CancelAsync();
             _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
             Logger.LogDebug("Playlist {Name} has started", Name);

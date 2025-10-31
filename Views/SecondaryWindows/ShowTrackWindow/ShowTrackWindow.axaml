@@ -4,15 +4,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Class="Avalonix.Views.SecondaryWindows.ShowTrackWindow.ShowTrackWindow"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Width="500" Height="250" 
+        Width="500" Height="500" 
+        MaxWidth="500" MaxHeight="500" 
+        MinWidth="100" MinHeight="100" 
         Title="Avalonix - ">
         
     <StackPanel Classes="vertical">
         <Border>
-            <Image Name="Image" MaxHeight="150" MaxWidth="150"/>
+            <Image Name="Cover" MaxHeight="150" MaxWidth="150"/>
         </Border>
-        <Label FontWeight="DemiBold" Name="Name">Song Name</Label>
-        <Label FontSize="13" FontWeight="Light" Name="Artist">Song Name</Label>
-        <Label FontSize="13" FontWeight="Light" Name="Album">Song Name</Label>
+        <Border>
+            <StackPanel Orientation="Vertical">
+                <Label FontWeight="DemiBold" Name="Name">Title: </Label>
+                <Label FontSize="13" FontWeight="Light" Name="Artist">Artist: </Label>
+            </StackPanel>
+        </Border>
+        <Border>
+            <StackPanel Orientation="Vertical">
+                <Label FontSize="13" FontWeight="Light" Name="Album">Album: </Label>
+                <Label FontSize="13" FontWeight="Light" Name="Genre">Genre: </Label>
+                <Label FontSize="13" FontWeight="Light" Name="MediaFileFormat">Format: </Label>
+                <Label FontSize="13" FontWeight="Light" Name="Year">Year: </Label>
+                <Label FontSize="13" FontWeight="Light" Name="Duration">Duration: </Label>
+            </StackPanel>
+        </Border>
+        <Border>
+            <StackPanel Orientation="Vertical">
+                <Label FontWeight="DemiBold">Lyrics</Label>
+                <Label FontWeight="SemiLight" FontStyle="Italic" Name="Lyrics">Not found</Label>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </Window>

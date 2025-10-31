@@ -3,10 +3,10 @@ using System.IO;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Threading;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.WindowManager;
 using Microsoft.Extensions.Logging;
+using static Avalonia.Threading.Dispatcher;
 
 namespace Avalonix.Views.SecondaryWindows.ShowTrackWindow;
 
@@ -19,26 +19,48 @@ public partial class ShowTrackWindow : Window
         InitializeComponent();   
         logger.LogInformation("ShowTrackWindow initialized");
         Title += track.Metadata.TrackName;
-        Name.Content = track.Metadata.TrackName;
-        Artist.Content = track.Metadata.Artist;
-        Album.Content = track.Metadata.Album;
+        
         UpdateAlbumCover(track);
+        InitializeMainFields(track);
+        InitializeAdditionalFields(track);
+    }
+
+    private void InitializeAdditionalFields(Track track)
+    {
+        Album.Content += track.Metadata.Album;
+        Genre.Content += track.Metadata.Genre;
+        MediaFileFormat.Content += track.Metadata.MediaFileFormat;
+        Year.Content += track.Metadata.Year.ToString();
+        Duration.Content += track.Metadata.Duration.Seconds + "s";
+    }
+
+    private void InitializeMainFields(Track track)
+    {
+        Name.Content += track.Metadata.TrackName;
+        Artist.Content += track.Metadata.Artist;
+        Lyrics.Content = track.Metadata.Lyric;
     }
     
     private void UpdateAlbumCover(Track track)
     {
         var coverData = track.Metadata.Cover;
-
+        
+        if (!UIThread.CheckAccess())
+        {
+            UIThread.Post(() => UpdateAlbumCover(track));
+            return;
+        }
+        
         if (coverData == null || coverData.Length == 0)
         {
-            Image = null;
+            Cover = null;
             return;
         }
 
         try
         {
             using var memoryStream = new MemoryStream(coverData);
-            Image = new Image
+            Cover = new Image
             {
                 Source = new Bitmap(memoryStream),
                 Stretch = Stretch.UniformToFill
@@ -47,7 +69,7 @@ public partial class ShowTrackWindow : Window
         catch (Exception ex)
         {
             _logger.LogError("Error loading cover: {Error}", ex.Message);
-            Image = null;
+            Cover = null;
         }
     }
 }
