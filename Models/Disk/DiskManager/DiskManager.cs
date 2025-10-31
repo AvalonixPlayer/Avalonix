@@ -15,7 +15,7 @@ namespace Avalonix.Models.Disk.DiskManager;
 public class DiskManager : IDiskManager
 {
     public const string Extension = ".avalonix";
-    public static string AvalonixFolderPath =
+    public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
     
     private readonly IDiskWriter _diskWriter;
@@ -29,7 +29,7 @@ public class DiskManager : IDiskManager
 
     private readonly ILogger _logger;
     private readonly IMediaPlayer _player;
-    private ISettingsManager _settingsManager;
+    private readonly ISettingsManager _settingsManager;
 
     public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader, ISettingsManager settingsManager)
     {
