@@ -137,10 +137,9 @@ public record Playlist
 
                     PlayQueue.PlayingIndex = i;
                     var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
-
+                    
                     UpdateLastListen();
                     UpdateRarity(ref track);
-                    await Save();
 
                     Player.Play(track);
 
@@ -170,6 +169,7 @@ public record Playlist
 
     public void Stop()
     {
+        await Save();
         _cancellationTokenSource?.Cancel();
         Player.Stop();
         Logger.LogDebug("Playlist stopped");

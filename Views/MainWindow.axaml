@@ -48,10 +48,11 @@
                     <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume"/>
                     <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider" Background="Transparent" Height="30" Width="150"/>
                 </StackPanel>
+                <Slider HorizontalAlignment="Right" ClipToBounds="True" Name="TrackPositionSlider" Width="120" Height="30"/>
             </StackPanel>
         </Border>
-        <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121">
-            <Image Source="avares://Avalonix/Assets/avalonia-logo.ico"/>
+        <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121" CornerRadius="7">
+            <Image Source=""/>
         </Border>
     </Grid>
 </Window>

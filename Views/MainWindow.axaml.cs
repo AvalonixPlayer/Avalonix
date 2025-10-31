@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -22,6 +24,10 @@ public partial class MainWindow : Window
     private readonly IMainWindowViewModel _vm;
     private readonly IPlaylistManager _playlistManager;
     private readonly IWindowManager _windowManager;
+
+    private readonly Timer _timer;
+
+    private bool _isUserDragging = true;
 
     private readonly Image _playButtonImage = new()
     {
@@ -47,12 +53,23 @@ public partial class MainWindow : Window
 
         _playlistManager.TrackChanged += UpdateAlbumCover;
         _playlistManager.TrackChanged += UpdateSongBox;
+        _playlistManager.TrackChanged += UpdateTrackPositionSlider;
+
+        _timer = new Timer(1000);
+        _timer.Elapsed += UpdateTrackPositionSlider;
+
+        _timer.AutoReset = true;
+        _timer.Enabled = true;
+        _timer.Start();
         _playlistManager.TrackChanged += UpdateTrackInfo;
 
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () =>
             VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
 
+        TrackPositionSlider.PointerEntered += (sender, args) => _isUserDragging = true;
+        TrackPositionSlider.PointerExited += (sender, args) => _isUserDragging = false;
+        TrackPositionSlider.ValueChanged += TrackPositionChange;
         _logger.LogInformation("MainWindow initialized");
     }
 
@@ -62,6 +79,24 @@ public partial class MainWindow : Window
     {
         await _playlistManager.ChangeVolume(Convert.ToUInt32(e.NewValue));
         _logger.LogInformation("Volume changed: {EOldValue} -> {ENewValue}", e.OldValue, e.NewValue);
+    }
+
+    private void TrackPositionChange(object? sender, RangeBaseValueChangedEventArgs rangeBaseValueChangedEventArgs)
+    {
+        if (_isUserDragging)
+            Dispatcher.UIThread.Post(async void () =>
+                _playlistManager.MediaPlayer.SetPosition(TrackPositionSlider.Value));
+    }
+
+    private void UpdateTrackPositionSlider(object? sender,
+        ElapsedEventArgs elapsedEventArgs)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!_isUserDragging)
+                    TrackPositionSlider.Value = _playlistManager.MediaPlayer.GetPosition();
+            });
     }
 
     private void Pause(object sender, RoutedEventArgs e)
@@ -107,6 +142,18 @@ public partial class MainWindow : Window
 
         SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
             .Select(x => x.Metadata.TrackName).ToList();
+    }
+
+    private void UpdateTrackPositionSlider()
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => UpdateTrackPositionSlider());
+            return;
+        }
+
+        if (_playlistManager.MediaPlayer.CurrentTrack != null)
+            TrackPositionSlider.Maximum = _playlistManager.MediaPlayer.CurrentTrack.Metadata.Duration.TotalSeconds;
     }
 
     private void UpdatePauseButtonImage(bool pause)
