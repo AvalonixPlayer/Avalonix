@@ -53,7 +53,7 @@
             </StackPanel>
         </Border>
         <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121">
-            <Image Source="../Assets/avalonia-logo.ico"/>
+            <Image Source="avares://Avalonix/Assets/avalonia-logo.ico"/>
         </Border>
     </Grid>
 </Window>

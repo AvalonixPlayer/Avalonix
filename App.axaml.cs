@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Disk.DiskLoader;
 using Avalonix.Models.Disk.DiskManager;
@@ -13,6 +14,7 @@ using Avalonix.Models.UserSettings;
 using Avalonix.Services;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
+using Avalonix.Services.ThemeManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels;
 using Avalonix.ViewModels.Main;
@@ -48,6 +50,7 @@ public class App : Application
             services.AddSingleton<IDiskWriter, DiskWriter>();
             services.AddSingleton<IMediaPlayer, MediaPlayer>();
             services.AddSingleton<IPlaylistManager, PlaylistManager>();
+            services.AddSingleton<IThemeManager, ThemeManager>();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();
