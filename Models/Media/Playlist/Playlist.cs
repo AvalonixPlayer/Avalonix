@@ -167,7 +167,7 @@ public record Playlist
         }
     }
 
-    public void Stop()
+    public async Task Stop()
     {
         await Save();
         _cancellationTokenSource?.Cancel();
