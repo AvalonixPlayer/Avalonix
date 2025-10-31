@@ -20,7 +20,6 @@ public partial class ShowTrackWindow : Window
         logger.LogInformation("ShowTrackWindow initialized");
         Title += track.Metadata.TrackName;
         
-        UpdateAlbumCover(track);
         InitializeMainFields(track);
         InitializeAdditionalFields(track);
     }
@@ -31,7 +30,7 @@ public partial class ShowTrackWindow : Window
         Genre.Content += track.Metadata.Genre;
         MediaFileFormat.Content += track.Metadata.MediaFileFormat;
         Year.Content += track.Metadata.Year.ToString();
-        Duration.Content += track.Metadata.Duration.Seconds + "s";
+        Duration.Content += ToHumanFriendlyString(track.Metadata.Duration);
     }
 
     private void InitializeMainFields(Track track)
@@ -41,35 +40,10 @@ public partial class ShowTrackWindow : Window
         Lyrics.Content = track.Metadata.Lyric;
     }
     
-    private void UpdateAlbumCover(Track track)
+    private static string ToHumanFriendlyString(TimeSpan timeSpan)
     {
-        var coverData = track.Metadata.Cover;
-        
-        if (!UIThread.CheckAccess())
-        {
-            UIThread.Post(() => UpdateAlbumCover(track));
-            return;
-        }
-        
-        if (coverData == null || coverData.Length == 0)
-        {
-            Cover = null;
-            return;
-        }
-
-        try
-        {
-            using var memoryStream = new MemoryStream(coverData);
-            Cover = new Image
-            {
-                Source = new Bitmap(memoryStream),
-                Stretch = Stretch.UniformToFill
-            };
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error loading cover: {Error}", ex.Message);
-            Cover = null;
-        }
+        if (timeSpan.Hours > 0)
+            return $"{timeSpan.Hours}H {timeSpan.Minutes}M {timeSpan.Seconds}S";
+        return timeSpan.Minutes > 0 ? $"{timeSpan.Minutes}M {timeSpan.Seconds}S" : $"{timeSpan.Seconds}S";
     }
 }

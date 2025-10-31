@@ -11,9 +11,6 @@
         
     <StackPanel Classes="vertical">
         <Border>
-            <Image Name="Cover" MaxHeight="150" MaxWidth="150"/>
-        </Border>
-        <Border>
             <StackPanel Orientation="Vertical">
                 <Label FontWeight="DemiBold" Name="Name">Title: </Label>
                 <Label FontSize="13" FontWeight="Light" Name="Artist">Artist: </Label>

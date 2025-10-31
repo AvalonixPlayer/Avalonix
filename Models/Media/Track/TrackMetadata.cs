@@ -23,7 +23,6 @@ public record TrackMetadata
         _path = path;
         FillTrackMetaData();
     }
-        
 
     private void FillTrackMetaData()
     {
