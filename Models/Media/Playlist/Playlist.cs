@@ -118,52 +118,56 @@ public record Playlist
 
     public async Task Play(int startSong = 0)
     {
-        _cancellationTokenSource?.Cancel();
-        _cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = _cancellationTokenSource.Token;
-        Logger.LogDebug("Playlist {Name} has started", Name);
-
-        var playing = true;
-        
-        Console.WriteLine(Settings.Loop);
-        
-        while (playing)
+        while (true)
         {
-            for (var i = startSong; i < PlayQueue.Tracks.Count; i++)
+            await _cancellationTokenSource?.CancelAsync()!;
+            _cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = _cancellationTokenSource.Token;
+            Logger.LogDebug("Playlist {Name} has started", Name);
+
+            var playing = true;
+
+            Console.WriteLine(Settings.Loop);
+
+            while (playing)
             {
-                if (cancellationToken.IsCancellationRequested)
-                    break;
+                for (var i = startSong; i < PlayQueue.Tracks.Count; i++)
+                {
+                    if (cancellationToken.IsCancellationRequested) break;
 
-                PlayQueue.PlayingIndex = i;
-                var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
+                    PlayQueue.PlayingIndex = i;
+                    var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
 
-                UpdateLastListen();
-                UpdateRarity(ref track);
-                await Save();
+                    UpdateLastListen();
+                    UpdateRarity(ref track);
+                    await Save();
 
-                Player.Play(track);
-            
-                while (!Player.IsFree && !cancellationToken.IsCancellationRequested)
-                    await Task.Delay(1000, cancellationToken);
+                    Player.Play(track);
 
-                if (cancellationToken.IsCancellationRequested)
-                    break;
-            }
+                    while (!Player.IsFree && !cancellationToken.IsCancellationRequested) await Task.Delay(1000, cancellationToken);
 
-            if (!Settings.Loop)
-            {
+                    if (cancellationToken.IsCancellationRequested) break;
+                }
+
+                if (Settings.Loop) continue;
                 playing = false;
                 Logger.LogDebug("Playlist {Name} completed", Name);
             }
-        }
-        if (!cancellationToken.IsCancellationRequested)
-        {
-            PlayQueue.FillQueue(PlaylistData);
-            if (Settings.Loop) 
-                await Play();
+
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                PlayQueue.FillQueue(PlaylistData);
+                if (Settings.Loop)
+                {
+                    startSong = 0;
+                    continue;
+                }
+            }
+
+            break;
         }
     }
-    
+
     public void Stop()
     {
         _cancellationTokenSource?.Cancel();
@@ -183,7 +187,7 @@ public record Playlist
     }
 
     public void BackTrack() =>
-        _ = PlayQueue.PlayingIndex - 1 <= 0 ? Play(0) : Play(PlayQueue.PlayingIndex - 1);
+        _ = PlayQueue.PlayingIndex - 1 <= 0 ? Play() : Play(PlayQueue.PlayingIndex - 1);
 
     public void Pause()
     {
