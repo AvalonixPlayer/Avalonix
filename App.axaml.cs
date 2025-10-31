@@ -8,7 +8,7 @@ using Avalonia.Markup.Xaml.Styling;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Disk.DiskLoader;
 using Avalonix.Models.Disk.DiskManager;
-using Avalonix.Models.DiskWriter;
+using Avalonix.Models.Disk.DiskWriter;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.UserSettings;
 using Avalonix.Services;

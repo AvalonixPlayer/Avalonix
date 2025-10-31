@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Models.DiskWriter;
+namespace Avalonix.Models.Disk.DiskWriter;
 
 public class DiskWriter(ILogger logger) : IDiskWriter
 {

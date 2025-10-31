@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk.DiskLoader;
-using Avalonix.Models.DiskWriter;
+using Avalonix.Models.Disk.DiskWriter;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.UserSettings.Theme;

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Avalonix.Models.DiskWriter;
+namespace Avalonix.Models.Disk.DiskWriter;
 
 public interface IDiskWriter
 {
