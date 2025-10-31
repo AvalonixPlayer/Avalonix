@@ -28,7 +28,7 @@ public record TrackMetadata
     private void FillTrackMetaData()
     {
         var track = File.Create(_path);
-        TrackName = track.Tag!.Title;
+        TrackName = track.Tag!.Title ?? Path.GetFileNameWithoutExtension(_path);
         MediaFileFormat = Path.GetExtension(_path);
         Album = track.Tag!.Album!;
         Artist = track.Tag!.FirstPerformer!;
