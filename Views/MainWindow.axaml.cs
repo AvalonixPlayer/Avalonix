@@ -54,6 +54,7 @@ public partial class MainWindow : Window
         _playlistManager.TrackChanged += UpdateAlbumCover;
         _playlistManager.TrackChanged += UpdateSongBox;
         _playlistManager.TrackChanged += UpdateTrackPositionSlider;
+        _playlistManager.TrackChanged += UpdateTrackInfo;
 
         _timer = new Timer(1000);
         _timer.Elapsed += UpdateTrackPositionSlider;
@@ -61,15 +62,26 @@ public partial class MainWindow : Window
         _timer.AutoReset = true;
         _timer.Enabled = true;
         _timer.Start();
-        _playlistManager.TrackChanged += UpdateTrackInfo;
 
         InitializeComponent();
         Dispatcher.UIThread.Post(async void () =>
             VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
 
+        var trackSliderPressed = true;
+
         TrackPositionSlider.PointerMoved += (sender, args) => _isUserDragging = true;
-        TrackPositionSlider.PointerCaptureLost += (sender, args) => _isUserDragging = false;
-        
+        TrackPositionSlider.PointerCaptureLost += (sender, args) =>
+        {
+            _isUserDragging = false;
+            trackSliderPressed = false;
+        };
+        TrackPositionSlider.PointerExited += (sender, args) =>
+        {
+            Console.WriteLine(trackSliderPressed);
+            if(!trackSliderPressed)
+                _isUserDragging = false;
+        };
+
         TrackPositionSlider.ValueChanged += TrackPositionChange;
         _logger.LogInformation("MainWindow initialized");
     }
@@ -96,7 +108,10 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(() =>
             {
                 if (!_isUserDragging)
+                {
+                    Console.WriteLine(_playlistManager.MediaPlayer.GetPosition());
                     TrackPositionSlider.Value = _playlistManager.MediaPlayer.GetPosition();
+                }
             });
     }
 
@@ -104,7 +119,7 @@ public partial class MainWindow : Window
     {
         var playingPlaylist = _playlistManager.PlayingPlaylist;
         if (playingPlaylist == null) return;
-    
+
         if (playingPlaylist.Paused)
         {
             _playlistManager.ResumePlaylist();
@@ -156,6 +171,7 @@ public partial class MainWindow : Window
         if (_playlistManager.MediaPlayer.CurrentTrack != null)
             TrackPositionSlider.Maximum = _playlistManager.MediaPlayer.CurrentTrack.Metadata.Duration.TotalSeconds;
         TrackPositionSlider.Value = 0;
+        Console.WriteLine(111);
     }
 
     private void UpdatePauseButtonImage(bool pause)
@@ -210,6 +226,7 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(UpdateTrackInfo);
             return;
         }
+
         TrackName.Content = _playlistManager.CurrentTrack?.Metadata.TrackName;
         ArtistName.Content = _playlistManager.CurrentTrack?.Metadata.Artist;
     }
