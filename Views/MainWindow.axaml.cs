@@ -27,7 +27,7 @@ public partial class MainWindow : Window
 
     private readonly Timer _timer;
 
-    private bool _isUserDragging = true;
+    private bool _isUserDragging;
 
     private readonly Image _playButtonImage = new()
     {
@@ -67,8 +67,9 @@ public partial class MainWindow : Window
         Dispatcher.UIThread.Post(async void () =>
             VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
 
-        TrackPositionSlider.PointerEntered += (sender, args) => _isUserDragging = true;
-        TrackPositionSlider.PointerReleased += (sender, args) => _isUserDragging = false;
+        TrackPositionSlider.PointerMoved += (sender, args) => _isUserDragging = true;
+        TrackPositionSlider.PointerCaptureLost += (sender, args) => _isUserDragging = false;
+        
         TrackPositionSlider.ValueChanged += TrackPositionChange;
         _logger.LogInformation("MainWindow initialized");
     }

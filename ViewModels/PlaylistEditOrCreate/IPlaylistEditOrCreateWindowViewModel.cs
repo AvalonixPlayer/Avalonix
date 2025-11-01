@@ -10,5 +10,6 @@ public interface IPlaylistEditOrCreateWindowViewModel
 {
     ISecondWindowStrategy Strategy { get; }
     Task<List<string>?> OpenTrackFileDialogAsync(Window parent);
+    Task<string?> OpenObservingDirectoryDialogAsync(Window parent);
     Task ExecuteAsync(string playlistName, List<Track> tracksPaths, string? observingDirectory);
 }

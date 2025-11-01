@@ -17,6 +17,8 @@ public partial class PlaylistCreateWindow : Window
 {
     private readonly IPlaylistEditOrCreateWindowViewModel _vm;
     private readonly ILogger<WindowManager> _logger;
+    
+    private string? _observingDirectory;
         
     public PlaylistCreateWindow(ILogger<WindowManager> logger, IPlaylistEditOrCreateWindowViewModel vm)
     {
@@ -54,6 +56,13 @@ public partial class PlaylistCreateWindow : Window
             _logger.LogError("Error when adding songs: {ex}", ex.Message);
         }
     }
+    
+    private async void ObservingDirectory_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var observingDirectory = await _vm.OpenObservingDirectoryDialogAsync(this);
+        if(string.IsNullOrEmpty(observingDirectory)) return;
+        _observingDirectory = observingDirectory;
+    }
 
     private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -81,7 +90,7 @@ public partial class PlaylistCreateWindow : Window
             var items = NewSongBox.Items.OfType<string>().ToList();
             List<Track> tracks = [];
             items.ForEach(item => tracks.Add(new Track(item)));
-            await _vm.ExecuteAsync(name, tracks, ObservingDirectory.Text);
+            await _vm.ExecuteAsync(name, tracks, _observingDirectory);
             Close();
         }
         catch (Exception ex)

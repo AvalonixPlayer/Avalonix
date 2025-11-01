@@ -32,6 +32,12 @@ public class PlaylistEditOrCreateWindowViewModel(
         ]
     };
 
+    private readonly FolderPickerOpenOptions _folderPickerOptions = new()
+    {
+        Title = "Select observing directory",
+        AllowMultiple = false
+    };
+
     public ISecondWindowStrategy Strategy => strategy;
 
     public async Task<List<string>?> OpenTrackFileDialogAsync(Window parent)
@@ -60,6 +66,32 @@ public class PlaylistEditOrCreateWindowViewModel(
         catch (Exception ex)
         {
             logger.LogError("Error opening file dialog: {ex}", ex.Message);
+            return null;
+        }
+    }
+    
+    public async Task<string?> OpenObservingDirectoryDialogAsync(Window parent)
+    {
+        try
+        {
+            var storageProvider = parent.StorageProvider;
+
+            logger.LogInformation("Opening observing directory dialog");
+
+            var directory = (await storageProvider.OpenFolderPickerAsync(_folderPickerOptions))[0].Path.LocalPath;
+            
+            if (string.IsNullOrEmpty(directory))
+            {
+                logger.LogInformation("No directory selected");
+                return null;
+            }
+
+            logger.LogInformation("Selected directory: {directory}", directory);
+            return directory;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error opening folder dialog: {ex}", ex.Message);
             return null;
         }
     }

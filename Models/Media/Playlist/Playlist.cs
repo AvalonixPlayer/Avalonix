@@ -126,9 +126,7 @@ public record Playlist
             Logger.LogDebug("Playlist {Name} has started", Name);
 
             var playing = true;
-
-            Console.WriteLine(Settings.Loop);
-
+            
             while (playing)
             {
                 for (var i = startSong; i < PlayQueue.Tracks.Count; i++)

@@ -58,7 +58,6 @@ public class PlaylistManager(
             ObservingDirectory = observingDirectory
         };
         
-        Console.WriteLine(observingDirectory is null);
         var settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
         return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }
