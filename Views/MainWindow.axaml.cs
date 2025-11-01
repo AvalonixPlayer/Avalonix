@@ -155,6 +155,7 @@ public partial class MainWindow : Window
 
         if (_playlistManager.MediaPlayer.CurrentTrack != null)
             TrackPositionSlider.Maximum = _playlistManager.MediaPlayer.CurrentTrack.Metadata.Duration.TotalSeconds;
+        TrackPositionSlider.Value = 0;
     }
 
     private void UpdatePauseButtonImage(bool pause)
