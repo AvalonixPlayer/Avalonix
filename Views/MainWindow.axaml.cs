@@ -68,7 +68,7 @@ public partial class MainWindow : Window
             VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
 
         TrackPositionSlider.PointerEntered += (sender, args) => _isUserDragging = true;
-        TrackPositionSlider.PointerExited += (sender, args) => _isUserDragging = false;
+        TrackPositionSlider.PointerReleased += (sender, args) => _isUserDragging = false;
         TrackPositionSlider.ValueChanged += TrackPositionChange;
         _logger.LogInformation("MainWindow initialized");
     }
