@@ -21,6 +21,7 @@
 - 🏗️ **Native**
 - 👨‍💻 **User-friendly**
 - ✅ **Cross-platform**
+- ⚙️ **Working with metadata**
 
 # ⬇️ **Installation**
 < In future>
