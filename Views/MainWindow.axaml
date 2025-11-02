@@ -43,6 +43,7 @@
                     <Button Name="PauseButton" Click="Pause"><Image Source="../Assets/buttons/pause.png"/></Button>
                     <Button Name="NextButton" Click="PlayNextTrack"><Image Source="../Assets/buttons/next.png"/></Button>
                     <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
+                    <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Spacing="0" Margin="0">
                     <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume"/>

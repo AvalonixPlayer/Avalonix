@@ -1,0 +1,62 @@
+using System;
+using System.IO;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonix.Models.Media.Playlist;
+using Avalonix.Models.Media.Track;
+using Avalonix.Services.PlaylistManager;
+using Avalonix.Services.WindowManager;
+using Avalonix.ViewModels.EditMetadata;
+using Microsoft.Extensions.Logging;
+
+namespace Avalonix.Views.SecondaryWindows.EditMetadataWindow;
+
+public partial class EditMetadataWindow : Window
+{
+    private readonly ILogger<WindowManager> _logger;
+    private string? _newCoverPath;
+    private readonly IEditMetadataWindowViewModel _vm;
+    private readonly Track _track;
+    private readonly IPlaylistManager _playlistManager;
+
+    public EditMetadataWindow(ILogger<WindowManager> logger, IEditMetadataWindowViewModel vm, Track track,
+        IPlaylistManager playlistManager)
+    {
+        _logger = logger;
+        _vm = vm;
+        _track = track;
+        _playlistManager = playlistManager;
+
+        InitializeComponent();
+        InitializeFields(track);
+    }
+
+    private void InitializeFields(Track track)
+    {
+        _newCoverPath = null;
+        Name.Text = track.Metadata.TrackName;
+        Artist.Text = track.Metadata.Artist;
+        Album.Text = track.Metadata.Album;
+        Genre.Text = track.Metadata.Genre;
+        Year.Text = track.Metadata.Year.ToString();
+        Lyric.Text = track.Metadata.Lyric;
+    }
+
+    private async void SelectCover(object? sender, RoutedEventArgs e)
+    {
+        _newCoverPath = await _vm.OpenTrackFileDialogAsync(this);
+        _logger.LogInformation("Change cover path to {CoverPath}", _newCoverPath);
+    }
+
+    private void Apply_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _playlistManager.MediaPlayer.Stop();
+        byte[]? cover = null;
+        if (!string.IsNullOrEmpty(_newCoverPath))
+            cover = File.ReadAllBytes(_newCoverPath);
+        _track.Metadata.RewriteTags(Name.Text!, Album.Text!, Artist.Text!, Genre.Text!, int.Parse(Year.Text!),
+            Lyric.Text!, cover);
+    }
+}

@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="Avalonix.Views.SecondaryWindows.EditMetadataWindow.EditMetadataWindow"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="500" Height="500"
+        MaxWidth="500" MaxHeight="800"
+        MinWidth="100" MinHeight="100"
+        Title="Avalonix - ">
+    <StackPanel Classes="vertical">
+        <Border>
+            <StackPanel Orientation="Vertical">
+                <Button Name="Apply" Click="Apply_OnClick">Apply</Button>
+                <Label>Title: </Label>
+                <TextBox FontWeight="DemiBold" Name="Name">Title: </TextBox>
+                <Label>Artist: </Label>
+                <TextBox FontSize="13" FontWeight="DemiBold" Name="Artist">Artist: </TextBox>
+                <Label>Album: </Label>
+                <TextBox FontSize="13" FontWeight="DemiBold" Name="Album">Album: </TextBox>
+                <Label>Genre: </Label>
+                <TextBox FontSize="13" FontWeight="DemiBold" Name="Genre">Genre: </TextBox>
+                <Label>Year: </Label>
+                <TextBox FontSize="13" FontWeight="DemiBold" Name="Year">Year: </TextBox>
+                <Label>Lyric: </Label>
+                <TextBox FontSize="13" Height="100" FontWeight="DemiBold" Name="Lyric" AcceptsReturn="True">Lyric: </TextBox>
+                <Button Name="ChangeAlbumCover" Click="SelectCover">Cover</Button>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</Window>

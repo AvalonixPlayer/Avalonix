@@ -41,16 +41,30 @@ public record TrackMetadata
             Cover = picture.Data.Data;
     }
 
-    public void RewriteTags(TrackMetadata newMetadata)
+    [Obsolete("Obsolete")]
+    public void RewriteTags(string title, string album, string artist, string genre, int year, string lyric, byte[]? cover)
     {
-        var file = File.Create(_path)!;
-        var tag = file.Tag;
-        tag.Album = newMetadata.Album!;
-        tag.Performers = [newMetadata.Artist!];
-        tag.Title = newMetadata.TrackName!;
-        tag.Genres = [newMetadata.Genre];
-        tag.Lyrics = newMetadata.Lyric;
-        tag.Year = newMetadata.Year ?? 0;
+        using var file = File.Create(_path);
+        file.Tag.Title = title;
+        file.Tag.Album = album;
+        file.Tag.Artists = [artist];
+        file.Tag.Genres = [genre];
+        file.Tag.Year = (uint)year;
+        file.Tag.Lyrics = lyric;
+            
+        file.Tag.Pictures = [];
+            
+        if (cover is { Length: > 0 })
+        {
+            var picture = new TagLib.Picture
+            {
+                Type = TagLib.PictureType.FrontCover,
+                Description = "Cover",
+                Data = new TagLib.ByteVector(cover)
+            };
+            file.Tag.Pictures = [picture];
+        }
+        
         file.Save();
     }
     

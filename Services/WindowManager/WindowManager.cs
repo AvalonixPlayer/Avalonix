@@ -5,10 +5,12 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
+using Avalonix.ViewModels.EditMetadata;
 using Avalonix.ViewModels.PlaylistEditOrCreate;
 using Avalonix.ViewModels.PlaylistSelect;
 using Avalonix.ViewModels.Strategy;
 using Avalonix.Views.SecondaryWindows.AboutWindow;
+using Avalonix.Views.SecondaryWindows.EditMetadataWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 using Avalonix.Views.SecondaryWindows.ShowTrackWindow;
@@ -67,6 +69,9 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
     public AboutWindow AboutWindow_Open() => new(logger, "v1.0.0");
 
     public ShowTrackWindow ShowTrackWindow_Open(Track track) => new(logger, track);
+    
+    public EditMetadataWindow EditMetadataWindow_Open(Track track) => new(logger, new EditMetadataWindowViewModel(logger, null!),track, playlistManager);
+    
     public PlaylistSelectWindow PlaylistDeleteWindow_Open() => 
         PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager)); 
 }

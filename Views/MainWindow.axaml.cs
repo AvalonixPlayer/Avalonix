@@ -77,8 +77,7 @@ public partial class MainWindow : Window
         };
         TrackPositionSlider.PointerExited += (sender, args) =>
         {
-            Console.WriteLine(trackSliderPressed);
-            if(!trackSliderPressed)
+            if (!trackSliderPressed)
                 _isUserDragging = false;
         };
 
@@ -108,10 +107,7 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(() =>
             {
                 if (!_isUserDragging)
-                {
-                    Console.WriteLine(_playlistManager.MediaPlayer.GetPosition());
                     TrackPositionSlider.Value = _playlistManager.MediaPlayer.GetPosition();
-                }
             });
     }
 
@@ -171,7 +167,6 @@ public partial class MainWindow : Window
         if (_playlistManager.MediaPlayer.CurrentTrack != null)
             TrackPositionSlider.Maximum = _playlistManager.MediaPlayer.CurrentTrack.Metadata.Duration.TotalSeconds;
         TrackPositionSlider.Value = 0;
-        Console.WriteLine(111);
     }
 
     private void UpdatePauseButtonImage(bool pause)
@@ -246,6 +241,19 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             _logger.LogError("Error opening track: {Error}", ex.Message);
+        }
+    }
+
+    private async void OpenEditTrackButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var currentTrack = _playlistManager.CurrentTrack;
+            if (currentTrack != null) await _windowManager.EditMetadataWindow_Open(currentTrack).ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error opening track edit: {Error}", ex.Message);
         }
     }
 
