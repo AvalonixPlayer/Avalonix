@@ -52,10 +52,9 @@ public record TrackMetadata
         file.Tag.Year = (uint)year;
         file.Tag.Lyrics = lyric;
             
-        file.Tag.Pictures = [];
-            
-        if (cover is { Length: > 0 })
+        if (cover != null)
         {
+            file.Tag.Pictures = [];
             var picture = new TagLib.Picture
             {
                 Type = TagLib.PictureType.FrontCover,
