@@ -25,8 +25,10 @@ public record Playlist
     private readonly Random _random = new();
     private CancellationTokenSource? _cancellationTokenSource;
     public bool Paused => Player.IsPaused;
+    private bool _compleated = false;
 
-    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger, PlaySettings settings)
+    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
+        PlaySettings settings)
     {
         Name = name;
         PlaylistData = playlistData;
@@ -125,9 +127,7 @@ public record Playlist
             var cancellationToken = _cancellationTokenSource.Token;
             Logger.LogDebug("Playlist {Name} has started", Name);
 
-            var playing = true;
-            
-            while (playing)
+            while (true)
             {
                 for (var i = startSong; i < PlayQueue.Tracks.Count; i++)
                 {
@@ -135,20 +135,22 @@ public record Playlist
 
                     PlayQueue.PlayingIndex = i;
                     var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
-                    
+
                     UpdateLastListen();
                     UpdateRarity(ref track);
 
                     Player.Play(track);
 
-                    while (!Player.IsFree && !cancellationToken.IsCancellationRequested) await Task.Delay(1000, cancellationToken);
+                    while (!Player.IsFree && !cancellationToken.IsCancellationRequested)
+                        await Task.Delay(1000, cancellationToken);
 
                     if (cancellationToken.IsCancellationRequested) break;
                 }
 
                 if (Settings.Loop) continue;
-                playing = false;
                 Logger.LogDebug("Playlist {Name} completed", Name);
+                _compleated = true;
+                break;
             }
 
             if (!cancellationToken.IsCancellationRequested)
@@ -175,13 +177,22 @@ public record Playlist
 
     public void NextTrack()
     {
-        if (PlayQueue.PlayingIndex >= PlayQueue.Tracks.Count - 1)
+        if (_compleated)
         {
             PlayQueue.FillQueue(PlaylistData);
-            _ = Play(PlayQueue.PlayingIndex);
+            _ = Play();
+            _compleated = false;
+            return;
+        }
+
+        if (PlayQueue.PlayingIndex + 1 >= PlayQueue.Tracks.Count)
+        {
+            PlayQueue.FillQueue(PlaylistData);
+            _ = Play();
         }
         else
             _ = Play(PlayQueue.PlayingIndex + 1);
+        Logger.LogDebug("User skipped track");
     }
 
     public void BackTrack() =>

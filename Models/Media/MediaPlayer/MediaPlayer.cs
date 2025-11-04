@@ -15,9 +15,9 @@ public class MediaPlayer : IMediaPlayer
 
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
     public bool IsPaused => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_PAUSED;
-    
+
     public Track.Track? CurrentTrack { get; private set; }
-    
+
     public event Action<bool>? PlaybackStateChanged;
     public event Action? TrackChanged;
 
@@ -25,28 +25,32 @@ public class MediaPlayer : IMediaPlayer
     {
         _logger = logger;
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-        Task.Run(async () =>
-        {
-             _currentVolume = (await settingsManager.GetSettings()).Avalonix.Volume / 100F;
-        });
+        Task.Run(async () => _currentVolume = (await settingsManager.GetSettings()).Avalonix.Volume / 100F);
     }
 
     public void Play(Track.Track track)
     {
         CurrentTrack = track;
         Bass.BASS_StreamFree(_stream);
-        _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
-        
+        try
+        {
+            _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Create stream error: {e}",e.Message);
+        }
+
         if (_stream == 0)
         {
             _logger.LogError("Could not create stream {TrackDataPath}", track.TrackData.Path);
             return;
         }
-        
+
         Bass.BASS_ChannelPlay(_stream, true);
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, _currentVolume);
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
-        
+
         PlaybackStateChanged?.Invoke(false);
         TrackChanged?.Invoke();
     }
@@ -84,7 +88,7 @@ public class MediaPlayer : IMediaPlayer
 
     public double GetPosition() =>
         Bass.BASS_ChannelBytes2Seconds(_stream, Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE));
-    
+
     public void SetPosition(double position) =>
         Bass.BASS_ChannelSetPosition(_stream, Bass.BASS_ChannelSeconds2Bytes(_stream, position));
 }
