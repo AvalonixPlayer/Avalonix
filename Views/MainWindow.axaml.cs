@@ -49,26 +49,27 @@ public partial class MainWindow : Window
         _playlistManager = playlistManager;
         _windowManager = windowManager;
 
+        InitializeComponent();
+        
         _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
-
+        
         _playlistManager.TrackChanged += UpdateAlbumCover;
         _playlistManager.TrackChanged += UpdateSongBox;
         _playlistManager.TrackChanged += UpdateTrackPositionSlider;
         _playlistManager.TrackChanged += UpdateTrackInfo;
-
+        
         _timer = new Timer(1000);
         _timer.Elapsed += UpdateTrackPositionSlider;
-
         _timer.AutoReset = true;
         _timer.Enabled = true;
         _timer.Start();
-
-        InitializeComponent();
+        
+        SongBox.Tapped += SongBox_OnSelectionChanged;
+        
         Dispatcher.UIThread.Post(async void () =>
             VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
 
         var trackSliderPressed = true;
-
         TrackPositionSlider.PointerMoved += (sender, args) => _isUserDragging = true;
         TrackPositionSlider.PointerCaptureLost += (sender, args) =>
         {
@@ -80,8 +81,8 @@ public partial class MainWindow : Window
             if (!trackSliderPressed)
                 _isUserDragging = false;
         };
-
         TrackPositionSlider.ValueChanged += TrackPositionChange;
+        
         _logger.LogInformation("MainWindow initialized");
     }
 
@@ -145,7 +146,7 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(UpdateSongBox);
             return;
         }
-
+        
         if (_playlistManager.PlayingPlaylist?.PlayQueue.Tracks == null)
         {
             _logger.LogError("Play queue is empty");
@@ -266,6 +267,24 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             _logger.LogError("Error opening track: {Error}", ex.Message);
+        }
+    }
+
+    private void SongBox_OnSelectionChanged(object? sender, TappedEventArgs tappedEventArgs)
+    {
+        try
+        {
+            var castedSender = (ListBox)sender!;
+            _logger.LogInformation(castedSender.SelectedItem?.ToString());
+            var selectedTrack = castedSender.SelectedItem?.ToString();
+            if(selectedTrack != null)
+                _playlistManager.ForceStartTrackByName(selectedTrack);
+            else
+                _logger.LogError("No track selected");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error while force starting song: {ex}", ex.Message);
         }
     }
 }

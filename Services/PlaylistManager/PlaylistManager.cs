@@ -122,5 +122,6 @@ public class PlaylistManager(
     public void NextTrack() => PlayingPlaylist?.NextTrack();
 
     public void TrackBefore() => PlayingPlaylist?.BackTrack();
-    
+
+    public void ForceStartTrackByName(string name) => PlayingPlaylist?.ForceStartTrackByName(name);
 }

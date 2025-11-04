@@ -27,4 +27,5 @@ public interface IPlaylistManager
     event Action<bool> PlaybackStateChanged;
     event Action TrackChanged;
     Task<List<Playlist>> GetAllPlaylists();
+    void ForceStartTrackByName(string name);
 }
