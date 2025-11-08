@@ -321,6 +321,7 @@ public partial class MainWindow : Window
 
     private void SongBox_OnSelectionChanged(object? sender, TappedEventArgs tappedEventArgs)
     {
+        /* Later
         try
         {
             var castedSender = (ListBox)sender!;
@@ -335,6 +336,7 @@ public partial class MainWindow : Window
         {
             _logger.LogError("Error while force starting song: {ex}", ex.Message);
         }
+        */
     }
 
     private string PostProcessedText(string? enterText, int maxSymbols)
