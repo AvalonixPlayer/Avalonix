@@ -147,7 +147,11 @@ public record Playlist
                     if (cancellationToken.IsCancellationRequested) break;
                 }
 
-                if (Settings.Loop) continue;
+                if (Settings.Loop)
+                {
+                    startSong = 0;
+                    continue;
+                }
                 Logger.LogDebug("Playlist {Name} completed", Name);
                 _compleated = true;
                 break;
