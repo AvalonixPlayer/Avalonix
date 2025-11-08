@@ -28,7 +28,8 @@
         <Border Grid.Row="1" Grid.Column="0" Height="70">
             <StackPanel Classes="horizontal">
                 <Button Click="AboutButton_OnClick" Content="?"/> 
-                <Button Click="SnuffleButton_OnClick" Content="?/*"/> 
+                <Button Click="ShuffleButton_OnClick" Name="Shuffle"><Image Source="../Assets/buttons/EnableSnuffle.png"/></Button>
+                <Button Click="LoopButton_OnClick" Name="Loop"><Image Source="../Assets/buttons/EnableLoop.png"/></Button>
             </StackPanel>
         </Border> 
         

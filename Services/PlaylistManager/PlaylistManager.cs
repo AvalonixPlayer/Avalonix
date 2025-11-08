@@ -25,13 +25,21 @@ public class PlaylistManager(
     private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
     public Track? CurrentTrack => player.CurrentTrack;
+    
     private readonly Settings _settings = settingsManager.Settings!;
 
     public void ResetSnuffle()
     {
         logger.LogDebug("Changing shuffle mode");
-        _settings.Avalonix.PlaySettings = _settings.Avalonix.PlaySettings 
-            with { Shuffle = !_settings.Avalonix.PlaySettings.Shuffle };
+        _settings.Avalonix.SuffleChanged?.Invoke(!_settings.Avalonix.PlaySettings.Shuffle);
+        _settings.Avalonix.PlaySettings.Shuffle = !_settings.Avalonix.PlaySettings.Shuffle;
+    }
+
+    public void ResetLoop()
+    {
+        logger.LogDebug("Changing loop mode");
+        _settings.Avalonix.LoopChanged?.Invoke(!_settings.Avalonix.PlaySettings.Loop);
+        _settings.Avalonix.PlaySettings.Loop = !_settings.Avalonix.PlaySettings.Loop;
     }
 
     public event Action<bool> PlaybackStateChanged
@@ -44,6 +52,18 @@ public class PlaylistManager(
     {
         add => player.TrackChanged += value;
         remove => player.TrackChanged -= value;
+    }
+    
+    public event Action<bool> ShuffleChanged
+    {
+        add => _settings.Avalonix.SuffleChanged += value;
+        remove => _settings.Avalonix.SuffleChanged -= value;
+    }
+    
+    public event Action<bool> LoopChanged
+    {
+        add => _settings.Avalonix.LoopChanged += value;
+        remove => _settings.Avalonix.LoopChanged -= value;
     }
 
     public async Task<List<Playlist>> GetAllPlaylists() => await diskManager.GetAllPlaylists(); 

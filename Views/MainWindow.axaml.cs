@@ -41,6 +41,30 @@ public partial class MainWindow : Window
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/pause.png")))
     };
 
+    private readonly Image _enableShuffleImage = new()
+    {
+        Source =
+            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/EnableSnuffle.png")))
+    };
+    
+    private readonly Image _disableShuffleImage = new()
+    {
+        Source =
+            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/DisableSnuffle.png")))
+    };
+    
+    private readonly Image _enableLoopImage = new()
+    {
+        Source =
+            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/EnableLoop.png")))
+    };
+    
+    private readonly Image _disableLoopImage = new()
+    {
+        Source =
+            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/DisableLoop.png")))
+    };
+    
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
         ISettingsManager settingsManager, IPlaylistManager playlistManager, IWindowManager windowManager)
     {
@@ -57,7 +81,11 @@ public partial class MainWindow : Window
         _playlistManager.TrackChanged += UpdateSongBox;
         _playlistManager.TrackChanged += UpdateTrackPositionSlider;
         _playlistManager.TrackChanged += UpdateTrackInfo;
-
+        _playlistManager.ShuffleChanged += UpdateShuffleButtonImage;
+        _playlistManager.LoopChanged +=  UpdateLoopButtonImage;
+        UpdateShuffleButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Shuffle);
+        UpdateLoopButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Loop);
+        
         _timer = new Timer(1000);
         _timer.Elapsed += UpdateTrackPositionSlider;
         _timer.AutoReset = true;
@@ -118,13 +146,9 @@ public partial class MainWindow : Window
         if (playingPlaylist == null) return;
 
         if (playingPlaylist.Paused)
-        {
             _playlistManager.ResumePlaylist();
-        }
         else
-        {
             _playlistManager.PausePlaylist();
-        }
     }
 
     private void PlayNextTrack(object sender, RoutedEventArgs e) =>
@@ -230,7 +254,32 @@ public partial class MainWindow : Window
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
         _windowManager.AboutWindow_Open().ShowDialog(this);
 
-    private void SnuffleButton_OnClick(object? sender, RoutedEventArgs e) => _playlistManager.ResetSnuffle();
+    private void ShuffleButton_OnClick(object? sender, RoutedEventArgs e) =>
+        _playlistManager.ResetSnuffle();
+    private void LoopButton_OnClick(object? sender, RoutedEventArgs e) =>
+        _playlistManager.ResetLoop();
+
+    private void UpdateShuffleButtonImage(bool enable)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => UpdateShuffleButtonImage(enable));
+            return;
+        }
+
+        Shuffle.Content = !enable ? _enableShuffleImage : _disableShuffleImage;
+    }
+    
+    private void UpdateLoopButtonImage(bool enable)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => UpdateLoopButtonImage(enable));
+            return;
+        }
+
+        Loop.Content = !enable ? _enableLoopImage : _disableLoopImage;
+    }
 
     private async void OpenTrackButton_OnClick(object? sender, RoutedEventArgs e)
     {

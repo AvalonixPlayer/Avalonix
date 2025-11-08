@@ -82,7 +82,7 @@ public class MediaPlayer : IMediaPlayer
     public Task ChangeVolume(uint volume)
     {
         var vol = _settingsManager.Settings!.Avalonix.Volume = volume;
-        Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, vol);
+        Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, vol / 100F);
         return Task.CompletedTask;
     }
 

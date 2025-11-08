@@ -24,8 +24,11 @@ public interface IPlaylistManager
     void TrackBefore();
     Task ChangeVolume(uint volume);
     void ResetSnuffle();
+    void ResetLoop();
     event Action<bool> PlaybackStateChanged;
     event Action TrackChanged;
+    event Action<bool> ShuffleChanged;
+    event Action<bool> LoopChanged;
     Task<List<Playlist>> GetAllPlaylists();
     void ForceStartTrackByName(string name);
 }
