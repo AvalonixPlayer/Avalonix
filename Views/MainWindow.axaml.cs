@@ -50,22 +50,22 @@ public partial class MainWindow : Window
         _windowManager = windowManager;
 
         InitializeComponent();
-        
+
         _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
-        
+
         _playlistManager.TrackChanged += UpdateAlbumCover;
         _playlistManager.TrackChanged += UpdateSongBox;
         _playlistManager.TrackChanged += UpdateTrackPositionSlider;
         _playlistManager.TrackChanged += UpdateTrackInfo;
-        
+
         _timer = new Timer(1000);
         _timer.Elapsed += UpdateTrackPositionSlider;
         _timer.AutoReset = true;
         _timer.Enabled = true;
         _timer.Start();
-        
+
         SongBox.Tapped += SongBox_OnSelectionChanged;
-        
+
         Dispatcher.UIThread.Post(async void () =>
             VolumeSlider.Value = (await settingsManager.GetSettings()).Avalonix.Volume);
 
@@ -82,7 +82,7 @@ public partial class MainWindow : Window
                 _isUserDragging = false;
         };
         TrackPositionSlider.ValueChanged += TrackPositionChange;
-        
+
         _logger.LogInformation("MainWindow initialized");
     }
 
@@ -146,7 +146,7 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(UpdateSongBox);
             return;
         }
-        
+
         if (_playlistManager.PlayingPlaylist?.PlayQueue.Tracks == null)
         {
             _logger.LogError("Play queue is empty");
@@ -161,7 +161,7 @@ public partial class MainWindow : Window
     {
         if (!Dispatcher.UIThread.CheckAccess())
         {
-            Dispatcher.UIThread.Post(() => UpdateTrackPositionSlider());
+            Dispatcher.UIThread.Post(UpdateTrackPositionSlider);
             return;
         }
 
@@ -223,8 +223,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        TrackName.Content = _playlistManager.CurrentTrack?.Metadata.TrackName;
-        ArtistName.Content = _playlistManager.CurrentTrack?.Metadata.Artist;
+        TrackName.Content = PostProcessedText(_playlistManager.CurrentTrack?.Metadata.TrackName, 13);
+        ArtistName.Content = PostProcessedText(_playlistManager.CurrentTrack?.Metadata.Artist, 13);
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
@@ -277,7 +277,7 @@ public partial class MainWindow : Window
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
             var selectedTrack = castedSender.SelectedItem?.ToString();
-            if(selectedTrack != null)
+            if (selectedTrack != null)
                 _playlistManager.ForceStartTrackByName(selectedTrack);
             else
                 _logger.LogError("No track selected");
@@ -286,5 +286,11 @@ public partial class MainWindow : Window
         {
             _logger.LogError("Error while force starting song: {ex}", ex.Message);
         }
+    }
+
+    private string PostProcessedText(string? enterText, int maxSymbols)
+    {
+        if (enterText.Length <= maxSymbols) return enterText;
+        return string.Concat(enterText.AsSpan(0, maxSymbols - 3), "...");
     }
 }
