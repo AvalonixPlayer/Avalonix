@@ -25,7 +25,7 @@ public class PlaylistManager(
     private CancellationTokenSource? _globalCancellationTokenSource;
     public bool IsPaused { get; } = player.IsPaused;
     public Track? CurrentTrack => player.CurrentTrack;
-    private readonly Settings _settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
+    private readonly Settings _settings = settingsManager.Settings!;
 
     public void ResetSnuffle()
     {
@@ -57,8 +57,8 @@ public class PlaylistManager(
             ObserveDirectory = observingDirectory is not null,
             ObservingDirectory = observingDirectory
         };
-        
-        var settings = Task.Run(async () => await settingsManager.GetSettings()).Result;
+
+        var settings = settingsManager.Settings!;
         return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }
 

@@ -25,6 +25,7 @@ public class DiskWriter(ILogger logger) : IDiskWriter
 
         try
         {
+            var json = JsonSerializer.Serialize(obj, _jsonSerializerOptions);
             await File.WriteAllTextAsync(path, JsonSerializer.Serialize(obj, _jsonSerializerOptions));
         }
         catch (Exception e)

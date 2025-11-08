@@ -22,7 +22,9 @@ public class DiskLoader(ILogger logger) : IDiskLoader
 
         try
         {
-            return JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), _jsonSerializerOptions)!;
+            var result = JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(path), _jsonSerializerOptions);
+            Console.WriteLine($"{result is null} {typeof(T).Name}");
+            return result ?? default;
         }
         catch (Exception ex)
         {

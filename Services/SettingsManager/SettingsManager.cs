@@ -10,30 +10,45 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.SettingsManager;
 
-public class SettingsManager(IDiskWriter writer,IDiskLoader loader,ILogger logger) : ISettingsManager
+public class SettingsManager : ISettingsManager
 {
     private static string SettingsPath { get; } =
         Path.Combine(DiskManager.AvalonixFolderPath, "settings" + DiskManager.Extension);
+    private readonly IDiskWriter _diskWriter;
+    private readonly IDiskLoader _diskLoader;
+    private readonly ILogger _logger;
     
-    public async Task SaveSettings(Settings settings)
+    public Settings? Settings { get; }
+
+    public SettingsManager(IDiskWriter writer,IDiskLoader loader,ILogger logger)
     {
-        await writer.WriteAsync(settings, SettingsPath);
-        logger.LogInformation("Settings saved");
+        _diskWriter = writer;
+        _diskLoader = loader;
+        _logger = logger;
+        Settings = Task.Run(async () => await GetSettings()).Result;
     }
     
-    public async Task<Settings> GetSettings()
+    public async Task SaveSettings()
+    {
+        await _diskWriter.WriteAsync(Settings, SettingsPath);
+        _logger.LogInformation("Settings saved");
+    }
+
+    private async Task<Settings> GetSettings()
     {
         try
         {
-            var result = await loader.LoadAsync<Settings>(SettingsPath);
-            if (result != null) return result;
-            await SaveSettings(new Settings());
-            result = await loader.LoadAsync<Settings>(SettingsPath);
-            return result!;
+            if (!Path.Exists(SettingsPath))
+            {
+                await File.Create(SettingsPath).DisposeAsync();
+                await _diskWriter.WriteAsync(new Settings(), SettingsPath);
+            }
+            var result = await _diskLoader.LoadAsync<Settings>(SettingsPath);
+            return result ?? default!;
         }
         catch (Exception e)
         {
-            logger.LogWarning("Catch warning while getting settings: {Ex}", e.Message);
+            _logger.LogWarning("Catch warning while getting settings: {Ex}", e.Message);
             throw;
         }
     }

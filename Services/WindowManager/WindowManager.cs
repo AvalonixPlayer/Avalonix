@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.Models.Media.Track;
+using Avalonix.Models.UserSettings;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels.EditMetadata;
@@ -30,8 +31,7 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
     {
         try
         {
-            var settings = await settingsManager.GetSettings();
-            await settingsManager.SaveSettings(settings);
+            await settingsManager.SaveSettings();
             CloseMainWindow();
         }
         catch (Exception ex)

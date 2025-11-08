@@ -10,8 +10,8 @@ namespace Avalonix.Models.Media.MediaPlayer;
 public class MediaPlayer : IMediaPlayer
 {
     private int _stream;
-    private float _currentVolume = 1.0f;
     private readonly ILogger _logger;
+    private readonly ISettingsManager _settingsManager;
 
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
     public bool IsPaused => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_PAUSED;
@@ -24,8 +24,8 @@ public class MediaPlayer : IMediaPlayer
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
         _logger = logger;
+        _settingsManager = settingsManager;
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-        Task.Run(async () => _currentVolume = (await settingsManager.GetSettings()).Avalonix.Volume / 100F);
     }
 
     public void Play(Track.Track track)
@@ -48,7 +48,7 @@ public class MediaPlayer : IMediaPlayer
         }
 
         Bass.BASS_ChannelPlay(_stream, true);
-        Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, _currentVolume);
+        Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, _settingsManager.Settings!.Avalonix.Volume / 100F);
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
 
         PlaybackStateChanged?.Invoke(false);
@@ -81,8 +81,8 @@ public class MediaPlayer : IMediaPlayer
 
     public Task ChangeVolume(uint volume)
     {
-        _currentVolume = volume / 100F;
-        Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, volume / 100F);
+        var vol = _settingsManager.Settings!.Avalonix.Volume = volume;
+        Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, vol);
         return Task.CompletedTask;
     }
 
