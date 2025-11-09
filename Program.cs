@@ -12,7 +12,7 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        if (!Directory.GetFiles(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)!).Contains("bass.dll"))
+        if (!Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!).Contains("bass.dll"))
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Error: bass.dll not found!");
@@ -20,6 +20,7 @@ internal static class Program
             Console.ReadLine();
             Environment.Exit(1);
         }
+
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
