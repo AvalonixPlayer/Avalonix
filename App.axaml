@@ -7,6 +7,6 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
     <Application.Styles>
-        <StyleInclude Source="avares://Avalonix/Styles/Gray.axaml"/>
+        <StyleInclude Source="avares://Avalonix/Styles/Purple.axaml"/>
     </Application.Styles>
 </Application>

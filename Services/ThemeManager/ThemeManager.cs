@@ -25,5 +25,5 @@ public class ThemeManager : IThemeManager
         return _styles;
     }
     
-    public Styles ResetTheme() => LoadTheme("Default");
+    public Styles ResetTheme() => LoadTheme("Purple");
 }

@@ -95,9 +95,9 @@ public partial class MainWindow : Window
         SongBox.Tapped += SongBox_OnSelectionChanged;
 
         Dispatcher.UIThread.Post(void () =>
-            VolumeSlider.Value = (settingsManager.Settings!).Avalonix.Volume);
+            VolumeSlider.Value = settingsManager.Settings!.Avalonix.Volume);
 
-        var trackSliderPressed = true;
+        var trackSliderPressed = false;
         TrackPositionSlider.PointerMoved += (sender, args) => _isUserDragging = true;
         TrackPositionSlider.PointerCaptureLost += (sender, args) =>
         {
