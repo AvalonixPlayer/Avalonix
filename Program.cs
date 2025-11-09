@@ -12,7 +12,9 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        if (!Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!).Contains("bass.dll"))
+        var containtBassDll = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!)
+            .Contains(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "bass.dll"));
+        if (!containtBassDll)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Error: bass.dll not found!");
