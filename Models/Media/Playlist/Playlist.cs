@@ -25,7 +25,7 @@ public record Playlist
     private readonly Random _random = new();
     private CancellationTokenSource? _cancellationTokenSource;
     public bool Paused => Player.IsPaused;
-    private bool _compleated = false;
+    private bool _compleated;
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
         PlaySettings settings)
@@ -103,21 +103,7 @@ public record Playlist
         Logger.LogDebug("Playlist saved {playlistName}", Name);
         await Disk.SavePlaylist(this);
     }
-
-    private void UpdateLastListen()
-    {
-        Logger.LogDebug("Updated last listen info of playlist {playlistName}", Name);
-        PlaylistData.LastListen = DateTime.Now.Date;
-    }
-
-    private void UpdateRarity(ref Track.Track track)
-    {
-        Logger.LogDebug("Updated rarity of playlist {playlistName} and track {trackName} in it", Name,
-            track.Metadata.TrackName);
-        PlaylistData.Rarity++;
-        track.IncreaseRarity(1);
-    }
-
+    
     public async Task Play(int startSong = 0)
     {
         while (true)
@@ -136,8 +122,12 @@ public record Playlist
                     PlayQueue.PlayingIndex = i;
                     var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
 
-                    UpdateLastListen();
-                    UpdateRarity(ref track);
+                    PlaylistData.LastListen = DateTime.Now.Date;
+                    
+                    PlaylistData.Rarity++;
+                    track.IncreaseRarity(1);
+                    
+                    track.UpdateLastListenDate();
 
                     Player.Play(track);
 

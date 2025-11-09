@@ -48,7 +48,7 @@ public class MediaPlayer : IMediaPlayer
         }
 
         Bass.BASS_ChannelPlay(_stream, true);
-        Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, _settingsManager.Settings!.Avalonix.Volume / 100F);
+        ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
         _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
 
         PlaybackStateChanged?.Invoke(false);
