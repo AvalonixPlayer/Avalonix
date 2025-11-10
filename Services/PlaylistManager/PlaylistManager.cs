@@ -143,5 +143,5 @@ public class PlaylistManager(
 
     public void TrackBefore() => PlayingPlaylist?.BackTrack();
 
-    public void ForceStartTrackByName(string name) => PlayingPlaylist?.ForceStartTrackByName(name);
+    public void ForceStartTrackByIndex(int index) => PlayingPlaylist?.ForceStartTrackByIndex(index);
 }

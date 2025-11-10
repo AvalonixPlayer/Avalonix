@@ -189,8 +189,8 @@ public record Playlist
         Logger.LogDebug("User skipped track");
     }
 
-    public void ForceStartTrackByName(string name) =>
-        _ = Play(PlayQueue.Tracks.TakeWhile(track => track.Metadata.TrackName != name).Count());
+    public void ForceStartTrackByIndex(int index) =>
+        _ = Play(index);
 
     public void BackTrack() =>
         _ = PlayQueue.PlayingIndex - 1 <= 0 ? Play() : Play(PlayQueue.PlayingIndex - 1);

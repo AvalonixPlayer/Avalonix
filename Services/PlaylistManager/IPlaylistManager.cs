@@ -30,5 +30,5 @@ public interface IPlaylistManager
     event Action<bool> ShuffleChanged;
     event Action<bool> LoopChanged;
     Task<List<Playlist>> GetAllPlaylists();
-    void ForceStartTrackByName(string name);
+    void ForceStartTrackByIndex(int index);
 }

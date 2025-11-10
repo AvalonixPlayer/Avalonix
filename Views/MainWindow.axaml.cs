@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Timers;
@@ -321,14 +322,14 @@ public partial class MainWindow : Window
 
     private void SongBox_OnSelectionChanged(object? sender, TappedEventArgs tappedEventArgs)
     {
-        /* Later
         try
         {
             var castedSender = (ListBox)sender!;
-            _logger.LogInformation(castedSender.SelectedItem?.ToString());
-            var selectedTrack = castedSender.SelectedItem?.ToString();
+            _logger.LogInformation(castedSender.SelectedIndex.ToString());
+            var selectedIndex = castedSender.SelectedIndex;
+            var selectedTrack = _playlistManager.PlayingPlaylist?.PlayQueue.Tracks[selectedIndex];
             if (selectedTrack != null)
-                _playlistManager.ForceStartTrackByName(selectedTrack);
+                _playlistManager.ForceStartTrackByIndex(selectedIndex);
             else
                 _logger.LogError("No track selected");
         }
@@ -336,7 +337,6 @@ public partial class MainWindow : Window
         {
             _logger.LogError("Error while force starting song: {ex}", ex.Message);
         }
-        */
     }
 
     private string PostProcessedText(string? enterText, int maxSymbols)
