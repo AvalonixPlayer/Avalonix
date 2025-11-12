@@ -1,9 +1,11 @@
 using System;
 using System.IO;
+using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.PlaylistManager;
@@ -50,13 +52,16 @@ public partial class EditMetadataWindow : Window
         _logger.LogInformation("Change cover path to {CoverPath}", _newCoverPath);
     }
 
+    [Obsolete("Obsolete")]
     private void Apply_OnClick(object? sender, RoutedEventArgs e)
     {
         _playlistManager.MediaPlayer.Stop();
         byte[]? cover = null;
         if (!string.IsNullOrEmpty(_newCoverPath))
             cover = File.ReadAllBytes(_newCoverPath);
-        _track.Metadata.RewriteTags(Name.Text!, Album.Text!, Artist.Text!, Genre.Text!, int.Parse(Year.Text!),
-            Lyric.Text!, cover);
+        new Thread(() =>
+            Dispatcher.UIThread.Invoke(() => _track.Metadata.RewriteTags(Name.Text!, Album.Text!, Artist.Text!,
+                Genre.Text!, int.Parse(Year.Text!),
+                Lyric.Text!, cover))).Start();
     }
 }

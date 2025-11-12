@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -16,6 +18,7 @@ using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
 using Avalonix.Services.WindowManager;
+using Timer = System.Timers.Timer;
 
 namespace Avalonix.Views;
 
@@ -47,25 +50,25 @@ public partial class MainWindow : Window
         Source =
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/EnableSnuffle.png")))
     };
-    
+
     private readonly Image _disableShuffleImage = new()
     {
         Source =
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/DisableSnuffle.png")))
     };
-    
+
     private readonly Image _enableLoopImage = new()
     {
         Source =
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/EnableLoop.png")))
     };
-    
+
     private readonly Image _disableLoopImage = new()
     {
         Source =
             new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/DisableLoop.png")))
     };
-    
+
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
         ISettingsManager settingsManager, IPlaylistManager playlistManager, IWindowManager windowManager)
     {
@@ -83,10 +86,11 @@ public partial class MainWindow : Window
         _playlistManager.TrackChanged += UpdateTrackPositionSlider;
         _playlistManager.TrackChanged += UpdateTrackInfo;
         _playlistManager.ShuffleChanged += UpdateShuffleButtonImage;
-        _playlistManager.LoopChanged +=  UpdateLoopButtonImage;
+        _playlistManager.LoopChanged += UpdateLoopButtonImage;
+        
         UpdateShuffleButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Shuffle);
         UpdateLoopButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Loop);
-        
+
         _timer = new Timer(1000);
         _timer.Elapsed += UpdateTrackPositionSlider;
         _timer.AutoReset = true;
@@ -178,8 +182,10 @@ public partial class MainWindow : Window
             return;
         }
 
-        SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
-            .Select(x => x.Metadata.TrackName).ToList();
+        new Thread(() =>
+            Dispatcher.UIThread.Invoke(() =>
+                SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
+                    .Select(x => PostProcessedText(x.Metadata.TrackName,30)).ToList())).Start();
     }
 
     private void UpdateTrackPositionSlider()
@@ -226,12 +232,18 @@ public partial class MainWindow : Window
 
         try
         {
-            using var memoryStream = new MemoryStream(coverData);
-            AlbumCover.Child = new Image
+            new Thread(() =>
             {
-                Source = new Bitmap(memoryStream),
-                Stretch = Stretch.UniformToFill
-            };
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    using var memoryStream = new MemoryStream(coverData);
+                    AlbumCover.Child = new Image
+                    {
+                        Source = new Bitmap(memoryStream),
+                        Stretch = Stretch.UniformToFill
+                    };
+                });
+            }).Start();
         }
         catch (Exception ex)
         {
@@ -257,6 +269,7 @@ public partial class MainWindow : Window
 
     private void ShuffleButton_OnClick(object? sender, RoutedEventArgs e) =>
         _playlistManager.ResetSnuffle();
+
     private void LoopButton_OnClick(object? sender, RoutedEventArgs e) =>
         _playlistManager.ResetLoop();
 
@@ -270,7 +283,7 @@ public partial class MainWindow : Window
 
         Shuffle.Content = !enable ? _enableShuffleImage : _disableShuffleImage;
     }
-    
+
     private void UpdateLoopButtonImage(bool enable)
     {
         if (!Dispatcher.UIThread.CheckAccess())
@@ -341,7 +354,7 @@ public partial class MainWindow : Window
 
     private string PostProcessedText(string? enterText, int maxSymbols)
     {
-        if (enterText.Length <= maxSymbols) return enterText;
+        if (enterText?.Length <= maxSymbols) return enterText;
         return string.Concat(enterText.AsSpan(0, maxSymbols - 3), "...");
     }
 }
