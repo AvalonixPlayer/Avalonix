@@ -1,0 +1,1 @@
+dotnet publish --self-contained -p:PublishSingleFile=true
