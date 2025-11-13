@@ -87,7 +87,7 @@ public partial class MainWindow : Window
         _playlistManager.TrackChanged += UpdateTrackInfo;
         _playlistManager.ShuffleChanged += UpdateShuffleButtonImage;
         _playlistManager.LoopChanged += UpdateLoopButtonImage;
-        
+
         UpdateShuffleButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Shuffle);
         UpdateLoopButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Loop);
 
@@ -182,10 +182,10 @@ public partial class MainWindow : Window
             return;
         }
 
-        new Thread(() =>
-            Dispatcher.UIThread.Invoke(() =>
+        new Task(() =>
+            Dispatcher.UIThread.Post(() =>
                 SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
-                    .Select(x => PostProcessedText(x.Metadata.TrackName,30)).ToList())).Start();
+                    .Select(x => PostProcessedText(x.Metadata.TrackName, 30)).ToList())).Start();
     }
 
     private void UpdateTrackPositionSlider()
@@ -232,9 +232,9 @@ public partial class MainWindow : Window
 
         try
         {
-            new Thread(() =>
+            new Task(() =>
             {
-                Dispatcher.UIThread.Invoke(() =>
+                Dispatcher.UIThread.Post(() =>
                 {
                     using var memoryStream = new MemoryStream(coverData);
                     AlbumCover.Child = new Image
@@ -354,7 +354,17 @@ public partial class MainWindow : Window
 
     private string PostProcessedText(string? enterText, int maxSymbols)
     {
-        if (enterText?.Length <= maxSymbols) return enterText;
-        return string.Concat(enterText.AsSpan(0, maxSymbols - 3), "...");
+        try
+        {
+            if (string.IsNullOrEmpty(enterText)) return string.Empty;
+            return enterText.Length <= maxSymbols
+                ? enterText
+                : string.Concat(enterText.AsSpan(0, maxSymbols - 3), "...");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error post process text: {mess}", e.Message);
+            return enterText ?? string.Empty;
+        }
     }
 }

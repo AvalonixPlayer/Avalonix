@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -59,8 +60,8 @@ public partial class EditMetadataWindow : Window
         byte[]? cover = null;
         if (!string.IsNullOrEmpty(_newCoverPath))
             cover = File.ReadAllBytes(_newCoverPath);
-        new Thread(() =>
-            Dispatcher.UIThread.Invoke(() => _track.Metadata.RewriteTags(Name.Text!, Album.Text!, Artist.Text!,
+        new Task(() =>
+            Dispatcher.UIThread.Post(() => _track.Metadata.RewriteTags(Name.Text!, Album.Text!, Artist.Text!,
                 Genre.Text!, int.Parse(Year.Text!),
                 Lyric.Text!, cover))).Start();
     }
