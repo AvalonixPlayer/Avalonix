@@ -1,7 +1,7 @@
 # **Avalonix** 🎵
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Nokskiy/Avalonix?style=for-the-badge&logo=github)
-![GitHub top language](https://img.shields.io/github/languages/top/Nokskiy/Avalonix?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/AvalonixPlayer/Avalonix?style=for-the-badge&logo=github)
+![GitHub top language](https://img.shields.io/github/languages/top/AvalonixPlayer/Avalonix?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/Cross_platform-blue?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Nokskiy/Avalonix?style=for-the-badge&logo=github)
 
