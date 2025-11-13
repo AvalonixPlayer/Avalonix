@@ -38,6 +38,8 @@ public class SettingsManager : ISettingsManager
     {
         try
         {
+            if(!Directory.Exists(DiskManager.AvalonixFolderPath))
+                Directory.CreateDirectory(DiskManager.AvalonixFolderPath);
             if (!Path.Exists(SettingsPath))
             {
                 await File.Create(SettingsPath).DisposeAsync();
