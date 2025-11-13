@@ -4,8 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:main="clr-namespace:Avalonix.ViewModels.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-        Width="980" Height="600" CanMaximize="True"
-        MinHeight="800" MinWidth="980" 
+        Width="1180" Height="600" CanMaximize="True"
+        MinHeight="800" MinWidth="1180"
         x:Class="Avalonix.Views.MainWindow"
         x:DataType="main:MainWindowViewModel"
         Title="Avalonix - Main Window">
