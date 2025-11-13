@@ -10,21 +10,8 @@ namespace Avalonix;
 internal static class Program
 {
     [STAThread]
-    public static void Main(string[] args)
-    {
-        var containtBassDll = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!)
-            .Contains(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "bass.dll"));
-        if (!containtBassDll)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Error: bass.dll not found!");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.ReadLine();
-            Environment.Exit(1);
-        }
-
+    public static void Main(string[] args) =>
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-    }
 
     private static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>().LogToTrace().UsePlatformDetect();
