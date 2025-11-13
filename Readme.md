@@ -3,19 +3,16 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/AvalonixPlayer/Avalonix?style=for-the-badge&logo=github)
 ![GitHub top language](https://img.shields.io/github/languages/top/AvalonixPlayer/Avalonix?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/Cross_platform-blue?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/Nokskiy/Avalonix?style=for-the-badge&logo=github)
+![GitHub last commit](https://img.shields.io/github/last-commit/AvalonixPlayer/Avalonix?style=for-the-badge&logo=github)
 
-![GitHub License](https://img.shields.io/github/license/Nokskiy/Avalonix?style=for-the-badge)
-![GitHub Repo stars](https://img.shields.io/github/stars/Nokskiy/Avalonix?style=for-the-badge&color=yellow)
-
-> [!IMPORTANT]
-> 🛠️ Release soon
+![GitHub License](https://img.shields.io/github/license/AvalonixPlayer/Avalonix?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/AvalonixPlayer/Avalonix?style=for-the-badge&color=yellow)
 
 # 📌 **About**
 
 ***Avalonix*** is a ***simple***, ***user-friendly***, ***cross-platform*** playlist player 🎧
 
-![screenshot](.github/screenshots/avalonix_screenshot.png)
+![screenshot](.github/screenshots/avalonix_screenshot.jpg)
 
 # 🌟 **Features**
 - 🏗️ **Native**
@@ -24,7 +21,11 @@
 - ⚙️ **Working with metadata**
 
 # ⬇️ **Installation**
-< In future>
+Method 1:
+Download release from our [releases](https://github.com/AvalonixPlayer/Avalonix/releases) page
+
+Method 2:
+Clone repo and use **build.bat** file
 
 # 🙏 **Support**
 Avalonix is **non-commercial** software. You can help us by **starring** this repository.
