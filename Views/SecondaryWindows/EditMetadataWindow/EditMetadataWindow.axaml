@@ -4,9 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Class="Avalonix.Views.SecondaryWindows.EditMetadataWindow.EditMetadataWindow"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Width="500" Height="500"
-        MaxWidth="500" MaxHeight="800"
-        MinWidth="100" MinHeight="100"
+        Width="500" Height="700"
+        CanResize="False"
         Title="Avalonix - ">
     <StackPanel Classes="vertical">
         <Border>
