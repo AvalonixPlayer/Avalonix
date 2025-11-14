@@ -68,8 +68,8 @@ public partial class PlaylistCreateWindow : Window
     {
         try
         {
-            var songs2Remove = NewSongBox.SelectedItems!; 
-            NewSongBox.Items.Remove(songs2Remove);
+            var songs2Remove = NewSongBox.SelectedIndex; 
+            NewSongBox.Items.RemoveAt(songs2Remove);
             _logger.LogInformation("Removed songs: {songs}", songs2Remove );
             
             if (NewSongBox.Items.Count.Equals(0)) 
