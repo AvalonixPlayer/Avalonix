@@ -80,6 +80,8 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
+        _playlistManager.PlaylistChanged += SubscribeTrackMetadataLoaded;
+        _playlistManager.PlaylistChanged += UpdateSongBox;
 
         _playlistManager.TrackChanged += UpdateAlbumCover;
         _playlistManager.TrackChanged += UpdateSongBox;
@@ -168,6 +170,12 @@ public partial class MainWindow : Window
     private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
         await _vm.PlaylistSelectWindow_Open().ShowDialog(this);
 
+    private void SubscribeTrackMetadataLoaded()
+    {
+        foreach (var track in _playlistManager.PlayingPlaylist?.PlayQueue.Tracks!)
+            track.Metadata.MetadataLoaded += UpdateSongBox;
+    }
+    
     private void UpdateSongBox()
     {
         if (!Dispatcher.UIThread.CheckAccess())
@@ -182,10 +190,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        new Task(() =>
-            Dispatcher.UIThread.Post(() =>
-                SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
-                    .Select(x => PostProcessedText(x.Metadata.TrackName, 30)).ToList())).Start();
+        SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
+            .Select(x => PostProcessedText(x.Metadata.TrackName, 30)).ToList();
     }
 
     private void UpdateTrackPositionSlider()

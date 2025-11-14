@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using File = TagLib.File;
 
 namespace Avalonix.Models.Media.Track;
@@ -16,15 +17,12 @@ public record TrackMetadata
     public string? Lyric { get; private set; }
     public TimeSpan Duration { get; private set; }
     public byte[]? Cover { get; private set; }
-    private readonly string _path;
+    private string _path = null!;
+    public Action? MetadataLoaded;
 
-    public TrackMetadata(string path)
-    {
-        _path = path;
-        FillTrackMetaData();
-    }
-
-    private void FillTrackMetaData()
+    public void Init(string path) => _path = path;
+    
+    public void FillTrackMetaData()
     {
         var track = File.Create(_path);
         TrackName = track.Tag!.Title ?? Path.GetFileNameWithoutExtension(_path);
@@ -35,10 +33,26 @@ public record TrackMetadata
         Year = track.Tag!.Year;
         Lyric = track.Tag!.Lyrics!;
         Duration = track.Properties!.Duration;
-        if (track.Tag.Pictures is not { Length: > 0 }) return;
+        if (track.Tag.Pictures is not { Length: > 0 })
+        {
+            MetadataLoaded?.Invoke();
+            return;
+        }
         var picture = track.Tag.Pictures[0];
         if (picture != null && picture.Data != null && picture.Data.Data is { Length: > 0 })
             Cover = picture.Data.Data;
+        MetadataLoaded?.Invoke();
+    }
+
+    public void Remove()
+    {
+        TrackName = null;
+        Album = null;
+        Artist = null;
+        Genre = null;
+        Year = null;
+        Lyric = null;
+        Cover = null;
     }
 
     [Obsolete("Obsolete")]

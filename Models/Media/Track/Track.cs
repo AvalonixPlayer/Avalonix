@@ -6,7 +6,7 @@ namespace Avalonix.Models.Media.Track;
 public class Track
 {
     [JsonInclude] public TrackData TrackData { get; set; } = null!;
-    [JsonIgnore] public TrackMetadata Metadata => new(TrackData.Path);
+    [JsonIgnore] public TrackMetadata Metadata = new();
 
     [JsonConstructor]
     public Track() { }

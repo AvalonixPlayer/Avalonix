@@ -25,6 +25,7 @@ public interface IPlaylistManager
     Task ChangeVolume(uint volume);
     void ResetSnuffle();
     void ResetLoop();
+    event Action? PlaylistChanged;
     event Action<bool> PlaybackStateChanged;
     event Action TrackChanged;
     event Action<bool> ShuffleChanged;

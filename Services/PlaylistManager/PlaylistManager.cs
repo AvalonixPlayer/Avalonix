@@ -27,6 +27,8 @@ public class PlaylistManager(
     public Track? CurrentTrack => player.CurrentTrack;
     
     private readonly Settings _settings = settingsManager.Settings!;
+    
+    public event Action? PlaylistChanged;
 
     public void ResetSnuffle()
     {
@@ -116,9 +118,21 @@ public class PlaylistManager(
 
             PlayingPlaylist = null;
         }
+        PlayingPlaylist?.PlayQueue.Tracks.ForEach(x => x.Metadata.Remove());
 
         PlayingPlaylist = playlist;
-
+        
+        PlaylistChanged?.Invoke();
+        
+        new Thread(() =>
+        {
+            foreach (var i in PlayingPlaylist.PlayQueue.Tracks)
+            {
+                i.Metadata.Init(i.TrackData.Path);
+                i.Metadata.FillTrackMetaData();
+            }
+        }).Start();
+        
         _ = Task.Run(async () =>
         {
             try
