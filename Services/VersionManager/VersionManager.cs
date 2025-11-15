@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -21,6 +22,16 @@ public class VersionManager : IVersionManager
             version = CutText(content, "AvalonixTAG_Version", "AvalonixTAG_Close");
         }
 
+        return new Release(version);
+    }
+
+    public async Task<Release> GetCurrentRelease()
+    {
+        string version;
+        var pathToRelease = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!,"Release");
+        if(!Path.Exists(pathToRelease)) return new Release("null");
+        var content = await File.ReadAllTextAsync(pathToRelease);
+        version = CutText(content, "AvalonixTAG_Version", "AvalonixTAG_Close");
         return new Release(version);
     }
 
