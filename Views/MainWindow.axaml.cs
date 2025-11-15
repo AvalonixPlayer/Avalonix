@@ -361,6 +361,7 @@ public partial class MainWindow : Window
                 _playlistManager.ForceStartTrackByIndex(selectedIndex);
             else
                 _logger.LogError("No track selected");
+            castedSender.Selection = null!;
         }
         catch (Exception ex)
         {
