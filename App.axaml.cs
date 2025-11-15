@@ -15,6 +15,7 @@ using Avalonix.Services;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.ThemeManager;
+using Avalonix.Services.VersionManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels;
 using Avalonix.ViewModels.Main;
@@ -42,6 +43,7 @@ public class App : Application
             services.AddTransient<IPlaylistEditOrCreateWindowViewModel, PlaylistEditOrCreateWindowViewModel>();
             services.AddTransient<IPlaylistSelectWindowViewModel, PlaylistSelectWindowViewModel>();
             services.AddTransient<MainWindow>();
+            services.AddSingleton<IVersionManager, VersionManager>();
             services.AddSingleton<ISettingsManager, SettingsManager>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();

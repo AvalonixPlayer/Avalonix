@@ -1,8 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonix.Services.VersionManager;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +14,14 @@ public partial class AboutWindow : Window
 {
     private readonly ILogger _logger;
     private const string Url = "https://github.com/AvalonixPlayer/Avalonix";
-    public AboutWindow(ILogger logger, string version)
+    public AboutWindow(ILogger logger, string version, IVersionManager versionManager)
     {
         _logger = logger;
         InitializeComponent();
+        var lastRelease = Task.Run(versionManager.GetLastRelease).Result;
         _logger.LogInformation("About window loaded");
         VersionLabel.Content = $"Version: {version}";
+        LastVersionLabel.Content = $"Last Version: {lastRelease.Version}";
     }
 
     private void OpenUrlButton_OnClick(object? sender, RoutedEventArgs e)

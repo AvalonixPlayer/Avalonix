@@ -6,6 +6,7 @@ using Avalonix.Models.Media.Track;
 using Avalonix.Models.UserSettings;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
+using Avalonix.Services.VersionManager;
 using Avalonix.ViewModels.EditMetadata;
 using Avalonix.ViewModels.PlaylistEditOrCreate;
 using Avalonix.ViewModels.PlaylistSelect;
@@ -19,7 +20,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.WindowManager;
 
-public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlaylistManager playlistManager) 
+public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlaylistManager playlistManager, IVersionManager versionManager) 
     : IWindowManager
 {
     private static void CloseMainWindow()
@@ -66,7 +67,7 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
     public PlaylistCreateWindow PlaylistEditWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
 
-    public AboutWindow AboutWindow_Open() => new(logger, "v1.0.0");
+    public AboutWindow AboutWindow_Open() => new(logger, "v1.0.0", versionManager);
 
     public ShowTrackWindow ShowTrackWindow_Open(Track track) => new(logger, track);
     
