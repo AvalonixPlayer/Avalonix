@@ -14,7 +14,7 @@ public partial class AboutWindow : Window
 {
     private readonly ILogger _logger;
     private const string Url = "https://github.com/AvalonixPlayer/Avalonix";
-    public AboutWindow(ILogger logger, string version, IVersionManager versionManager)
+    public AboutWindow(ILogger logger, IVersionManager versionManager)
     {
         _logger = logger;
         InitializeComponent();

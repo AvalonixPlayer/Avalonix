@@ -67,7 +67,7 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
     public PlaylistCreateWindow PlaylistEditWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
 
-    public AboutWindow AboutWindow_Open() => new(logger, "v1.0.0", versionManager);
+    public AboutWindow AboutWindow_Open() => new(logger, versionManager);
 
     public ShowTrackWindow ShowTrackWindow_Open(Track track) => new(logger, track);
     
