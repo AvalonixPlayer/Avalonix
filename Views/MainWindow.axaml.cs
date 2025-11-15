@@ -172,8 +172,18 @@ public partial class MainWindow : Window
 
     private void SubscribeTrackMetadataLoaded()
     {
-        foreach (var track in _playlistManager.PlayingPlaylist?.PlayQueue.Tracks!)
-            track.Metadata.MetadataLoaded += UpdateSongBox;
+        if(_playlistManager.PlayingPlaylist == null) return;
+        
+        for(var i = 0; i < _playlistManager.PlayingPlaylist!.PlayQueue.Tracks.Count; i++)
+        {
+            _playlistManager.PlayingPlaylist.PlayQueue.Tracks[i].Metadata.MetadataLoaded += UpdateSongBox;
+            var i1 = i;
+            _playlistManager.PlayingPlaylist.PlayQueue.Tracks[i].Metadata.MetadataLoaded += () =>
+            {
+                if (i1 == _playlistManager.PlayingPlaylist.PlayQueue.PlayingIndex)
+                    UpdateAlbumCover();
+            };
+        }
     }
     
     private void UpdateSongBox()

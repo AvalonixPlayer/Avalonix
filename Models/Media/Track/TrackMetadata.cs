@@ -44,17 +44,6 @@ public record TrackMetadata
         MetadataLoaded?.Invoke();
     }
 
-    public void Remove()
-    {
-        TrackName = null;
-        Album = null;
-        Artist = null;
-        Genre = null;
-        Year = null;
-        Lyric = null;
-        Cover = null;
-    }
-
     [Obsolete("Obsolete")]
     public void RewriteTags(string title, string album, string artist, string genre, int year, string lyric, byte[]? cover)
     {

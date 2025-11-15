@@ -118,7 +118,6 @@ public class PlaylistManager(
 
             PlayingPlaylist = null;
         }
-        PlayingPlaylist?.PlayQueue.Tracks.ForEach(x => x.Metadata.Remove());
 
         PlayingPlaylist = playlist;
         
