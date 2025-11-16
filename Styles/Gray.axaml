@@ -36,7 +36,7 @@
     
     <Style Selector="Window">
         <Setter Property="Background" Value="#424652"/>
-        <Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
+        <Setter Property="Icon" Value="/Assets/avalonix-logo.ico"/>
     </Style>
 
     <Style Selector="ListBox">

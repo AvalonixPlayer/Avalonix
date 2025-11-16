@@ -13,7 +13,7 @@
             <StackPanel Classes="vertical">
                 <Label FontSize="40" FontWeight="ExtraBold">Avalonix</Label>
                 <Border Background="Black">
-                    <Image Source="../../../../Assets/avalonia-logo.ico" Height="100" Width="100" />
+                    <Image Source="../../../../Assets/avalonix-logo.ico" Height="100" Width="100" />
                 </Border>
             </StackPanel>
         </Border>

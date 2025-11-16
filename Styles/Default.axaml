@@ -37,7 +37,7 @@
     <Style Selector="Window">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="TransparencyLevelHint" Value="AcrylicBlur"/>
-        <Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
+        <Setter Property="Icon" Value="/Assets/avalonix-logo.ico"/>
     </Style>
 
     <Style Selector="ListBox">

@@ -39,7 +39,7 @@ InfoAfterFile=.\bin\Release\net9.0\win-x64\publish\LICENSE
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputBaseFilename=mysetup
-SetupIconFile=.\Assets\avalonia-logo.ico
+SetupIconFile=.\Assets\avalonix-logo.ico
 SolidCompression=yes
 WizardStyle=modern dynamic polar
 
@@ -85,11 +85,12 @@ Source: ".\bin\Release\net9.0\win-x64\publish\bass.dll"; DestDir: "{app}"; Flags
 Source: ".\bin\Release\net9.0\win-x64\publish\av_libglesv2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Release\net9.0\win-x64\publish\av_libglesv2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Release\net9.0\win-x64\publish\Release"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\Assets\avalonix-logo.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\MyIcon.ico";Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
