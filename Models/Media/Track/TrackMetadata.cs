@@ -18,7 +18,9 @@ public record TrackMetadata
     public TimeSpan Duration { get; private set; }
     public byte[]? Cover { get; private set; }
     private string _path = null!;
+    
     public Action? MetadataLoaded;
+    public Action? MetadataEdited;
 
     public void Init(string path) => _path = path;
     
@@ -45,13 +47,15 @@ public record TrackMetadata
     }
 
     [Obsolete("Obsolete")]
-    public void RewriteTags(string title, string album, string artist, string genre, int year, string lyric, byte[]? cover)
+    public void RewriteTags(string title, string album, string? artist, string? genre, int year, string lyric, byte[]? cover)
     {
         using var file = File.Create(_path);
         file.Tag.Title = title;
         file.Tag.Album = album;
-        file.Tag.Artists = [artist];
-        file.Tag.Genres = [genre];
+        if(artist != null)
+            file.Tag.Artists = [artist];
+        if(genre != null)
+            file.Tag.Genres = [genre];
         file.Tag.Year = (uint)year;
         file.Tag.Lyrics = lyric;
             
@@ -68,6 +72,8 @@ public record TrackMetadata
         }
         
         file.Save();
+        FillTrackMetaData();
+        MetadataEdited?.Invoke();
     }
     
     public override string ToString()
