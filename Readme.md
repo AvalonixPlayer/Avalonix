@@ -6,7 +6,9 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/AvalonixPlayer/Avalonix?style=for-the-badge&logo=github)
 
 ![GitHub License](https://img.shields.io/github/license/AvalonixPlayer/Avalonix?style=for-the-badge)
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/AvalonixPlayer/Avalonix?style=for-the-badge&color=yellow)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/AvalonixPlayer/Avalonix/total?style=for-the-badge)
 
 # 📌 **About**
 
