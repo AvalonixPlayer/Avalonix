@@ -10,6 +10,8 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/AvalonixPlayer/Avalonix?style=for-the-badge&color=yellow)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/AvalonixPlayer/Avalonix/total?style=for-the-badge)
 
+![GitHub Release](https://img.shields.io/github/v/release/AvalonixPlayer/Avalonix?display_name=tag&style=for-the-badge)
+
 # 📌 **About**
 
 ***Avalonix*** is a ***simple***, ***user-friendly***, ***cross-platform*** playlist player 🎧
