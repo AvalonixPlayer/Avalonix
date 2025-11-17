@@ -11,17 +11,17 @@ namespace Avalonix.Models.Media.Album;
 
 public record Album
 {
-    public AlbumMetadata? Metadata { get; private set; }
-    public AlbumData? AlbumData { get; private set; }
+    private AlbumMetadata? _metadata;
+    private AlbumData? _albumData;
     public PlayQueue PlayQueue { get; }
 
     public Album(List<string> tracksPaths, IMediaPlayer player, ILogger logger, PlaySettings settings)
     {
         PlayQueue = new PlayQueue(player, logger, settings);
 
-        AlbumData = new AlbumData(tracksPaths);
-        Metadata = new AlbumMetadata(tracksPaths);
+        _metadata = new AlbumMetadata(tracksPaths);
+        _albumData = new AlbumData(tracksPaths);
         
-        PlayQueue.FillQueue(AlbumData.Tracks);
+        PlayQueue.FillQueue(_albumData.Tracks);
     }
 }
