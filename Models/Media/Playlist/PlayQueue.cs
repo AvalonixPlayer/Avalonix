@@ -12,10 +12,10 @@ public class PlayQueue(PlaySettings settings, Random random)
     public List<Track.Track> Tracks { get; private set; } = null!;
     private PlaySettings Settings => settings;
 
-    public void FillQueue(PlaylistData playlistData)
+    public void FillQueue(List<Track.Track> tracks)
     {
         PlayingIndex = 0;
-        Tracks = playlistData.Tracks;
+        Tracks = tracks;
         
         if (Settings.Shuffle)
             Tracks = Tracks.OrderBy(_ => random.Next()).ToList();

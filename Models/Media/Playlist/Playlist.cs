@@ -38,7 +38,7 @@ public record Playlist
         Settings = settings;
         PlayQueue = new PlayQueue(Settings, _random);
 
-        PlayQueue.FillQueue(PlaylistData);
+        PlayQueue.FillQueue(PlaylistData.Tracks);
     }
 
     public async Task AddTrack(Track.Track track)
@@ -149,7 +149,7 @@ public record Playlist
 
             if (!cancellationToken.IsCancellationRequested)
             {
-                PlayQueue.FillQueue(PlaylistData);
+                PlayQueue.FillQueue(PlaylistData.Tracks);
                 if (Settings.Loop)
                 {
                     startSong = 0;
@@ -173,7 +173,7 @@ public record Playlist
     {
         if (_compleated)
         {
-            PlayQueue.FillQueue(PlaylistData);
+            PlayQueue.FillQueue(PlaylistData.Tracks);
             _ = Play();
             _compleated = false;
             return;
@@ -181,7 +181,7 @@ public record Playlist
 
         if (PlayQueue.PlayingIndex + 1 >= PlayQueue.Tracks.Count)
         {
-            PlayQueue.FillQueue(PlaylistData);
+            PlayQueue.FillQueue(PlaylistData.Tracks);
             _ = Play();
         }
         else
