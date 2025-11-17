@@ -152,7 +152,7 @@ public partial class MainWindow : Window
         var playingPlaylist = _playlistManager.PlayingPlaylist;
         if (playingPlaylist == null) return;
 
-        if (playingPlaylist.Paused)
+        if (playingPlaylist.PlayQueue.Paused)
             _playlistManager.ResumePlaylist();
         else
             _playlistManager.PausePlaylist();

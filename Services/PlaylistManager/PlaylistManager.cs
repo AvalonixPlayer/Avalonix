@@ -109,7 +109,7 @@ public class PlaylistManager(
         {
             try
             {
-                await PlayingPlaylist.Stop();
+                PlayingPlaylist.PlayQueue.Stop();
             }
             catch (Exception ex)
             {
@@ -136,7 +136,7 @@ public class PlaylistManager(
         {
             try
             {
-                await PlayingPlaylist.Play().ConfigureAwait(false);
+                await PlayingPlaylist.PlayQueue.Play().ConfigureAwait(false);
             }
             catch (OperationCanceledException) { /* expected on cancel */ }
             catch (Exception ex)
@@ -148,13 +148,13 @@ public class PlaylistManager(
 
     public async Task ChangeVolume(uint volume) => await player.ChangeVolume(volume);
 
-    public void PausePlaylist() => PlayingPlaylist?.Pause();
+    public void PausePlaylist() => PlayingPlaylist?.PlayQueue.Pause();
     
-    public void ResumePlaylist() => PlayingPlaylist?.Resume();
+    public void ResumePlaylist() => PlayingPlaylist?.PlayQueue.Resume();
     
-    public void NextTrack() => PlayingPlaylist?.NextTrack();
+    public void NextTrack() => PlayingPlaylist?.PlayQueue.NextTrack();
 
-    public void TrackBefore() => PlayingPlaylist?.BackTrack();
+    public void TrackBefore() => PlayingPlaylist?.PlayQueue.BackTrack();
 
-    public void ForceStartTrackByIndex(int index) => PlayingPlaylist?.ForceStartTrackByIndex(index);
+    public void ForceStartTrackByIndex(int index) => PlayingPlaylist?.PlayQueue.ForceStartTrackByIndex(index);
 }

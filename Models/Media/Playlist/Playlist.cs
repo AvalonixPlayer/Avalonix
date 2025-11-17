@@ -22,11 +22,6 @@ public record Playlist
     private PlaySettings Settings { get; }
     public PlayQueue PlayQueue { get; }
 
-    private readonly Random _random = new();
-    private CancellationTokenSource? _cancellationTokenSource;
-    public bool Paused => Player.IsPaused;
-    private bool _compleated;
-
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
         PlaySettings settings)
     {
@@ -36,9 +31,16 @@ public record Playlist
         Disk = disk;
         Logger = logger;
         Settings = settings;
-        PlayQueue = new PlayQueue(Settings, _random);
+        PlayQueue = new PlayQueue(player, logger, Settings);
 
         PlayQueue.FillQueue(PlaylistData.Tracks);
+
+        PlayQueue.QueueStopped += () => Task.Run(Save);
+        PlayQueue.StartedNewTrack += () =>
+        {
+            PlaylistData.LastListen = DateTime.Now.Date;
+            PlaylistData.Rarity++;
+        };
     }
 
     public async Task AddTrack(Track.Track track)
@@ -102,108 +104,5 @@ public record Playlist
     {
         Logger.LogDebug("Playlist saved {playlistName}", Name);
         await Disk.SavePlaylist(this);
-    }
-    
-    public async Task Play(int startSong = 0)
-    {
-        while (true)
-        {
-            _cancellationTokenSource?.CancelAsync();
-            _cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = _cancellationTokenSource.Token;
-            Logger.LogDebug("Playlist {Name} has started", Name);
-
-            while (true)
-            {
-                for (var i = startSong; i < PlayQueue.Tracks.Count; i++)
-                {
-                    if (cancellationToken.IsCancellationRequested) break;
-
-                    PlayQueue.PlayingIndex = i;
-                    var track = PlayQueue.Tracks[PlayQueue.PlayingIndex];
-
-                    PlaylistData.LastListen = DateTime.Now.Date;
-                    
-                    PlaylistData.Rarity++;
-                    track.IncreaseRarity(1);
-                    
-                    track.UpdateLastListenDate();
-
-                    Player.Play(track);
-
-                    while (!Player.IsFree && !cancellationToken.IsCancellationRequested)
-                        await Task.Delay(1000, cancellationToken);
-
-                    if (cancellationToken.IsCancellationRequested) break;
-                }
-
-                if (Settings.Loop)
-                {
-                    startSong = 0;
-                    continue;
-                }
-                Logger.LogDebug("Playlist {Name} completed", Name);
-                _compleated = true;
-                break;
-            }
-
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                PlayQueue.FillQueue(PlaylistData.Tracks);
-                if (Settings.Loop)
-                {
-                    startSong = 0;
-                    continue;
-                }
-            }
-
-            break;
-        }
-    }
-
-    public async Task Stop()
-    {
-        await Save();
-        _cancellationTokenSource?.Cancel();
-        Player.Stop();
-        Logger.LogDebug("Playlist stopped");
-    }
-
-    public void NextTrack()
-    {
-        if (_compleated)
-        {
-            PlayQueue.FillQueue(PlaylistData.Tracks);
-            _ = Play();
-            _compleated = false;
-            return;
-        }
-
-        if (PlayQueue.PlayingIndex + 1 >= PlayQueue.Tracks.Count)
-        {
-            PlayQueue.FillQueue(PlaylistData.Tracks);
-            _ = Play();
-        }
-        else
-            _ = Play(PlayQueue.PlayingIndex + 1);
-        Logger.LogDebug("User skipped track");
-    }
-
-    public void ForceStartTrackByIndex(int index) =>
-        _ = Play(index);
-
-    public void BackTrack() =>
-        _ = PlayQueue.PlayingIndex - 1 <= 0 ? Play() : Play(PlayQueue.PlayingIndex - 1);
-
-    public void Pause()
-    {
-        Player.Pause();
-        Logger.LogDebug("Playlist paused");
-    }
-
-    public void Resume()
-    {
-        Player.Resume();
-        Logger.LogDebug("Playlist resumed");
     }
 }
