@@ -15,23 +15,29 @@ namespace Avalonix.Models.Disk.DiskManager;
 public class DiskManager : IDiskManager
 {
     public const string Extension = ".avalonix";
+    public static readonly string[] MusicFilesExtensions = [".mp3", ".flac", ".m4a", ".wav", ".waw"];
+
     public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
-    
+
     private readonly IDiskWriter _diskWriter;
     private readonly IDiskLoader _diskLoader;
-    
+
     private static string PlaylistsPath { get; } =
         Path.Combine(AvalonixFolderPath, "playlists");
 
     private static string ThemesPath { get; } =
         Path.Combine(AvalonixFolderPath, "themes");
 
+    private static string MusicPath { get; } =
+        Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+
     private readonly ILogger _logger;
     private readonly IMediaPlayer _player;
     private readonly ISettingsManager _settingsManager;
 
-    public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader, ISettingsManager settingsManager)
+    public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader,
+        ISettingsManager settingsManager)
     {
         _logger = logger;
         _diskWriter = diskWriter;
@@ -65,7 +71,8 @@ public class DiskManager : IDiskManager
                 await _diskLoader.LoadAsync<PlaylistData>(Path.Combine(PlaylistsPath, name + Extension));
             if (playlistData == null!) _logger.LogError("Playlist get error: {name}", name);
             else _logger.LogDebug("Playlist get: {name}", name);
-            return new Playlist(name, playlistData!, _player, this, _logger, _settingsManager.Settings!.Avalonix.PlaySettings);
+            return new Playlist(name, playlistData!, _player, this, _logger,
+                _settingsManager.Settings!.Avalonix.PlaySettings);
         }
         catch (Exception ex)
         {
@@ -109,4 +116,7 @@ public class DiskManager : IDiskManager
         var result = await _diskLoader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
         return result;
     }
+
+    public string[] GetMusicFilesForAlbums() =>
+        Directory.GetFiles(MusicPath, $"*{MusicFilesExtensions}", SearchOption.AllDirectories);
 }
