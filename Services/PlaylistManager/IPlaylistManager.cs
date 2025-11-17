@@ -12,7 +12,6 @@ public interface IPlaylistManager
     IMediaPlayer MediaPlayer { get; }
     Playlist? PlayingPlaylist { get; set; }
     Track? CurrentTrack { get; }
-    bool IsPaused { get; }
     Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
