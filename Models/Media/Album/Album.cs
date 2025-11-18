@@ -8,7 +8,7 @@ namespace Avalonix.Models.Media.Album;
 
 public record Album
 {
-    private AlbumMetadata? _metadata;
+    public AlbumMetadata? Metadata;
     private AlbumData? _albumData;
     public PlayQueue PlayQueue { get; }
 
@@ -16,9 +16,14 @@ public record Album
     {
         PlayQueue = new PlayQueue(player, logger, settings);
 
-        _metadata = new AlbumMetadata(tracksPaths);
+        Metadata = new AlbumMetadata(tracksPaths);
         _albumData = new AlbumData(tracksPaths);
         
         PlayQueue.FillQueue(_albumData.Tracks);
+    }
+
+    public void FillAlbumData()
+    {
+        
     }
 }
