@@ -4,6 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Avalonix.Controls.TrackListItem">
-  Welcome to Avalonia!
+  <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+    <Button Click="ShowTrack_OnClick">
+      <Image Source="avares://Avalonix/Assets/avalonix-logo.ico" MaxHeight="20" MaxWidth="20"/>
+    </Button>
+    <Button Click="RemoveTrack_OnClick">
+      <Image Source="avares://Avalonix/Assets/avalonix-logo.ico" MaxHeight="20" MaxWidth="20"/>
+    </Button>
+    <Button>
+      <Image></Image>
+    </Button>
+  </StackPanel>
 </UserControl>
 

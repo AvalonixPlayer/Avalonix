@@ -10,29 +10,29 @@
         x:DataType="main:MainWindowViewModel"
         Title="Avalonix - Main Window">
 
-    <Design.DataContext> 
-        <main:MainWindowViewModel/> 
+    <Design.DataContext>
+        <main:MainWindowViewModel/>
     </Design.DataContext>
-    
+
     <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="False" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
             <StackPanel Classes="vertical">
                 <StackPanel Classes="horizontal">
-                    <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button> 
-                    <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button> 
-                    <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button> 
+                    <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button>
+                    <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button>
+                    <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button>
                 </StackPanel>
                 <ListBox MinHeight="600" MaxHeight="600" Name="SongBox"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Grid.Column="0" Height="70">
             <StackPanel Classes="horizontal">
-                <Button Click="AboutButton_OnClick" Content="?"/> 
+                <Button Click="AboutButton_OnClick" Content="?"/>
                 <Button Click="ShuffleButton_OnClick" Name="Shuffle"><Image Source="../Assets/buttons/EnableSnuffle.png"/></Button>
                 <Button Click="LoopButton_OnClick" Name="Loop"><Image Source="../Assets/buttons/EnableLoop.png"/></Button>
             </StackPanel>
-        </Border> 
-        
+        </Border>
+
         <Border Grid.Row="1" Grid.Column="1" Height="70">
             <StackPanel Classes="center">
                 <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
@@ -43,8 +43,6 @@
                     <Button Name="BackButton" Click="PlayTrackBefore"><Image Source="../Assets/buttons/back.png"/></Button>
                     <Button Name="PauseButton" Click="Pause"><Image Source="../Assets/buttons/pause.png"/></Button>
                     <Button Name="NextButton" Click="PlayNextTrack"><Image Source="../Assets/buttons/next.png"/></Button>
-                    <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
-                    <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Spacing="0" Margin="0">
                     <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume"/>

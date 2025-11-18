@@ -60,7 +60,7 @@ public record Playlist
         return result;
     }
 
-    public async Task RemoveTrack(Track.Track track)
+    public async Task RemoveTrack(Track.Track? track)
     {
         for (var i = 0; i < PlaylistData.Tracks.Count; i++)
             if (PlaylistData.Tracks[i].TrackData.Path == track.TrackData.Path)
