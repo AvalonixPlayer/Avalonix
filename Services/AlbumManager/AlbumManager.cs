@@ -1,48 +1,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Avalonix.Models.Disk.DiskManager;
+using Avalonix.Models.Media.Album;
+using Avalonix.Models.Media.Track;
 using File = TagLib.File;
 
 namespace Avalonix.Services.AlbumManager;
 
 public class AlbumManager(IDiskManager diskManager) : IAlbumManager
 {
-    public Dictionary<ArtistWithAlbum, List<string>> GetArtistWithAlbumsWithPathToTracks()
+    public Dictionary<List<string>,Track> GetArtistWithAlbumsWithTracks()
     {
-        var result = new Dictionary<ArtistWithAlbum, List<string>>();
+        var result = new Dictionary<List<string>,Track>();
         var paths = diskManager.GetMusicFilesForAlbums().ToList();
 
-        var albumsWithArtists = paths.Select(GetArtistWithAlbum).ToList();
-        
-        foreach (var al in albumsWithArtists)
+        new Thread(() =>
         {
-            if (result.ContainsKey(al))
+            foreach (var i in paths)
             {
-                var index = result.Keys.ToList().IndexOf(al);
-                result.ElementAt(index).Value = al
+                var track = new Track();
+                track.Metadata.Init(i);
+                track.Metadata.FillTrackMetaData();
             }
-            else
-            {
-                result.Add(al, []);
-            }
-                
-        }
+        }).Start();
 
         return result;
-
-        ArtistWithAlbum GetArtistWithAlbum(string path)
-        {
-            var track = File.Create(path);
-            if (string.IsNullOrEmpty(track.Tag?.Album) || string.IsNullOrEmpty(track.Tag?.FirstAlbumArtist))
-                return null!;
-            return new ArtistWithAlbum(track.Tag.FirstAlbumArtist, track.Tag.Album);
-        }
     }
-}
-
-public record ArtistWithAlbum(string Name, string Album)
-{
-    public string Name = Name;
-    public string Album = Album;
 }
