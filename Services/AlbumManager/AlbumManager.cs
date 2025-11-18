@@ -69,4 +69,9 @@ public class AlbumManager(
                 album.Metadata.AlbumName == albumName);
         }
     }
+
+    public void StartAlbum(Album album)
+    {
+        
+    }
 }

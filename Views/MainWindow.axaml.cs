@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Avalonia.Controls;
@@ -17,8 +15,6 @@ using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
-using Avalonix.Models.Disk.DiskManager;
-using Avalonix.Services.AlbumManager;
 using Avalonix.Services.WindowManager;
 using Timer = System.Timers.Timer;
 

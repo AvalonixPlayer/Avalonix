@@ -44,6 +44,10 @@
       <Compile Update="Views\SecondaryWindows\EditMetadataWindow\EditMetadataWindow.cs">
         <DependentUpon>EditMetadataWindow.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\SecondaryWindows\AlbumSelectWindow\AlbumSelectWindow.axaml.cs">
+        <DependentUpon>PlaylistSelectWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>
