@@ -11,9 +11,9 @@ namespace Avalonix.Services.AlbumManager;
 
 public class AlbumManager(IDiskManager diskManager) : IAlbumManager
 {
-    public Dictionary<List<string>,Track> GetArtistWithAlbumsWithTracks()
+    public List<Album> GetArtistWithAlbumsWithTracks()
     {
-        var result = new Dictionary<List<string>,Track>();
+        var result = new List<Album>();
         var paths = diskManager.GetMusicFilesForAlbums().ToList();
 
         new Thread(() =>
