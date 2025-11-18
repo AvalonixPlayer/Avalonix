@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using File = TagLib.File;
 
 namespace Avalonix.Models.Media.Track;
