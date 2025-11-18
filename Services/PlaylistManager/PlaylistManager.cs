@@ -122,14 +122,14 @@ public class PlaylistManager(
         
         PlaylistChanged?.Invoke();
         
-        new Thread(() =>
+        _ = Task.Run(() =>
         {
             foreach (var i in PlayingPlaylist.PlayQueue.Tracks)
             {
                 i.Metadata.Init(i.TrackData.Path);
                 i.Metadata.FillTrackMetaData();
             }
-        }).Start();
+        });
         
         _ = Task.Run(async () =>
         {

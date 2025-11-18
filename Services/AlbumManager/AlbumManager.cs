@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonix.Models.Disk.DiskManager;
 using Avalonix.Models.Media.Album;
 using Avalonix.Models.Media.Track;
@@ -15,8 +16,10 @@ public class AlbumManager(IDiskManager diskManager) : IAlbumManager
     {
         var result = new List<Album>();
         var paths = diskManager.GetMusicFilesForAlbums().ToList();
+        
+        //var tracks = 
 
-        new Thread(() =>
+        _ = Task.Run(() =>
         {
             foreach (var i in paths)
             {
@@ -24,7 +27,7 @@ public class AlbumManager(IDiskManager diskManager) : IAlbumManager
                 track.Metadata.Init(i);
                 track.Metadata.FillTrackMetaData();
             }
-        }).Start();
+        });
 
         return result;
     }
