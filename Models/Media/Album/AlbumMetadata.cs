@@ -18,6 +18,11 @@ public record AlbumMetadata
 
     private void FillMetadata(List<Track.Track> tracks)
     {
+        foreach (var track in tracks)
+        {
+            track.Metadata.Init(track.TrackData.Path);
+            track.Metadata.FillTrackMetaData();
+        }
         AlbumName = tracks[0].Metadata.Album;
         var tracksMetadata = tracks.Select(x => x.Metadata).ToList();
         foreach (var trackMetadata in

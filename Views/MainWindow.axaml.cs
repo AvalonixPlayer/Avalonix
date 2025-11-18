@@ -17,6 +17,8 @@ using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
+using Avalonix.Models.Disk.DiskManager;
+using Avalonix.Services.AlbumManager;
 using Avalonix.Services.WindowManager;
 using Timer = System.Timers.Timer;
 
@@ -78,7 +80,7 @@ public partial class MainWindow : Window
         _windowManager = windowManager;
 
         InitializeComponent();
-
+        
         _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
         _playlistManager.PlaylistChanged += SubscribeTrackMetadataLoaded;
         _playlistManager.PlaylistChanged += UpdateSongBox;
@@ -172,9 +174,9 @@ public partial class MainWindow : Window
 
     private void SubscribeTrackMetadataLoaded()
     {
-        if(_playlistManager.PlayingPlaylist == null) return;
-        
-        for(var i = 0; i < _playlistManager.PlayingPlaylist!.PlayQueue.Tracks.Count; i++)
+        if (_playlistManager.PlayingPlaylist == null) return;
+
+        for (var i = 0; i < _playlistManager.PlayingPlaylist!.PlayQueue.Tracks.Count; i++)
         {
             _playlistManager.PlayingPlaylist.PlayQueue.Tracks[i].Metadata.MetadataLoaded += UpdateSongBox;
             var i1 = i;
@@ -185,7 +187,7 @@ public partial class MainWindow : Window
             };
         }
     }
-    
+
     private void UpdateSongBox()
     {
         if (!Dispatcher.UIThread.CheckAccess())

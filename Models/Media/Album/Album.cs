@@ -21,9 +21,4 @@ public record Album
         
         PlayQueue.FillQueue(_albumData.Tracks);
     }
-
-    public void FillAlbumData()
-    {
-        
-    }
 }

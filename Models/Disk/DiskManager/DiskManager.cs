@@ -15,7 +15,7 @@ namespace Avalonix.Models.Disk.DiskManager;
 public class DiskManager : IDiskManager
 {
     public const string Extension = ".avalonix";
-    public static readonly string[] MusicFilesExtensions = [".mp3", ".flac", ".m4a", ".wav", ".waw"];
+    public static readonly string[] MusicFilesExtensions = ["*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw"];
 
     public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
@@ -117,6 +117,19 @@ public class DiskManager : IDiskManager
         return result;
     }
 
-    public string[] GetMusicFilesForAlbums() =>
-        Directory.GetFiles(MusicPath, $"*{MusicFilesExtensions}", SearchOption.AllDirectories);
+    public List<string> GetMusicFilesForAlbums()
+    {
+        return FindFiles();
+
+        List<string> FindFiles()
+        {
+            var files = new List<string>();
+            foreach (var ext in MusicFilesExtensions)
+            {
+                var foundFiles = Directory.EnumerateFiles(MusicPath, $"*{ext}", SearchOption.AllDirectories);
+                files.AddRange(foundFiles);
+            }
+            return files;
+        }
+    }
 }

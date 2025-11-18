@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,45 +8,48 @@ using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
-using File = TagLib.File;
 
 namespace Avalonix.Services.AlbumManager;
 
 public class AlbumManager(
-    IMediaPlayer player,
     ILogger logger,
+    IMediaPlayer player,
     ISettingsManager settingsManager,
     IDiskManager diskManager) : IAlbumManager
 {
-    public List<Album> GetAlbums()
+    public Action? TrackLoaded { get; set; }
+    
+    private readonly List<Track> _tracks = [];
+
+    public Task LoadTracks()
     {
-        var paths = diskManager.GetMusicFilesForAlbums().ToList();
-
-        var tracks = new List<Track>();
-
         _ = Task.Run(() =>
         {
+            var paths = diskManager.GetMusicFilesForAlbums();
+            
             foreach (var path in paths)
             {
-                var track = new Track();
+                var track = new Track(path);
                 track.Metadata.Init(path);
                 track.Metadata.FillTrackMetaData();
-                tracks.Add(track);
+                _tracks.Add(track);
+                TrackLoaded?.Invoke();
             }
         });
-
+        return Task.CompletedTask;
+    }
+    
+    public List<Album> GetAlbums()
+    {
         var albums = new List<Album>();
 
-        foreach (var track in tracks)
+        foreach (var track in _tracks)
         {
             if (track.Metadata.Artist == null || track.Metadata.Album == null) continue;
 
-            Album? album;
-            if (ContaintAlbum(track.Metadata.Artist, track.Metadata.Album) != null)
-            {
-                album = ContaintAlbum(track.Metadata.Artist, track.Metadata.Album);
-                album!.PlayQueue.Tracks.Add(track);
-            }
+            var album = ContaintAlbum(track.Metadata.Artist, track.Metadata.Album);
+
+            if (album != null) album.PlayQueue.Tracks.Add(track);
             else
             {
                 album = new Album([track.TrackData.Path], player, logger,
@@ -56,8 +60,13 @@ public class AlbumManager(
 
         return albums;
 
-        Album? ContaintAlbum(string artist, string albumName) =>
-            albums.First(album =>
-                album.Metadata!.ArtistName == artist && album.Metadata.AlbumName == albumName);
+        Album? ContaintAlbum(string artist, string albumName)
+        {
+            if (albums.Count == 0) return null;
+
+            return albums.FirstOrDefault(album =>
+                album.Metadata!.ArtistName == artist &&
+                album.Metadata.AlbumName == albumName);
+        }
     }
 }
