@@ -11,4 +11,5 @@ public interface IAlbumManager
     Task LoadTracks();
     List<Album> GetAlbums();
     void StartAlbum(Album album);
+    void RemoveAlbum(Album album);
 }

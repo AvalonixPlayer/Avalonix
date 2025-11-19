@@ -15,7 +15,7 @@ namespace Avalonix.ViewModels.PlaylistEditOrCreate;
 public class PlaylistEditOrCreateWindowViewModel(
     ILogger<WindowManager> logger,
     IPlaylistManager playlistManager,
-    ISecondWindowStrategy strategy)
+    IPlaylistWindowStrategy strategy)
     : ViewModelBase, IPlaylistEditOrCreateWindowViewModel
 {
     private readonly FilePickerOpenOptions _filePickerOptions = new()
@@ -38,7 +38,7 @@ public class PlaylistEditOrCreateWindowViewModel(
         AllowMultiple = false
     };
 
-    public ISecondWindowStrategy Strategy => strategy;
+    public IPlaylistWindowStrategy Strategy => strategy;
 
     public async Task<List<string>?> OpenTrackFileDialogAsync(Window parent)
     {
@@ -69,7 +69,7 @@ public class PlaylistEditOrCreateWindowViewModel(
             return null;
         }
     }
-    
+
     public async Task<string?> OpenObservingDirectoryDialogAsync(Window parent)
     {
         try
@@ -79,7 +79,7 @@ public class PlaylistEditOrCreateWindowViewModel(
             logger.LogInformation("Opening observing directory dialog");
 
             var directory = (await storageProvider.OpenFolderPickerAsync(_folderPickerOptions))[0].Path.LocalPath;
-            
+
             if (string.IsNullOrEmpty(directory))
             {
                 logger.LogInformation("No directory selected");
@@ -99,6 +99,6 @@ public class PlaylistEditOrCreateWindowViewModel(
     public async Task ExecuteAsync(string playlistName, List<Track> tracksPaths, string? observingDirectory)
     {
         var playlist = playlistManager.ConstructPlaylist(playlistName, tracksPaths, observingDirectory);
-        await Strategy.ExecuteAsync(playlist); 
+        await Strategy.ExecuteAsync(playlist);
     }
 }

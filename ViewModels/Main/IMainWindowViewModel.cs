@@ -8,5 +8,5 @@ public interface IMainWindowViewModel
 {
     Task ExitAsync();
     PlaylistCreateWindow PlaylistCreateWindow_Open();
-    PlaylistSelectWindow PlaylistSelectWindow_Open();
+    ItemSelectWindow PlaylistSelectWindow_Open();
 }

@@ -18,7 +18,7 @@ public class AlbumManager(
     IDiskManager diskManager) : IAlbumManager
 {
     public Action? TrackLoaded { get; set; }
-    
+
     private readonly List<Track> _tracks = [];
 
     public Task LoadTracks()
@@ -26,7 +26,7 @@ public class AlbumManager(
         _ = Task.Run(() =>
         {
             var paths = diskManager.GetMusicFilesForAlbums();
-            
+
             foreach (var path in paths)
             {
                 var track = new Track(path);
@@ -38,7 +38,7 @@ public class AlbumManager(
         });
         return Task.CompletedTask;
     }
-    
+
     public List<Album> GetAlbums()
     {
         var albums = new List<Album>();
@@ -47,7 +47,7 @@ public class AlbumManager(
         {
             if (track.Metadata.Artist == null || track.Metadata.Album == null) continue;
 
-            var album = ContaintAlbum(track.Metadata.Artist, track.Metadata.Album);
+            var album = ContainAlbum(track.Metadata.Artist, track.Metadata.Album);
 
             if (album != null) album.PlayQueue.Tracks.Add(track);
             else
@@ -60,7 +60,7 @@ public class AlbumManager(
 
         return albums;
 
-        Album? ContaintAlbum(string artist, string albumName)
+        Album? ContainAlbum(string artist, string albumName)
         {
             if (albums.Count == 0) return null;
 
@@ -72,6 +72,11 @@ public class AlbumManager(
 
     public void StartAlbum(Album album)
     {
-        
+
+    }
+
+    public void RemoveAlbum(Album album)
+    {
+        // TODO: remove tracks
     }
 }

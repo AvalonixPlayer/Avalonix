@@ -12,9 +12,10 @@ public interface IWindowManager
 {
     Task CloseMainWindowAsync();
     PlaylistCreateWindow PlaylistCreateWindow_Open();
-    PlaylistSelectWindow PlaylistSelectWindow_Open();
+    ItemSelectWindow PlaylistSelectWindow_Open();
     AboutWindow AboutWindow_Open();
     ShowTrackWindow ShowTrackWindow_Open(Track track);
     EditMetadataWindow EditMetadataWindow_Open(Track track);
-    PlaylistSelectWindow PlaylistDeleteWindow_Open();
+    ItemSelectWindow PlaylistDeleteWindow_Open();
+    ItemSelectWindow AlbumSelectAndPlayWindow_Open();
 }
