@@ -56,4 +56,7 @@ public record Album : IPlayable
         });
         return Task.CompletedTask;
     }
+    
+    public bool QueueIsEmpty() =>
+        PlayQueue.QueueIsEmpty();
 }

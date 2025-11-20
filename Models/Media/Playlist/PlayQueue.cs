@@ -10,12 +10,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.Playlist;
 
-public class PlayQueue(IMediaPlayer player, ILogger logger,PlaySettings settings)
+public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings settings)
 {
     public int PlayingIndex { get; set; }
-    public List<Track.Track> Tracks { get; private set; } = null!;
+    public List<Track.Track> Tracks { get; private set; } = [];
     private PlaySettings Settings => settings;
-    
+
     private readonly Random _random = new();
     private CancellationTokenSource? _cancellationTokenSource;
     public bool Paused => player.IsPaused;
@@ -23,16 +23,16 @@ public class PlayQueue(IMediaPlayer player, ILogger logger,PlaySettings settings
 
     public Action? StartedNewTrack;
     public Action? QueueStopped;
-    
+
     public void FillQueue(List<Track.Track> tracks)
     {
         PlayingIndex = 0;
         Tracks = tracks;
-        
+
         if (Settings.Shuffle)
             Tracks = Tracks.OrderBy(_ => _random.Next()).ToList();
     }
-    
+
     public async Task Play(int startSong = 0)
     {
         while (true)
@@ -49,10 +49,10 @@ public class PlayQueue(IMediaPlayer player, ILogger logger,PlaySettings settings
 
                     PlayingIndex = i;
                     var track = Tracks[PlayingIndex];
-                    
+
                     StartedNewTrack?.Invoke();
                     track.IncreaseRarity(1);
-                    
+
                     track.UpdateLastListenDate();
 
                     player.Play(track);
@@ -68,6 +68,7 @@ public class PlayQueue(IMediaPlayer player, ILogger logger,PlaySettings settings
                     startSong = 0;
                     continue;
                 }
+
                 _compleated = true;
                 break;
             }
@@ -112,6 +113,7 @@ public class PlayQueue(IMediaPlayer player, ILogger logger,PlaySettings settings
         }
         else
             _ = Play(PlayingIndex + 1);
+
         logger.LogDebug("User skipped track");
     }
 
@@ -132,4 +134,7 @@ public class PlayQueue(IMediaPlayer player, ILogger logger,PlaySettings settings
         player.Resume();
         logger.LogDebug("Playlist resumed");
     }
+
+    public bool QueueIsEmpty() =>
+        Tracks.Count == 0;
 }

@@ -193,13 +193,13 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (_playlistManager.PlayingPlaylist?.PlayQueue.Tracks == null)
+        if (_playlistManager.PlayingPlaylist?.QueueIsEmpty() == true)
         {
             _logger.LogError("Play queue is empty");
             return;
         }
 
-        SongBox.ItemsSource = _playlistManager.PlayingPlaylist.PlayQueue.Tracks
+        SongBox.ItemsSource = _playlistManager.PlayingPlaylist?.PlayQueue.Tracks
             .Select(x => PostProcessedText(x.Metadata.TrackName, 30)).ToList();
     }
 

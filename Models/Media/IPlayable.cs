@@ -1,9 +1,11 @@
 using System.Threading.Tasks;
+using Avalonix.Models.Media.Playlist;
 
 namespace Avalonix.Models.Media;
 
 public interface IPlayable
 {
+    PlayQueue PlayQueue { get; }
     Task Play();
     void Pause();
     void Stop();
@@ -12,4 +14,5 @@ public interface IPlayable
     void BackTrack();
     void ForceStartTrackByIndex(int index);
     Task LoadTracksMetadata();
+    bool QueueIsEmpty();
 }

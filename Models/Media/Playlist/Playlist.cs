@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk.DiskManager;
 using Avalonix.Models.Media.MediaPlayer;
@@ -13,7 +14,7 @@ public record Playlist : IPlayable
     public PlaylistData PlaylistData { get; }
     private readonly IDiskManager _disk;
     private readonly ILogger _logger;
-    private PlayQueue PlayQueue { get; }
+    public PlayQueue PlayQueue { get; }
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
         PlaySettings settings)
@@ -73,4 +74,7 @@ public record Playlist : IPlayable
         _logger.LogDebug("Playlist saved {playlistName}", Name);
         await _disk.SavePlaylist(this);
     }
+
+    public bool QueueIsEmpty() =>
+        PlayQueue.QueueIsEmpty();
 }
