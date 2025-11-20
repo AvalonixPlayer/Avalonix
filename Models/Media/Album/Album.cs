@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.UserSettings.AvalonixSettingsFiles;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.Album;
 
-public record Album : IItem
+public record Album : IPlayable
 {
     public AlbumMetadata? Metadata;
     private AlbumData? _albumData;
@@ -21,4 +22,16 @@ public record Album : IItem
 
         PlayQueue.FillQueue(_albumData.Tracks);
     }
+    
+    public async Task Play() =>
+        await PlayQueue.Play().ConfigureAwait(false);
+
+    public void Pause() =>
+        PlayQueue.Pause();
+
+    public void Stop() =>
+        PlayQueue.Stop();
+
+    public void Resume() =>
+        PlayQueue.Resume();
 }
