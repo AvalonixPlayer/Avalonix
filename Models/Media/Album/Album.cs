@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.Album;
 
-public record Album
+public record Album : IItem
 {
     public AlbumMetadata? Metadata;
     private AlbumData? _albumData;
@@ -18,7 +18,7 @@ public record Album
 
         Metadata = new AlbumMetadata(tracksPaths);
         _albumData = new AlbumData(tracksPaths);
-        
+
         PlayQueue.FillQueue(_albumData.Tracks);
     }
 }

@@ -20,7 +20,7 @@ public class PlaylistSelectViewModel(IPlaylistManager playlistManager, IPlaylist
                 Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
     public async Task ExecuteAction(Playlist playlist) => await Strategy.ExecuteAsync(playlist);
-    public async Task<T> GetItems<T>()
+    public async Task<TList> GetItems<TList<Playlist>>>()
     {
         return await GetPlaylists();
     }

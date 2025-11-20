@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Models.Media.Playlist;
 
-public record Playlist
+public record Playlist : IItem
 {
     public string Name { get; }
     public PlaylistData PlaylistData { get; }
-    private IDiskManager Disk { get; }
-    private ILogger Logger { get; }
-    private PlaySettings Settings { get; }
+    private readonly IDiskManager _disk;
+    private readonly ILogger _logger;
+    private readonly PlaySettings _settings;
     public PlayQueue PlayQueue { get; }
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
@@ -21,10 +21,10 @@ public record Playlist
     {
         Name = name;
         PlaylistData = playlistData;
-        Disk = disk;
-        Logger = logger;
-        Settings = settings;
-        PlayQueue = new PlayQueue(player, logger, Settings);
+        _disk = disk;
+        _logger = logger;
+        _settings = settings;
+        PlayQueue = new PlayQueue(player, logger, settings);
 
         PlayQueue.FillQueue(PlaylistData.Tracks);
 
@@ -35,10 +35,10 @@ public record Playlist
             PlaylistData.Rarity++;
         };
     }
-    
+
     public async Task Save()
     {
-        Logger.LogDebug("Playlist saved {playlistName}", Name);
-        await Disk.SavePlaylist(this);
+        _logger.LogDebug("Playlist saved {playlistName}", Name);
+        await _disk.SavePlaylist(this);
     }
 }
