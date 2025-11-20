@@ -40,4 +40,20 @@ public record Album : IPlayable
 
     public void BackTrack() =>
         PlayQueue.BackTrack();
+
+    public void ForceStartTrackByIndex(int index) =>
+        PlayQueue.ForceStartTrackByIndex(index);
+
+    public Task LoadTracksMetadata()
+    {
+        _ = Task.Run(() =>
+        {
+            foreach (var i in PlayQueue.Tracks)
+            {
+                i.Metadata.Init(i.TrackData.Path);
+                i.Metadata.FillTrackMetaData();
+            }
+        });
+        return Task.CompletedTask;
+    }
 }

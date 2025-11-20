@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
 using Avalonix.Models.Disk.DiskManager;
+using Avalonix.Models.Media;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
@@ -14,19 +15,19 @@ using Microsoft.Extensions.Logging;
 namespace Avalonix.Services.PlaylistManager;
 
 public class PlaylistManager(
-    IMediaPlayer player, 
+    IMediaPlayer player,
     IDiskManager diskManager,
-    ILogger logger, 
-    ISettingsManager settingsManager) 
+    ILogger logger,
+    ISettingsManager settingsManager)
     : IPlaylistManager
 {
     public IMediaPlayer MediaPlayer => player;
-    public Playlist? PlayingPlaylist { get; set; }
+    public IPlayable? PlayingPlaylist { get; set; }
     private CancellationTokenSource? _globalCancellationTokenSource;
     public Track? CurrentTrack => player.CurrentTrack;
-    
+
     private readonly Settings _settings = settingsManager.Settings!;
-    
+
     public event Action? PlaylistChanged;
 
     public void ResetSnuffle()
@@ -48,26 +49,26 @@ public class PlaylistManager(
         add => player.PlaybackStateChanged += value;
         remove => player.PlaybackStateChanged -= value;
     }
-    
+
     public event Action TrackChanged
     {
         add => player.TrackChanged += value;
         remove => player.TrackChanged -= value;
     }
-    
+
     public event Action<bool> ShuffleChanged
     {
         add => _settings.Avalonix.SuffleChanged += value;
         remove => _settings.Avalonix.SuffleChanged -= value;
     }
-    
+
     public event Action<bool> LoopChanged
     {
         add => _settings.Avalonix.LoopChanged += value;
         remove => _settings.Avalonix.LoopChanged -= value;
     }
 
-    public async Task<List<Playlist>> GetAllPlaylists() => await diskManager.GetAllPlaylists(); 
+    public async Task<List<Playlist>> GetAllPlaylists() => await diskManager.GetAllPlaylists();
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
     {
@@ -96,7 +97,10 @@ public class PlaylistManager(
         {
             _globalCancellationTokenSource?.Cancel();
         }
-        catch (ObjectDisposedException) { /* ignore */ }
+        catch (ObjectDisposedException)
+        {
+            /* ignore */
+        }
         finally
         {
             _globalCancellationTokenSource?.Dispose();
@@ -108,7 +112,7 @@ public class PlaylistManager(
         {
             try
             {
-                PlayingPlaylist.PlayQueue.Stop();
+                PlayingPlaylist.Stop();
             }
             catch (Exception ex)
             {
@@ -119,25 +123,21 @@ public class PlaylistManager(
         }
 
         PlayingPlaylist = playlist;
-        
+
         PlaylistChanged?.Invoke();
-        
-        _ = Task.Run(() =>
-        {
-            foreach (var i in PlayingPlaylist.PlayQueue.Tracks)
-            {
-                i.Metadata.Init(i.TrackData.Path);
-                i.Metadata.FillTrackMetaData();
-            }
-        });
-        
+
+        Task.Run(PlayingPlaylist.LoadTracksMetadata);
+
         _ = Task.Run(async () =>
         {
             try
             {
-                await PlayingPlaylist.PlayQueue.Play().ConfigureAwait(false);
+                await PlayingPlaylist.Play().ConfigureAwait(false);
             }
-            catch (OperationCanceledException) { /* expected on cancel */ }
+            catch (OperationCanceledException)
+            {
+                /* expected on cancel */
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Playlist play failed");
@@ -148,13 +148,13 @@ public class PlaylistManager(
 
     public async Task ChangeVolume(uint volume) => await player.ChangeVolume(volume);
 
-    public void PausePlaylist() => PlayingPlaylist?.PlayQueue.Pause();
-    
-    public void ResumePlaylist() => PlayingPlaylist?.PlayQueue.Resume();
-    
-    public void NextTrack() => PlayingPlaylist?.PlayQueue.NextTrack();
+    public void PausePlaylist() => PlayingPlaylist?.Pause();
 
-    public void TrackBefore() => PlayingPlaylist?.PlayQueue.BackTrack();
+    public void ResumePlaylist() => PlayingPlaylist?.Resume();
 
-    public void ForceStartTrackByIndex(int index) => PlayingPlaylist?.PlayQueue.ForceStartTrackByIndex(index);
+    public void NextTrack() => PlayingPlaylist?.NextTrack();
+
+    public void TrackBefore() => PlayingPlaylist?.BackTrack();
+
+    public void ForceStartTrackByIndex(int index) => PlayingPlaylist?.ForceStartTrackByIndex(index);
 }

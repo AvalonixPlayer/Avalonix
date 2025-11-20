@@ -13,7 +13,7 @@ public record Playlist : IPlayable
     public PlaylistData PlaylistData { get; }
     private readonly IDiskManager _disk;
     private readonly ILogger _logger;
-    public PlayQueue PlayQueue { get; }
+    private PlayQueue PlayQueue { get; }
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
         PlaySettings settings)
@@ -51,6 +51,22 @@ public record Playlist : IPlayable
 
     public void BackTrack() =>
         PlayQueue.BackTrack();
+
+    public void ForceStartTrackByIndex(int index) =>
+        PlayQueue.ForceStartTrackByIndex(index);
+
+    public Task LoadTracksMetadata()
+    {
+        _ = Task.Run(() =>
+        {
+            foreach (var i in PlayQueue.Tracks)
+            {
+                i.Metadata.Init(i.TrackData.Path);
+                i.Metadata.FillTrackMetaData();
+            }
+        });
+        return Task.CompletedTask;
+    }
 
     public async Task Save()
     {
