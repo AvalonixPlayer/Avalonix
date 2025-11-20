@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
-using Avalonia.Controls;
-using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Services.WindowManager;
-using Avalonix.ViewModels.ItemSelect;
-using Avalonix.ViewModels.ItemSelect.Playlist;
-using Avalonix.ViewModels.PlaylistSelect;
+using Avalonix.ViewModels.PlayableSelectViewModel;
+using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
+namespace Avalonix.Views.SecondaryWindows.PlayableSelectWindow;
 
-public partial class ItemSelectWindow : Window
+public partial class PlayableSelectWindow : Window
 {
     private readonly ILogger<WindowManager> _logger;
-    private readonly IItemSelectViewModel _vm;
     private readonly List<Playlist> _playlists;
-    public ItemSelectWindow(ILogger<WindowManager> logger, IItemSelectViewModel vm)
+    public PlayableSelectWindow(ILogger<WindowManager> logger, IPlayableSelectViewModel vm)
     {
         InitializeComponent();
         _logger = logger;

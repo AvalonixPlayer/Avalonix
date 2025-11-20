@@ -4,24 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Services.PlaylistManager;
-using Avalonix.ViewModels.ItemSelect;
-using Avalonix.ViewModels.ItemSelect.Playlist;
 using Avalonix.ViewModels.Strategy;
+using TagLib.Ape;
 
-namespace Avalonix.ViewModels.PlaylistSelect;
+namespace Avalonix.ViewModels.PlayableSelectViewModel;
 
-public class PlaylistSelectViewModel(IPlaylistManager playlistManager, IPlaylistWindowStrategy strategy) : ViewModelBase, IPlaylistSelectViewModel, IItemSelectViewModel
+public class PlayableSelectViewModel(IPlaylistManager playlistManager, IPlaylistWindowStrategy strategy) : ViewModelBase, IPlayableSelectViewModel
 {
-    public IPlaylistWindowStrategy Strategy { get; } = strategy;
+    public  Strategy { get; } = strategy;
     public async Task<List<Playlist>> GetPlaylists() => await playlistManager.GetAllPlaylists();
     public List<Playlist> SearchItem(string text, List<Playlist> playlists) =>
         string.IsNullOrWhiteSpace(text) ? playlists : playlists.
             Where(item => item.Name.
                 Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
-    public async Task ExecuteAction(Playlist playlist) => await Strategy.ExecuteAsync(playlist);
-    public async Task<TList> GetItems<TList<Playlist>>>()
-    {
-        return await GetPlaylists();
-    }
+    public async Task ExecuteAction(Item playable) => await Strategy.ExecuteAsync(playable);
 }

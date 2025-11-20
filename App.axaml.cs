@@ -18,10 +18,9 @@ using Avalonix.Services.ThemeManager;
 using Avalonix.Services.VersionManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels;
-using Avalonix.ViewModels.ItemSelect.Playlist;
 using Avalonix.ViewModels.Main;
+using Avalonix.ViewModels.PlayableSelectViewModel;
 using Avalonix.ViewModels.PlaylistEditOrCreate;
-using Avalonix.ViewModels.PlaylistSelect;
 using Avalonix.ViewModels.Strategy;
 using Avalonix.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +41,7 @@ public class App : Application
         {
             services.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
             services.AddTransient<IPlaylistEditOrCreateWindowViewModel, PlaylistEditOrCreateWindowViewModel>();
-            services.AddTransient<IPlaylistSelectViewModel, PlaylistSelectViewModel>();
+            services.AddTransient<IPlayableSelectViewModel, PlayableSelectViewModel>();
             services.AddTransient<MainWindow>();
             services.AddSingleton<IVersionManager, VersionManager>();
             services.AddSingleton<ISettingsManager, SettingsManager>();

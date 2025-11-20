@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.ViewModels.Strategy;
 
-namespace Avalonix.ViewModels.ItemSelect.Playlist;
+namespace Avalonix.ViewModels.PlayableSelectViewModel;
 
-public interface IPlaylistSelectViewModel
+public interface IPlayableSelectViewModel
 {
     Task<List<Models.Media.Playlist.Playlist>> GetPlaylists();
     List<Models.Media.Playlist.Playlist> SearchItem(string text, List<Models.Media.Playlist.Playlist> playlists);

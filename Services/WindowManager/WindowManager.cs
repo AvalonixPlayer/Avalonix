@@ -10,13 +10,13 @@ using Avalonix.Services.SettingsManager;
 using Avalonix.Services.VersionManager;
 using Avalonix.ViewModels.EditMetadata;
 using Avalonix.ViewModels.ItemSelect.Album;
+using Avalonix.ViewModels.PlayableSelectViewModel;
 using Avalonix.ViewModels.PlaylistEditOrCreate;
-using Avalonix.ViewModels.PlaylistSelect;
 using Avalonix.ViewModels.Strategy;
 using Avalonix.Views.SecondaryWindows.AboutWindow;
 using Avalonix.Views.SecondaryWindows.EditMetadataWindow;
+using Avalonix.Views.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
-using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 using Avalonix.Views.SecondaryWindows.ShowTrackWindow;
 using Microsoft.Extensions.Logging;
 
@@ -50,26 +50,26 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
         return new PlaylistCreateWindow(logger, vm);
     }
 
-    private ItemSelectWindow PlaylistSelectWindow_Open(IPlaylistWindowStrategy strategy)
+    private PlayableSelectWindow PlaylistSelectWindow_Open(IPlaylistWindowStrategy strategy)
     {
-        var vm = new PlaylistSelectViewModel(playlistManager, strategy);
-        return new ItemSelectWindow(logger, vm);
+        var vm = new PlayableSelectViewModel(playlistManager, strategy);
+        return new PlayableSelectWindow(logger, vm);
     }
 
-    private ItemSelectWindow AlbumSelectWindow_Open(IAlbumWindowStrategy strategy)
+    private PlayableSelectWindow AlbumSelectWindow_Open(IAlbumWindowStrategy strategy)
     {
         var vm = new AlbumSelectViewModel(albumManager, strategy);
-        return new ItemSelectWindow(logger, vm);
+        return new PlayableSelectWindow(logger, vm);
     }
 
-    public ItemSelectWindow PlaylistSelectToPlayWindow_Open() =>
+    public PlayableSelectWindow PlaylistSelectToPlayWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager));
-    public ItemSelectWindow PlaylistSelectToEditWindow_Open() =>
+    public PlayableSelectWindow PlaylistSelectToEditWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager));
     public PlaylistCreateWindow PlaylistCreateWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
 
-    public ItemSelectWindow PlaylistSelectWindow_Open() =>
+    public PlayableSelectWindow PlaylistSelectWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager));
 
     public PlaylistCreateWindow PlaylistEditWindow_Open() =>
@@ -81,12 +81,12 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
 
     public EditMetadataWindow EditMetadataWindow_Open(Track track) => new(logger, new EditMetadataWindowViewModel(logger, null!),track, playlistManager);
 
-    public ItemSelectWindow PlaylistDeleteWindow_Open() =>
+    public PlayableSelectWindow PlaylistDeleteWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager));
 
-    public ItemSelectWindow AlbumSelectAndPlayWindow_Open() =>
+    public PlayableSelectWindow AlbumSelectAndPlayWindow_Open() =>
         AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(albumManager));
 
-    public ItemSelectWindow AlbumSelectAndDeleteWindow_Open() =>
+    public PlayableSelectWindow AlbumSelectAndDeleteWindow_Open() =>
         AlbumSelectWindow_Open(new SelectAndDeleteAlbumWindowStrategy(albumManager));
 }

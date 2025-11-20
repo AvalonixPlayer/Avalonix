@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using Avalonix.Models.Media.Track;
 using Avalonix.Views.SecondaryWindows.AboutWindow;
 using Avalonix.Views.SecondaryWindows.EditMetadataWindow;
+using Avalonix.Views.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
-using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 using Avalonix.Views.SecondaryWindows.ShowTrackWindow;
 
 namespace Avalonix.Services.WindowManager;
@@ -12,10 +12,10 @@ public interface IWindowManager
 {
     Task CloseMainWindowAsync();
     PlaylistCreateWindow PlaylistCreateWindow_Open();
-    ItemSelectWindow PlaylistSelectWindow_Open();
+    PlayableSelectWindow PlaylistSelectWindow_Open();
     AboutWindow AboutWindow_Open();
     ShowTrackWindow ShowTrackWindow_Open(Track track);
     EditMetadataWindow EditMetadataWindow_Open(Track track);
-    ItemSelectWindow PlaylistDeleteWindow_Open();
-    ItemSelectWindow AlbumSelectAndPlayWindow_Open();
+    PlayableSelectWindow PlaylistDeleteWindow_Open();
+    PlayableSelectWindow AlbumSelectAndPlayWindow_Open();
 }

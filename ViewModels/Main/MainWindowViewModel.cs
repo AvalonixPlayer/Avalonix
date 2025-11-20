@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Avalonix.Services.WindowManager;
+using Avalonix.Views.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
-using Avalonix.Views.SecondaryWindows.PlaylistSelectWindow;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModels.Main;
@@ -35,7 +35,7 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         }
     }
     
-    public ItemSelectWindow PlaylistSelectWindow_Open()
+    public PlayableSelectWindow PlaylistSelectWindow_Open()
     {
         try
         {
