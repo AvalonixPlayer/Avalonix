@@ -44,21 +44,21 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
         }
     }
 
-    private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlaylistWindowStrategy strategy)
+    private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlayableWindowStrategy strategy)
     {
         var vm = new PlaylistEditOrCreateWindowViewModel(logger, playlistManager, strategy);
         return new PlaylistCreateWindow(logger, vm);
     }
 
-    private PlayableSelectWindow PlaylistSelectWindow_Open(IPlaylistWindowStrategy strategy)
+    private PlayableSelectWindow PlaylistSelectWindow_Open(IPlayableWindowStrategy strategy)
     {
         var vm = new PlayableSelectViewModel(playlistManager, strategy);
         return new PlayableSelectWindow(logger, vm);
     }
 
-    private PlayableSelectWindow AlbumSelectWindow_Open(IAlbumWindowStrategy strategy)
+    private PlayableSelectWindow AlbumSelectWindow_Open(IPlayableWindowStrategy strategy)
     {
-        var vm = new AlbumSelectViewModel(albumManager, strategy);
+        var vm = new PlayableSelectViewModel(albumManager, strategy);
         return new PlayableSelectWindow(logger, vm);
     }
 

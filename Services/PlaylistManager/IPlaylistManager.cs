@@ -16,7 +16,7 @@ public interface IPlaylistManager
     Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
-    void DeletePlaylist(Playlist playlist);
+    void DeletePlaylist(Playlist? playlist);
     Task StartPlaylist(Playlist playlist);
     void PausePlaylist();
     void ResumePlaylist();

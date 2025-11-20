@@ -12,8 +12,9 @@ namespace Avalonix.ViewModels.PlayableSelectViewModel;
 
 public class PlayableSelectViewModel(IPlaylistManager playlistManager, IPlayableWindowStrategy strategy) : ViewModelBase, IPlayableSelectViewModel
 {
-    public IPlayableWindowStrategy Strategy { get; }
-    public async Task<List<Playlist>> GetPlaylists() => await playlistManager.GetAllPlaylists();
+    public IPlayableWindowStrategy Strategy { get; } = strategy;
+    public async Task<List<IPlayable>> GetPlayableItems()
+        => (await playlistManager.GetAllPlaylists()).Cast<IPlayable>().ToList();
     public List<Playlist> SearchItem(string text, List<Playlist> playlists) =>
         string.IsNullOrWhiteSpace(text) ? playlists : playlists.
             Where(item => item.Name.
