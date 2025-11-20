@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonix.Models.Media.Playlist;
+using Avalonix.Models.Media;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels.PlayableSelectViewModel;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,8 @@ namespace Avalonix.Views.SecondaryWindows.PlayableSelectWindow;
 public partial class PlayableSelectWindow : Window
 {
     private readonly ILogger<WindowManager> _logger;
-    private readonly List<Playlist> _playlists;
+    private readonly List<IPlayable> _playlists;
+    private readonly IPlayableSelectViewModel _vm;
     public PlayableSelectWindow(ILogger<WindowManager> logger, IPlayableSelectViewModel vm)
     {
         InitializeComponent();
@@ -21,7 +22,7 @@ public partial class PlayableSelectWindow : Window
         _vm = vm;
         _logger.LogInformation("PlaylistCreateWindow opened");
 
-        _playlists = Task.Run(async () => await _vm.GetPlaylists()).Result;
+        _playlists = Task.Run(async () => await _vm.GetPlayableItems()).Result;
 
         var result = _playlists.Select(p => p.Name).ToList();
         PlaylistBox.ItemsSource = result;

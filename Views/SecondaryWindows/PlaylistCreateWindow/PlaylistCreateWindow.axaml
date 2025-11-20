@@ -8,27 +8,23 @@
         x:Class="Avalonix.Views.SecondaryWindows.PlaylistCreateWindow.PlaylistCreateWindow"
         x:DataType="playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel"
         Title="Avalonix - ">
-    
-    <Design.DataContext>
-        <playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel/>
-    </Design.DataContext>
-    
+
     <StackPanel Margin="10">
         <Border>
             <StackPanel>
-                <Label Padding="10" Name="NameLabel">Playlist Name</Label> 
+                <Label Padding="10" Name="NameLabel">Playlist Name</Label>
                 <TextBox Name="PlaylistName" Height="50" Watermark="Playlist Name"/>
             </StackPanel>
         </Border>
         <Border Padding="5" Margin="5">
             <StackPanel>
-                <Label Padding="10">Songs</Label> 
+                <Label Padding="10">Songs</Label>
                 <ListBox Height="300" Name="NewSongBox"></ListBox>
                 <CheckBox Name="ObserveDirectory">Observe directory</CheckBox>
                 <Button Name="ObservingDirectory" Click="ObservingDirectory_OnClick" IsEnabled="False"></Button>
                 <StackPanel Classes="horizontal">
                     <Button Width="125" Click="AddButton_OnClick">Add</Button>
-                    <Button Width="125" Click="RemoveButton_OnClick" Name="RemoveButton" IsEnabled="False">Remove</Button>             
+                    <Button Width="125" Click="RemoveButton_OnClick" Name="RemoveButton" IsEnabled="False">Remove</Button>
                 </StackPanel>
                 <Button Width="260" Click="ActionPlaylistButton_OnClick" Name="MainActionButton">Default</Button>
             </StackPanel>
