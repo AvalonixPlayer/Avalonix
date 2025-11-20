@@ -17,8 +17,8 @@ public class DiskWriter(ILogger logger) : IDiskWriter
         IncludeFields = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
-    
-    public async Task WriteAsync<T>(T obj, string path)
+
+    public async Task WriteJsonAsync<T>(T obj, string path)
     {
         if (!File.Exists(path))
             File.Create(path).Close();

@@ -4,5 +4,5 @@ namespace Avalonix.Models.Disk.DiskWriter;
 
 public interface IDiskWriter
 {
-    Task WriteAsync<T>(T obj, string path);
+    Task WriteJsonAsync<T>(T obj, string path);
 }

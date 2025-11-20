@@ -59,7 +59,7 @@ public class DiskManager : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await _diskWriter.WriteAsync(playlist.PlaylistData, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+        await _diskWriter.WriteJsonAsync(playlist.PlaylistData, Path.Combine(PlaylistsPath, playlist.Name + Extension));
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
@@ -105,11 +105,11 @@ public class DiskManager : IDiskManager
     public async Task CreateNewTheme(string name)
     {
         var theme = new Theme { Name = name };
-        await _diskWriter.WriteAsync(theme, Path.Combine(ThemesPath, name + Extension));
+        await _diskWriter.WriteJsonAsync(theme, Path.Combine(ThemesPath, name + Extension));
     }
 
     public async Task SaveTheme(Theme theme) =>
-        await _diskWriter.WriteAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
+        await _diskWriter.WriteJsonAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
 
     public async Task<Theme?> GetTheme(string name)
     {

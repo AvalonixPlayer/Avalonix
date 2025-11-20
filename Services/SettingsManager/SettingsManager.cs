@@ -30,7 +30,7 @@ public class SettingsManager : ISettingsManager
     
     public async Task SaveSettings()
     {
-        await _diskWriter.WriteAsync(Settings, SettingsPath);
+        await _diskWriter.WriteJsonAsync(Settings, SettingsPath);
         _logger.LogInformation("Settings saved");
     }
 
@@ -43,7 +43,7 @@ public class SettingsManager : ISettingsManager
             if (!Path.Exists(SettingsPath))
             {
                 await File.Create(SettingsPath).DisposeAsync();
-                await _diskWriter.WriteAsync(new Settings(), SettingsPath);
+                await _diskWriter.WriteJsonAsync(new Settings(), SettingsPath);
             }
             var result = await _diskLoader.LoadAsync<Settings>(SettingsPath);
             return result ?? default!;

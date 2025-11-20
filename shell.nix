@@ -29,6 +29,7 @@ let
     xorg.libxcb
     xorg.libICE
     xorg.libSM
+    gsettings-desktop-schemas
 
     libxkbcommon
   ];
@@ -36,7 +37,7 @@ in
 
 pkgs.mkShell {
   buildInputs = [
-    pkgs.dotnet-sdk_9
+    pkgs.dotnet-sdk_10
   ] ++ nativeDeps;
 
   LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath nativeDeps;
