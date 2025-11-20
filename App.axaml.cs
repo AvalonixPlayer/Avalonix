@@ -12,6 +12,7 @@ using Avalonix.Models.Disk.DiskWriter;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.UserSettings;
 using Avalonix.Services;
+using Avalonix.Services.DatabaseService;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.PlaylistManager;
@@ -56,6 +57,8 @@ public class App : Application
             services.AddSingleton<IPlaylistManager, PlaylistManager>();
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();
+            services.AddDbContext<AppDbContext>();
+            services.AddSingleton<IDatabaseService, DatabaseService>();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();
