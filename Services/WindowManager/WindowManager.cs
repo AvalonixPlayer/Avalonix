@@ -4,10 +4,12 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.Models.Media.Track;
 using Avalonix.Models.UserSettings;
+using Avalonix.Services.AlbumManager;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.VersionManager;
 using Avalonix.ViewModels.EditMetadata;
+using Avalonix.ViewModels.ItemSelect.Album;
 using Avalonix.ViewModels.PlaylistEditOrCreate;
 using Avalonix.ViewModels.PlaylistSelect;
 using Avalonix.ViewModels.Strategy;
@@ -20,7 +22,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.WindowManager;
 
-public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlaylistManager playlistManager, IVersionManager versionManager) 
+public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlaylistManager playlistManager, IVersionManager versionManager, IAlbumManager albumManager)
     : IWindowManager
 {
     private static void CloseMainWindow()
@@ -42,26 +44,32 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
         }
     }
 
-    private PlaylistCreateWindow PlaylistCreateWindow_Open(ISecondWindowStrategy strategy)
+    private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlaylistWindowStrategy strategy)
     {
         var vm = new PlaylistEditOrCreateWindowViewModel(logger, playlistManager, strategy);
         return new PlaylistCreateWindow(logger, vm);
     }
 
-    private PlaylistSelectWindow PlaylistSelectWindow_Open(ISecondWindowStrategy strategy)
+    private ItemSelectWindow PlaylistSelectWindow_Open(IPlaylistWindowStrategy strategy)
     {
-        var vm = new PlaylistSelectWindowViewModel(playlistManager, strategy);
-        return new PlaylistSelectWindow(logger, vm);
+        var vm = new PlaylistSelectViewModel(playlistManager, strategy);
+        return new ItemSelectWindow(logger, vm);
     }
 
-    public PlaylistSelectWindow PlaylistSelectToPlayWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager)); 
-    public PlaylistSelectWindow PlaylistSelectToEditWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager)); 
+    private ItemSelectWindow AlbumSelectWindow_Open(IAlbumWindowStrategy strategy)
+    {
+        var vm = new AlbumSelectViewModel(albumManager, strategy);
+        return new ItemSelectWindow(logger, vm);
+    }
+
+    public ItemSelectWindow PlaylistSelectToPlayWindow_Open() =>
+        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager));
+    public ItemSelectWindow PlaylistSelectToEditWindow_Open() =>
+        PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager));
     public PlaylistCreateWindow PlaylistCreateWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
 
-    public PlaylistSelectWindow PlaylistSelectWindow_Open() => 
+    public ItemSelectWindow PlaylistSelectWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager));
 
     public PlaylistCreateWindow PlaylistEditWindow_Open() =>
@@ -70,9 +78,15 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
     public AboutWindow AboutWindow_Open() => new(logger, versionManager);
 
     public ShowTrackWindow ShowTrackWindow_Open(Track track) => new(logger, track);
-    
+
     public EditMetadataWindow EditMetadataWindow_Open(Track track) => new(logger, new EditMetadataWindowViewModel(logger, null!),track, playlistManager);
-    
-    public PlaylistSelectWindow PlaylistDeleteWindow_Open() => 
-        PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager)); 
+
+    public ItemSelectWindow PlaylistDeleteWindow_Open() =>
+        PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager));
+
+    public ItemSelectWindow AlbumSelectAndPlayWindow_Open() =>
+        AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(albumManager));
+
+    public ItemSelectWindow AlbumSelectAndDeleteWindow_Open() =>
+        AlbumSelectWindow_Open(new SelectAndDeleteAlbumWindowStrategy(albumManager));
 }

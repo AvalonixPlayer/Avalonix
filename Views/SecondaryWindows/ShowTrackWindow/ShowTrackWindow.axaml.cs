@@ -12,11 +12,8 @@ namespace Avalonix.Views.SecondaryWindows.ShowTrackWindow;
 
 public partial class ShowTrackWindow : Window
 {
-    private readonly ILogger<WindowManager> _logger;
-
     public ShowTrackWindow(ILogger<WindowManager> logger, Track track)
     {
-        _logger = logger;
         InitializeComponent();
         logger.LogInformation("ShowTrackWindow initialized");
         Title += track.Metadata.TrackName;

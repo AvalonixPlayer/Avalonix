@@ -35,7 +35,7 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
         }
     }
     
-    public PlaylistSelectWindow PlaylistSelectWindow_Open()
+    public ItemSelectWindow PlaylistSelectWindow_Open()
     {
         try
         {
