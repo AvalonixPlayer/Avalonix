@@ -35,7 +35,7 @@ public partial class ShowTrackWindow : Window
     {
         Name.Content += " " + track.Metadata.TrackName;
         Artist.Content += " " + track.Metadata.Artist;
-        Lyrics.Text = " " + track.Metadata.Lyric;
+        Lyrics.Text = track.Metadata.Lyric;
     }
 
     private static string ToHumanFriendlyString(TimeSpan timeSpan)
