@@ -22,7 +22,7 @@ public record Album : IPlayable
 
         PlayQueue.FillQueue(_albumData.Tracks);
     }
-    
+
     public async Task Play() =>
         await PlayQueue.Play().ConfigureAwait(false);
 
@@ -34,4 +34,10 @@ public record Album : IPlayable
 
     public void Resume() =>
         PlayQueue.Resume();
+
+    public void NextTrack() =>
+        PlayQueue.NextTrack();
+
+    public void BackTrack() =>
+        PlayQueue.BackTrack();
 }

@@ -8,4 +8,6 @@ public interface IPlayable
     void Pause();
     void Stop();
     void Resume();
+    void NextTrack();
+    void BackTrack();
 }

@@ -46,6 +46,12 @@ public record Playlist : IPlayable
     public void Resume() =>
         PlayQueue.Resume();
 
+    public void NextTrack() =>
+        PlayQueue.NextTrack();
+
+    public void BackTrack() =>
+        PlayQueue.BackTrack();
+
     public async Task Save()
     {
         _logger.LogDebug("Playlist saved {playlistName}", Name);
