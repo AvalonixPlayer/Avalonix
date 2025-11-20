@@ -5,7 +5,7 @@ using Avalonix.Services.AlbumManager;
 
 namespace Avalonix.ViewModels.Strategy;
 
-public class SelectAndPlayAlbumWindowStrategy(IAlbumManager albumManager) : ISecondWindowStrategy, IAlbumWindowStrategy
+public class SelectAndPlayAlbumWindowStrategy(IAlbumManager albumManager) : IAlbumWindowStrategy
 {
     public string WindowTitle => "Select a album to play";
     public string ActionButtonText => "Album name to play";

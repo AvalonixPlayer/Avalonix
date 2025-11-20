@@ -15,7 +15,7 @@ namespace Avalonix.ViewModels.PlaylistEditOrCreate;
 public class PlaylistEditOrCreateWindowViewModel(
     ILogger<WindowManager> logger,
     IPlaylistManager playlistManager,
-    IPlaylistWindowStrategy strategy)
+    IPlayableWindowStrategy strategy)
     : ViewModelBase, IPlaylistEditOrCreateWindowViewModel
 {
     private readonly FilePickerOpenOptions _filePickerOptions = new()
@@ -38,7 +38,7 @@ public class PlaylistEditOrCreateWindowViewModel(
         AllowMultiple = false
     };
 
-    public IPlaylistWindowStrategy Strategy => strategy;
+    public IPlayableWindowStrategy Strategy => strategy;
 
     public async Task<List<string>?> OpenTrackFileDialogAsync(Window parent)
     {

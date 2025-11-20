@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Avalonix.Models.Media;
 using Avalonix.Models.Media.Album;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Services.AlbumManager;
@@ -12,14 +13,9 @@ public interface ISecondWindowStrategy
     string ActionButtonText { get; }
 }
 
-public interface IPlaylistWindowStrategy : ISecondWindowStrategy
+public interface IPlayableWindowStrategy : ISecondWindowStrategy
 {
-    Task ExecuteAsync(Playlist playlist);
-}
-
-public interface IAlbumWindowStrategy : ISecondWindowStrategy
-{
-    Task ExecuteAsync(Album playlist);
+    Task ExecuteAsync(IPlayable playlist);
 }
 
 

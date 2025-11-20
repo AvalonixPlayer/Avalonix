@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonix.Models.Media;
 using Avalonix.ViewModels.Strategy;
 
 namespace Avalonix.ViewModels.PlayableSelectViewModel;
 
 public interface IPlayableSelectViewModel
 {
-    Task<List<Models.Media.Playlist.Playlist>> GetPlaylists();
-    List<Models.Media.Playlist.Playlist> SearchItem(string text, List<Models.Media.Playlist.Playlist> playlists);
-    Task ExecuteAction(Models.Media.Playlist.Playlist playlist);
-    IPlaylistWindowStrategy Strategy { get; }
+    Task<List<IPlayable>> GetPlaylists();
+    List<IPlayable> SearchItem(string text, List<IPlayable> playlists);
+    Task ExecuteAction(IPlayable playlist);
+    IPlayableWindowStrategy Strategy { get; }
 }
