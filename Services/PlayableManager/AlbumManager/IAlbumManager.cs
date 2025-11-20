@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Models.Media.Album;
 
-namespace Avalonix.Services.AlbumManager;
+namespace Avalonix.Services.PlayableManager.AlbumManager;
 
-public interface IAlbumManager
+public interface IAlbumManager : IPlayableManager
 {
     public Action? TrackLoaded { get; set; }
     Task LoadTracks();

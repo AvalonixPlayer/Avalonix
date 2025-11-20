@@ -6,9 +6,9 @@ using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
 
-namespace Avalonix.Services.PlaylistManager;
+namespace Avalonix.Services.PlayableManager.PlaylistManager;
 
-public interface IPlaylistManager
+public interface IPlaylistManager : IPlayableManager
 {
     IMediaPlayer MediaPlayer { get; }
     IPlayable? PlayingPlaylist { get; set; }
@@ -16,11 +16,11 @@ public interface IPlaylistManager
     Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
-    void DeletePlaylist(Playlist? playlist);
+    void DeletePlaylist(Playlist playlist);
     Task StartPlaylist(Playlist playlist);
     void PausePlaylist();
     void ResumePlaylist();
-    void NextTrack();
+    new void NextTrack();
     void TrackBefore();
     Task ChangeVolume(uint volume);
     void ResetSnuffle();

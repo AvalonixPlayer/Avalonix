@@ -12,6 +12,7 @@ using Avalonix.Models.Disk.DiskWriter;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.UserSettings;
 using Avalonix.Services;
+using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.ThemeManager;

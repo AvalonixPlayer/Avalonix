@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk;
@@ -9,6 +10,7 @@ using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
 using Avalonix.Models.UserSettings;
+using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
@@ -157,4 +159,6 @@ public class PlaylistManager(
     public void TrackBefore() => PlayingPlaylist?.BackTrack();
 
     public void ForceStartTrackByIndex(int index) => PlayingPlaylist?.ForceStartTrackByIndex(index);
+    public async Task<List<IPlayable>> GetPlayableItems() =>
+        (await GetAllPlaylists()).Cast<IPlayable>().ToList();
 }

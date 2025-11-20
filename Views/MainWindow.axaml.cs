@@ -15,6 +15,7 @@ using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
+using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.WindowManager;
 using Timer = System.Timers.Timer;
 
@@ -76,7 +77,7 @@ public partial class MainWindow : Window
         _windowManager = windowManager;
 
         InitializeComponent();
-        
+
         _playlistManager.PlaybackStateChanged += UpdatePauseButtonImage;
         _playlistManager.PlaylistChanged += SubscribeTrackMetadataLoaded;
         _playlistManager.PlaylistChanged += UpdateSongBox;

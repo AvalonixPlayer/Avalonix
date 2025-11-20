@@ -7,8 +7,8 @@ namespace Avalonix.ViewModels.PlayableSelectViewModel;
 
 public interface IPlayableSelectViewModel
 {
-    Task<List<IPlayable>> GetPlaylists();
-    List<IPlayable> SearchItem(string text, List<IPlayable> playlists);
-    Task ExecuteAction(IPlayable playlist);
+    Task<List<IPlayable>> GetPlayableItems();
+    List<IPlayable> SearchItem(string text, List<IPlayable> playable);
+    Task ExecuteAction(IPlayable playable);
     IPlayableWindowStrategy Strategy { get; }
 }

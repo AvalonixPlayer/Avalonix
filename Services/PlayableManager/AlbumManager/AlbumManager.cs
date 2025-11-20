@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk.DiskManager;
+using Avalonix.Models.Media;
 using Avalonix.Models.Media.Album;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Track;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Services.AlbumManager;
+namespace Avalonix.Services.PlayableManager.AlbumManager;
 
 public class AlbumManager(
     ILogger logger,
@@ -79,4 +80,6 @@ public class AlbumManager(
     {
         // TODO: remove tracks
     }
+
+    public Task<List<IPlayable>> GetPlayableItems() => Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());
 }

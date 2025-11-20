@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Avalonix.Models.Media;
 using Avalonix.Models.Media.Album;
-using Avalonix.Services.AlbumManager;
+using Avalonix.Services.PlayableManager.AlbumManager;
 
 namespace Avalonix.ViewModels.Strategy;
 
