@@ -5,7 +5,7 @@ namespace Avalonix.Models.Media.Album;
 
 public record AlbumMetadata
 {
-    public string? AlbumName { get; private set; }
+    public string AlbumName { get; private set; }
     public string? ArtistName { get; private set; }
     public string[]? Genres { get; private set; }
     public byte[]? Cover { get; private set; }

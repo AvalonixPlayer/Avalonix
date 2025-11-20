@@ -5,6 +5,7 @@ namespace Avalonix.Models.Media;
 
 public interface IPlayable
 {
+    string Name { get; }
     PlayQueue PlayQueue { get; }
     Task Play();
     void Pause();
