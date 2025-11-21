@@ -19,10 +19,10 @@ public class PlayableSelectViewModel(IPlayableManager playableItemsManager, IPla
             Where(item => item.Name.
                 Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
-    public List<IPlayable> SearchItem(string text, List<IPlayable> playable)
-    {
-        throw new NotImplementedException();
-    }
+    public List<IPlayable> SearchItem(string text, List<IPlayable> playable) =>
+        string.IsNullOrWhiteSpace(text) ? playable : playable.
+            Where(item => item.Name.
+                Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
     public async Task ExecuteAction(IPlayable playable) => await Strategy.ExecuteAsync(playable);
 }
