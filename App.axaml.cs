@@ -13,6 +13,7 @@ using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.UserSettings;
 using Avalonix.Services;
 using Avalonix.Services.DatabaseService;
+using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.PlaylistManager;
@@ -54,6 +55,7 @@ public class App : Application
             services.AddSingleton<IDiskLoader, DiskLoader>();
             services.AddSingleton<IDiskWriter, DiskWriter>();
             services.AddSingleton<IMediaPlayer, MediaPlayer>();
+            services.AddSingleton<IPlayableManager, PlaylistManager>();
             services.AddSingleton<IPlaylistManager, PlaylistManager>();
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();

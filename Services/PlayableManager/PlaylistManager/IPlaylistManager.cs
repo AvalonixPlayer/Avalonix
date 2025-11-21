@@ -10,26 +10,10 @@ namespace Avalonix.Services.PlayableManager.PlaylistManager;
 
 public interface IPlaylistManager : IPlayableManager
 {
-    IMediaPlayer MediaPlayer { get; }
-    IPlayable? PlayingPlaylist { get; set; }
-    Track? CurrentTrack { get; }
     Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
     void DeletePlaylist(Playlist playlist);
     Task StartPlaylist(Playlist playlist);
-    void PausePlaylist();
-    void ResumePlaylist();
-    new void NextTrack();
-    void TrackBefore();
-    Task ChangeVolume(uint volume);
-    void ResetSnuffle();
-    void ResetLoop();
-    event Action? PlaylistChanged;
-    event Action<bool> PlaybackStateChanged;
-    event Action TrackChanged;
-    event Action<bool> ShuffleChanged;
-    event Action<bool> LoopChanged;
     Task<List<Playlist>> GetAllPlaylists();
-    void ForceStartTrackByIndex(int index);
 }

@@ -21,6 +21,11 @@ public class AlbumManager(
     public Action? TrackLoaded { get; set; }
 
     private readonly List<Track> _tracks = [];
+    
+    public IMediaPlayer MediaPlayer { get; }
+    public IPlayable? PlayingPlayable { get; set; }
+
+    public Track? CurrentTrack { get; }
 
     public void LoadTracks()
     {
@@ -80,4 +85,50 @@ public class AlbumManager(
         LoadTracks();
         return Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());
     }
+
+    public void PausePlayable()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ResumePlayable()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void NextTrack()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void TrackBefore()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task ChangeVolume(uint volume)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ResetSnuffle()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ResetLoop()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ForceStartTrackByIndex(int index)
+    {
+        throw new NotImplementedException();
+    }
+
+    public event Action? PlayableChanged;
+    public event Action<bool>? PlaybackStateChanged;
+    public event Action? TrackChanged;
+    public event Action<bool>? ShuffleChanged;
+    public event Action<bool>? LoopChanged;
 }

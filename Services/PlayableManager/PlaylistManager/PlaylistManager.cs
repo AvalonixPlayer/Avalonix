@@ -24,13 +24,13 @@ public class PlaylistManager(
     : IPlaylistManager
 {
     public IMediaPlayer MediaPlayer => player;
-    public IPlayable? PlayingPlaylist { get; set; }
+    public IPlayable? PlayingPlayable { get; set; }
     private CancellationTokenSource? _globalCancellationTokenSource;
     public Track? CurrentTrack => player.CurrentTrack;
 
     private readonly Settings _settings = settingsManager.Settings!;
 
-    public event Action? PlaylistChanged;
+    public event Action? PlayableChanged;
 
     public void ResetSnuffle()
     {
@@ -110,31 +110,31 @@ public class PlaylistManager(
 
         _globalCancellationTokenSource = new CancellationTokenSource();
 
-        if (PlayingPlaylist != null)
+        if (PlayingPlayable != null)
         {
             try
             {
-                PlayingPlaylist.Stop();
+                PlayingPlayable.Stop();
             }
             catch (Exception ex)
             {
                 logger.LogWarning(ex, "Error stopping previous playlist");
             }
 
-            PlayingPlaylist = null;
+            PlayingPlayable = null;
         }
 
-        PlayingPlaylist = playlist;
+        PlayingPlayable = playlist;
 
-        PlaylistChanged?.Invoke();
+        PlayableChanged?.Invoke();
 
-        Task.Run(PlayingPlaylist.LoadTracksMetadata);
+        Task.Run(PlayingPlayable.LoadTracksMetadata);
 
         _ = Task.Run(async () =>
         {
             try
             {
-                await PlayingPlaylist.Play().ConfigureAwait(false);
+                await PlayingPlayable.Play().ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -150,15 +150,15 @@ public class PlaylistManager(
 
     public async Task ChangeVolume(uint volume) => await player.ChangeVolume(volume);
 
-    public void PausePlaylist() => PlayingPlaylist?.Pause();
+    public void PausePlayable() => PlayingPlayable?.Pause();
 
-    public void ResumePlaylist() => PlayingPlaylist?.Resume();
+    public void ResumePlayable() => PlayingPlayable?.Resume();
 
-    public void NextTrack() => PlayingPlaylist?.NextTrack();
+    public void NextTrack() => PlayingPlayable?.NextTrack();
 
-    public void TrackBefore() => PlayingPlaylist?.BackTrack();
+    public void TrackBefore() => PlayingPlayable?.BackTrack();
 
-    public void ForceStartTrackByIndex(int index) => PlayingPlaylist?.ForceStartTrackByIndex(index);
+    public void ForceStartTrackByIndex(int index) => PlayingPlayable?.ForceStartTrackByIndex(index);
     public async Task<List<IPlayable>> GetPlayableItems() =>
         (await GetAllPlaylists()).Cast<IPlayable>().ToList();
 }
