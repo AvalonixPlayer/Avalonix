@@ -144,6 +144,9 @@ public partial class MainWindow : Window
 
     private async void SelectPlaylist_OnClick(object? sender, RoutedEventArgs e) =>
         await _vm.PlaylistSelectWindow_Open().ShowDialog(this);
+    
+    private async void SelectAlbum_OnClick(object? sender, RoutedEventArgs e) =>
+        await _vm.AlbumSelectWindow_Open().ShowDialog(this);
 
     private void SubscribeTrackMetadataLoaded()
     {

@@ -47,4 +47,17 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
             return null!;
         }
     }
+
+    public PlayableSelectWindow AlbumSelectWindow_Open()
+    {
+        try
+        {
+            return windowManager.AlbumSelectAndPlayWindow_Open();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error while opening PlaylistSelectWindow: {e}", ex.Message);
+            return null!;
+        }
+    }
 }
