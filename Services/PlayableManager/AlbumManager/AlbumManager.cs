@@ -22,22 +22,18 @@ public class AlbumManager(
 
     private readonly List<Track> _tracks = [];
 
-    public Task LoadTracks()
+    public void LoadTracks()
     {
-        _ = Task.Run(() =>
-        {
-            var paths = diskManager.GetMusicFilesForAlbums();
+        var paths = diskManager.GetMusicFilesForAlbums();
 
-            foreach (var path in paths)
-            {
-                var track = new Track(path);
-                track.Metadata.Init(path);
-                track.Metadata.FillTrackMetaData();
-                _tracks.Add(track);
-                TrackLoaded?.Invoke();
-            }
-        });
-        return Task.CompletedTask;
+        foreach (var path in paths)
+        {
+            var track = new Track(path);
+            track.Metadata.Init(path);
+            track.Metadata.FillTrackMetaData();
+            _tracks.Add(track);
+            TrackLoaded?.Invoke();
+        }
     }
 
     public List<Album> GetAlbums()
@@ -71,15 +67,17 @@ public class AlbumManager(
         }
     }
 
-    public void StartAlbum(Album album)
-    {
-
-    }
+    public async void StartAlbum(Album album) =>
+        await album.Play();
 
     public void RemoveAlbum(Album album)
     {
         // TODO: remove tracks
     }
 
-    public Task<List<IPlayable>> GetPlayableItems() => Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());
+    public Task<List<IPlayable>> GetPlayableItems()
+    {
+        LoadTracks();
+        return Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());
+    }
 }

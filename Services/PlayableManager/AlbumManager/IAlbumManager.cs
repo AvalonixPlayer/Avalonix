@@ -8,7 +8,7 @@ namespace Avalonix.Services.PlayableManager.AlbumManager;
 public interface IAlbumManager : IPlayableManager
 {
     public Action? TrackLoaded { get; set; }
-    Task LoadTracks();
+    void LoadTracks();
     List<Album> GetAlbums();
     void StartAlbum(Album album);
     void RemoveAlbum(Album album);
