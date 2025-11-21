@@ -32,41 +32,17 @@ public partial class MainWindow : Window
 
     private bool _isUserDragging;
 
-    private readonly Image _playButtonImage = new()
-    {
-        Source =
-            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/play.png")))
-    };
+    private readonly Image _playButtonImage = GetImageFromAvares("buttons/play.png");
 
-    private readonly Image _pauseButtonImage = new()
-    {
-        Source =
-            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/pause.png")))
-    };
+    private readonly Image _pauseButtonImage = GetImageFromAvares("buttons/pause.png");
 
-    private readonly Image _enableShuffleImage = new()
-    {
-        Source =
-            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/EnableSnuffle.png")))
-    };
+    private readonly Image _enableShuffleImage = GetImageFromAvares("buttons/EnableSnuffle.png");
 
-    private readonly Image _disableShuffleImage = new()
-    {
-        Source =
-            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/DisableSnuffle.png")))
-    };
+    private readonly Image _disableShuffleImage = GetImageFromAvares("buttons/DisableSnuffle.png");
 
-    private readonly Image _enableLoopImage = new()
-    {
-        Source =
-            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/EnableLoop.png")))
-    };
+    private readonly Image _enableLoopImage = GetImageFromAvares("buttons/EnableLoop.png");
 
-    private readonly Image _disableLoopImage = new()
-    {
-        Source =
-            new Bitmap(AssetLoader.Open(new Uri("avares://Avalonix/Assets/buttons/DisableLoop.png")))
-    };
+    private readonly Image _disableLoopImage = GetImageFromAvares("buttons/DisableLoop.png");
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
         ISettingsManager settingsManager, IPlaylistManager playlistManager, IWindowManager windowManager)
@@ -383,4 +359,11 @@ public partial class MainWindow : Window
             return enterText ?? string.Empty;
         }
     }
+
+    private static Image GetImageFromAvares(string partOfPath) =>
+        new()
+        {
+            Source =
+                new Bitmap(AssetLoader.Open(new Uri($"avares://Avalonix/Assets/{partOfPath}")))
+        };
 }

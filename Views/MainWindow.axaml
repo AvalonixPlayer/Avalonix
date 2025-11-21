@@ -8,7 +8,7 @@
         MinHeight="800" MinWidth="1180"
         x:Class="Avalonix.Views.MainWindow"
         x:DataType="main:MainWindowViewModel"
-        Title="Avalonix - Main Window">
+        Title="Avalonix">
 
     <Design.DataContext>
         <main:MainWindowViewModel />
