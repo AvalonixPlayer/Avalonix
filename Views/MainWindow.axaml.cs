@@ -80,13 +80,13 @@ public partial class MainWindow : Window
             VolumeSlider.Value = settingsManager.Settings!.Avalonix.Volume);
 
         var trackSliderPressed = false;
-        TrackPositionSlider.PointerMoved += (sender, args) => _isUserDragging = true;
-        TrackPositionSlider.PointerCaptureLost += (sender, args) =>
+        TrackPositionSlider.PointerMoved += (_, _) => _isUserDragging = true;
+        TrackPositionSlider.PointerCaptureLost += (_, _) =>
         {
             _isUserDragging = false;
             trackSliderPressed = false;
         };
-        TrackPositionSlider.PointerExited += (sender, args) =>
+        TrackPositionSlider.PointerExited += (_, _) =>
         {
             if (!trackSliderPressed)
                 _isUserDragging = false;
