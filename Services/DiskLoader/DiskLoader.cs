@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonix.Services.DatabaseService;
+using Avalonix.Services.Media.Playlist;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.DiskLoader;
 
-public class DiskLoader(ILogger logger) : IDiskLoader
+public class DiskLoader(ILogger logger, IDatabaseService databaseService) : IDiskLoader
 {
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
@@ -26,8 +29,21 @@ public class DiskLoader(ILogger logger) : IDiskLoader
         }
         catch (Exception ex)
         {
-            logger.LogError("Failed to load json: " + ex.Message);
+            logger.LogError("Failed to load json: {ex}", ex.Message);
             return default;
+        }
+    }
+
+    public async Task<List<Playlist>> LoadAllPlaylistsFromDb()
+    {
+        try
+        {
+            return await databaseService.GetAllPlaylists();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error while getting db of playlists: {ex}", ex);
+            return [];
         }
     }
 }

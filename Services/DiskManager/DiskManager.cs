@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonix.Services.DatabaseService;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
 using Avalonix.Services.Media.MediaPlayer;
@@ -35,15 +36,17 @@ public class DiskManager : IDiskManager
     private readonly ILogger _logger;
     private readonly IMediaPlayer _player;
     private readonly ISettingsManager _settingsManager;
+    private readonly IDatabaseService _databaseService;
 
     public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader,
-        ISettingsManager settingsManager)
+        ISettingsManager settingsManager, IDatabaseService databaseService)
     {
         _logger = logger;
         _diskWriter = diskWriter;
         _diskLoader = diskLoader;
         _player = player;
         _settingsManager = settingsManager;
+        _databaseService = databaseService;
 
         CheckDirectory(AvalonixFolderPath);
         CheckDirectory(PlaylistsPath);
@@ -81,26 +84,14 @@ public class DiskManager : IDiskManager
         }
     }
 
-    public void RemovePlaylist(string name)
+    public async Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
-        File.Delete(Path.Combine(PlaylistsPath, name + Extension));
+        _databaseService.RemovePlaylist(name, await GetAllPlaylists());
         _logger.LogInformation("Playlist {name} was been removed", name);
     }
 
-    public async Task<List<Playlist>> GetAllPlaylists()
-    {
-        var files = Directory.EnumerateFiles(PlaylistsPath, $"*{Extension}");
-        var playlists = new List<Playlist>();
-        foreach (var file in files)
-        {
-            var playlist = await GetPlaylist(Path.GetFileNameWithoutExtension(file));
-            if (playlist == null!) continue;
-            playlists.Add(playlist);
-        }
-
-        return playlists;
-    }
+    public async Task<List<Playlist>> GetAllPlaylists() => await _diskLoader.LoadAllPlaylistsFromDb();
 
     public async Task CreateNewTheme(string name)
     {

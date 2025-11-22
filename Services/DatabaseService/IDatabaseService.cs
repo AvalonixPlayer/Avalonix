@@ -7,7 +7,8 @@ namespace Avalonix.Services.DatabaseService;
 public interface IDatabaseService
 {
     Task WritePlaylist(Playlist playlist);
-    Task RemovePlaylist(Playlist playlist);
+    void RemovePlaylist(Playlist playlist);
+    void RemovePlaylist(string plName, List<Playlist> playlists);
     Task<List<Playlist>> GetAllPlaylists();
 }
 

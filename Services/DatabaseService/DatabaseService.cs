@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Services.Media.Playlist;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +11,12 @@ public class DatabaseService(AppDbContext dbContext) : IDatabaseService
 {
     public async Task WritePlaylist(Playlist playlist) => await dbContext.AddAsync(playlist);
 
-    public Task RemovePlaylist(Playlist playlist)
+    public void RemovePlaylist(Playlist playlist) => dbContext.Remove(playlist);
+
+    public void RemovePlaylist(string plName, List<Playlist> playlists)
     {
-        dbContext.Remove(playlist);
-        return Task.CompletedTask;
+        var playlist = playlists.FirstOrDefault(playlist1 => playlist1.Name == plName);
+        if (playlist != null) RemovePlaylist(playlist);
     }
 
     public Task<List<Playlist>> GetAllPlaylists() => dbContext.Playlists.ToListAsync();
