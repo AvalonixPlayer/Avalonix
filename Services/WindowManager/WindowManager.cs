@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonix.Services.Media.Track;
+using Avalonix.Model.Media.Track;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;

@@ -1,7 +1,6 @@
 using System;
 using Avalonia.Controls;
-using Avalonix.Services.Media.Album;
-using Avalonix.Services.Media.Track;
+using Avalonix.Model.Media.Track;
 using Avalonix.Services.WindowManager;
 using Microsoft.Extensions.Logging;
 

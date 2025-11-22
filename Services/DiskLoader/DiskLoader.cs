@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.DatabaseService;
-using Avalonix.Services.Media.Playlist;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.DiskLoader;
@@ -18,7 +18,7 @@ public class DiskLoader(ILogger logger, IDatabaseService databaseService) : IDis
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
-    public async Task<T?> LoadAsync<T>(string path)
+    public async Task<T?> LoadAsyncFromJson<T>(string path)
     {
         if (!File.Exists(path))
             return default;
@@ -34,7 +34,7 @@ public class DiskLoader(ILogger logger, IDatabaseService databaseService) : IDis
         }
     }
 
-    public async Task<List<Playlist>> LoadAllPlaylistsFromDb()
+    public async Task<List<PlaylistData>> LoadAllPlaylistsFromDb()
     {
         try
         {

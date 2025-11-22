@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.DiskManager;
-using Avalonix.Services.Media.MediaPlayer;
 using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Services.Media.Playlist;
+namespace Avalonix.Model.Media.Playlist;
 
 public record Playlist : IPlayable
 {

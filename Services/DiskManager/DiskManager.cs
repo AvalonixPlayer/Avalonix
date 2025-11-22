@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.DatabaseService;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
-using Avalonix.Services.Media.MediaPlayer;
-using Avalonix.Services.Media.Playlist;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.UserSettings.Theme;
 using Microsoft.Extensions.Logging;
@@ -71,7 +71,7 @@ public class DiskManager : IDiskManager
         try
         {
             var playlistData =
-                await _diskLoader.LoadAsync<PlaylistData>(Path.Combine(PlaylistsPath, name + Extension));
+                await _diskLoader.Ge
             if (playlistData == null!) _logger.LogError("Playlist get error: {name}", name);
             else _logger.LogDebug("Playlist get: {name}", name);
             return new Playlist(name, playlistData!, _player, this, _logger,
@@ -87,7 +87,7 @@ public class DiskManager : IDiskManager
     public async Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
-        _databaseService.RemovePlaylist(name, await GetAllPlaylists());
+        _databaseService.RemovePlaylistData(name, await GetAllPlaylists());
         _logger.LogInformation("Playlist {name} was been removed", name);
     }
 
@@ -104,7 +104,7 @@ public class DiskManager : IDiskManager
 
     public async Task<Theme?> GetTheme(string name)
     {
-        var result = await _diskLoader.LoadAsync<Theme>(Path.Combine(ThemesPath, name + Extension));
+        var result = await _diskLoader.LoadAsyncFromJson<Theme>(Path.Combine(ThemesPath, name + Extension));
         return result;
     }
 

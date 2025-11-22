@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonix.Services.Media.Playlist;
+using Avalonix.Model.Media.Playlist;
 
 namespace Avalonix.Services.DatabaseService;
 
 public interface IDatabaseService
 {
-    Task WritePlaylist(Playlist playlist);
-    void RemovePlaylist(Playlist playlist);
-    void RemovePlaylist(string plName, List<Playlist> playlists);
-    Task<List<Playlist>> GetAllPlaylists();
+    Task WritePlaylistData(PlaylistData playlist);
+    void RemovePlaylistData(PlaylistData playlist);
+    void RemovePlaylistData(string plName, List<PlaylistData> playlists);
+    Task<List<PlaylistData>> GetAllPlaylists();
 }
 

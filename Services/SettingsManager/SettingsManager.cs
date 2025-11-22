@@ -43,7 +43,7 @@ public class SettingsManager : ISettingsManager
                 await File.Create(SettingsPath).DisposeAsync();
                 await _diskWriter.WriteJsonAsync(new Settings(), SettingsPath);
             }
-            var result = await _diskLoader.LoadAsync<Settings>(SettingsPath);
+            var result = await _diskLoader.LoadAsyncFromJson<Settings>(SettingsPath);
             return result ?? default!;
         }
         catch (Exception e)

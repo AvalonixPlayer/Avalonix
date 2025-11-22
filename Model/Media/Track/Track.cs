@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace Avalonix.Services.Media.Track;
+namespace Avalonix.Model.Media.Track;
 
 public class Track
 {

@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.DatabaseService;
-using Avalonix.Services.Media.Playlist;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.DiskWriter;
@@ -38,7 +38,7 @@ public class DiskWriter(ILogger logger, IDatabaseService databaseService) : IDis
         logger.LogInformation("Trying to Write Playlist: {plName}", playlist.Name);
         try
         {
-            await databaseService.WritePlaylist(playlist);
+            await databaseService.WritePlaylistData(playlist);
         }
         catch (Exception ex)
         {

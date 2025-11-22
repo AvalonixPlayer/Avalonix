@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonix.Services.Media.MediaPlayer;
-using Avalonix.Services.Media.Playlist;
+using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Services.Media.Album;
+namespace Avalonix.Model.Media.Album;
 
 public record Album : IPlayable
 {
@@ -58,7 +58,7 @@ public record Album : IPlayable
         });
         return Task.CompletedTask;
     }
-    
+
     public bool QueueIsEmpty() =>
         PlayQueue.QueueIsEmpty();
 }

@@ -1,4 +1,4 @@
-namespace Avalonix.Services.Media.Playlist;
+namespace Avalonix.Model.Media.Playlist;
 
 public enum SortPlaylistTrackFlags
 {

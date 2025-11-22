@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Avalonix.Services.Media;
+using Avalonix.Model.Media;
 
 namespace Avalonix.ViewModels.Strategy;
 

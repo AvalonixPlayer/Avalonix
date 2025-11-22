@@ -4,7 +4,7 @@ using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
 
-namespace Avalonix.Services.Media.MediaPlayer;
+namespace Avalonix.Model.Media.MediaPlayer;
 
 public class MediaPlayer : IMediaPlayer
 {
@@ -15,7 +15,7 @@ public class MediaPlayer : IMediaPlayer
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
     public bool IsPaused => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_PAUSED;
 
-    public Track.Track? CurrentTrack { get; private set; }
+    public Model.Media.Track.Track? CurrentTrack { get; private set; }
 
     public event Action<bool>? PlaybackStateChanged;
     public event Action? TrackChanged;
@@ -27,7 +27,7 @@ public class MediaPlayer : IMediaPlayer
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
     }
 
-    public void Play(Track.Track track)
+    public void Play(Model.Media.Track.Track track)
     {
         CurrentTrack = track;
         Bass.BASS_StreamFree(_stream);

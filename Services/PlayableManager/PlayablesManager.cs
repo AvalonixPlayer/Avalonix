@@ -1,15 +1,15 @@
 using System;
 using System.Threading.Tasks;
-using Avalonix.Services.Media;
-using Avalonix.Services.Media.Album;
-using Avalonix.Services.Media.MediaPlayer;
-using Avalonix.Services.Media.Playlist;
+using Avalonix.Model.Media;
+using Avalonix.Model.Media.Album;
+using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.UserSettings;
 using Microsoft.Extensions.Logging;
-using Track = Avalonix.Services.Media.Track.Track;
+using Track = Avalonix.Model.Media.Track.Track;
 
 namespace Avalonix.Services.PlayableManager;
 

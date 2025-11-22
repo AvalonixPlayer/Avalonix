@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Avalonix.Services.Media.Playlist;
+namespace Avalonix.Model.Media.Playlist;
 
 public class PlaylistData
 {
@@ -32,7 +32,7 @@ public class PlaylistData
         if (!Directory.Exists(ObservingDirectory)) return;
 
         var extensions = new[] { "*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw" };
-        var files = extensions.SelectMany(ext => 
+        var files = extensions.SelectMany(ext =>
             Directory.EnumerateFiles(ObservingDirectory, ext, SearchOption.AllDirectories));
 
         var currentPaths = _tracks.Select(track => track.TrackData.Path).ToList();

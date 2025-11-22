@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonix.Services.Media.MediaPlayer;
+using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Services.Media.Playlist;
+namespace Avalonix.Model.Media.Playlist;
 
 public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings settings)
 {

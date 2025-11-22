@@ -1,13 +1,13 @@
 using System;
 using System.IO;
-using Avalonix.Services.Media.Playlist;
+using Avalonix.Model.Media.Playlist;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avalonix.Services.DatabaseService;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Playlist> Playlists { get; set; }
+    public DbSet<PlaylistData> Playlists { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

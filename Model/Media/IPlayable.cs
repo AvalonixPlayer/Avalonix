@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Avalonix.Services.Media.Playlist;
+using Avalonix.Model.Media.Playlist;
 
-namespace Avalonix.Services.Media;
+namespace Avalonix.Model.Media;
 
 public interface IPlayable
 {

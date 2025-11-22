@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Avalonix.Services.Media;
-using Avalonix.Services.Media.Playlist;
+using Avalonix.Model.Media;
+using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 
 namespace Avalonix.ViewModels.Strategy;

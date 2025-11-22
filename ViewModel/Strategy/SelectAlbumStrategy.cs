@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Avalonix.Services.Media;
-using Avalonix.Services.Media.Album;
+using Avalonix.Model.Media;
+using Avalonix.Model.Media.Album;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 

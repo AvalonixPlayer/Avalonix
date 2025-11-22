@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Avalonix.Services.Media.Track;
+namespace Avalonix.Model.Media.Track;
 
 public class TrackData(string path)
 {

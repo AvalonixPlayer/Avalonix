@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using File = TagLib.File;
 
-namespace Avalonix.Services.Media.Track;
+namespace Avalonix.Model.Media.Track;
 
 public record TrackMetadata
 {
@@ -17,12 +17,12 @@ public record TrackMetadata
     public TimeSpan Duration { get; private set; }
     public byte[]? Cover { get; private set; }
     private string _path = null!;
-    
+
     public Action? MetadataLoaded;
     public Action? MetadataEdited;
 
     public void Init(string path) => _path = path;
-    
+
     public void FillTrackMetaData()
     {
         var track = File.Create(_path);
@@ -57,7 +57,7 @@ public record TrackMetadata
             file.Tag.Genres = [genre];
         file.Tag.Year = (uint)year;
         file.Tag.Lyrics = lyric;
-            
+
         if (cover != null)
         {
             file.Tag.Pictures = [];
@@ -69,12 +69,12 @@ public record TrackMetadata
             };
             file.Tag.Pictures = [picture];
         }
-        
+
         file.Save();
         FillTrackMetaData();
         MetadataEdited?.Invoke();
     }
-    
+
     public override string ToString()
     {
         var result = new StringBuilder();
