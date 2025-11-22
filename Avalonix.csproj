@@ -11,6 +11,7 @@
     <ItemGroup>
         <Folder Include="github\" />
         <AvaloniaResource Include="Assets\**" />
+        <Folder Include="Model\" />
     </ItemGroup>
 
 
@@ -39,7 +40,7 @@
 
     <ItemGroup>
         <AdditionalFiles Include="Styles\Default.axaml" />
-        <AdditionalFiles Include="Views\SecondaryWindows\PlaylistCreateWindow\PlaylistCreateWindow.axaml" />
+        <AdditionalFiles Include="View\SecondaryWindows\PlaylistCreateWindow\PlaylistCreateWindow.axaml" />
     </ItemGroup>
 
 

@@ -1,9 +1,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonix.Services.Disk.DiskLoader;
-using Avalonix.Services.Disk.DiskManager;
-using Avalonix.Services.Disk.DiskWriter;
+using Avalonix.Services.DiskLoader;
+using Avalonix.Services.DiskWriter;
 using Avalonix.Services.UserSettings;
 using Microsoft.Extensions.Logging;
 
@@ -12,7 +11,7 @@ namespace Avalonix.Services.SettingsManager;
 public class SettingsManager : ISettingsManager
 {
     private static string SettingsPath { get; } =
-        Path.Combine(DiskManager.AvalonixFolderPath, "settings" + DiskManager.Extension);
+        Path.Combine(DiskManager.DiskManager.AvalonixFolderPath, "settings" + DiskManager.DiskManager.Extension);
     private readonly IDiskWriter _diskWriter;
     private readonly IDiskLoader _diskLoader;
     private readonly ILogger _logger;
@@ -37,8 +36,8 @@ public class SettingsManager : ISettingsManager
     {
         try
         {
-            if(!Directory.Exists(DiskManager.AvalonixFolderPath))
-                Directory.CreateDirectory(DiskManager.AvalonixFolderPath);
+            if(!Directory.Exists(DiskManager.DiskManager.AvalonixFolderPath))
+                Directory.CreateDirectory(DiskManager.DiskManager.AvalonixFolderPath);
             if (!Path.Exists(SettingsPath))
             {
                 await File.Create(SettingsPath).DisposeAsync();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonix.Services.Disk.DiskManager;
+using Avalonix.Services.DiskManager;
 using Avalonix.Services.Media;
 using Avalonix.Services.Media.MediaPlayer;
 using Avalonix.Services.Media.Playlist;

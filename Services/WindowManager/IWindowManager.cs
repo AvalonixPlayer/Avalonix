@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Avalonix.Services.Media.Track;
-using Avalonix.Views.SecondaryWindows.AboutWindow;
-using Avalonix.Views.SecondaryWindows.EditMetadataWindow;
-using Avalonix.Views.SecondaryWindows.PlayableSelectWindow;
-using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
-using Avalonix.Views.SecondaryWindows.ShowTrackWindow;
+using Avalonix.View.SecondaryWindows.AboutWindow;
+using Avalonix.View.SecondaryWindows.EditMetadataWindow;
+using Avalonix.View.SecondaryWindows.PlayableSelectWindow;
+using Avalonix.View.SecondaryWindows.PlaylistCreateWindow;
+using Avalonix.View.SecondaryWindows.ShowTrackWindow;
 
 namespace Avalonix.Services.WindowManager;
 
