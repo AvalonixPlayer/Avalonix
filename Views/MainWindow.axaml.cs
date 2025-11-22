@@ -46,7 +46,7 @@ public partial class MainWindow : Window
     private readonly Image _disableLoopImage = GetImageFromAvares("buttons/DisableLoop.png");
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
-        ISettingsManager settingsManager, IPlayableManager playableManager, IWindowManager windowManager)
+        ISettingsManager settingsManager, IPlaylistManager playableManager, IWindowManager windowManager)
     {
         _logger = logger;
         _vm = vm;

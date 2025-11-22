@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Models.Disk.DiskManager;
 using Avalonix.Models.Media;
 using Avalonix.Models.Media.Album;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Track;
+using Avalonix.Models.UserSettings;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
@@ -22,10 +24,37 @@ public class AlbumManager(
 
     private readonly List<Track> _tracks = [];
     
+    private CancellationTokenSource? _globalCancellationTokenSource;
+    
     public IMediaPlayer MediaPlayer { get; }
     public IPlayable? PlayingPlayable { get; set; }
 
     public Track? CurrentTrack { get; }
+    private readonly Settings _settings = settingsManager.Settings!;
+    public event Action<bool> PlaybackStateChanged
+    {
+        add => player.PlaybackStateChanged += value;
+        remove => player.PlaybackStateChanged -= value;
+    }
+
+    public event Action TrackChanged
+    {
+        add => player.TrackChanged += value;
+        remove => player.TrackChanged -= value;
+    }
+
+    public event Action<bool> ShuffleChanged
+    {
+        add => _settings.Avalonix.SuffleChanged += value;
+        remove => _settings.Avalonix.SuffleChanged -= value;
+    }
+
+    public event Action<bool> LoopChanged
+    {
+        add => _settings.Avalonix.LoopChanged += value;
+        remove => _settings.Avalonix.LoopChanged -= value;
+    }
+    public event Action? PlayableChanged;
 
     public void LoadTracks()
     {
@@ -72,8 +101,42 @@ public class AlbumManager(
         }
     }
 
-    public async void StartAlbum(Album album) =>
-        await album.Play();
+    public Task StartAlbum(Album album)
+    {
+        try
+        {
+            _globalCancellationTokenSource?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            /* ignore */
+        }
+        finally
+        {
+            _globalCancellationTokenSource?.Dispose();
+        }
+
+        PlayingPlayable = album;
+        
+        PlayableChanged?.Invoke();
+        
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await PlayingPlayable.Play().ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                /* expected on cancel */
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Playlist play failed");
+            }
+        });
+        return Task.CompletedTask;
+    }
 
     public void RemoveAlbum(Album album)
     {
@@ -125,10 +188,4 @@ public class AlbumManager(
     {
         throw new NotImplementedException();
     }
-
-    public event Action? PlayableChanged;
-    public event Action<bool>? PlaybackStateChanged;
-    public event Action? TrackChanged;
-    public event Action<bool>? ShuffleChanged;
-    public event Action<bool>? LoopChanged;
 }

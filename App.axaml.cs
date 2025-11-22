@@ -57,8 +57,8 @@ public class App : Application
             services.AddSingleton<IMediaPlayer, MediaPlayer>();
             services.AddSingleton<IPlayableManager, PlaylistManager>();
             services.AddSingleton<IPlaylistManager, PlaylistManager>();
-            services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();
+            services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddDbContext<AppDbContext>();
             services.AddSingleton<IDatabaseService, DatabaseService>();
         }).ConfigureLogging(log =>

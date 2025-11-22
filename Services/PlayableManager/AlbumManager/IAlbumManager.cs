@@ -10,6 +10,6 @@ public interface IAlbumManager : IPlayableManager
     public Action? TrackLoaded { get; set; }
     void LoadTracks();
     List<Album> GetAlbums();
-    void StartAlbum(Album album);
+    Task StartAlbum(Album album);
     void RemoveAlbum(Album album);
 }

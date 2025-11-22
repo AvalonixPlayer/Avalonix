@@ -125,6 +125,7 @@ public class PlaylistManager(
         }
 
         PlayingPlayable = playlist;
+        Console.WriteLine(PlayingPlayable.Name);
 
         PlayableChanged?.Invoke();
 
