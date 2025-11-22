@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonix.Models.Media.Playlist;
-using Microsoft.Data.Sqlite;
+using Avalonix.Services.Media.Playlist;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avalonix.Services.DatabaseService;

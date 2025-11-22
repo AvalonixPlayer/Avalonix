@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Avalonix.Views.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.Views.SecondaryWindows.PlaylistCreateWindow;
 
-namespace Avalonix.ViewModels;
+namespace Avalonix.ViewModels.Main;
 
 public interface IMainWindowViewModel
 {

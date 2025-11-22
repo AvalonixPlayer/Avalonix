@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonix.Models.Media;
-using Avalonix.Models.Media.Album;
+using Avalonix.Services.Media;
+using Avalonix.Services.Media.Album;
 
 namespace Avalonix.Services.PlayableManager.AlbumManager;
 

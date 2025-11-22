@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonix.Models.Media;
+using Avalonix.Services.Media;
 using Avalonix.ViewModels.Strategy;
 
 namespace Avalonix.ViewModels.PlayableSelectViewModel;

@@ -1,10 +1,6 @@
 ﻿#define DEBUG
 using Avalonia;
 using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Avalonix.Services.VersionManager;
 
 namespace Avalonix;
 

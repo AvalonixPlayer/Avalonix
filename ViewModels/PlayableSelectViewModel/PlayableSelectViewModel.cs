@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonix.Models.Media;
-using Avalonix.Models.Media.Playlist;
+using Avalonix.Services.Media;
 using Avalonix.Services.PlayableManager;
 using Avalonix.ViewModels.Strategy;
 

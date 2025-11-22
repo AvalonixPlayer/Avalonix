@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Avalonix.Models.Media;
-using Avalonix.Models.Media.MediaPlayer;
-using Avalonix.Models.Media.Track;
+using Avalonix.Services.Media;
+using Avalonix.Services.Media.MediaPlayer;
+using Avalonix.Services.Media.Track;
 
 namespace Avalonix.Services.PlayableManager;
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonix.Models.Media.Playlist;
+using Avalonix.Services.Media.Playlist;
 
 namespace Avalonix.Services.DatabaseService;
 

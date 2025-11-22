@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonix.Models.Media;
+using Avalonix.Services.Media;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels.PlayableSelectViewModel;
 using Microsoft.Extensions.Logging;

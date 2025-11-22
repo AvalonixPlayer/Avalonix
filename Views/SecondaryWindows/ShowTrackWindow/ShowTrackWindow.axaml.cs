@@ -1,12 +1,8 @@
 using System;
-using System.IO;
 using Avalonia.Controls;
-using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using Avalonix.Models.Media.Track;
+using Avalonix.Services.Media.Track;
 using Avalonix.Services.WindowManager;
 using Microsoft.Extensions.Logging;
-using static Avalonia.Threading.Dispatcher;
 
 namespace Avalonix.Views.SecondaryWindows.ShowTrackWindow;
 

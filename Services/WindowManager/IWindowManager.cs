@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Avalonix.Models.Media.Track;
+using Avalonix.Services.Media.Track;
 using Avalonix.Views.SecondaryWindows.AboutWindow;
 using Avalonix.Views.SecondaryWindows.EditMetadataWindow;
 using Avalonix.Views.SecondaryWindows.PlayableSelectWindow;

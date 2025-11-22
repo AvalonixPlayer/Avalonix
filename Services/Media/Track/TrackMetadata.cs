@@ -1,0 +1,92 @@
+using System;
+using System.IO;
+using System.Text;
+using File = TagLib.File;
+
+namespace Avalonix.Services.Media.Track;
+
+public record TrackMetadata
+{
+    public string? TrackName { get; private set; }
+    public string? Album { get; private set; }
+    public string? MediaFileFormat { get; private set; }
+    public string? Artist { get; private set; }
+    public string? Genre { get; private set; }
+    public uint? Year { get; private set; }
+    public string? Lyric { get; private set; }
+    public TimeSpan Duration { get; private set; }
+    public byte[]? Cover { get; private set; }
+    private string _path = null!;
+    
+    public Action? MetadataLoaded;
+    public Action? MetadataEdited;
+
+    public void Init(string path) => _path = path;
+    
+    public void FillTrackMetaData()
+    {
+        var track = File.Create(_path);
+        TrackName = track.Tag!.Title ?? Path.GetFileNameWithoutExtension(_path);
+        MediaFileFormat = Path.GetExtension(_path);
+        Album = track.Tag!.Album!;
+        Artist = track.Tag!.FirstPerformer!;
+        Genre = track.Tag!.FirstGenre!;
+        Year = track.Tag!.Year;
+        Lyric = track.Tag!.Lyrics!;
+        Duration = track.Properties!.Duration;
+        if (track.Tag.Pictures is not { Length: > 0 })
+        {
+            MetadataLoaded?.Invoke();
+            return;
+        }
+        var picture = track.Tag.Pictures[0];
+        if (picture != null && picture.Data != null && picture.Data.Data is { Length: > 0 })
+            Cover = picture.Data.Data;
+        MetadataLoaded?.Invoke();
+    }
+
+    [Obsolete("Obsolete")]
+    public void RewriteTags(string title, string album, string? artist, string? genre, int year, string lyric, byte[]? cover)
+    {
+        using var file = File.Create(_path);
+        file.Tag.Title = title;
+        file.Tag.Album = album;
+        if(artist != null)
+            file.Tag.Artists = [artist];
+        if(genre != null)
+            file.Tag.Genres = [genre];
+        file.Tag.Year = (uint)year;
+        file.Tag.Lyrics = lyric;
+            
+        if (cover != null)
+        {
+            file.Tag.Pictures = [];
+            var picture = new TagLib.Picture
+            {
+                Type = TagLib.PictureType.FrontCover,
+                Description = "Cover",
+                Data = new TagLib.ByteVector(cover)
+            };
+            file.Tag.Pictures = [picture];
+        }
+        
+        file.Save();
+        FillTrackMetaData();
+        MetadataEdited?.Invoke();
+    }
+    
+    public override string ToString()
+    {
+        var result = new StringBuilder();
+        result.AppendLine($"TrackName: {TrackName}");
+        result.AppendLine($"Album: {Album}");
+        result.AppendLine($"Format: {MediaFileFormat}");
+        result.AppendLine($"Artist: {Artist}");
+        result.AppendLine($"Genre: {Genre}");
+        result.AppendLine($"Year: {Year}");
+        result.AppendLine($"Lyric: {Lyric}");
+        result.AppendLine($"Duration: {Duration}");
+        result.AppendLine($"Cover: {Cover == null}");
+        return result.ToString();
+    }
+}

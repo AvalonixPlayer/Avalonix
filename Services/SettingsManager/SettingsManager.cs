@@ -1,11 +1,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonix.Models.Disk;
-using Avalonix.Models.Disk.DiskLoader;
-using Avalonix.Models.Disk.DiskManager;
-using Avalonix.Models.Disk.DiskWriter;
-using Avalonix.Models.UserSettings;
+using Avalonix.Services.Disk.DiskLoader;
+using Avalonix.Services.Disk.DiskManager;
+using Avalonix.Services.Disk.DiskWriter;
+using Avalonix.Services.UserSettings;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.SettingsManager;

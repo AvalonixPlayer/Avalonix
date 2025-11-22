@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Avalonix.Models.Media.Playlist;
+using Avalonix.Services.Media.Playlist;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avalonix.Services.DatabaseService;

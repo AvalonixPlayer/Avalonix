@@ -1,14 +1,10 @@
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using Avalonix.Models.Media.Playlist;
-using Avalonix.Models.Media.Track;
+using Avalonix.Services.Media.Track;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels.EditMetadata;

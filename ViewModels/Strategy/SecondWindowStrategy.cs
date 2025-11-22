@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
-using Avalonix.Models.Media;
-using Avalonix.Models.Media.Album;
-using Avalonix.Models.Media.Playlist;
+using Avalonix.Services.Media;
 
 namespace Avalonix.ViewModels.Strategy;
 

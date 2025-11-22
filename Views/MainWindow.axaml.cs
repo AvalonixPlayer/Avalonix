@@ -11,12 +11,11 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonix.Services.SettingsManager;
-using Avalonix.ViewModels;
 using Microsoft.Extensions.Logging;
 using Avalonia.Platform;
 using Avalonix.Services.PlayableManager;
-using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.WindowManager;
+using Avalonix.ViewModels.Main;
 using Timer = System.Timers.Timer;
 
 namespace Avalonix.Views;

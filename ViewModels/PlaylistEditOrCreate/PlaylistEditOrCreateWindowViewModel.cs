@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
-using Avalonix.Models.Media.Track;
+using Avalonix.Services.Media.Track;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModels.Strategy;
