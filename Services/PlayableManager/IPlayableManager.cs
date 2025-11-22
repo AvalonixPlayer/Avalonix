@@ -17,7 +17,6 @@ public interface IPlayableManager
     void ResumePlayable();
     void NextTrack();
     void TrackBefore();
-    Task ChangeVolume(uint volume);
     void ResetSnuffle();
     void ResetLoop();
     void ForceStartTrackByIndex(int index);

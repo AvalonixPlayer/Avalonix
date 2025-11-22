@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonix.Models.Disk;
 using Avalonix.Models.Disk.DiskManager;
 using Avalonix.Models.Media;
 using Avalonix.Models.Media.MediaPlayer;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Models.Media.Track;
 using Avalonix.Models.UserSettings;
-using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Services.PlaylistManager;
+namespace Avalonix.Services.PlayableManager.PlaylistManager;
 
 public class PlaylistManager(
     IMediaPlayer player,
@@ -147,8 +145,6 @@ public class PlaylistManager(
         });
         return Task.CompletedTask;
     }
-
-    public async Task ChangeVolume(uint volume) => await player.ChangeVolume(volume);
 
     public void PausePlayable() => PlayingPlayable?.Pause();
 

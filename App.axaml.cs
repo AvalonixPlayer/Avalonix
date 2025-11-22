@@ -16,7 +16,6 @@ using Avalonix.Services.DatabaseService;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
-using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.ThemeManager;
 using Avalonix.Services.VersionManager;

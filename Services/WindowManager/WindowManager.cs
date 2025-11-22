@@ -6,7 +6,6 @@ using Avalonix.Models.Media.Track;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
-using Avalonix.Services.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.VersionManager;
 using Avalonix.ViewModels.EditMetadata;

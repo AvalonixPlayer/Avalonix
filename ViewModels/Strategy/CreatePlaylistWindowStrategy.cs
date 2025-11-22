@@ -3,7 +3,6 @@ using Avalonix.Models.Media;
 using Avalonix.Models.Media.Album;
 using Avalonix.Models.Media.Playlist;
 using Avalonix.Services.PlayableManager.PlaylistManager;
-using Avalonix.Services.PlaylistManager;
 
 namespace Avalonix.ViewModels.Strategy;
 
