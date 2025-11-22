@@ -60,6 +60,7 @@ public class AlbumManager(
     {
         var paths = diskManager.GetMusicFilesForAlbums();
 
+        _tracks.Clear();
         foreach (var path in paths)
         {
             var track = new Track(path);
