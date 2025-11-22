@@ -14,6 +14,11 @@ public record AlbumData
     private void FillTracks(List<string> tracksPaths)
     {
         foreach (var trackPath in tracksPaths)
-            Tracks.Add(new Track.Track(trackPath));
+        {
+            var track = new Track.Track(trackPath);
+            track.Metadata.Init(trackPath);
+            track.Metadata.FillTrackMetaData();
+            Tracks.Add(track);
+        }
     }
 }
