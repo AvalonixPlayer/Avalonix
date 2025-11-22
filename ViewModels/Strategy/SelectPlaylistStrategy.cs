@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Avalonix.Models.Media;
 using Avalonix.Models.Media.Playlist;
+using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.PlaylistManager;
 
@@ -18,12 +19,12 @@ public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistMana
     }
 }
 
-public class SelectAndPlayPlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy
+public class SelectAndPlayPlaylistWindowStrategy(IPlayablesManager playablesManager) : IPlayableWindowStrategy
 {
     public string WindowTitle => "to play";
     public string ActionButtonText => "Playlist name to play";
 
-    public async Task ExecuteAsync(IPlayable playlist) => await playlistManager.StartPlaylist((playlist as Playlist)!);
+    public async Task ExecuteAsync(IPlayable playlist) => await playablesManager.StartPlayable((playlist as Playlist)!);
 }
 
 public class SelectAndEditPlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy

@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
+using Avalonix.Models.Media;
 
 namespace Avalonix.Services.PlayableManager;
 
 public interface IPlayablesManager
 {
-    void StartPlayable(IPlayableManager playableManager);
+    Task StartPlayable(IPlayable playable);
 }

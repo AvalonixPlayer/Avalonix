@@ -101,7 +101,7 @@ public class AlbumManager(
         }
     }
 
-    public Task StartAlbum(Album album)
+    public Task StartAlbum(IPlayable album)
     {
         try
         {

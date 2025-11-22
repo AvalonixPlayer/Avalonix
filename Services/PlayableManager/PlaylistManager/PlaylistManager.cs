@@ -91,7 +91,7 @@ public class PlaylistManager(
     public async Task CreatePlaylist(Playlist playlist) => await playlist.Save();
     public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.Name);
 
-    public Task StartPlaylist(Playlist playlist)
+    public Task StartPlaylist(IPlayable playlist)
     {
         ArgumentNullException.ThrowIfNull(playlist);
 
@@ -125,7 +125,6 @@ public class PlaylistManager(
         }
 
         PlayingPlayable = playlist;
-        Console.WriteLine(PlayingPlayable.Name);
 
         PlayableChanged?.Invoke();
 

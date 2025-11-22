@@ -1,16 +1,27 @@
 using System.Threading.Tasks;
+using Avalonix.Models.Media;
+using Avalonix.Models.Media.Album;
 using Avalonix.Models.Media.Playlist;
+using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 
 namespace Avalonix.Services.PlayableManager;
 
-public class PlayablesManager : IPlayablesManager
+public class PlayablesManager(IPlaylistManager playlistManager, IAlbumManager albumManager) : IPlayablesManager
 {
-    public void StartPlayable(IPlayableManager playableManager)
+    public Task StartPlayable(IPlayable playable)
     {
-        if (playableManager is IPlaylistManager)
+        playlistManager.PlayingPlayable?.Stop();
+        albumManager.PlayingPlayable?.Stop();
+        switch (playable)
         {
-            (playableManager as IPlaylistManager).StartPlaylist(playableManager.PlayingPlayable as Playlist);
+            case Playlist:
+                playlistManager.StartPlaylist(playable);
+                break;
+            case Album:
+                albumManager.StartAlbum(playable);
+                break;
         }
+        return Task.CompletedTask;
     }
 }

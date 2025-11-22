@@ -26,7 +26,7 @@ public partial class MainWindow : Window
 {
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
-    private readonly IPlayableManager _playableManager;
+    private readonly IPlayablesManager _playablesManager;
     private readonly IWindowManager _windowManager;
 
     private readonly Timer _timer;
@@ -46,25 +46,25 @@ public partial class MainWindow : Window
     private readonly Image _disableLoopImage = GetImageFromAvares("buttons/DisableLoop.png");
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
-        ISettingsManager settingsManager, IPlaylistManager playableManager, IWindowManager windowManager)
+        ISettingsManager settingsManager, IPlayablesManager playablesManager, IWindowManager windowManager)
     {
         _logger = logger;
         _vm = vm;
-        _playableManager = playableManager;
+        _playablesManager = playablesManager;
         _windowManager = windowManager;
 
         InitializeComponent();
 
-        _playableManager.PlaybackStateChanged += UpdatePauseButtonImage;
-        _playableManager.PlayableChanged += SubscribeTrackMetadataLoaded;
-        _playableManager.PlayableChanged += UpdateSongBox;
+        _playablesManager.PlaybackStateChanged += UpdatePauseButtonImage;
+        _playablesManager.PlayableChanged += SubscribeTrackMetadataLoaded;
+        _playablesManager.PlayableChanged += UpdateSongBox;
 
-        _playableManager.TrackChanged += UpdateAlbumCover;
-        _playableManager.TrackChanged += UpdateSongBox;
-        _playableManager.TrackChanged += UpdateTrackPositionSlider;
-        _playableManager.TrackChanged += UpdateTrackInfo;
-        _playableManager.ShuffleChanged += UpdateShuffleButtonImage;
-        _playableManager.LoopChanged += UpdateLoopButtonImage;
+        _playablesManager.TrackChanged += UpdateAlbumCover;
+        _playablesManager.TrackChanged += UpdateSongBox;
+        _playablesManager.TrackChanged += UpdateTrackPositionSlider;
+        _playablesManager.TrackChanged += UpdateTrackInfo;
+        _playablesManager.ShuffleChanged += UpdateShuffleButtonImage;
+        _playablesManager.LoopChanged += UpdateLoopButtonImage;
 
         UpdateShuffleButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Shuffle);
         UpdateLoopButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Loop);
@@ -101,7 +101,7 @@ public partial class MainWindow : Window
 
     private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        await _playableManager.ChangeVolume(Convert.ToUInt32(e.NewValue));
+        await _playablesManager.ChangeVolume(Convert.ToUInt32(e.NewValue));
         _logger.LogInformation("Volume changed: {EOldValue} -> {ENewValue}", e.OldValue, e.NewValue);
     }
 
@@ -109,7 +109,7 @@ public partial class MainWindow : Window
     {
         if (_isUserDragging)
             Dispatcher.UIThread.Post(async void () =>
-                _playableManager.MediaPlayer.SetPosition(TrackPositionSlider.Value));
+                _playablesManager.MediaPlayer.SetPosition(TrackPositionSlider.Value));
     }
 
     private void UpdateTrackPositionSlider(object? sender,
@@ -119,26 +119,26 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.Post(() =>
             {
                 if (!_isUserDragging)
-                    TrackPositionSlider.Value = _playableManager.MediaPlayer.GetPosition();
+                    TrackPositionSlider.Value = _playablesManager.MediaPlayer.GetPosition();
             });
     }
 
     private void Pause(object sender, RoutedEventArgs e)
     {
-        var playingPlaylist = _playableManager.PlayingPlayable;
+        var playingPlaylist = _playablesManager.PlayingPlayable;
         if (playingPlaylist == null) return;
 
         if (playingPlaylist.PlayQueue.Paused)
-            _playableManager.ResumePlayable();
+            _playablesManager.ResumePlayable();
         else
-            _playableManager.PausePlayable();
+            _playablesManager.PausePlayable();
     }
 
     private void PlayNextTrack(object sender, RoutedEventArgs e) =>
-        _playableManager.NextTrack();
+        _playablesManager.NextTrack();
 
     private void PlayTrackBefore(object sender, RoutedEventArgs e) =>
-        _playableManager.TrackBefore();
+        _playablesManager.TrackBefore();
 
     private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e) =>
         await _vm.PlaylistCreateWindow_Open().ShowDialog(this);
@@ -151,15 +151,15 @@ public partial class MainWindow : Window
 
     private void SubscribeTrackMetadataLoaded()
     {
-        if (_playableManager.PlayingPlayable == null) return;
+        if (_playablesManager.PlayingPlayable == null) return;
 
-        for (var i = 0; i < _playableManager.PlayingPlayable!.PlayQueue.Tracks.Count; i++)
+        for (var i = 0; i < _playablesManager.PlayingPlayable!.PlayQueue.Tracks.Count; i++)
         {
-            _playableManager.PlayingPlayable.PlayQueue.Tracks[i].Metadata.MetadataLoaded += UpdateSongBox;
+            _playablesManager.PlayingPlayable.PlayQueue.Tracks[i].Metadata.MetadataLoaded += UpdateSongBox;
             var i1 = i;
-            _playableManager.PlayingPlayable.PlayQueue.Tracks[i].Metadata.MetadataLoaded += () =>
+            _playablesManager.PlayingPlayable.PlayQueue.Tracks[i].Metadata.MetadataLoaded += () =>
             {
-                if (i1 == _playableManager.PlayingPlayable.PlayQueue.PlayingIndex)
+                if (i1 == _playablesManager.PlayingPlayable.PlayQueue.PlayingIndex)
                     UpdateAlbumCover();
             };
         }
@@ -173,13 +173,13 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (_playableManager.PlayingPlayable?.QueueIsEmpty() == true)
+        if (_playablesManager.PlayingPlayable?.QueueIsEmpty() == true)
         {
             _logger.LogError("Play queue is empty");
             return;
         }
 
-        SongBox.ItemsSource = _playableManager.PlayingPlayable?.PlayQueue.Tracks
+        SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
             .Select(x => PostProcessedText(x.Metadata.TrackName, 30)).ToList();
     }
 
@@ -191,8 +191,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (_playableManager.MediaPlayer.CurrentTrack != null)
-            TrackPositionSlider.Maximum = _playableManager.MediaPlayer.CurrentTrack.Metadata.Duration.TotalSeconds;
+        if (_playablesManager.MediaPlayer.CurrentTrack != null)
+            TrackPositionSlider.Maximum = _playablesManager.MediaPlayer.CurrentTrack.Metadata.Duration.TotalSeconds;
         TrackPositionSlider.Value = 0;
     }
 
@@ -215,7 +215,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var currentTrack = _playableManager.CurrentTrack;
+        var currentTrack = _playablesManager.CurrentTrack;
 
         var coverData = currentTrack?.Metadata.Cover;
 
@@ -255,18 +255,18 @@ public partial class MainWindow : Window
             return;
         }
 
-        TrackName.Content = PostProcessedText(_playableManager.CurrentTrack?.Metadata.TrackName, 13);
-        ArtistName.Content = PostProcessedText(_playableManager.CurrentTrack?.Metadata.Artist, 13);
+        TrackName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.TrackName, 13);
+        ArtistName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 13);
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
         _windowManager.AboutWindow_Open().ShowDialog(this);
 
     private void ShuffleButton_OnClick(object? sender, RoutedEventArgs e) =>
-        _playableManager.ResetSnuffle();
+        _playablesManager.ResetSnuffle();
 
     private void LoopButton_OnClick(object? sender, RoutedEventArgs e) =>
-        _playableManager.ResetLoop();
+        _playablesManager.ResetLoop();
 
     private void UpdateShuffleButtonImage(bool enable)
     {
@@ -294,7 +294,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            var currentTrack = _playableManager.CurrentTrack;
+            var currentTrack = _playablesManager.CurrentTrack;
             if (currentTrack != null) await _windowManager.ShowTrackWindow_Open(currentTrack).ShowDialog(this);
         }
         catch (Exception ex)
@@ -307,7 +307,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            var currentTrack = _playableManager.CurrentTrack;
+            var currentTrack = _playablesManager.CurrentTrack;
             if (currentTrack != null) await _windowManager.EditMetadataWindow_Open(currentTrack).ShowDialog(this);
         }
         catch (Exception ex)
@@ -335,9 +335,9 @@ public partial class MainWindow : Window
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedIndex.ToString());
             var selectedIndex = castedSender.SelectedIndex;
-            var selectedTrack = _playableManager.PlayingPlayable?.PlayQueue.Tracks[selectedIndex];
+            var selectedTrack = _playablesManager.PlayingPlayable?.PlayQueue.Tracks[selectedIndex];
             if (selectedTrack != null)
-                _playableManager.ForceStartTrackByIndex(selectedIndex);
+                _playablesManager.ForceStartTrackByIndex(selectedIndex);
             else
                 _logger.LogError("No track selected");
             castedSender.Selection = null!;

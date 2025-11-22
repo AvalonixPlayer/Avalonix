@@ -55,6 +55,7 @@ public class App : Application
             services.AddSingleton<IDiskLoader, DiskLoader>();
             services.AddSingleton<IDiskWriter, DiskWriter>();
             services.AddSingleton<IMediaPlayer, MediaPlayer>();
+            services.AddSingleton<IPlayablesManager, PlayablesManager>();
             services.AddSingleton<IPlayableManager, PlaylistManager>();
             services.AddSingleton<IPlaylistManager, PlaylistManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();

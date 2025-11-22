@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.Models.Media.Track;
+using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.PlaylistManager;
@@ -21,7 +22,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.WindowManager;
 
-public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlaylistManager playlistManager, IVersionManager versionManager, IAlbumManager albumManager)
+public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlayablesManager playablesManager, IPlaylistManager playlistManager, IVersionManager versionManager, IAlbumManager albumManager)
     : IWindowManager
 {
     private static void CloseMainWindow()
@@ -62,14 +63,14 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
     }
 
     public PlayableSelectWindow PlaylistSelectToPlayWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager));
+        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playablesManager));
     public PlayableSelectWindow PlaylistSelectToEditWindow_Open() =>
         PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager));
     public PlaylistCreateWindow PlaylistCreateWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
 
     public PlayableSelectWindow PlaylistSelectWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playlistManager));
+        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playablesManager));
 
     public PlaylistCreateWindow PlaylistEditWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
@@ -84,7 +85,7 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
         PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager));
 
     public PlayableSelectWindow AlbumSelectAndPlayWindow_Open() =>
-        AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(albumManager));
+        AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
 
     public PlayableSelectWindow AlbumSelectAndDeleteWindow_Open() =>
         AlbumSelectWindow_Open(new SelectAndDeleteAlbumWindowStrategy(albumManager));
