@@ -16,12 +16,12 @@ public class PlayboxManager(
     public IPlayable? PlayingPlayable { get; set; }
     private CancellationTokenSource? _globalCancellationTokenSource;
     
-    public Task<List<IPlayable>> GetPlaylists()
+    public Task<List<IPlayable>> GetPlayables()
     {
         throw new NotImplementedException();
     }
 
-    public Task StartPlayable(IPlayable playBox)
+    public void StartPlayable(IPlayable playBox)
     {
         try
         {
@@ -55,7 +55,6 @@ public class PlayboxManager(
                 logger.LogError(ex, "Playlist play failed");
             }
         });
-        return Task.CompletedTask;
     }
 
     public event Action? PlayableChanged;

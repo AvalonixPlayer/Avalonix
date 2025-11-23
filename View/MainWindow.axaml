@@ -19,7 +19,7 @@
             <TabControl>
                 <TabControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
+                        <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </TabControl.ItemsPanel>
                 <TabItem Header="Playlists">

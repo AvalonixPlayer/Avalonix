@@ -103,7 +103,7 @@ public class AlbumManager(
         }
     }
 
-    public Task StartPlayable(IPlayable album)
+    public void StartPlayable(IPlayable album)
     {
         try
         {
@@ -137,7 +137,6 @@ public class AlbumManager(
                 logger.LogError(ex, "Playlist play failed");
             }
         });
-        return Task.CompletedTask;
     }
 
     public void RemoveAlbum(Album album)
@@ -145,7 +144,7 @@ public class AlbumManager(
         // TODO: remove tracks
     }
 
-    public Task<List<IPlayable>> GetPlaylists()
+    public Task<List<IPlayable>> GetPlayables()
     {
         LoadTracks();
         return Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());

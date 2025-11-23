@@ -12,6 +12,5 @@ public interface IPlaylistManager : IPlayableManager
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
     void DeletePlaylist(Playlist playlist);
-    Task StartPlayable(IPlayable playlist);
     Task<List<PlaylistData>> GetAllPlaylistData();
 }

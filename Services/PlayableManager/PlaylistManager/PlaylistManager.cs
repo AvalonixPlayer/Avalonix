@@ -76,7 +76,7 @@ public class PlaylistManager(
 
     public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.PlaylistData.Name);
 
-    public Task StartPlayable(IPlayable playlist)
+    public void StartPlayable(IPlayable playlist)
     {
         ArgumentNullException.ThrowIfNull(playlist);
 
@@ -130,10 +130,9 @@ public class PlaylistManager(
                 logger.LogError(ex, "Playlist play failed");
             }
         });
-        return Task.CompletedTask;
     }
 
-    public async Task<List<IPlayable>> GetPlaylists()
+    public async Task<List<IPlayable>> GetPlayables()
     {
         var allPlaylistData = await GetAllPlaylistData();
         return allPlaylistData.Select(data =>
