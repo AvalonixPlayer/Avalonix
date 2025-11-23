@@ -11,10 +11,12 @@ namespace Avalonix.Services.DatabaseService;
 public class DatabaseService : IDatabaseService
 {
     private readonly AppDbContext _dbContext;
+    private readonly ILogger _logger;
 
     public DatabaseService(AppDbContext dbContext, ILogger logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
 
         try
         {
@@ -29,7 +31,18 @@ public class DatabaseService : IDatabaseService
         }
     }
 
-    public async Task WritePlaylistData(PlaylistData playlist) => await _dbContext.AddAsync(playlist);
+    public async Task WritePlaylistData(PlaylistData playlist)
+    {
+        try
+        {
+            await _dbContext.AddAsync(playlist);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error while writing playlist: {ex}", ex);
+        }
+    }
 
     public void RemovePlaylistData(PlaylistData playlist) => _dbContext.Remove(playlist);
 
