@@ -9,21 +9,22 @@ namespace Avalonix.Model.Media.Playlist;
 
 public record Playlist : IPlayable
 {
-    public string Name { get; }
+
     public PlaylistData PlaylistData { get; }
     private readonly IDiskManager _disk;
     private readonly ILogger _logger;
+    public string Name { get; }
     public PlayQueue PlayQueue { get; }
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
         PlaySettings settings)
     {
-        Name = name;
         PlaylistData = playlistData;
         _disk = disk;
         _logger = logger;
         PlayQueue = new PlayQueue(player, logger, settings);
-
+        PlaylistData.Name = name;
+        Name = PlaylistData.Name;
         PlayQueue.FillQueue(PlaylistData.Tracks);
 
         PlayQueue.QueueStopped += () => Task.Run(Save);
@@ -70,7 +71,7 @@ public record Playlist : IPlayable
 
     public async Task Save()
     {
-        _logger.LogDebug("Playlist saved {playlistName}", Name);
+        _logger.LogDebug("Playlist saved {playlistName}", PlaylistData.Name);
         await _disk.SavePlaylist(this);
     }
 
