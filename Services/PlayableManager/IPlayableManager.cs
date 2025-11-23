@@ -11,8 +11,8 @@ public interface IPlayableManager
 {
     IMediaPlayer MediaPlayer { get; }
     IPlayable? PlayingPlayable { get; set; }
-    Track? CurrentTrack { get; }
-    Task<List<IPlayable>> GetPlaylists();
+    Task<List<IPlayable>> GetPlaylists(); // Must move to IAlbumManager and IPlaylistManager and rename
+    Task StartPlayable(IPlayable playlist);
     event Action? PlayableChanged;
     event Action<bool> PlaybackStateChanged;
     event Action TrackChanged;

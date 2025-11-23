@@ -24,7 +24,6 @@ public class PlaylistManager(
     public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }
     private CancellationTokenSource? _globalCancellationTokenSource;
-    public Track? CurrentTrack => player.CurrentTrack;
 
     private readonly Settings _settings = settingsManager.Settings!;
 
@@ -77,7 +76,7 @@ public class PlaylistManager(
 
     public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.PlaylistData.Name);
 
-    public Task StartPlaylist(IPlayable playlist)
+    public Task StartPlayable(IPlayable playlist)
     {
         ArgumentNullException.ThrowIfNull(playlist);
 

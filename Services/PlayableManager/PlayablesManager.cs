@@ -28,10 +28,10 @@ public class PlayablesManager(ILogger logger, IPlaylistManager playlistManager, 
         switch (playable)
         {
             case Playlist:
-                playlistManager.StartPlaylist(playable);
+                playlistManager.StartPlayable(playable);
                 break;
             case Album:
-                albumManager.StartAlbum(playable);
+                albumManager.StartPlayable(playable);
                 break;
         }
         PlayableChanged?.Invoke();

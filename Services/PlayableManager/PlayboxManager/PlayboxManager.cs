@@ -1,28 +1,61 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.MediaPlayer;
-using Avalonix.Model.Media.Track;
-using Avalonix.Services.DiskManager;
-using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.PlayableManager.PlayboxManager;
 
 public class PlayboxManager(
-    IMediaPlayer player,
-    ISettingsManager settingsManager,
-    IDiskManager diskManager,
-    IMediaPlayer mediaPlayer) : IPlayboxManager
+    ILogger logger,
+    IMediaPlayer player) : IPlayboxManager
 {
-    public IMediaPlayer MediaPlayer => mediaPlayer;
+    public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }
-    public Track? CurrentTrack { get; }
+    private CancellationTokenSource? _globalCancellationTokenSource;
     
     public Task<List<IPlayable>> GetPlaylists()
     {
         throw new NotImplementedException();
+    }
+
+    public Task StartPlayable(IPlayable playBox)
+    {
+        try
+        {
+            _globalCancellationTokenSource?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            /* ignore */
+        }
+        finally
+        {
+            _globalCancellationTokenSource?.Dispose();
+        }
+
+        PlayingPlayable = playBox;
+
+        PlayableChanged?.Invoke();
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await PlayingPlayable.Play().ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                /* expected on cancel */
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Playlist play failed");
+            }
+        });
+        return Task.CompletedTask;
     }
 
     public event Action? PlayableChanged;

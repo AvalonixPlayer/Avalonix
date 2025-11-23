@@ -26,12 +26,11 @@ public class AlbumManager(
     private readonly List<Track> _tracks = [];
 
     private CancellationTokenSource? _globalCancellationTokenSource;
-
     public IMediaPlayer MediaPlayer { get; } = mediaPlayer;
     public IPlayable? PlayingPlayable { get; set; }
 
-    public Track? CurrentTrack { get; }
     private readonly Settings _settings = settingsManager.Settings!;
+
     public event Action<bool> PlaybackStateChanged
     {
         add => player.PlaybackStateChanged += value;
@@ -55,6 +54,7 @@ public class AlbumManager(
         add => _settings.Avalonix.LoopChanged += value;
         remove => _settings.Avalonix.LoopChanged -= value;
     }
+
     public event Action? PlayableChanged;
 
     public void LoadTracks()
@@ -103,7 +103,7 @@ public class AlbumManager(
         }
     }
 
-    public Task StartAlbum(IPlayable album)
+    public Task StartPlayable(IPlayable album)
     {
         try
         {
