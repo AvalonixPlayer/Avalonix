@@ -150,44 +150,4 @@ public class AlbumManager(
         LoadTracks();
         return Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());
     }
-
-    public void PausePlayable()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ResumePlayable()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void NextTrack()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void TrackBefore()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task ChangeVolume(uint volume)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ResetSnuffle()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ResetLoop()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ForceStartTrackByIndex(int index)
-    {
-        throw new NotImplementedException();
-    }
 }

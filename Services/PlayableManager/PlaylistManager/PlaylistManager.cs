@@ -30,19 +30,6 @@ public class PlaylistManager(
 
     public event Action? PlayableChanged;
 
-    public void ResetSnuffle()
-    {
-        logger.LogDebug("Changing shuffle mode");
-        _settings.Avalonix.SuffleChanged?.Invoke(!_settings.Avalonix.PlaySettings.Shuffle);
-        _settings.Avalonix.PlaySettings.Shuffle = !_settings.Avalonix.PlaySettings.Shuffle;
-    }
-
-    public void ResetLoop()
-    {
-        logger.LogDebug("Changing loop mode");
-        _settings.Avalonix.LoopChanged?.Invoke(!_settings.Avalonix.PlaySettings.Loop);
-        _settings.Avalonix.PlaySettings.Loop = !_settings.Avalonix.PlaySettings.Loop;
-    }
 
     public event Action<bool> PlaybackStateChanged
     {
@@ -87,6 +74,7 @@ public class PlaylistManager(
     public async Task EditPlaylist(Playlist playlist) => await playlist.Save();
 
     public async Task CreatePlaylist(Playlist playlist) => await playlist.Save();
+
     public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.PlaylistData.Name);
 
     public Task StartPlaylist(IPlayable playlist)
@@ -146,15 +134,6 @@ public class PlaylistManager(
         return Task.CompletedTask;
     }
 
-    public void PausePlayable() => PlayingPlayable?.Pause();
-
-    public void ResumePlayable() => PlayingPlayable?.Resume();
-
-    public void NextTrack() => PlayingPlayable?.NextTrack();
-
-    public void TrackBefore() => PlayingPlayable?.BackTrack();
-
-    public void ForceStartTrackByIndex(int index) => PlayingPlayable?.ForceStartTrackByIndex(index);
     public async Task<List<IPlayable>> GetPlaylists()
     {
         var allPlaylistData = await GetAllPlaylistData();
