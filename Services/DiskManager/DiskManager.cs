@@ -62,7 +62,7 @@ public class DiskManager : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await _diskWriter.WriteJsonAsync(playlist.PlaylistData, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+        await _diskWriter.WritePlaylistToDb(playlist.PlaylistData);
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 

@@ -9,9 +9,7 @@ namespace Avalonix.Services.DatabaseService;
 
 public class DatabaseService(AppDbContext dbContext) : IDatabaseService
 {
-    public async Task WritePlaylist(PlaylistData playlist) => await dbContext.AddAsync(playlist);
-
-    public Task WritePlaylistData(PlaylistData playlist) => throw new NotImplementedException();
+    public async Task WritePlaylistData(PlaylistData playlist) => await dbContext.AddAsync(playlist);
 
     public void RemovePlaylistData(PlaylistData playlist) => dbContext.Remove(playlist);
 
