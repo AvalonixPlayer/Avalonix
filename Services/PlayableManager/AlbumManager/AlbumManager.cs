@@ -145,7 +145,7 @@ public class AlbumManager(
         // TODO: remove tracks
     }
 
-    public Task<List<IPlayable>> GetPlayableItems()
+    public Task<List<IPlayable>> GetPlaylists()
     {
         LoadTracks();
         return Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());

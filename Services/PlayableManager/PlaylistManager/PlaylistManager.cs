@@ -155,7 +155,7 @@ public class PlaylistManager(
     public void TrackBefore() => PlayingPlayable?.BackTrack();
 
     public void ForceStartTrackByIndex(int index) => PlayingPlayable?.ForceStartTrackByIndex(index);
-    public async Task<List<IPlayable>> GetPlayableItems()
+    public async Task<List<IPlayable>> GetPlaylists()
     {
         var allPlaylistData = await GetAllPlaylistData();
         return allPlaylistData.Select(data =>

@@ -12,7 +12,7 @@ public interface IPlayableManager
     IMediaPlayer MediaPlayer { get; }
     IPlayable? PlayingPlayable { get; set; }
     Track? CurrentTrack { get; }
-    Task<List<IPlayable>> GetPlayableItems();
+    Task<List<IPlayable>> GetPlaylists();
     void PausePlayable();
     void ResumePlayable();
     void NextTrack();

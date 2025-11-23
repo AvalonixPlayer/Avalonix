@@ -12,7 +12,7 @@ public class PlayableSelectViewModel(IPlayableManager playableItemsManager, IPla
 {
     public IPlayableWindowStrategy Strategy { get; } = strategy;
     public async Task<List<IPlayable>> GetPlayableItems()
-        => (await playableItemsManager.GetPlayableItems()).ToList();
+        => (await playableItemsManager.GetPlaylists()).ToList();
 
     public List<IPlayable> SearchItem(string text, List<IPlayable> playable) =>
         string.IsNullOrWhiteSpace(text) ? playable : playable.
