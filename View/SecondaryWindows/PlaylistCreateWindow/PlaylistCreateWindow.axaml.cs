@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonix.Model.Media.Track;
 using Avalonix.Services.WindowManager;
-using Avalonix.ViewModels.PlaylistEditOrCreate;
+using Avalonix.ViewModel.PlaylistEditOrCreate;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.PlaylistCreateWindow;

@@ -3,7 +3,7 @@ using Avalonix.Model.Media;
 using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 
-namespace Avalonix.ViewModels.Strategy;
+namespace Avalonix.ViewModel.Strategy;
 
 public class CreatePlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy
 {

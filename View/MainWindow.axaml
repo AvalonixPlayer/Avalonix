@@ -2,16 +2,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:main="clr-namespace:Avalonix.ViewModels.Main"
+        xmlns:main1="clr-namespace:Avalonix.ViewModel.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="1180" Height="600" CanMaximize="True"
         MinHeight="800" MinWidth="1180"
         x:Class="Avalonix.View.MainWindow"
-        x:DataType="main:MainWindowViewModel"
+        x:DataType="main1:MainWindowViewModel"
         Title="Avalonix">
 
     <Design.DataContext>
-        <main:MainWindowViewModel />
+        <main1:MainWindowViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="*,90" ColumnDefinitions="400,*" ShowGridLines="False" Margin="10">

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonix.Model.Media;
 using Avalonix.Services.WindowManager;
-using Avalonix.ViewModels.PlayableSelectViewModel;
+using Avalonix.ViewModel.PlayableSelectViewModel;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.PlayableSelectWindow;

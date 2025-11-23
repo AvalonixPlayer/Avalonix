@@ -4,7 +4,7 @@ using Avalonix.Model.Media.Album;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 
-namespace Avalonix.ViewModels.Strategy;
+namespace Avalonix.ViewModel.Strategy;
 
 public class SelectAndPlayAlbumWindowStrategy(IPlayablesManager playablesManager) : IPlayableWindowStrategy
 {

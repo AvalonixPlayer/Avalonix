@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonix.Model.Media.Track;
-using Avalonix.ViewModels.Strategy;
+using Avalonix.ViewModel.Strategy;
 
-namespace Avalonix.ViewModels.PlaylistEditOrCreate;
+namespace Avalonix.ViewModel.PlaylistEditOrCreate;
 
 public interface IPlaylistEditOrCreateWindowViewModel
 {

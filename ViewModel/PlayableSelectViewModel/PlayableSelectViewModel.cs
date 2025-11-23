@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Services.PlayableManager;
-using Avalonix.ViewModels.Strategy;
+using Avalonix.ViewModel.Strategy;
 
-namespace Avalonix.ViewModels.PlayableSelectViewModel;
+namespace Avalonix.ViewModel.PlayableSelectViewModel;
 
 public class PlayableSelectViewModel(IPlayableManager playableItemsManager, IPlayableWindowStrategy strategy) : ViewModelBase, IPlayableSelectViewModel
 {

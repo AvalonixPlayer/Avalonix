@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonix.Services.WindowManager;
-using Avalonix.ViewModels.Strategy;
+using Avalonix.ViewModel.Strategy;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.ViewModels.EditMetadata;
+namespace Avalonix.ViewModel.EditMetadata;
 
 public class EditMetadataWindowViewModel(ILogger<WindowManager> logger,
     ISecondWindowStrategy strategy) : ViewModelBase, IEditMetadataWindowViewModel
@@ -25,7 +25,7 @@ public class EditMetadataWindowViewModel(ILogger<WindowManager> logger,
             FilePickerFileTypes.All
         ]
     };
-    
+
     public async Task<string?> OpenTrackFileDialogAsync(Window parent)
     {
         try
@@ -44,7 +44,7 @@ public class EditMetadataWindowViewModel(ILogger<WindowManager> logger,
 
             var result = files.FirstOrDefault()?.Path.LocalPath;
 
-            logger.LogInformation("Selected file: {filepaths}", result);
+            logger.LogInformation("Selected file: {file paths}", result);
             return result;
         }
         catch (Exception ex)

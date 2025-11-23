@@ -7,7 +7,7 @@ using Avalonia.Threading;
 using Avalonix.Model.Media.Track;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.WindowManager;
-using Avalonix.ViewModels.EditMetadata;
+using Avalonix.ViewModel.EditMetadata;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.EditMetadataWindow;

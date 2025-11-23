@@ -13,10 +13,10 @@ using Avalonix.View.SecondaryWindows.EditMetadataWindow;
 using Avalonix.View.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.View.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.View.SecondaryWindows.ShowTrackWindow;
-using Avalonix.ViewModels.EditMetadata;
-using Avalonix.ViewModels.PlayableSelectViewModel;
-using Avalonix.ViewModels.PlaylistEditOrCreate;
-using Avalonix.ViewModels.Strategy;
+using Avalonix.ViewModel.EditMetadata;
+using Avalonix.ViewModel.PlayableSelectViewModel;
+using Avalonix.ViewModel.PlaylistEditOrCreate;
+using Avalonix.ViewModel.Strategy;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.WindowManager;

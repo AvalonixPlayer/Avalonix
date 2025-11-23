@@ -4,7 +4,7 @@ using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 
-namespace Avalonix.ViewModels.Strategy;
+namespace Avalonix.ViewModel.Strategy;
 
 public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy
 {
@@ -13,7 +13,7 @@ public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistMana
 
     public Task ExecuteAsync(IPlayable playlist)
     {
-        playlistManager.DeletePlaylist(playlist as Playlist);
+        playlistManager.DeletePlaylist((playlist as Playlist)!);
         return Task.CompletedTask;
     }
 }

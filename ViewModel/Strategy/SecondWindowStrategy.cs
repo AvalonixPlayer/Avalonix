@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
 
-namespace Avalonix.ViewModels.Strategy;
+namespace Avalonix.ViewModel.Strategy;
 
 public interface ISecondWindowStrategy
 {

@@ -5,7 +5,7 @@ using Avalonix.View.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.View.SecondaryWindows.PlaylistCreateWindow;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.ViewModels.Main;
+namespace Avalonix.ViewModel.Main;
 
 public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager)
     : ViewModelBase, IMainWindowViewModel
@@ -34,7 +34,7 @@ public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowMan
             return null!;
         }
     }
-    
+
     public PlayableSelectWindow PlaylistSelectWindow_Open()
     {
         try

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 
-namespace Avalonix.ViewModels.EditMetadata;
+namespace Avalonix.ViewModel.EditMetadata;
 
 public interface IEditMetadataWindowViewModel
 {

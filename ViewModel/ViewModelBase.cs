@@ -1,5 +1,5 @@
 using ReactiveUI;
 
-namespace Avalonix.ViewModels;
+namespace Avalonix.ViewModel;
 
 public abstract class ViewModelBase : ReactiveObject;

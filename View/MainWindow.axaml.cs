@@ -14,7 +14,7 @@ using Avalonia.Threading;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.WindowManager;
-using Avalonix.ViewModels.Main;
+using Avalonix.ViewModel.Main;
 using Microsoft.Extensions.Logging;
 using Timer = System.Timers.Timer;
 

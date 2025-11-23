@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
-using Avalonix.ViewModels.Strategy;
+using Avalonix.ViewModel.Strategy;
 
-namespace Avalonix.ViewModels.PlayableSelectViewModel;
+namespace Avalonix.ViewModel.PlayableSelectViewModel;
 
 public interface IPlayableSelectViewModel
 {

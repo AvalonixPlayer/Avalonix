@@ -1,7 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Avalonix.ViewModels.Main;
+using Avalonix.ViewModel.Main;
 
 namespace Avalonix;
 
