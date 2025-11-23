@@ -17,6 +17,11 @@
     <Grid RowDefinitions="*,90" ColumnDefinitions="400,*" ShowGridLines="False" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
             <TabControl>
+                <TabControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </TabControl.ItemsPanel>
                 <TabItem Header="Playlists">
                     <StackPanel Classes="vertical">
                         <StackPanel Classes="horizontal">
@@ -30,6 +35,13 @@
                     <ListBox MinHeight="600" MaxHeight="600" Name="SongBox" />
                 </TabItem>
                 <TabItem Header="Albums">
+                    <StackPanel Classes="vertical">
+                        <StackPanel Classes="horizontal">
+                            <Button Click="SelectAlbum_OnClick" Classes="h2">Select</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="In a vacuum">
                     <StackPanel Classes="vertical">
                         <StackPanel Classes="horizontal">
                             <Button Click="SelectAlbum_OnClick" Classes="h2">Select</Button>
