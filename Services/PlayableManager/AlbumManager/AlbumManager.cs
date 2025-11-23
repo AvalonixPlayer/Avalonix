@@ -59,7 +59,7 @@ public class AlbumManager(
 
     public void LoadTracks()
     {
-        var paths = diskManager.GetMusicFilesForAlbums();
+        var paths = diskManager.GetMusicFiles();
 
         _tracks.Clear();
         foreach (var path in paths)

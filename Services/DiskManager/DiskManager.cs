@@ -91,7 +91,7 @@ public class DiskManager : IDiskManager
         return result;
     }
 
-    public List<string> GetMusicFilesForAlbums()
+    public List<string> GetMusicFiles()
     {
         return FindFiles();
 
