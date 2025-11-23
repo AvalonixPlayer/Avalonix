@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Avalonix.Model.Media.Playlist;
 
 public class PlaylistData
 {
     private List<Track.Track> _tracks = [];
+    [Key]
+    public string Name { get; set; }
 
     public List<Track.Track> Tracks
     {
@@ -27,6 +31,10 @@ public class PlaylistData
     [JsonInclude] public bool ObserveDirectory { get; set; } = true;
     [JsonInclude] public string? ObservingDirectory { get; set; }
 
+    private void SetName()
+    {
+    }
+
     private void UpdateTracksByDirectoryObserving()
     {
         if (!Directory.Exists(ObservingDirectory)) return;
@@ -44,7 +52,4 @@ public class PlaylistData
 
     private void TracksFiltration() =>
         _tracks = _tracks.Where(track => File.Exists(track.TrackData.Path)).ToList();
-
-    private List<Track.Track> FiltratedTracks() =>
-        _tracks.Where(track => File.Exists(track.TrackData.Path)).ToList();
 }

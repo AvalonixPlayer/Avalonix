@@ -1,11 +1,24 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Avalonix.Model.Media.Track;
 
-public class TrackData(string path)
+public class TrackData
 {
-    public string Path { get; } = path;
+    [Key]
+    public string Name { get; set; }
+    public TrackData()
+    {
+        
+    }
+    public TrackData(string path)
+    {
+        Path = path;
+    }
+
+    public string Path { get; }
     public int Rarity { get; set; }
     public TimeSpan? LastListen { get; set; }
 

@@ -11,11 +11,13 @@ public class DatabaseService(AppDbContext dbContext) : IDatabaseService
 {
     public async Task WritePlaylist(PlaylistData playlist) => await dbContext.AddAsync(playlist);
 
+    public Task WritePlaylistData(PlaylistData playlist) => throw new NotImplementedException();
+
     public void RemovePlaylistData(PlaylistData playlist) => dbContext.Remove(playlist);
 
     public void RemovePlaylistData(string plName, List<PlaylistData> playlists)
     {
-        var playlist = playlists.FirstOrDefault(playlist1 => playlist1. == plName);
+        var playlist = playlists.FirstOrDefault(playlist1 => playlist1.Name == plName);
         if (playlist != null) RemovePlaylistData(playlist);
     }
 

@@ -33,7 +33,7 @@ public class DiskWriter(ILogger logger, IDatabaseService databaseService) : IDis
         }
     }
 
-    public async Task WritePlaylistToDb(Playlist playlist)
+    public async Task WritePlaylistToDb(PlaylistData playlist)
     {
         logger.LogInformation("Trying to Write Playlist: {plName}", playlist.Name);
         try

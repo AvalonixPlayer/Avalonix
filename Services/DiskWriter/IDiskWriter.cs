@@ -6,5 +6,5 @@ namespace Avalonix.Services.DiskWriter;
 public interface IDiskWriter
 {
     Task WriteJsonAsync<T>(T obj, string path);
-    Task WritePlaylistToDb(Playlist playlist);
+    Task WritePlaylistToDb(PlaylistData playlist);
 }

@@ -8,9 +8,8 @@ namespace Avalonix.Services.DiskManager;
 public interface IDiskManager
 {
     Task SavePlaylist(Playlist playlist);
-    Task<Playlist?> GetPlaylist(string name);
     Task RemovePlaylist(string name);
-    Task<List<Playlist>> GetAllPlaylists();
+    Task<List<PlaylistData>> GetAllPlaylists();
     Task CreateNewTheme(string name);
     Task SaveTheme(Theme theme);
     Task<Theme?> GetTheme(string name);

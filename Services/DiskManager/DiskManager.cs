@@ -66,24 +66,6 @@ public class DiskManager : IDiskManager
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
-    public async Task<Playlist?> GetPlaylist(string name)
-    {
-        try
-        {
-            var playlistData =
-                await _diskLoader.Ge
-            if (playlistData == null!) _logger.LogError("Playlist get error: {name}", name);
-            else _logger.LogDebug("Playlist get: {name}", name);
-            return new Playlist(name, playlistData!, _player, this, _logger,
-                _settingsManager.Settings!.Avalonix.PlaySettings);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Playlist error while get: {ex}", ex);
-            return null!;
-        }
-    }
-
     public async Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
@@ -91,7 +73,7 @@ public class DiskManager : IDiskManager
         _logger.LogInformation("Playlist {name} was been removed", name);
     }
 
-    public async Task<List<Playlist>> GetAllPlaylists() => await _diskLoader.LoadAllPlaylistsFromDb();
+    public async Task<List<PlaylistData>> GetAllPlaylists() => await _diskLoader.LoadAllPlaylistsFromDb();
 
     public async Task CreateNewTheme(string name)
     {

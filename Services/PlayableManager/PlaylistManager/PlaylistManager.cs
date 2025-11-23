@@ -68,7 +68,7 @@ public class PlaylistManager(
         remove => _settings.Avalonix.LoopChanged -= value;
     }
 
-    public async Task<List<Playlist>> GetAllPlaylists() => await diskManager.GetAllPlaylists();
+    public async Task<List<PlaylistData>> GetAllPlaylists() => await diskManager.GetAllPlaylists();
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
     {
