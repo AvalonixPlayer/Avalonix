@@ -18,15 +18,16 @@ public class AlbumManager(
     ILogger logger,
     IMediaPlayer player,
     ISettingsManager settingsManager,
-    IDiskManager diskManager) : IAlbumManager
+    IDiskManager diskManager,
+    IMediaPlayer mediaPlayer) : IAlbumManager
 {
     public Action? TrackLoaded { get; set; }
 
     private readonly List<Track> _tracks = [];
-    
+
     private CancellationTokenSource? _globalCancellationTokenSource;
-    
-    public IMediaPlayer MediaPlayer { get; }
+
+    public IMediaPlayer MediaPlayer { get; } = mediaPlayer;
     public IPlayable? PlayingPlayable { get; set; }
 
     public Track? CurrentTrack { get; }
@@ -118,9 +119,9 @@ public class AlbumManager(
         }
 
         PlayingPlayable = album;
-        
+
         PlayableChanged?.Invoke();
-        
+
         _ = Task.Run(async () =>
         {
             try

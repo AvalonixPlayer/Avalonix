@@ -16,14 +16,13 @@ public record Playlist : IPlayable
     public string Name { get; }
     public PlayQueue PlayQueue { get; }
 
-    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
+    public Playlist(PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
         PlaySettings settings)
     {
         PlaylistData = playlistData;
         _disk = disk;
         _logger = logger;
         PlayQueue = new PlayQueue(player, logger, settings);
-        PlaylistData.Name = name;
         Name = PlaylistData.Name;
         PlayQueue.FillQueue(PlaylistData.Tracks);
 

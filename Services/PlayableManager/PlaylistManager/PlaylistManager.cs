@@ -68,7 +68,7 @@ public class PlaylistManager(
         remove => _settings.Avalonix.LoopChanged -= value;
     }
 
-    public async Task<List<PlaylistData>> GetAllPlaylists() => await diskManager.GetAllPlaylists();
+    public async Task<List<PlaylistData>> GetAllPlaylistData() => await diskManager.GetAllPlaylists();
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
     {
@@ -81,7 +81,7 @@ public class PlaylistManager(
         };
 
         var settings = settingsManager.Settings!;
-        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
+        return new Playlist(playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }
 
     public async Task EditPlaylist(Playlist playlist) => await playlist.Save();
@@ -155,6 +155,11 @@ public class PlaylistManager(
     public void TrackBefore() => PlayingPlayable?.BackTrack();
 
     public void ForceStartTrackByIndex(int index) => PlayingPlayable?.ForceStartTrackByIndex(index);
-    public async Task<List<IPlayable>> GetPlayableItems() =>
-        (await GetAllPlaylists()).Cast<IPlayable>().ToList();
+    public async Task<List<IPlayable>> GetPlayableItems()
+    {
+        var allPlaylistData = await GetAllPlaylistData();
+        return allPlaylistData.Select(data =>
+            new Playlist(data, player, diskManager, logger, _settings.Avalonix.PlaySettings)
+        ).Cast<IPlayable>().ToList();
+    }
 }
