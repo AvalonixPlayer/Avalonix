@@ -66,11 +66,12 @@ public class DiskManager : IDiskManager
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
-    public async Task RemovePlaylist(string name)
+    public Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
-        _databaseService.RemovePlaylistData(name, await GetAllPlaylists());
+        _databaseService.RemovePlaylistData(name);
         _logger.LogInformation("Playlist {name} was been removed", name);
+        return Task.CompletedTask;
     }
 
     public async Task<List<PlaylistData>> GetAllPlaylists() => await _diskLoader.LoadAllPlaylistsFromDb();

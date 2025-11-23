@@ -8,7 +8,7 @@ public interface IDatabaseService
 {
     Task WritePlaylistData(PlaylistData playlist);
     void RemovePlaylistData(PlaylistData playlist);
-    void RemovePlaylistData(string plName, List<PlaylistData> playlists);
+    void RemovePlaylistData(string plName);
     Task<List<PlaylistData>> GetAllPlaylists();
 }
 

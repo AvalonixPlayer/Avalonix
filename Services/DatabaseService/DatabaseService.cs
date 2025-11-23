@@ -4,20 +4,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Playlist;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.DatabaseService;
 
-public class DatabaseService(AppDbContext dbContext) : IDatabaseService
+public class DatabaseService : IDatabaseService
 {
-    public async Task WritePlaylistData(PlaylistData playlist) => await dbContext.AddAsync(playlist);
+    private readonly AppDbContext _dbContext;
+    private readonly ILogger _logger;
 
-    public void RemovePlaylistData(PlaylistData playlist) => dbContext.Remove(playlist);
-
-    public void RemovePlaylistData(string plName, List<PlaylistData> playlists)
+    public DatabaseService(AppDbContext dbContext, ILogger logger)
     {
-        var playlist = playlists.FirstOrDefault(playlist1 => playlist1.Name == plName);
-        if (playlist != null) RemovePlaylistData(playlist);
+        _dbContext = dbContext;
+        _logger = logger;
+
+        try
+        {
+            if (!_dbContext.Database.EnsureCreated())
+            {
+                _logger.LogWarning("Table 'Playlists' already exist");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error while initializing: {ExMessage}", ex.Message);
+        }
     }
 
-    public Task<List<PlaylistData>> GetAllPlaylists() => dbContext.Playlists.ToListAsync();
+    public async Task WritePlaylistData(PlaylistData playlist) => await _dbContext.AddAsync(playlist);
+
+    public void RemovePlaylistData(PlaylistData playlist) => _dbContext.Remove(playlist);
+
+    public void RemovePlaylistData(string plName) => _dbContext.Remove(new PlaylistData { Name = plName});
+
+    public Task<List<PlaylistData>> GetAllPlaylists() => _dbContext.Playlists.ToListAsync();
 }
