@@ -22,12 +22,6 @@ public class PlayboxManager(
     public IPlayable? PlayingPlayable { get; set; }
     private CancellationTokenSource? _globalCancellationTokenSource;
 
-    public Task<List<IPlayable>> GetPlayables()
-    {
-        var allMusicFiles = diskManager.GetMusicFiles();
-        var playbox = new Playbox(allMusicFiles, MediaPlayer, logger, settingsManager.Settings!.Avalonix.PlaySettings);
-        return Task.FromResult(new List<IPlayable> { playbox });
-    }
 
     public void StartPlayable(IPlayable playBox)
     {
@@ -63,6 +57,13 @@ public class PlayboxManager(
                 logger.LogError(ex, "Playlist play failed");
             }
         });
+    }
+
+    public Task<List<IPlayable>> GetPlayables()
+    {
+        var allMusicFiles = diskManager.GetMusicFiles();
+        var playbox = new Playbox(allMusicFiles, MediaPlayer, logger, settingsManager.Settings!.Avalonix.PlaySettings);
+        return Task.FromResult(new List<IPlayable> { playbox });
     }
 
     public event Action? PlayableChanged;

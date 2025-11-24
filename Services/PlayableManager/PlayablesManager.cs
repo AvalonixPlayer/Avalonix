@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.Album;
 using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Model.Media.PlayBox;
 using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.PlayableManager.AlbumManager;
+using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.UserSettings;
@@ -13,27 +15,28 @@ using Track = Avalonix.Model.Media.Track.Track;
 
 namespace Avalonix.Services.PlayableManager;
 
-public class PlayablesManager(ILogger logger, IPlaylistManager playlistManager, IAlbumManager albumManager, IMediaPlayer mediaPlayer, ISettingsManager settingsManager) : IPlayablesManager
+public class PlayablesManager(
+    ILogger logger,
+    IPlaylistManager playlistManager,
+    IAlbumManager albumManager,
+    IPlayboxManager playboxManager,
+    IMediaPlayer mediaPlayer,
+    ISettingsManager settingsManager) : IPlayablesManager
 {
     public IMediaPlayer MediaPlayer => mediaPlayer;
     public IPlayable? PlayingPlayable { get; private set; }
     public Track? CurrentTrack => MediaPlayer.CurrentTrack;
     private readonly Settings _settings = settingsManager.Settings!;
+
     public Task StartPlayable(IPlayable playable)
     {
         playlistManager.PlayingPlayable?.Stop();
         albumManager.PlayingPlayable?.Stop();
+        playboxManager.PlayingPlayable?.Stop();
         PlayingPlayable = playable;
-        
-        switch (playable)
-        {
-            case Playlist:
-                playlistManager.StartPlayable(playable);
-                break;
-            case Album:
-                albumManager.StartPlayable(playable);
-                break;
-        }
+
+        playlistManager.StartPlayable(playable);
+
         PlayableChanged?.Invoke();
         return Task.CompletedTask;
     }
@@ -47,6 +50,7 @@ public class PlayablesManager(ILogger logger, IPlaylistManager playlistManager, 
     public void NextTrack() => PlayingPlayable?.NextTrack();
 
     public void TrackBefore() => PlayingPlayable?.BackTrack();
+
     public void ResetSnuffle()
     {
         logger.LogDebug("Changing shuffle mode");
@@ -86,6 +90,6 @@ public class PlayablesManager(ILogger logger, IPlaylistManager playlistManager, 
         add => _settings.Avalonix.LoopChanged += value;
         remove => _settings.Avalonix.LoopChanged -= value;
     }
-    
+
     public event Action? PlayableChanged;
 }

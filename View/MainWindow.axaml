@@ -31,9 +31,6 @@
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Play queue">
-                    <ListBox MinHeight="600" MaxHeight="600" Name="SongBox" />
-                </TabItem>
                 <TabItem Header="Albums">
                     <StackPanel Classes="vertical">
                         <StackPanel Classes="horizontal">
@@ -41,12 +38,15 @@
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="In a vacuum">
+                <TabItem Header="Tracks">
                     <StackPanel Classes="vertical">
                         <StackPanel Classes="horizontal">
-                            <Button Click="SelectAlbum_OnClick" Classes="h2">Select</Button>
+                            <Button Click="PlayAllTracksOnClick" Classes="h2">Play</Button>
                         </StackPanel>
                     </StackPanel>
+                </TabItem>
+                <TabItem Header="Play queue">
+                    <ListBox MinHeight="600" MaxHeight="600" Name="SongBox" />
                 </TabItem>
             </TabControl>
         </Border>

@@ -10,6 +10,7 @@ using Avalonix.Services.DiskManager;
 using Avalonix.Services.DiskWriter;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
+using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.ThemeManager;
@@ -50,6 +51,7 @@ public class App : Application
             services.AddSingleton<IPlayablesManager, PlayablesManager>();
             services.AddSingleton<IPlayableManager, PlaylistManager>();
             services.AddSingleton<IPlaylistManager, PlaylistManager>();
+            services.AddSingleton<IPlayboxManager, PlayboxManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddDbContext<AppDbContext>();

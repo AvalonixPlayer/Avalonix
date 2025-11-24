@@ -10,7 +10,7 @@ namespace Avalonix.Services.PlayableManager;
 public interface IPlayableManager
 {
     IMediaPlayer MediaPlayer { get; }
-    IPlayable? PlayingPlayable { get; set; }
+    IPlayable? PlayingPlayable { get; }
     Task<List<IPlayable>> GetPlayables();
     void StartPlayable(IPlayable playlist);
     event Action? PlayableChanged;

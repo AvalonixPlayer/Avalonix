@@ -12,6 +12,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonix.Services.PlayableManager;
+using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModel.Main;
@@ -25,6 +26,7 @@ public partial class MainWindow : Window
     private readonly ILogger<MainWindow> _logger;
     private readonly IMainWindowViewModel _vm;
     private readonly IPlayablesManager _playablesManager;
+    private readonly IPlayboxManager _playboxManager;
     private readonly IWindowManager _windowManager;
 
     private readonly Timer _timer;
@@ -44,12 +46,14 @@ public partial class MainWindow : Window
     private readonly Image _disableLoopImage = GetImageFromAvares("buttons/DisableLoop.png");
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
-        ISettingsManager settingsManager, IPlayablesManager playablesManager, IWindowManager windowManager)
+        ISettingsManager settingsManager, IPlayablesManager playablesManager, IWindowManager windowManager,
+        IPlayboxManager playboxManager)
     {
         _logger = logger;
         _vm = vm;
         _playablesManager = playablesManager;
         _windowManager = windowManager;
+        _playboxManager = playboxManager;
 
         InitializeComponent();
 
@@ -395,4 +399,7 @@ public partial class MainWindow : Window
             Source =
                 new Bitmap(AssetLoader.Open(new Uri($"avares://Avalonix/Assets/{partOfPath}")))
         };
+
+    private void PlayAllTracksOnClick(object? sender, RoutedEventArgs e) =>
+        _playablesManager.StartPlayable(_playboxManager.GetPlayables().Result[0]);
 }
