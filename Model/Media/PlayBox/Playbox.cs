@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Album;
 using Avalonix.Model.Media.MediaPlayer;
@@ -17,17 +18,8 @@ public class Playbox : IPlayable
     public Playbox(List<string> tracksPaths, IMediaPlayer player, ILogger logger, PlaySettings settings)
     {
         PlayQueue = new PlayQueue(player, logger, settings);
-        
-        List<Track.Track> tracks = [];
-        foreach (var trackPath in tracksPaths)
-        {
-            var track = new Model.Media.Track.Track(trackPath);
-            track.Metadata.Init(trackPath);
-            track.Metadata.FillTrackMetaData();
-            tracks.Add(track);
-        }
-        
-        PlayQueue.FillQueue(tracks);
+        PlayQueue.FillQueue(tracksPaths.Select(path => new Track.Track(path)).ToList());
+        Task.Run(LoadTracksMetadata).ConfigureAwait(false).GetAwaiter();
     }
 
     public async Task Play() =>
@@ -51,17 +43,13 @@ public class Playbox : IPlayable
     public void ForceStartTrackByIndex(int index) =>
         PlayQueue.ForceStartTrackByIndex(index);
 
-    public Task LoadTracksMetadata()
+    public async Task LoadTracksMetadata()
     {
-        _ = Task.Run(() =>
+        foreach (var i in PlayQueue.Tracks)
         {
-            foreach (var i in PlayQueue.Tracks)
-            {
-                i.Metadata.Init(i.TrackData.Path);
-                i.Metadata.FillTrackMetaData();
-            }
-        });
-        return Task.CompletedTask;
+            i.Metadata.Init(i.TrackData.Path);
+            await Task.Run(i.Metadata.FillTrackMetaData);
+        }
     }
 
     public bool QueueIsEmpty() =>

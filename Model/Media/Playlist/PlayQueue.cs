@@ -89,7 +89,6 @@ public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings setting
     public void Stop()
     {
         QueueStopped?.Invoke();
-        //await Save();
         _cancellationTokenSource?.Cancel();
         player.Stop();
         logger.LogDebug("Playlist stopped");

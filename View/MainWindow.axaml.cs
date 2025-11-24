@@ -58,13 +58,9 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _playablesManager.PlaybackStateChanged += UpdatePauseButtonImage;
-        _playablesManager.PlayableChanged += SubscribeTrackMetadataLoaded;
-        _playablesManager.PlayableChanged += UpdateSongBox;
-
-        _playablesManager.TrackChanged += UpdateAlbumCover;
-        _playablesManager.TrackChanged += UpdateSongBox;
-        _playablesManager.TrackChanged += UpdateTrackPositionSlider;
-        _playablesManager.TrackChanged += UpdateTrackInfo;
+        SubscribePlayableChanged();
+        SubscribeTrackChanged();
+        
         _playablesManager.ShuffleChanged += UpdateShuffleButtonImage;
         _playablesManager.LoopChanged += UpdateLoopButtonImage;
 
@@ -98,50 +94,10 @@ public partial class MainWindow : Window
 
         _logger.LogInformation("MainWindow initialized");
     }
-
-    protected sealed override async void OnClosed(EventArgs e) => await _windowManager.CloseMainWindowAsync();
-
-    private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
-    {
-        await _playablesManager.ChangeVolume(Convert.ToUInt32(e.NewValue));
-        _logger.LogInformation("Volume changed: {EOldValue} -> {ENewValue}", e.OldValue, e.NewValue);
-    }
-
-    private void TrackPositionChange(object? sender, RangeBaseValueChangedEventArgs rangeBaseValueChangedEventArgs)
-    {
-        if (_isUserDragging)
-            Dispatcher.UIThread.Post(async void () =>
-                _playablesManager.MediaPlayer.SetPosition(TrackPositionSlider.Value));
-    }
-
-    private void UpdateTrackPositionSlider(object? sender,
-        ElapsedEventArgs elapsedEventArgs)
-    {
-        if (!Dispatcher.UIThread.CheckAccess())
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (!_isUserDragging)
-                    TrackPositionSlider.Value = _playablesManager.MediaPlayer.GetPosition();
-            });
-    }
-
-    private void Pause(object sender, RoutedEventArgs e)
-    {
-        var playingPlaylist = _playablesManager.PlayingPlayable;
-        if (playingPlaylist == null) return;
-
-        if (playingPlaylist.PlayQueue.Paused)
-            _playablesManager.ResumePlayable();
-        else
-            _playablesManager.PausePlayable();
-    }
-
-    private void PlayNextTrack(object sender, RoutedEventArgs e) =>
-        _playablesManager.NextTrack();
-
-    private void PlayTrackBefore(object sender, RoutedEventArgs e) =>
-        _playablesManager.TrackBefore();
-
+    
+    private void PlayAllTracksOnClick(object? sender, RoutedEventArgs e) =>
+        _playablesManager.StartPlayable(_playboxManager.GetPlayables().Result[0]);
+    
     private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e)
     {
         try
@@ -176,6 +132,130 @@ public partial class MainWindow : Window
         {
             _logger.LogError("Error while select album: {ex}", ex);
         }
+    }
+    
+    private void Pause(object sender, RoutedEventArgs e)
+    {
+        var playingPlaylist = _playablesManager.PlayingPlayable;
+        if (playingPlaylist == null) return;
+
+        if (playingPlaylist.PlayQueue.Paused)
+            _playablesManager.ResumePlayable();
+        else
+            _playablesManager.PausePlayable();
+    }
+
+    private void PlayNextTrack(object sender, RoutedEventArgs e) =>
+        _playablesManager.NextTrack();
+
+    private void PlayTrackBefore(object sender, RoutedEventArgs e) =>
+        _playablesManager.TrackBefore();
+    
+    private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
+        _windowManager.AboutWindow_Open().ShowDialog(this);
+
+    private void ShuffleButton_OnClick(object? sender, RoutedEventArgs e) =>
+        _playablesManager.ResetSnuffle();
+
+    private void LoopButton_OnClick(object? sender, RoutedEventArgs e) =>
+        _playablesManager.ResetLoop();
+
+    private void UpdateShuffleButtonImage(bool enable)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => UpdateShuffleButtonImage(enable));
+            return;
+        }
+
+        Shuffle.Content = !enable ? _enableShuffleImage : _disableShuffleImage;
+    }
+
+    private void UpdateLoopButtonImage(bool enable)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => UpdateLoopButtonImage(enable));
+            return;
+        }
+
+        Loop.Content = !enable ? _enableLoopImage : _disableLoopImage;
+    }
+
+    private async void OpenTrackButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var currentTrack = _playablesManager.CurrentTrack;
+            if (currentTrack != null) await _windowManager.ShowTrackWindow_Open(currentTrack).ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error opening track: {Error}", ex.Message);
+        }
+    }
+
+    private async void OpenEditTrackButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var currentTrack = _playablesManager.CurrentTrack;
+            if (currentTrack != null) await _windowManager.EditMetadataWindow_Open(currentTrack).ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error opening track edit: {Error}", ex.Message);
+        }
+    }
+
+    private async void DeletePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await _windowManager.PlaylistDeleteWindow_Open().ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error opening track: {Error}", ex.Message);
+        }
+    }
+
+    private async void VolumeSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        await _playablesManager.ChangeVolume(Convert.ToUInt32(e.NewValue));
+        _logger.LogInformation("Volume changed: {EOldValue} -> {ENewValue}", e.OldValue, e.NewValue);
+    }
+
+    private void TrackPositionChange(object? sender, RangeBaseValueChangedEventArgs rangeBaseValueChangedEventArgs)
+    {
+        if (_isUserDragging)
+            Dispatcher.UIThread.Post(async void () =>
+                _playablesManager.MediaPlayer.SetPosition(TrackPositionSlider.Value));
+    }
+
+    private void UpdateTrackPositionSlider(object? sender,
+        ElapsedEventArgs elapsedEventArgs)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!_isUserDragging)
+                    TrackPositionSlider.Value = _playablesManager.MediaPlayer.GetPosition();
+            });
+    }
+
+    private void SubscribePlayableChanged()
+    {
+        _playablesManager.PlayableChanged += SubscribeTrackMetadataLoaded;
+        _playablesManager.PlayableChanged += UpdateSongBox;
+    }
+
+    private void SubscribeTrackChanged()
+    {
+        _playablesManager.TrackChanged += UpdateAlbumCover;
+        _playablesManager.TrackChanged += UpdateSongBox;
+        _playablesManager.TrackChanged += UpdateTrackPositionSlider;
+        _playablesManager.TrackChanged += UpdateTrackInfo;
     }
 
     private void SubscribeTrackMetadataLoaded()
@@ -288,75 +368,6 @@ public partial class MainWindow : Window
         ArtistName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 13);
     }
 
-    private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
-        _windowManager.AboutWindow_Open().ShowDialog(this);
-
-    private void ShuffleButton_OnClick(object? sender, RoutedEventArgs e) =>
-        _playablesManager.ResetSnuffle();
-
-    private void LoopButton_OnClick(object? sender, RoutedEventArgs e) =>
-        _playablesManager.ResetLoop();
-
-    private void UpdateShuffleButtonImage(bool enable)
-    {
-        if (!Dispatcher.UIThread.CheckAccess())
-        {
-            Dispatcher.UIThread.Post(() => UpdateShuffleButtonImage(enable));
-            return;
-        }
-
-        Shuffle.Content = !enable ? _enableShuffleImage : _disableShuffleImage;
-    }
-
-    private void UpdateLoopButtonImage(bool enable)
-    {
-        if (!Dispatcher.UIThread.CheckAccess())
-        {
-            Dispatcher.UIThread.Post(() => UpdateLoopButtonImage(enable));
-            return;
-        }
-
-        Loop.Content = !enable ? _enableLoopImage : _disableLoopImage;
-    }
-
-    private async void OpenTrackButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var currentTrack = _playablesManager.CurrentTrack;
-            if (currentTrack != null) await _windowManager.ShowTrackWindow_Open(currentTrack).ShowDialog(this);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error opening track: {Error}", ex.Message);
-        }
-    }
-
-    private async void OpenEditTrackButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var currentTrack = _playablesManager.CurrentTrack;
-            if (currentTrack != null) await _windowManager.EditMetadataWindow_Open(currentTrack).ShowDialog(this);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error opening track edit: {Error}", ex.Message);
-        }
-    }
-
-    private async void DeletePlaylistButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            await _windowManager.PlaylistDeleteWindow_Open().ShowDialog(this);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error opening track: {Error}", ex.Message);
-        }
-    }
-
     private void SongBox_OnSelectionChanged(object? sender, TappedEventArgs tappedEventArgs)
     {
         try
@@ -399,7 +410,5 @@ public partial class MainWindow : Window
             Source =
                 new Bitmap(AssetLoader.Open(new Uri($"avares://Avalonix/Assets/{partOfPath}")))
         };
-
-    private void PlayAllTracksOnClick(object? sender, RoutedEventArgs e) =>
-        _playablesManager.StartPlayable(_playboxManager.GetPlayables().Result[0]);
+    protected sealed override async void OnClosed(EventArgs e) => await _windowManager.CloseMainWindowAsync();
 }

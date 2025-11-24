@@ -26,6 +26,8 @@ public record Playlist : IPlayable
         Name = PlaylistData.Name;
         PlayQueue.FillQueue(PlaylistData.Tracks);
 
+        Task.Run(LoadTracksMetadata).ConfigureAwait(false).GetAwaiter();
+
         PlayQueue.QueueStopped += () => Task.Run(Save);
         PlayQueue.StartedNewTrack += () =>
         {
@@ -55,17 +57,13 @@ public record Playlist : IPlayable
     public void ForceStartTrackByIndex(int index) =>
         PlayQueue.ForceStartTrackByIndex(index);
 
-    public Task LoadTracksMetadata()
+    public async Task LoadTracksMetadata()
     {
-        _ = Task.Run(() =>
+        foreach (var i in PlayQueue.Tracks)
         {
-            foreach (var i in PlayQueue.Tracks)
-            {
-                i.Metadata.Init(i.TrackData.Path);
-                i.Metadata.FillTrackMetaData();
-            }
-        });
-        return Task.CompletedTask;
+            i.Metadata.Init(i.TrackData.Path);
+            await Task.Run(i.Metadata.FillTrackMetaData);
+        }
     }
 
     public async Task Save()

@@ -7,8 +7,7 @@ namespace Avalonix.Services.ThemeManager;
 public class ThemeManager : IThemeManager 
 {
     private Styles _styles = [];
-    // public List<Styles> AvailableThemes = []; in future
-    
+
     public Styles LoadTheme(string themeName)
     {
         _styles.Clear();

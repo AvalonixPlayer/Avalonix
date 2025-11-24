@@ -86,7 +86,6 @@ public class PlaylistManager(
         }
         catch (ObjectDisposedException)
         {
-            /* ignore */
         }
         finally
         {
@@ -123,7 +122,6 @@ public class PlaylistManager(
             }
             catch (OperationCanceledException)
             {
-                /* expected on cancel */
             }
             catch (Exception ex)
             {

@@ -24,6 +24,7 @@ public class AlbumManager(
     public Action? TrackLoaded { get; set; }
 
     private readonly List<Track> _tracks = [];
+    private bool _tracksLoaded = false;
 
     private CancellationTokenSource? _globalCancellationTokenSource;
     public IMediaPlayer MediaPlayer { get; } = mediaPlayer;
@@ -57,50 +58,31 @@ public class AlbumManager(
 
     public event Action? PlayableChanged;
 
-    public void LoadTracks()
+    public async Task LoadTracks()
     {
         var paths = diskManager.GetMusicFiles();
 
         _tracks.Clear();
+        _tracksLoaded = false;
+
+        var loadTasks = new List<Task>();
+        
         foreach (var path in paths)
         {
             var track = new Track(path);
             track.Metadata.Init(path);
-            track.Metadata.FillTrackMetaData();
             _tracks.Add(track);
-            TrackLoaded?.Invoke();
-        }
-    }
 
-    public List<Album> GetAlbums()
-    {
-        var albums = new List<Album>();
-
-        foreach (var track in _tracks)
-        {
-            if (track.Metadata.Artist == null || track.Metadata.Album == null) continue;
-
-            var album = ContainAlbum(track.Metadata.Artist, track.Metadata.Album);
-
-            if (album != null) album.PlayQueue.Tracks.Add(track);
-            else
+            var loadTask = Task.Run(async () =>
             {
-                album = new Album([track.TrackData.Path], player, logger,
-                    settingsManager.Settings!.Avalonix.PlaySettings);
-                albums.Add(album);
-            }
+                await track.Metadata.FillTrackMetaData();
+                TrackLoaded?.Invoke();
+            });
+            loadTasks.Add(loadTask);
         }
 
-        return albums;
-
-        Album? ContainAlbum(string artist, string albumName)
-        {
-            if (albums.Count == 0) return null;
-
-            return albums.FirstOrDefault(album =>
-                album.Metadata!.ArtistName == artist &&
-                album.Metadata.AlbumName == albumName);
-        }
+        await Task.WhenAll(loadTasks);
+        _tracksLoaded = true;
     }
 
     public void StartPlayable(IPlayable album)
@@ -111,7 +93,6 @@ public class AlbumManager(
         }
         catch (ObjectDisposedException)
         {
-            /* ignore */
         }
         finally
         {
@@ -130,23 +111,44 @@ public class AlbumManager(
             }
             catch (OperationCanceledException)
             {
-                /* expected on cancel */
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Playlist play failed");
+                logger.LogError(ex, "Album play failed");
             }
         });
     }
 
     public void RemoveAlbum(Album album)
     {
-        // TODO: remove tracks
+    }
+    
+    public List<Album> GetAlbums()
+    {
+        if (!_tracksLoaded)
+        {
+            logger.LogWarning("Tracks metadata not loaded yet. Call LoadTracks() first.");
+            return new List<Album>();
+        }
+
+        var albums = new List<Album>();
+        var albumGroups = _tracks
+            .Where(track => track.Metadata.Artist != null && track.Metadata.Album != null)
+            .GroupBy(track => new { Artist = track.Metadata.Artist!, Album = track.Metadata.Album! });
+
+        foreach (var group in albumGroups)
+        {
+            var tracksPaths = group.Select(track => track.TrackData.Path).ToList();
+            var album = new Album(tracksPaths, player, logger, settingsManager.Settings!.Avalonix.PlaySettings);
+            albums.Add(album);
+        }
+
+        return albums;
     }
 
-    public Task<List<IPlayable>> GetPlayables()
+    public async Task<List<IPlayable>> GetPlayables()
     {
-        LoadTracks();
-        return Task.FromResult(GetAlbums().Cast<IPlayable>().ToList());
+        await LoadTracks();
+        return GetAlbums().Cast<IPlayable>().ToList();
     }
 }

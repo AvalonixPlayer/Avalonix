@@ -31,7 +31,6 @@ public class PlayboxManager(
         }
         catch (ObjectDisposedException)
         {
-            /* ignore */
         }
         finally
         {
@@ -50,7 +49,6 @@ public class PlayboxManager(
             }
             catch (OperationCanceledException)
             {
-                /* expected on cancel */
             }
             catch (Exception ex)
             {

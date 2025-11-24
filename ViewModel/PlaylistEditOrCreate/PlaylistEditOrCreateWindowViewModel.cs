@@ -26,7 +26,7 @@ public class PlaylistEditOrCreateWindowViewModel(
         [
             new FilePickerFileType("Audio Files")
             {
-                Patterns = ["*.mp3", "*.flac", "*.wav", "*.waw"] // Only tested formats
+                Patterns = ["*.mp3", "*.flac", "*.wav", "*.waw"]
             },
             FilePickerFileTypes.All
         ]

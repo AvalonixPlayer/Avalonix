@@ -20,7 +20,7 @@ public class EditMetadataWindowViewModel(ILogger<WindowManager> logger,
         [
             new FilePickerFileType("Picture Files")
             {
-                Patterns = ["*.png", "*.jpg", "*.jpeg", "*.webp"] // Only tested formats
+                Patterns = ["*.png", "*.jpg", "*.jpeg", "*.webp"]
             },
             FilePickerFileTypes.All
         ]

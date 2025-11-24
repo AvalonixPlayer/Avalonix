@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using File = TagLib.File;
 
 namespace Avalonix.Model.Media.Track;
@@ -23,7 +24,7 @@ public record TrackMetadata
 
     public void Init(string path) => _path = path;
 
-    public void FillTrackMetaData()
+    public Task FillTrackMetaData()
     {
         var track = File.Create(_path);
         TrackName = track.Tag!.Title ?? Path.GetFileNameWithoutExtension(_path);
@@ -37,12 +38,13 @@ public record TrackMetadata
         if (track.Tag.Pictures is not { Length: > 0 })
         {
             MetadataLoaded?.Invoke();
-            return;
+            return Task.CompletedTask;
         }
         var picture = track.Tag.Pictures[0];
         if (picture != null && picture.Data != null && picture.Data.Data is { Length: > 0 })
             Cover = picture.Data.Data;
         MetadataLoaded?.Invoke();
+        return Task.CompletedTask;
     }
 
     [Obsolete("Obsolete")]

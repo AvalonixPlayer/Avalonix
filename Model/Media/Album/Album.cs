@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
@@ -11,7 +12,6 @@ public record Album : IPlayable
 {
     public string Name { get; }
     public AlbumMetadata? Metadata;
-    private AlbumData? _albumData;
     public PlayQueue PlayQueue { get; }
 
     public Album(List<string> tracksPaths, IMediaPlayer player, ILogger logger, PlaySettings settings)
@@ -19,10 +19,10 @@ public record Album : IPlayable
         PlayQueue = new PlayQueue(player, logger, settings);
 
         Metadata = new AlbumMetadata(tracksPaths);
-        _albumData = new AlbumData(tracksPaths);
         Name = Metadata.AlbumName;
 
-        PlayQueue.FillQueue(_albumData.Tracks);
+        PlayQueue.FillQueue(tracksPaths.Select(path => new Track.Track(path)).ToList());
+        Task.Run(LoadTracksMetadata);
     }
 
     public async Task Play() =>
@@ -46,17 +46,13 @@ public record Album : IPlayable
     public void ForceStartTrackByIndex(int index) =>
         PlayQueue.ForceStartTrackByIndex(index);
 
-    public Task LoadTracksMetadata()
+    public async Task LoadTracksMetadata()
     {
-        _ = Task.Run(() =>
+        foreach (var i in PlayQueue.Tracks)
         {
-            foreach (var i in PlayQueue.Tracks)
-            {
-                i.Metadata.Init(i.TrackData.Path);
-                i.Metadata.FillTrackMetaData();
-            }
-        });
-        return Task.CompletedTask;
+            i.Metadata.Init(i.TrackData.Path);
+            await Task.Run(i.Metadata.FillTrackMetaData);
+        }
     }
 
     public bool QueueIsEmpty() =>
