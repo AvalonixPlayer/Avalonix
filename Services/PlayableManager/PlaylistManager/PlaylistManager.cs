@@ -23,7 +23,7 @@ public class PlaylistManager(
 {
     public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }
-    private CancellationTokenSource? _globalCancellationTokenSource;
+    public CancellationTokenSource? GlobalCancellationTokenSource { get; private set; }
 
     private readonly Settings _settings = settingsManager.Settings!;
 
@@ -82,17 +82,17 @@ public class PlaylistManager(
 
         try
         {
-            _globalCancellationTokenSource?.Cancel();
+            GlobalCancellationTokenSource?.Cancel();
         }
         catch (ObjectDisposedException)
         {
         }
         finally
         {
-            _globalCancellationTokenSource?.Dispose();
+            GlobalCancellationTokenSource?.Dispose();
         }
 
-        _globalCancellationTokenSource = new CancellationTokenSource();
+        GlobalCancellationTokenSource = new CancellationTokenSource();
 
         if (PlayingPlayable != null)
         {

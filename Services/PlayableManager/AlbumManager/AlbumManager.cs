@@ -22,11 +22,10 @@ public class AlbumManager(
     IMediaPlayer mediaPlayer) : IAlbumManager
 {
     public Action? TrackLoaded { get; set; }
-
     private readonly List<Track> _tracks = [];
-    private bool _tracksLoaded = false;
+    private bool _tracksLoaded;
 
-    private CancellationTokenSource? _globalCancellationTokenSource;
+    public CancellationTokenSource? GlobalCancellationTokenSource {get; private set;}
     public IMediaPlayer MediaPlayer { get; } = mediaPlayer;
     public IPlayable? PlayingPlayable { get; set; }
 
@@ -58,7 +57,64 @@ public class AlbumManager(
 
     public event Action? PlayableChanged;
 
-    public async Task LoadTracks()
+    public void StartPlayable(IPlayable album)
+    {
+        try
+        {
+            GlobalCancellationTokenSource?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+        finally
+        {
+            GlobalCancellationTokenSource?.Dispose();
+        }
+        
+        GlobalCancellationTokenSource = new CancellationTokenSource();
+
+        PlayingPlayable = album;
+
+        PlayableChanged?.Invoke();
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await PlayingPlayable.Play().ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Album play failed");
+            }
+        });
+    }
+
+    public void RemoveAlbum(Album album)
+    {
+    }
+    
+    private async Task<List<Album>> GetAlbums()
+    {
+        await Task.Run(LoadTracks);
+        
+        if (!_tracksLoaded)
+        {
+            logger.LogWarning("Tracks metadata not loaded yet. Call LoadTracks() first.");
+            return [];
+        }
+
+        var albumGroups = _tracks
+            .Where(track => track.Metadata.Artist != null && track.Metadata.Album != null)
+            .GroupBy(track => new { Artist = track.Metadata.Artist!, Album = track.Metadata.Album! });
+
+        return albumGroups.Select(group => group.Select(track => track.TrackData.Path).ToList()).Select(tracksPaths => new Album(tracksPaths, player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
+    }
+    
+    private async Task LoadTracks()
     {
         var paths = diskManager.GetMusicFiles();
 
@@ -85,70 +141,9 @@ public class AlbumManager(
         _tracksLoaded = true;
     }
 
-    public void StartPlayable(IPlayable album)
-    {
-        try
-        {
-            _globalCancellationTokenSource?.Cancel();
-        }
-        catch (ObjectDisposedException)
-        {
-        }
-        finally
-        {
-            _globalCancellationTokenSource?.Dispose();
-        }
-
-        PlayingPlayable = album;
-
-        PlayableChanged?.Invoke();
-
-        _ = Task.Run(async () =>
-        {
-            try
-            {
-                await PlayingPlayable.Play().ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Album play failed");
-            }
-        });
-    }
-
-    public void RemoveAlbum(Album album)
-    {
-    }
-    
-    public List<Album> GetAlbums()
-    {
-        if (!_tracksLoaded)
-        {
-            logger.LogWarning("Tracks metadata not loaded yet. Call LoadTracks() first.");
-            return new List<Album>();
-        }
-
-        var albums = new List<Album>();
-        var albumGroups = _tracks
-            .Where(track => track.Metadata.Artist != null && track.Metadata.Album != null)
-            .GroupBy(track => new { Artist = track.Metadata.Artist!, Album = track.Metadata.Album! });
-
-        foreach (var group in albumGroups)
-        {
-            var tracksPaths = group.Select(track => track.TrackData.Path).ToList();
-            var album = new Album(tracksPaths, player, logger, settingsManager.Settings!.Avalonix.PlaySettings);
-            albums.Add(album);
-        }
-
-        return albums;
-    }
-
     public async Task<List<IPlayable>> GetPlayables()
     {
-        await LoadTracks();
-        return GetAlbums().Cast<IPlayable>().ToList();
+        var result = await Task.Run(GetAlbums);
+        return result.Cast<IPlayable>().ToList();
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.MediaPlayer;
@@ -9,6 +10,7 @@ namespace Avalonix.Services.PlayableManager;
 
 public interface IPlayableManager
 {
+    CancellationTokenSource? GlobalCancellationTokenSource { get; }
     IMediaPlayer MediaPlayer { get; }
     IPlayable? PlayingPlayable { get; }
     Task<List<IPlayable>> GetPlayables();

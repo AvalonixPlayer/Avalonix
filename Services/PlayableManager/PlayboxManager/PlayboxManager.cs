@@ -20,21 +20,21 @@ public class PlayboxManager(
 {
     public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }
-    private CancellationTokenSource? _globalCancellationTokenSource;
+    public CancellationTokenSource GlobalCancellationTokenSource { get; }
 
 
     public void StartPlayable(IPlayable playBox)
     {
         try
         {
-            _globalCancellationTokenSource?.Cancel();
+            GlobalCancellationTokenSource?.Cancel();
         }
         catch (ObjectDisposedException)
         {
         }
         finally
         {
-            _globalCancellationTokenSource?.Dispose();
+            GlobalCancellationTokenSource?.Dispose();
         }
 
         PlayingPlayable = playBox;
