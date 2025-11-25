@@ -15,10 +15,10 @@ namespace Avalonix.View.SecondaryWindows.EditMetadataWindow;
 public partial class EditMetadataWindow : Window
 {
     private readonly ILogger<WindowManager> _logger;
-    private string? _newCoverPath;
-    private readonly IEditMetadataWindowViewModel _vm;
-    private readonly Track _track;
     private readonly IPlaylistManager _playlistManager;
+    private readonly Track _track;
+    private readonly IEditMetadataWindowViewModel _vm;
+    private string? _newCoverPath;
 
     public EditMetadataWindow(ILogger<WindowManager> logger, IEditMetadataWindowViewModel vm, Track track,
         IPlaylistManager playlistManager)

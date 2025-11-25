@@ -15,6 +15,7 @@ public partial class PlayableSelectWindow : Window
     private readonly ILogger<WindowManager> _logger;
     private readonly List<IPlayable> _playables;
     private readonly IPlayableSelectViewModel _vm;
+
     public PlayableSelectWindow(ILogger<WindowManager> logger, IPlayableSelectViewModel vm)
     {
         InitializeComponent();
@@ -39,6 +40,7 @@ public partial class PlayableSelectWindow : Window
             PlaylistBox.ItemsSource = _playables.Select(p => p.Name);
             return;
         }
+
         var stringPlaylists = _vm.SearchItem(text, _playables).Select(p => p.Name).ToList();
         PlaylistBox.ItemsSource = stringPlaylists;
     }

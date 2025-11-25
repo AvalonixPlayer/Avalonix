@@ -10,14 +10,15 @@
         Title="Avalonix - Playlist Select">
 
     <Design.DataContext>
-        <playableSelectViewModel1:PlayableSelectViewModel/>
+        <playableSelectViewModel1:PlayableSelectViewModel />
     </Design.DataContext>
 
     <StackPanel Margin="10">
         <Border CornerRadius="12" Padding="5" Margin="5">
             <StackPanel>
-                <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Height="50" Watermark="Search"/>
-                <ListBox Height="500" Name="PlaylistBox" SelectionChanged="ActionSelectedPlaylist"></ListBox>
+                <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Height="50"
+                         Watermark="Search" />
+                <ListBox Height="500" Name="PlaylistBox" SelectionChanged="ActionSelectedPlaylist" />
             </StackPanel>
         </Border>
     </StackPanel>

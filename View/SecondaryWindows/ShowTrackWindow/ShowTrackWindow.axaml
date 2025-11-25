@@ -29,7 +29,7 @@
                 <Label FontWeight="DemiBold">Lyrics</Label>
                 <ScrollViewer Height="150" VerticalScrollBarVisibility="Auto">
                     <SelectableTextBlock FontWeight="SemiLight" FontStyle="Italic" Name="Lyrics"
-                               Text="Not found" TextWrapping="Wrap"/>
+                                         Text="Not found" TextWrapping="Wrap" />
                 </ScrollViewer>
             </StackPanel>
         </Border>

@@ -4,9 +4,9 @@
              xmlns:local="using:Avalonix"
              RequestedThemeVariant="Dark">
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
     <Application.Styles>
-        <StyleInclude Source="avares://Avalonix/Styles/Transparent.axaml"/>
+        <StyleInclude Source="avares://Avalonix/Styles/Transparent.axaml" />
     </Application.Styles>
 </Application>

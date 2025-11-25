@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Avalonix.Services.VersionManager;
 
@@ -25,8 +25,9 @@ public class VersionManager : IVersionManager
 
     public async Task<Release> GetCurrentRelease()
     {
-        var pathToRelease = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!,"Release");
-        if(!Path.Exists(pathToRelease)) return new Release("null");
+        var pathToRelease = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!,
+            "Release");
+        if (!Path.Exists(pathToRelease)) return new Release("null");
         var content = await File.ReadAllTextAsync(pathToRelease);
         var version = CutText(content, "AvalonixTAG_Version", "AvalonixTAG_Close");
         return new Release(version);

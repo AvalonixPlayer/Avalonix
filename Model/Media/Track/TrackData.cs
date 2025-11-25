@@ -1,22 +1,21 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 
 namespace Avalonix.Model.Media.Track;
 
 public class TrackData
 {
-    [Key]
-    public string Name { get; set; }
     public TrackData()
     {
-        
     }
+
     public TrackData(string path)
     {
         Path = path;
     }
+
+    [Key] public string Name { get; set; }
 
     public string Path { get; }
     public int Rarity { get; set; }

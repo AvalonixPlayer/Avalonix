@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Playlist;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +19,7 @@ public class DatabaseService : IDatabaseService
 
         try
         {
-            if (!_dbContext.Database.EnsureCreated())
-            {
-                logger.LogWarning("Table 'Playlists' already exist");
-            }
+            if (!_dbContext.Database.EnsureCreated()) logger.LogWarning("Table 'Playlists' already exist");
         }
         catch (Exception ex)
         {
@@ -44,9 +40,18 @@ public class DatabaseService : IDatabaseService
         }
     }
 
-    public void RemovePlaylistData(PlaylistData playlist) => _dbContext.Remove(playlist);
+    public void RemovePlaylistData(PlaylistData playlist)
+    {
+        _dbContext.Remove(playlist);
+    }
 
-    public void RemovePlaylistData(string plName) => _dbContext.Remove(new PlaylistData { Name = plName});
+    public void RemovePlaylistData(string plName)
+    {
+        _dbContext.Remove(new PlaylistData { Name = plName });
+    }
 
-    public Task<List<PlaylistData>> GetAllPlaylists() => _dbContext.Playlists.ToListAsync();
+    public Task<List<PlaylistData>> GetAllPlaylists()
+    {
+        return _dbContext.Playlists.ToListAsync();
+    }
 }

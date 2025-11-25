@@ -10,22 +10,23 @@ namespace Avalonix.Services.SettingsManager;
 
 public class SettingsManager : ISettingsManager
 {
-    private static string SettingsPath { get; } =
-        Path.Combine(DiskManager.DiskManager.AvalonixFolderPath, "settings" + DiskManager.DiskManager.Extension);
-    private readonly IDiskWriter _diskWriter;
     private readonly IDiskLoader _diskLoader;
+    private readonly IDiskWriter _diskWriter;
     private readonly ILogger _logger;
-    
-    public Settings? Settings { get; }
 
-    public SettingsManager(IDiskWriter writer,IDiskLoader loader,ILogger logger)
+    public SettingsManager(IDiskWriter writer, IDiskLoader loader, ILogger logger)
     {
         _diskWriter = writer;
         _diskLoader = loader;
         _logger = logger;
         Settings = Task.Run(async () => await GetSettings()).Result;
     }
-    
+
+    private static string SettingsPath { get; } =
+        Path.Combine(DiskManager.DiskManager.AvalonixFolderPath, "settings" + DiskManager.DiskManager.Extension);
+
+    public Settings? Settings { get; }
+
     public async Task SaveSettings()
     {
         await _diskWriter.WriteJsonAsync(Settings, SettingsPath);
@@ -36,13 +37,14 @@ public class SettingsManager : ISettingsManager
     {
         try
         {
-            if(!Directory.Exists(DiskManager.DiskManager.AvalonixFolderPath))
+            if (!Directory.Exists(DiskManager.DiskManager.AvalonixFolderPath))
                 Directory.CreateDirectory(DiskManager.DiskManager.AvalonixFolderPath);
             if (!Path.Exists(SettingsPath))
             {
                 await File.Create(SettingsPath).DisposeAsync();
                 await _diskWriter.WriteJsonAsync(new Settings(), SettingsPath);
             }
+
             var result = await _diskLoader.LoadAsyncFromJson<Settings>(SettingsPath);
             return result ?? default!;
         }

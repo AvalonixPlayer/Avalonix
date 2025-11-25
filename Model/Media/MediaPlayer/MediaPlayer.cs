@@ -8,17 +8,9 @@ namespace Avalonix.Model.Media.MediaPlayer;
 
 public class MediaPlayer : IMediaPlayer
 {
-    private int _stream;
     private readonly ILogger _logger;
     private readonly ISettingsManager _settingsManager;
-
-    public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
-    public bool IsPaused => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_PAUSED;
-
-    public Model.Media.Track.Track? CurrentTrack { get; private set; }
-
-    public event Action<bool>? PlaybackStateChanged;
-    public event Action? TrackChanged;
+    private int _stream;
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
@@ -27,7 +19,15 @@ public class MediaPlayer : IMediaPlayer
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
     }
 
-    public void Play(Model.Media.Track.Track track)
+    public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
+    public bool IsPaused => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_PAUSED;
+
+    public Track.Track? CurrentTrack { get; private set; }
+
+    public event Action<bool>? PlaybackStateChanged;
+    public event Action? TrackChanged;
+
+    public void Play(Track.Track track)
     {
         CurrentTrack = track;
         Bass.BASS_StreamFree(_stream);
@@ -37,7 +37,7 @@ public class MediaPlayer : IMediaPlayer
         }
         catch (Exception e)
         {
-            _logger.LogError("Create stream error: {e}",e.Message);
+            _logger.LogError("Create stream error: {e}", e.Message);
         }
 
         if (_stream == 0)
@@ -72,12 +72,6 @@ public class MediaPlayer : IMediaPlayer
         PlaybackStateChanged?.Invoke(false);
     }
 
-    public void Reset()
-    {
-        PlaybackStateChanged?.Invoke(false);
-        Bass.BASS_ChannelPlay(_stream, true);
-    }
-
     public Task ChangeVolume(uint volume)
     {
         var vol = _settingsManager.Settings!.Avalonix.Volume = volume;
@@ -85,9 +79,19 @@ public class MediaPlayer : IMediaPlayer
         return Task.CompletedTask;
     }
 
-    public double GetPosition() =>
-        Bass.BASS_ChannelBytes2Seconds(_stream, Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE));
+    public double GetPosition()
+    {
+        return Bass.BASS_ChannelBytes2Seconds(_stream, Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE));
+    }
 
-    public void SetPosition(double position) =>
+    public void SetPosition(double position)
+    {
         Bass.BASS_ChannelSetPosition(_stream, Bass.BASS_ChannelSeconds2Bytes(_stream, position));
+    }
+
+    public void Reset()
+    {
+        PlaybackStateChanged?.Invoke(false);
+        Bass.BASS_ChannelPlay(_stream, true);
+    }
 }

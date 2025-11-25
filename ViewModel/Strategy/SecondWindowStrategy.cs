@@ -13,5 +13,3 @@ public interface IPlayableWindowStrategy : ISecondWindowStrategy
 {
     Task ExecuteAsync(IPlayable playlist);
 }
-
-

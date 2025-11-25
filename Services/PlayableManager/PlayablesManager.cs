@@ -1,10 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
-using Avalonix.Model.Media.Album;
 using Avalonix.Model.Media.MediaPlayer;
-using Avalonix.Model.Media.PlayBox;
-using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
@@ -23,10 +20,10 @@ public class PlayablesManager(
     IMediaPlayer mediaPlayer,
     ISettingsManager settingsManager) : IPlayablesManager
 {
+    private readonly Settings _settings = settingsManager.Settings!;
     public IMediaPlayer MediaPlayer => mediaPlayer;
     public IPlayable? PlayingPlayable { get; private set; }
     public Track? CurrentTrack => MediaPlayer.CurrentTrack;
-    private readonly Settings _settings = settingsManager.Settings!;
 
     public Task StartPlayable(IPlayable playable)
     {
@@ -41,15 +38,30 @@ public class PlayablesManager(
         return Task.CompletedTask;
     }
 
-    public async Task ChangeVolume(uint volume) => await MediaPlayer.ChangeVolume(volume);
+    public async Task ChangeVolume(uint volume)
+    {
+        await MediaPlayer.ChangeVolume(volume);
+    }
 
-    public void PausePlayable() => PlayingPlayable?.Pause();
+    public void PausePlayable()
+    {
+        PlayingPlayable?.Pause();
+    }
 
-    public void ResumePlayable() => PlayingPlayable?.Resume();
+    public void ResumePlayable()
+    {
+        PlayingPlayable?.Resume();
+    }
 
-    public void NextTrack() => PlayingPlayable?.NextTrack();
+    public void NextTrack()
+    {
+        PlayingPlayable?.NextTrack();
+    }
 
-    public void TrackBefore() => PlayingPlayable?.BackTrack();
+    public void TrackBefore()
+    {
+        PlayingPlayable?.BackTrack();
+    }
 
     public void ResetSnuffle()
     {
@@ -65,7 +77,10 @@ public class PlayablesManager(
         _settings.Avalonix.PlaySettings.Loop = !_settings.Avalonix.PlaySettings.Loop;
     }
 
-    public void ForceStartTrackByIndex(int index) => PlayingPlayable?.ForceStartTrackByIndex(index);
+    public void ForceStartTrackByIndex(int index)
+    {
+        PlayingPlayable?.ForceStartTrackByIndex(index);
+    }
 
     public event Action<bool> PlaybackStateChanged
     {

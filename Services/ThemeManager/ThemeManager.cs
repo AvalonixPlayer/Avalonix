@@ -4,22 +4,25 @@ using Avalonia.Styling;
 
 namespace Avalonix.Services.ThemeManager;
 
-public class ThemeManager : IThemeManager 
+public class ThemeManager : IThemeManager
 {
-    private Styles _styles = [];
+    private readonly Styles _styles = [];
 
     public Styles LoadTheme(string themeName)
     {
         _styles.Clear();
-        
+
         var themeInclude = new StyleInclude(new Uri("avares://YourApp/"))
         {
             Source = new Uri($"avares://Avalonix/Styles/{themeName}.xaml")
         };
-        
+
         _styles.Add(themeInclude);
         return _styles;
     }
-    
-    public Styles ResetTheme() => LoadTheme("Purple");
+
+    public Styles ResetTheme()
+    {
+        return LoadTheme("Purple");
+    }
 }

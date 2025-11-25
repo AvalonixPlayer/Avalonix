@@ -23,27 +23,26 @@ namespace Avalonix.View;
 
 public partial class MainWindow : Window
 {
-    private readonly ILogger<MainWindow> _logger;
-    private readonly IMainWindowViewModel _vm;
-    private readonly IPlayablesManager _playablesManager;
-    private readonly IPlayboxManager _playboxManager;
-    private readonly IWindowManager _windowManager;
-
-    private readonly Timer _timer;
-
-    private bool _isUserDragging;
-
-    private readonly Image _playButtonImage = GetImageFromAvares("buttons/play.png");
-
-    private readonly Image _pauseButtonImage = GetImageFromAvares("buttons/pause.png");
-
-    private readonly Image _enableShuffleImage = GetImageFromAvares("buttons/EnableSnuffle.png");
+    private readonly Image _disableLoopImage = GetImageFromAvares("buttons/DisableLoop.png");
 
     private readonly Image _disableShuffleImage = GetImageFromAvares("buttons/DisableSnuffle.png");
 
     private readonly Image _enableLoopImage = GetImageFromAvares("buttons/EnableLoop.png");
 
-    private readonly Image _disableLoopImage = GetImageFromAvares("buttons/DisableLoop.png");
+    private readonly Image _enableShuffleImage = GetImageFromAvares("buttons/EnableSnuffle.png");
+    private readonly ILogger<MainWindow> _logger;
+
+    private readonly Image _pauseButtonImage = GetImageFromAvares("buttons/pause.png");
+    private readonly IPlayablesManager _playablesManager;
+    private readonly IPlayboxManager _playboxManager;
+
+    private readonly Image _playButtonImage = GetImageFromAvares("buttons/play.png");
+
+    private readonly Timer _timer;
+    private readonly IMainWindowViewModel _vm;
+    private readonly IWindowManager _windowManager;
+
+    private bool _isUserDragging;
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
         ISettingsManager settingsManager, IPlayablesManager playablesManager, IWindowManager windowManager,
@@ -60,7 +59,7 @@ public partial class MainWindow : Window
         _playablesManager.PlaybackStateChanged += UpdatePauseButtonImage;
         SubscribePlayableChanged();
         SubscribeTrackChanged();
-        
+
         _playablesManager.ShuffleChanged += UpdateShuffleButtonImage;
         _playablesManager.LoopChanged += UpdateLoopButtonImage;
 
@@ -94,10 +93,12 @@ public partial class MainWindow : Window
 
         _logger.LogInformation("MainWindow initialized");
     }
-    
-    private void PlayAllTracksOnClick(object? sender, RoutedEventArgs e) =>
+
+    private void PlayAllTracksOnClick(object? sender, RoutedEventArgs e)
+    {
         _playablesManager.StartPlayable(_playboxManager.GetPlayables().Result[0]);
-    
+    }
+
     private async void NewPlaylistButton_OnClick(object? sender, RoutedEventArgs e)
     {
         try
@@ -133,7 +134,7 @@ public partial class MainWindow : Window
             _logger.LogError("Error while select album: {ex}", ex);
         }
     }
-    
+
     private void Pause(object sender, RoutedEventArgs e)
     {
         var playingPlaylist = _playablesManager.PlayingPlayable;
@@ -145,20 +146,30 @@ public partial class MainWindow : Window
             _playablesManager.PausePlayable();
     }
 
-    private void PlayNextTrack(object sender, RoutedEventArgs e) =>
+    private void PlayNextTrack(object sender, RoutedEventArgs e)
+    {
         _playablesManager.NextTrack();
+    }
 
-    private void PlayTrackBefore(object sender, RoutedEventArgs e) =>
+    private void PlayTrackBefore(object sender, RoutedEventArgs e)
+    {
         _playablesManager.TrackBefore();
-    
-    private void AboutButton_OnClick(object? sender, RoutedEventArgs e) =>
+    }
+
+    private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
+    {
         _windowManager.AboutWindow_Open().ShowDialog(this);
+    }
 
-    private void ShuffleButton_OnClick(object? sender, RoutedEventArgs e) =>
+    private void ShuffleButton_OnClick(object? sender, RoutedEventArgs e)
+    {
         _playablesManager.ResetSnuffle();
+    }
 
-    private void LoopButton_OnClick(object? sender, RoutedEventArgs e) =>
+    private void LoopButton_OnClick(object? sender, RoutedEventArgs e)
+    {
         _playablesManager.ResetLoop();
+    }
 
     private void UpdateShuffleButtonImage(bool enable)
     {
@@ -404,11 +415,17 @@ public partial class MainWindow : Window
         }
     }
 
-    private static Image GetImageFromAvares(string partOfPath) =>
-        new()
+    private static Image GetImageFromAvares(string partOfPath)
+    {
+        return new Image
         {
             Source =
                 new Bitmap(AssetLoader.Open(new Uri($"avares://Avalonix/Assets/{partOfPath}")))
         };
-    protected sealed override async void OnClosed(EventArgs e) => await _windowManager.CloseMainWindowAsync();
+    }
+
+    protected sealed override async void OnClosed(EventArgs e)
+    {
+        await _windowManager.CloseMainWindowAsync();
+    }
 }

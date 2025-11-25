@@ -11,17 +11,16 @@ namespace Avalonix.Model.Media.Playlist;
 
 public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings settings)
 {
+    private readonly Random _random = new();
+    private CancellationTokenSource? _cancellationTokenSource;
+    private bool _compleated;
+    public Action? QueueStopped;
+
+    public Action? StartedNewTrack;
     public int PlayingIndex { get; set; }
     public List<Track.Track> Tracks { get; private set; } = [];
     private PlaySettings Settings => settings;
-
-    private readonly Random _random = new();
-    private CancellationTokenSource? _cancellationTokenSource;
     public bool Paused => player.IsPaused;
-    private bool _compleated;
-
-    public Action? StartedNewTrack;
-    public Action? QueueStopped;
 
     public void FillQueue(List<Track.Track> tracks)
     {
@@ -110,16 +109,22 @@ public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings setting
             _ = Play();
         }
         else
+        {
             _ = Play(PlayingIndex + 1);
+        }
 
         logger.LogDebug("User skipped track");
     }
 
-    public void ForceStartTrackByIndex(int index) =>
+    public void ForceStartTrackByIndex(int index)
+    {
         _ = Play(index);
+    }
 
-    public void BackTrack() =>
+    public void BackTrack()
+    {
         _ = PlayingIndex - 1 <= 0 ? Play() : Play(PlayingIndex - 1);
+    }
 
     public void Pause()
     {
@@ -133,6 +138,8 @@ public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings setting
         logger.LogDebug("Playlist resumed");
     }
 
-    public bool QueueIsEmpty() =>
-        Tracks.Count == 0;
+    public bool QueueIsEmpty()
+    {
+        return Tracks.Count == 0;
+    }
 }

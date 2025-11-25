@@ -13,7 +13,7 @@ public interface IPlayablesManager
     Track? CurrentTrack { get; }
     Task StartPlayable(IPlayable playable);
     Task ChangeVolume(uint volume);
-    
+
     void PausePlayable();
     void ResumePlayable();
     void NextTrack();

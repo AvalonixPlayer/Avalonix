@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -11,8 +12,9 @@ namespace Avalonix.View.SecondaryWindows.AboutWindow;
 
 public partial class AboutWindow : Window
 {
-    private readonly ILogger _logger;
     private const string Url = "https://github.com/AvalonixPlayer/Avalonix";
+    private readonly ILogger _logger;
+
     public AboutWindow(ILogger logger, IVersionManager versionManager)
     {
         _logger = logger;
@@ -35,27 +37,19 @@ public partial class AboutWindow : Window
         try
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = url,
                     UseShellExecute = true
                 });
-            }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
                 Process.Start("open", url);
-            }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
                 Process.Start("xdg-open", url);
-            }
             else
-            {
                 throw new PlatformNotSupportedException("Unsupported platform");
-            }
         }
-        catch (System.ComponentModel.Win32Exception noBrowser)
+        catch (Win32Exception noBrowser)
         {
             _logger.LogError("Error: No browser found to open {Url}. {NoBrowserMessage}", url, noBrowser.Message);
         }

@@ -12,8 +12,8 @@ namespace Avalonix.View.SecondaryWindows.PlaylistCreateWindow;
 
 public partial class PlaylistCreateWindow : Window
 {
-    private readonly IPlaylistEditOrCreateWindowViewModel _vm;
     private readonly ILogger<WindowManager> _logger;
+    private readonly IPlaylistEditOrCreateWindowViewModel _vm;
 
     private string? _observingDirectory;
 
@@ -57,7 +57,7 @@ public partial class PlaylistCreateWindow : Window
     private async void ObservingDirectory_OnClick(object? sender, RoutedEventArgs e)
     {
         var observingDirectory = await _vm.OpenObservingDirectoryDialogAsync(this);
-        if(string.IsNullOrEmpty(observingDirectory)) return;
+        if (string.IsNullOrEmpty(observingDirectory)) return;
         _observingDirectory = observingDirectory;
     }
 
@@ -67,7 +67,7 @@ public partial class PlaylistCreateWindow : Window
         {
             var songs2Remove = NewSongBox.SelectedIndex;
             NewSongBox.Items.RemoveAt(songs2Remove);
-            _logger.LogInformation("Removed songs: {songs}", songs2Remove );
+            _logger.LogInformation("Removed songs: {songs}", songs2Remove);
 
             if (NewSongBox.Items.Count.Equals(0))
                 RemoveButton.IsEnabled = false;
@@ -83,7 +83,7 @@ public partial class PlaylistCreateWindow : Window
         try
         {
             var name = PlaylistName.Text;
-            if(string.IsNullOrEmpty(name)) return;
+            if (string.IsNullOrEmpty(name)) return;
             var items = NewSongBox.Items.OfType<string>().ToList();
             List<Track> tracks = [];
             items.ForEach(item => tracks.Add(new Track(item)));

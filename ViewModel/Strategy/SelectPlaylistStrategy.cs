@@ -23,7 +23,10 @@ public class SelectAndPlayPlaylistWindowStrategy(IPlayablesManager playablesMana
     public string WindowTitle => "to play";
     public string ActionButtonText => "Playlist name to play";
 
-    public async Task ExecuteAsync(IPlayable playlist) => await playablesManager.StartPlayable((playlist as Playlist)!);
+    public async Task ExecuteAsync(IPlayable playlist)
+    {
+        await playablesManager.StartPlayable((playlist as Playlist)!);
+    }
 }
 
 public class SelectAndEditPlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy
@@ -31,6 +34,8 @@ public class SelectAndEditPlaylistWindowStrategy(IPlaylistManager playlistManage
     public string WindowTitle => "to edit";
     public string ActionButtonText => "Playlist name to edit";
 
-    public async Task ExecuteAsync(IPlayable playlist) => await playlistManager.EditPlaylist((playlist as Playlist)!);
-
+    public async Task ExecuteAsync(IPlayable playlist)
+    {
+        await playlistManager.EditPlaylist((playlist as Playlist)!);
+    }
 }

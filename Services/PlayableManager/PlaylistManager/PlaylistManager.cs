@@ -21,11 +21,10 @@ public class PlaylistManager(
     ISettingsManager settingsManager)
     : IPlaylistManager
 {
+    private readonly Settings _settings = settingsManager.Settings!;
     public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }
     public CancellationTokenSource? GlobalCancellationTokenSource { get; private set; }
-
-    private readonly Settings _settings = settingsManager.Settings!;
 
     public event Action? PlayableChanged;
 
@@ -54,7 +53,10 @@ public class PlaylistManager(
         remove => _settings.Avalonix.LoopChanged -= value;
     }
 
-    public async Task<List<PlaylistData>> GetAllPlaylistData() => await diskManager.GetAllPlaylists();
+    public async Task<List<PlaylistData>> GetAllPlaylistData()
+    {
+        return await diskManager.GetAllPlaylists();
+    }
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
     {
@@ -70,11 +72,20 @@ public class PlaylistManager(
         return new Playlist(playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }
 
-    public async Task EditPlaylist(Playlist playlist) => await playlist.Save();
+    public async Task EditPlaylist(Playlist playlist)
+    {
+        await playlist.Save();
+    }
 
-    public async Task CreatePlaylist(Playlist playlist) => await playlist.Save();
+    public async Task CreatePlaylist(Playlist playlist)
+    {
+        await playlist.Save();
+    }
 
-    public void DeletePlaylist(Playlist playlist) => diskManager.RemovePlaylist(playlist.PlaylistData.Name);
+    public void DeletePlaylist(Playlist playlist)
+    {
+        diskManager.RemovePlaylist(playlist.PlaylistData.Name);
+    }
 
     public void StartPlayable(IPlayable playlist)
     {

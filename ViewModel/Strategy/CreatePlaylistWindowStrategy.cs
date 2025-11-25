@@ -10,7 +10,10 @@ public class CreatePlaylistWindowStrategy(IPlaylistManager playlistManager) : IP
     public string WindowTitle => "Create a new playlist";
     public string ActionButtonText => "Create";
 
-    public async Task ExecuteAsync(IPlayable playlist) => await playlistManager.CreatePlaylist((playlist as Playlist)!);
+    public async Task ExecuteAsync(IPlayable playlist)
+    {
+        await playlistManager.CreatePlaylist((playlist as Playlist)!);
+    }
 }
 
 public class EditPlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy
@@ -18,5 +21,8 @@ public class EditPlaylistWindowStrategy(IPlaylistManager playlistManager) : IPla
     public string WindowTitle => "Edit a new playlist";
     public string ActionButtonText => "Save";
 
-    public async Task ExecuteAsync(IPlayable playlist) => await playlistManager.EditPlaylist((playlist as Playlist)!);
+    public async Task ExecuteAsync(IPlayable playlist)
+    {
+        await playlistManager.EditPlaylist((playlist as Playlist)!);
+    }
 }

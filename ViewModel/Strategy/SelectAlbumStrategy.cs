@@ -11,7 +11,10 @@ public class SelectAndPlayAlbumWindowStrategy(IPlayablesManager playablesManager
     public string WindowTitle => "Select a album to play";
     public string ActionButtonText => "Album name to play";
 
-    public async Task ExecuteAsync(IPlayable album) => await playablesManager.StartPlayable((album as Album)!);
+    public async Task ExecuteAsync(IPlayable album)
+    {
+        await playablesManager.StartPlayable((album as Album)!);
+    }
 }
 
 public class SelectAndDeleteAlbumWindowStrategy(IAlbumManager albumManager) : IPlayableWindowStrategy

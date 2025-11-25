@@ -21,22 +21,14 @@ public class DiskManager : IDiskManager
     public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
 
-    private readonly IDiskWriter _diskWriter;
+    private readonly IDatabaseService _databaseService;
     private readonly IDiskLoader _diskLoader;
 
-    private static string PlaylistsPath { get; } =
-        Path.Combine(AvalonixFolderPath, "playlists");
-
-    private static string ThemesPath { get; } =
-        Path.Combine(AvalonixFolderPath, "themes");
-
-    private static string MusicPath { get; } =
-        Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+    private readonly IDiskWriter _diskWriter;
 
     private readonly ILogger _logger;
     private readonly IMediaPlayer _player;
     private readonly ISettingsManager _settingsManager;
-    private readonly IDatabaseService _databaseService;
 
     public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader,
         ISettingsManager settingsManager, IDatabaseService databaseService)
@@ -60,6 +52,15 @@ public class DiskManager : IDiskManager
         }
     }
 
+    private static string PlaylistsPath { get; } =
+        Path.Combine(AvalonixFolderPath, "playlists");
+
+    private static string ThemesPath { get; } =
+        Path.Combine(AvalonixFolderPath, "themes");
+
+    private static string MusicPath { get; } =
+        Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+
     public async Task SavePlaylist(Playlist playlist)
     {
         await _diskWriter.WritePlaylistToDb(playlist.PlaylistData);
@@ -74,7 +75,10 @@ public class DiskManager : IDiskManager
         return Task.CompletedTask;
     }
 
-    public async Task<List<PlaylistData>> GetAllPlaylists() => await _diskLoader.LoadAllPlaylistsFromDb();
+    public async Task<List<PlaylistData>> GetAllPlaylists()
+    {
+        return await _diskLoader.LoadAllPlaylistsFromDb();
+    }
 
     public async Task CreateNewTheme(string name)
     {
@@ -82,8 +86,10 @@ public class DiskManager : IDiskManager
         await _diskWriter.WriteJsonAsync(theme, Path.Combine(ThemesPath, name + Extension));
     }
 
-    public async Task SaveTheme(Theme theme) =>
+    public async Task SaveTheme(Theme theme)
+    {
         await _diskWriter.WriteJsonAsync(theme, Path.Combine(ThemesPath, theme.Name + Extension));
+    }
 
     public async Task<Theme?> GetTheme(string name)
     {
@@ -105,6 +111,7 @@ public class DiskManager : IDiskManager
                 var f = Directory.EnumerateFiles("D:\\плейлисты", $"*{ext}", SearchOption.AllDirectories);
                 files.AddRange(f);
             }
+
             return files;
         }
     }

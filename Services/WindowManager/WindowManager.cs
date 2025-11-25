@@ -21,14 +21,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.WindowManager;
 
-public class WindowManager(ILogger<WindowManager> logger, ISettingsManager settingsManager, IPlayablesManager playablesManager, IPlaylistManager playlistManager, IVersionManager versionManager, IAlbumManager albumManager)
+public class WindowManager(
+    ILogger<WindowManager> logger,
+    ISettingsManager settingsManager,
+    IPlayablesManager playablesManager,
+    IPlaylistManager playlistManager,
+    IVersionManager versionManager,
+    IAlbumManager albumManager)
     : IWindowManager
 {
-    private static void CloseMainWindow()
-    {
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) desktop.Shutdown();
-    }
-
     public async Task CloseMainWindowAsync()
     {
         try
@@ -41,6 +42,47 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
             logger.LogCritical("Error during closing and saving: {ex}", ex);
             CloseMainWindow();
         }
+    }
+
+    public PlaylistCreateWindow PlaylistCreateWindow_Open()
+    {
+        return PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
+    }
+
+    public PlayableSelectWindow PlaylistSelectWindow_Open()
+    {
+        return PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playablesManager));
+    }
+
+    public AboutWindow AboutWindow_Open()
+    {
+        return new AboutWindow(logger, versionManager);
+    }
+
+    public ShowTrackWindow ShowTrackWindow_Open(Track track)
+    {
+        return new ShowTrackWindow(logger, track);
+    }
+
+    public EditMetadataWindow EditMetadataWindow_Open(Track track)
+    {
+        return new EditMetadataWindow(logger, new EditMetadataWindowViewModel(logger, null!), track, playlistManager);
+    }
+
+    public PlayableSelectWindow PlaylistDeleteWindow_Open()
+    {
+        return PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager));
+    }
+
+    public PlayableSelectWindow AlbumSelectAndPlayWindow_Open()
+    {
+        return AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
+    }
+
+    private static void CloseMainWindow()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            desktop.Shutdown();
     }
 
     private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlayableWindowStrategy strategy)
@@ -61,31 +103,23 @@ public class WindowManager(ILogger<WindowManager> logger, ISettingsManager setti
         return new PlayableSelectWindow(logger, vm);
     }
 
-    public PlayableSelectWindow PlaylistSelectToPlayWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playablesManager));
-    public PlayableSelectWindow PlaylistSelectToEditWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager));
-    public PlaylistCreateWindow PlaylistCreateWindow_Open() =>
-        PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
+    public PlayableSelectWindow PlaylistSelectToPlayWindow_Open()
+    {
+        return PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playablesManager));
+    }
 
-    public PlayableSelectWindow PlaylistSelectWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndPlayPlaylistWindowStrategy(playablesManager));
+    public PlayableSelectWindow PlaylistSelectToEditWindow_Open()
+    {
+        return PlaylistSelectWindow_Open(new SelectAndEditPlaylistWindowStrategy(playlistManager));
+    }
 
-    public PlaylistCreateWindow PlaylistEditWindow_Open() =>
-        PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
+    public PlaylistCreateWindow PlaylistEditWindow_Open()
+    {
+        return PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
+    }
 
-    public AboutWindow AboutWindow_Open() => new(logger, versionManager);
-
-    public ShowTrackWindow ShowTrackWindow_Open(Track track) => new(logger, track);
-
-    public EditMetadataWindow EditMetadataWindow_Open(Track track) => new(logger, new EditMetadataWindowViewModel(logger, null!),track, playlistManager);
-
-    public PlayableSelectWindow PlaylistDeleteWindow_Open() =>
-        PlaylistSelectWindow_Open(new SelectAndDeletePlaylistWindowStrategy(playlistManager));
-
-    public PlayableSelectWindow AlbumSelectAndPlayWindow_Open() =>
-        AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
-
-    public PlayableSelectWindow AlbumSelectAndDeleteWindow_Open() =>
-        AlbumSelectWindow_Open(new SelectAndDeleteAlbumWindowStrategy(albumManager));
+    public PlayableSelectWindow AlbumSelectAndDeleteWindow_Open()
+    {
+        return AlbumSelectWindow_Open(new SelectAndDeleteAlbumWindowStrategy(albumManager));
+    }
 }

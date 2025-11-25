@@ -21,15 +21,14 @@ public class AlbumManager(
     IDiskManager diskManager,
     IMediaPlayer mediaPlayer) : IAlbumManager
 {
-    public Action? TrackLoaded { get; set; }
+    private readonly Settings _settings = settingsManager.Settings!;
     private readonly List<Track> _tracks = [];
     private bool _tracksLoaded;
+    public Action? TrackLoaded { get; set; }
 
-    public CancellationTokenSource? GlobalCancellationTokenSource {get; private set;}
+    public CancellationTokenSource? GlobalCancellationTokenSource { get; private set; }
     public IMediaPlayer MediaPlayer { get; } = mediaPlayer;
     public IPlayable? PlayingPlayable { get; set; }
-
-    private readonly Settings _settings = settingsManager.Settings!;
 
     public event Action<bool> PlaybackStateChanged
     {
@@ -70,7 +69,7 @@ public class AlbumManager(
         {
             GlobalCancellationTokenSource?.Dispose();
         }
-        
+
         GlobalCancellationTokenSource = new CancellationTokenSource();
 
         PlayingPlayable = album;
@@ -96,11 +95,17 @@ public class AlbumManager(
     public void RemoveAlbum(Album album)
     {
     }
-    
+
+    public async Task<List<IPlayable>> GetPlayables()
+    {
+        var result = await Task.Run(GetAlbums);
+        return result.Cast<IPlayable>().ToList();
+    }
+
     private async Task<List<Album>> GetAlbums()
     {
         await Task.Run(LoadTracks);
-        
+
         if (!_tracksLoaded)
         {
             logger.LogWarning("Tracks metadata not loaded yet. Call LoadTracks() first.");
@@ -111,9 +116,10 @@ public class AlbumManager(
             .Where(track => track.Metadata.Artist != null && track.Metadata.Album != null)
             .GroupBy(track => new { Artist = track.Metadata.Artist!, Album = track.Metadata.Album! });
 
-        return albumGroups.Select(group => group.Select(track => track.TrackData.Path).ToList()).Select(tracksPaths => new Album(tracksPaths, player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
+        return albumGroups.Select(group => group.Select(track => track.TrackData.Path).ToList()).Select(tracksPaths =>
+            new Album(tracksPaths, player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
     }
-    
+
     private async Task LoadTracks()
     {
         var paths = diskManager.GetMusicFiles();
@@ -122,7 +128,7 @@ public class AlbumManager(
         _tracksLoaded = false;
 
         var loadTasks = new List<Task>();
-        
+
         foreach (var path in paths)
         {
             var track = new Track(path);
@@ -139,11 +145,5 @@ public class AlbumManager(
 
         await Task.WhenAll(loadTasks);
         _tracksLoaded = true;
-    }
-
-    public async Task<List<IPlayable>> GetPlayables()
-    {
-        var result = await Task.Run(GetAlbums);
-        return result.Cast<IPlayable>().ToList();
     }
 }

@@ -11,4 +11,3 @@ public interface IDatabaseService
     void RemovePlaylistData(string plName);
     Task<List<PlaylistData>> GetAllPlaylists();
 }
-

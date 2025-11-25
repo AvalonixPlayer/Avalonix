@@ -4,15 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Avalonix.Model.Media.Playlist;
 
 public class PlaylistData
 {
     private List<Track.Track> _tracks = [];
-    [Key]
-    public string Name { get; set; }
+
+    [Key] public string Name { get; set; }
 
     public List<Track.Track> Tracks
     {
@@ -50,6 +49,8 @@ public class PlaylistData
                 _tracks.Add(new Track.Track(file));
     }
 
-    private void TracksFiltration() =>
+    private void TracksFiltration()
+    {
         _tracks = _tracks.Where(track => File.Exists(track.TrackData.Path)).ToList();
+    }
 }

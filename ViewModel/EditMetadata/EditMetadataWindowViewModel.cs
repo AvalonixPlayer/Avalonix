@@ -9,7 +9,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.ViewModel.EditMetadata;
 
-public class EditMetadataWindowViewModel(ILogger<WindowManager> logger,
+public class EditMetadataWindowViewModel(
+    ILogger<WindowManager> logger,
     ISecondWindowStrategy strategy) : ViewModelBase, IEditMetadataWindowViewModel
 {
     private readonly FilePickerOpenOptions _filePickerOptions = new()

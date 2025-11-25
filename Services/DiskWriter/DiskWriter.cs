@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Playlist;
@@ -14,7 +15,7 @@ public class DiskWriter(ILogger logger, IDatabaseService databaseService) : IDis
     {
         WriteIndented = true,
         IncludeFields = true,
-        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     public async Task WriteJsonAsync<T>(T obj, string path)

@@ -2,12 +2,17 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using TagLib;
 using File = TagLib.File;
 
 namespace Avalonix.Model.Media.Track;
 
 public record TrackMetadata
 {
+    private string _path = null!;
+    public Action? MetadataEdited;
+
+    public Action? MetadataLoaded;
     public string? TrackName { get; private set; }
     public string? Album { get; private set; }
     public string? MediaFileFormat { get; private set; }
@@ -17,12 +22,11 @@ public record TrackMetadata
     public string? Lyric { get; private set; }
     public TimeSpan Duration { get; private set; }
     public byte[]? Cover { get; private set; }
-    private string _path = null!;
 
-    public Action? MetadataLoaded;
-    public Action? MetadataEdited;
-
-    public void Init(string path) => _path = path;
+    public void Init(string path)
+    {
+        _path = path;
+    }
 
     public Task FillTrackMetaData()
     {
@@ -40,6 +44,7 @@ public record TrackMetadata
             MetadataLoaded?.Invoke();
             return Task.CompletedTask;
         }
+
         var picture = track.Tag.Pictures[0];
         if (picture != null && picture.Data != null && picture.Data.Data is { Length: > 0 })
             Cover = picture.Data.Data;
@@ -48,14 +53,15 @@ public record TrackMetadata
     }
 
     [Obsolete("Obsolete")]
-    public void RewriteTags(string title, string album, string? artist, string? genre, int year, string lyric, byte[]? cover)
+    public void RewriteTags(string title, string album, string? artist, string? genre, int year, string lyric,
+        byte[]? cover)
     {
         using var file = File.Create(_path);
         file.Tag.Title = title;
         file.Tag.Album = album;
-        if(artist != null)
+        if (artist != null)
             file.Tag.Artists = [artist];
-        if(genre != null)
+        if (genre != null)
             file.Tag.Genres = [genre];
         file.Tag.Year = (uint)year;
         file.Tag.Lyrics = lyric;
@@ -63,11 +69,11 @@ public record TrackMetadata
         if (cover != null)
         {
             file.Tag.Pictures = [];
-            var picture = new TagLib.Picture
+            var picture = new Picture
             {
-                Type = TagLib.PictureType.FrontCover,
+                Type = PictureType.FrontCover,
                 Description = "Cover",
-                Data = new TagLib.ByteVector(cover)
+                Data = new ByteVector(cover)
             };
             file.Tag.Pictures = [picture];
         }
