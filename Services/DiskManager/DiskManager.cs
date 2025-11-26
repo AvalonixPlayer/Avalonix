@@ -108,8 +108,6 @@ public class DiskManager : IDiskManager
             {
                 var foundFiles = Directory.EnumerateFiles(MusicPath, $"*{ext}", SearchOption.AllDirectories);
                 files.AddRange(foundFiles);
-                var f = Directory.EnumerateFiles("D:\\плейлисты", $"*{ext}", SearchOption.AllDirectories);
-                files.AddRange(f);
             }
 
             return files;

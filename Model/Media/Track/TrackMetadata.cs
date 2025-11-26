@@ -31,23 +31,40 @@ public record TrackMetadata
     public Task FillTrackMetaData()
     {
         var track = File.Create(_path);
-        TrackName = track.Tag!.Title ?? Path.GetFileNameWithoutExtension(_path);
+        
+        var tag = track.Tag!;
+        
+        TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(_path);
         MediaFileFormat = Path.GetExtension(_path);
-        Album = track.Tag!.Album!;
-        Artist = track.Tag!.FirstPerformer!;
-        Genre = track.Tag!.FirstGenre!;
-        Year = track.Tag!.Year;
-        Lyric = track.Tag!.Lyrics!;
-        Duration = track.Properties!.Duration;
-        if (track.Tag.Pictures is not { Length: > 0 })
+        Album = tag.Album!;
+        Artist = tag.FirstPerformer;
+        Genre = tag.FirstGenre;
+        Year = tag.Year;
+        Lyric = tag.Lyrics;
+        Duration = track.Properties.Duration;
+        if (tag.Pictures is not { Length: > 0 })
         {
             MetadataLoaded?.Invoke();
             return Task.CompletedTask;
         }
 
-        var picture = track.Tag.Pictures[0];
+        var picture = tag.Pictures[0];
         if (picture != null && picture.Data != null && picture.Data.Data is { Length: > 0 })
             Cover = picture.Data.Data;
+        
+        MetadataLoaded?.Invoke();
+        return Task.CompletedTask;
+    }
+    
+    public Task FillBasicTrackMetaData()
+    {
+        var track = File.Create(_path);
+        var tag = track.Tag!;
+        
+        TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(_path);
+        Artist = tag.FirstPerformer;
+        Album = tag.Album;
+        
         MetadataLoaded?.Invoke();
         return Task.CompletedTask;
     }
@@ -81,20 +98,5 @@ public record TrackMetadata
         file.Save();
         FillTrackMetaData();
         MetadataEdited?.Invoke();
-    }
-
-    public override string ToString()
-    {
-        var result = new StringBuilder();
-        result.AppendLine($"TrackName: {TrackName}");
-        result.AppendLine($"Album: {Album}");
-        result.AppendLine($"Format: {MediaFileFormat}");
-        result.AppendLine($"Artist: {Artist}");
-        result.AppendLine($"Genre: {Genre}");
-        result.AppendLine($"Year: {Year}");
-        result.AppendLine($"Lyric: {Lyric}");
-        result.AppendLine($"Duration: {Duration}");
-        result.AppendLine($"Cover: {Cover == null}");
-        return result.ToString();
     }
 }

@@ -20,7 +20,6 @@ public record Album : IPlayable
         Name = Metadata.AlbumName;
 
         PlayQueue.FillQueue(tracksPaths.Select(path => new Track.Track(path)).ToList());
-        Task.Run(LoadTracksMetadata);
     }
 
     public string Name { get; }
@@ -61,12 +60,12 @@ public record Album : IPlayable
         PlayQueue.ForceStartTrackByIndex(index);
     }
 
-    public async Task LoadTracksMetadata()
+    public async Task LoadBasicTracksMetadata()
     {
         foreach (var i in PlayQueue.Tracks)
         {
             i.Metadata.Init(i.TrackData.Path);
-            await Task.Run(i.Metadata.FillTrackMetaData);
+            await Task.Run(i.Metadata.FillBasicTrackMetaData);
         }
     }
 

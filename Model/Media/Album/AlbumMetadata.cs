@@ -11,17 +11,15 @@ public record AlbumMetadata
         FillMetadata(tracks);
     }
 
-    public string AlbumName { get; private set; }
+    public string AlbumName { get; private set; } = string.Empty;
     public string? ArtistName { get; private set; }
-    public string[]? Genres { get; private set; }
-    public byte[]? Cover { get; private set; }
 
     private void FillMetadata(List<Track.Track> tracks)
     {
         foreach (var track in tracks)
         {
             track.Metadata.Init(track.TrackData.Path);
-            track.Metadata.FillTrackMetaData();
+            track.Metadata.FillBasicTrackMetaData();
         }
 
         AlbumName = tracks[0].Metadata.Album ?? "none";
@@ -30,24 +28,6 @@ public record AlbumMetadata
                  tracksMetadata.Where(trackMetadata => !string.IsNullOrEmpty(trackMetadata.Artist)))
         {
             ArtistName = trackMetadata.Artist;
-            break;
-        }
-
-        foreach (var trackMetadata in tracksMetadata.Where(trackMetadata => !string.IsNullOrEmpty(trackMetadata.Genre)))
-        {
-            Genres = [trackMetadata.Genre ?? "none"];
-            break;
-        }
-
-        foreach (var trackMetadata in tracksMetadata.Where(trackMetadata => !string.IsNullOrEmpty(trackMetadata.Genre)))
-        {
-            Genres = [trackMetadata.Genre ?? "none"];
-            break;
-        }
-
-        foreach (var trackMetadata in tracksMetadata.Where(trackMetadata => !string.IsNullOrEmpty(trackMetadata.Genre)))
-        {
-            Cover = trackMetadata.Cover;
             break;
         }
     }

@@ -135,11 +135,7 @@ public class AlbumManager(
             track.Metadata.Init(path);
             _tracks.Add(track);
 
-            var loadTask = Task.Run(async () =>
-            {
-                await track.Metadata.FillTrackMetaData();
-                TrackLoaded?.Invoke();
-            });
+            var loadTask = Task.Run(track.Metadata.FillBasicTrackMetaData);
             loadTasks.Add(loadTask);
         }
 
