@@ -5,9 +5,8 @@ namespace Avalonix.Model.Media.Album;
 
 public record AlbumMetadata
 {
-    public AlbumMetadata(List<string> tracksPaths)
+    public AlbumMetadata(List<Track.Track> tracks)
     {
-        var tracks = tracksPaths.Select(trackPath => new Track.Track(trackPath)).ToList();
         FillMetadata(tracks);
     }
 

@@ -349,14 +349,17 @@ public partial class MainWindow : Window
 
         try
         {
-            Dispatcher.UIThread.Post(() =>
+            _ = Task.Run(() =>
             {
-                using var memoryStream = new MemoryStream(coverData);
-                AlbumCover.Child = new Image
+                Dispatcher.UIThread.Post(() =>
                 {
-                    Source = new Bitmap(memoryStream),
-                    Stretch = Stretch.UniformToFill
-                };
+                    using var memoryStream = new MemoryStream(coverData);
+                    AlbumCover.Child = new Image
+                    {
+                        Source = new Bitmap(memoryStream),
+                        Stretch = Stretch.UniformToFill
+                    };
+                });
             });
         }
         catch (Exception ex)
@@ -379,9 +382,12 @@ public partial class MainWindow : Window
             _logger.LogError("Current track is null");
             return;
         }
+
         TrackName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.TrackName, 25);
         ArtistName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 25);
-        TrackDuration.Content = PostProcessedText(TrackMetadata.ToHumanFriendlyString(_playablesManager.CurrentTrack!.Metadata.Duration), 25);
+        TrackDuration.Content =
+            PostProcessedText(TrackMetadata.ToHumanFriendlyString(_playablesManager.CurrentTrack!.Metadata.Duration),
+                25);
     }
 
     private void SongBox_OnSelectionChanged(object? sender, TappedEventArgs tappedEventArgs)

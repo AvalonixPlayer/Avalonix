@@ -129,7 +129,7 @@ public class PlaylistManager(
         {
             try
             {
-                await PlayingPlayable.Play().ConfigureAwait(false);
+                await PlayingPlayable.Play();
             }
             catch (OperationCanceledException)
             {

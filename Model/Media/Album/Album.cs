@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
@@ -12,14 +11,14 @@ public record Album : IPlayable
 {
     public AlbumMetadata? Metadata;
 
-    public Album(List<string> tracksPaths, IMediaPlayer player, ILogger logger, PlaySettings settings)
+    public Album(List<Track.Track> tracks, IMediaPlayer player, ILogger logger, PlaySettings settings)
     {
         PlayQueue = new PlayQueue(player, logger, settings);
 
-        Metadata = new AlbumMetadata(tracksPaths);
+        Metadata = new AlbumMetadata(tracks);
         Name = Metadata.AlbumName;
 
-        PlayQueue.FillQueue(tracksPaths.Select(path => new Track.Track(path)).ToList());
+        PlayQueue.FillQueue(tracks);
     }
 
     public string Name { get; }
@@ -27,7 +26,7 @@ public record Album : IPlayable
 
     public async Task Play()
     {
-        await PlayQueue.Play().ConfigureAwait(false);
+        await PlayQueue.Play();
     }
 
     public void Pause()

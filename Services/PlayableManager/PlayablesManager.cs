@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
+using Avalonix.Model.Media.Album;
 using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Model.Media.PlayBox;
+using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
@@ -32,7 +35,18 @@ public class PlayablesManager(
         playboxManager.PlayingPlayable?.Stop();
         PlayingPlayable = playable;
 
-        playlistManager.StartPlayable(playable);
+        switch (playable)
+        {
+            case Playlist:
+                playlistManager.StartPlayable(playable);
+                break;
+            case Album:
+                albumManager.StartPlayable(playable);
+                break;
+            case Playbox:
+                playboxManager.StartPlayable(playable);
+                break;
+        }
 
         PlayableChanged?.Invoke();
         return Task.CompletedTask;

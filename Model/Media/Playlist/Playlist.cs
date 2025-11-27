@@ -37,7 +37,7 @@ public record Playlist : IPlayable
     public async Task Play()
     {
         await Task.Run(LoadBasicTracksMetadata);
-        await PlayQueue.Play().ConfigureAwait(false);
+        await PlayQueue.Play();
     }
 
     public void Pause()

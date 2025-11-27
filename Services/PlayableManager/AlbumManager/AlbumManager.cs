@@ -79,7 +79,7 @@ public class AlbumManager(
         {
             try
             {
-                await PlayingPlayable.Play().ConfigureAwait(false);
+                await PlayingPlayable.Play();
             }
             catch (OperationCanceledException)
             {
@@ -116,8 +116,8 @@ public class AlbumManager(
 
         var albumGroups = allValidTracks.GroupBy(track => new { track.Metadata.Artist, track.Metadata.Album });
 
-        return albumGroups.Select(group => group.Select(track => track.TrackData.Path).ToList()).Select(tracksPaths =>
-            new Album(tracksPaths, player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
+        return albumGroups.Select(group =>
+            new Album(group.ToList(), player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
     }
 
     private async Task LoadTracks()
@@ -127,17 +127,15 @@ public class AlbumManager(
         _tracksLoaded = false;
 
         var tracks = new Track[paths.Count];
-    
-        await Parallel.ForEachAsync(Enumerable.Range(0, paths.Count), 
-            new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
-            async (i, _) =>
-            {
-                var path = paths[i];
-                var track = new Track(path);
-                track.Metadata.Init(path);
-                await track.Metadata.FillBasicTrackMetaData();
-                tracks[i] = track;
-            });
+
+        for (var i = 0; i < tracks.Length; i++)
+        {
+            var path = paths[i];
+            var track = new Track(path);
+            track.Metadata.Init(path);
+            await Task.Run(track.Metadata.FillBasicTrackMetaData);
+            tracks[i] = track;
+        }
 
         _tracks.AddRange(tracks);
         _tracksLoaded = true;

@@ -21,7 +21,7 @@ public partial class PlayableSelectWindow : Window
         InitializeComponent();
         _logger = logger;
         _vm = vm;
-        _logger.LogInformation("PlaylistCreateWindow opened");
+        _logger.LogInformation("PlayableCreateWindow opened");
 
         _playables = Task.Run(async () => await _vm.GetPlayableItems()).Result;
 

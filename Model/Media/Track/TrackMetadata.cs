@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using TagLib;
 using File = TagLib.File;
@@ -9,7 +8,7 @@ namespace Avalonix.Model.Media.Track;
 
 public record TrackMetadata
 {
-    private string _path = null!;
+    private string? _path;
     public Action? MetadataEdited;
 
     public Action? MetadataLoaded;
@@ -30,10 +29,11 @@ public record TrackMetadata
 
     public Task FillTrackMetaData()
     {
+        if (_path == null) return Task.CompletedTask;
         var track = File.Create(_path);
-        
+
         var tag = track.Tag!;
-        
+
         TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(_path);
         MediaFileFormat = Path.GetExtension(_path);
         Album = tag.Album!;
@@ -51,20 +51,21 @@ public record TrackMetadata
         var picture = tag.Pictures[0];
         if (picture != null && picture.Data != null && picture.Data.Data is { Length: > 0 })
             Cover = picture.Data.Data;
-        
+
         MetadataLoaded?.Invoke();
         return Task.CompletedTask;
     }
-    
+
     public Task FillBasicTrackMetaData()
     {
+        if (_path == null) return Task.CompletedTask;
         var track = File.Create(_path);
         var tag = track.Tag!;
-        
+
         TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(_path);
         Artist = tag.FirstPerformer;
         Album = tag.Album;
-        
+
         MetadataLoaded?.Invoke();
         return Task.CompletedTask;
     }
@@ -99,7 +100,7 @@ public record TrackMetadata
         FillTrackMetaData();
         MetadataEdited?.Invoke();
     }
-    
+
     public static string ToHumanFriendlyString(TimeSpan timeSpan)
     {
         if (timeSpan.Hours > 0)

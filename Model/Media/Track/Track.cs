@@ -8,7 +8,6 @@ namespace Avalonix.Model.Media.Track;
 public class Track
 {
     [JsonIgnore] public TrackMetadata Metadata = new();
-    public TrackData TrackData { get; } = null!;
 
     public Track()
     {
@@ -18,6 +17,8 @@ public class Track
     {
         TrackData = new TrackData(path);
     }
+
+    public TrackData TrackData { get; } = null!;
 
 
     public void IncreaseRarity(int rarity)

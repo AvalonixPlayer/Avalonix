@@ -44,14 +44,15 @@ public class PlayboxManager(
         {
             try
             {
-                await PlayingPlayable.Play().ConfigureAwait(false);
+                await PlayingPlayable.Play();
             }
             catch (OperationCanceledException)
             {
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Playlist play failed");
+                Console.WriteLine(PlayingPlayable.PlayQueue.Tracks);
+                logger.LogError(ex.Message, "Playbox play failed");
             }
         });
     }
