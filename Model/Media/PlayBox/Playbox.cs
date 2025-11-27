@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,11 +58,13 @@ public class Playbox : IPlayable
 
     public async Task LoadBasicTracksMetadata()
     {
-        foreach (var i in PlayQueue.Tracks)
-        {
-            i.Metadata.Init(i.TrackData.Path);
-            await Task.Run(i.Metadata.FillBasicTrackMetaData);
-        }
+        await Parallel.ForEachAsync(PlayQueue.Tracks,
+            new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
+            async (track, _) =>
+            {
+                track.Metadata.Init(track.TrackData.Path);
+                await track.Metadata.FillBasicTrackMetaData();
+            });
     }
 
     public bool QueueIsEmpty()

@@ -64,11 +64,6 @@
 
         <Border Grid.Row="1" Grid.Column="1" Height="70">
             <StackPanel Classes="center">
-                <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
-                    <Label Name="TrackName" FontSize="23" FontWeight="DemiBold" Content="" />
-                    <Label Name="ArtistName" FontSize="10" FontWeight="Light" FontStyle="Italic" BorderBrush="DimGray"
-                           Content="" Margin="0, 0, 0, 5" />
-                </StackPanel>
                 <StackPanel Classes="center">
                     <Button Name="BackButton" Click="PlayTrackBefore">
                         <Image Source="../Assets/buttons/back.png" />
@@ -91,9 +86,22 @@
                         Height="30" />
             </StackPanel>
         </Border>
-        <Border Name="AlbumCover" Grid.Row="0" Grid.Column="1" Height="300" Width="300" Background="#cc212121"
-                CornerRadius="25" ClipToBounds="True">
-            <Image Source=""/>
+
+        <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                <Border Name="AlbumCover" Height="300" Width="300" Background="#cc212121"
+                        CornerRadius="25" ClipToBounds="True">
+                    <Image Source="" />
+                </Border>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="2">
+                    <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content=""
+                           HorizontalContentAlignment="Center" HorizontalAlignment="Center" />
+                    <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold"
+                           BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"
+                           HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="White" />
+                </StackPanel>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>

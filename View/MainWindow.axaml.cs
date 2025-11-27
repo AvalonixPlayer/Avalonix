@@ -300,7 +300,8 @@ public partial class MainWindow : Window
         }
 
         SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
-            .Select(x => PostProcessedText(x.Metadata.TrackName, 30)).ToList();
+            .Where(track => !string.IsNullOrEmpty(track.Metadata.TrackName)).ToList()
+            .Select(track => PostProcessedText(track.Metadata.TrackName, 30));
     }
 
     private void UpdateTrackPositionSlider()
@@ -375,8 +376,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        TrackName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.TrackName, 13);
-        ArtistName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 13);
+        TrackName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.TrackName, 25);
+        ArtistName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 25);
     }
 
     private void SongBox_OnSelectionChanged(object? sender, TappedEventArgs tappedEventArgs)

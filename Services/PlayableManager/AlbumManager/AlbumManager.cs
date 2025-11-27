@@ -24,7 +24,6 @@ public class AlbumManager(
     private readonly Settings _settings = settingsManager.Settings!;
     private readonly List<Track> _tracks = [];
     private bool _tracksLoaded;
-    public Action? TrackLoaded { get; set; }
 
     public CancellationTokenSource? GlobalCancellationTokenSource { get; private set; }
     public IMediaPlayer MediaPlayer { get; } = mediaPlayer;
@@ -112,9 +111,10 @@ public class AlbumManager(
             return [];
         }
 
-        var albumGroups = _tracks
-            .Where(track => track.Metadata.Artist != null && track.Metadata.Album != null)
-            .GroupBy(track => new { Artist = track.Metadata.Artist!, Album = track.Metadata.Album! });
+        var allValidTracks = _tracks.Where(track =>
+            !string.IsNullOrEmpty(track.Metadata.Artist) && !string.IsNullOrEmpty(track.Metadata.Album));
+
+        var albumGroups = allValidTracks.GroupBy(track => new { track.Metadata.Artist, track.Metadata.Album });
 
         return albumGroups.Select(group => group.Select(track => track.TrackData.Path).ToList()).Select(tracksPaths =>
             new Album(tracksPaths, player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
@@ -123,23 +123,23 @@ public class AlbumManager(
     private async Task LoadTracks()
     {
         var paths = diskManager.GetMusicFiles();
-
         _tracks.Clear();
         _tracksLoaded = false;
 
-        var loadTasks = new List<Task>();
+        var tracks = new Track[paths.Count];
+    
+        await Parallel.ForEachAsync(Enumerable.Range(0, paths.Count), 
+            new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
+            async (i, _) =>
+            {
+                var path = paths[i];
+                var track = new Track(path);
+                track.Metadata.Init(path);
+                await track.Metadata.FillBasicTrackMetaData();
+                tracks[i] = track;
+            });
 
-        foreach (var path in paths)
-        {
-            var track = new Track(path);
-            track.Metadata.Init(path);
-            _tracks.Add(track);
-
-            var loadTask = Task.Run(track.Metadata.FillBasicTrackMetaData);
-            loadTasks.Add(loadTask);
-        }
-
-        await Task.WhenAll(loadTasks);
+        _tracks.AddRange(tracks);
         _tracksLoaded = true;
     }
 }

@@ -22,8 +22,6 @@ public record Playlist : IPlayable
         Name = PlaylistData.Name;
         PlayQueue.FillQueue(PlaylistData.Tracks);
 
-        Task.Run(LoadBasicTracksMetadata).ConfigureAwait(false).GetAwaiter();
-
         PlayQueue.QueueStopped += () => Task.Run(Save);
         PlayQueue.StartedNewTrack += () =>
         {
@@ -38,6 +36,7 @@ public record Playlist : IPlayable
 
     public async Task Play()
     {
+        await Task.Run(LoadBasicTracksMetadata);
         await PlayQueue.Play().ConfigureAwait(false);
     }
 
