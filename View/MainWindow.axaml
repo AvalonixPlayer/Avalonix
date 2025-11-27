@@ -100,6 +100,10 @@
                            BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"
                            HorizontalContentAlignment="Center" HorizontalAlignment="Center"
                            Foreground="White" />
+                    <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold"
+                           BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"
+                           HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="White" />
                 </StackPanel>
             </StackPanel>
         </Border>

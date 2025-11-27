@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Avalonix.Model.Media.Track;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.SettingsManager;
@@ -348,18 +349,15 @@ public partial class MainWindow : Window
 
         try
         {
-            new Task(() =>
+            Dispatcher.UIThread.Post(() =>
             {
-                Dispatcher.UIThread.Post(() =>
+                using var memoryStream = new MemoryStream(coverData);
+                AlbumCover.Child = new Image
                 {
-                    using var memoryStream = new MemoryStream(coverData);
-                    AlbumCover.Child = new Image
-                    {
-                        Source = new Bitmap(memoryStream),
-                        Stretch = Stretch.UniformToFill
-                    };
-                });
-            }).Start();
+                    Source = new Bitmap(memoryStream),
+                    Stretch = Stretch.UniformToFill
+                };
+            });
         }
         catch (Exception ex)
         {
@@ -376,8 +374,14 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (_playablesManager.CurrentTrack == null)
+        {
+            _logger.LogError("Current track is null");
+            return;
+        }
         TrackName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.TrackName, 25);
         ArtistName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 25);
+        TrackDuration.Content = PostProcessedText(TrackMetadata.ToHumanFriendlyString(_playablesManager.CurrentTrack!.Metadata.Duration), 25);
     }
 
     private void SongBox_OnSelectionChanged(object? sender, TappedEventArgs tappedEventArgs)

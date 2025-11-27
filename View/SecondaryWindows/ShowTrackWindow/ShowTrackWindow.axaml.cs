@@ -24,7 +24,7 @@ public partial class ShowTrackWindow : Window
         Genre.Content += " " + track.Metadata.Genre;
         MediaFileFormat.Content += " " + track.Metadata.MediaFileFormat;
         Year.Content += " " + track.Metadata.Year;
-        Duration.Content += " " + ToHumanFriendlyString(track.Metadata.Duration);
+        Duration.Content += " " + TrackMetadata.ToHumanFriendlyString(track.Metadata.Duration);
     }
 
     private void InitializeMainFields(Track track)
@@ -32,12 +32,5 @@ public partial class ShowTrackWindow : Window
         Name.Content += " " + track.Metadata.TrackName;
         Artist.Content += " " + track.Metadata.Artist;
         Lyrics.Text = track.Metadata.Lyric;
-    }
-
-    private static string ToHumanFriendlyString(TimeSpan timeSpan)
-    {
-        if (timeSpan.Hours > 0)
-            return $"{timeSpan.Hours}H {timeSpan.Minutes}M {timeSpan.Seconds}S";
-        return timeSpan.Minutes > 0 ? $"{timeSpan.Minutes}M {timeSpan.Seconds}S" : $"{timeSpan.Seconds}S";
     }
 }
