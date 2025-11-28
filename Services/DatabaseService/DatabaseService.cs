@@ -36,7 +36,7 @@ public class DatabaseService : IDatabaseService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while writing playlist: {ex}", ex);
+            _logger.LogError("Error while writing playlist: {ex}", ex.Message);
         }
     }
 
@@ -47,7 +47,7 @@ public class DatabaseService : IDatabaseService
 
     public void RemovePlaylistData(string plName)
     {
-        _dbContext.Remove(new PlaylistData { Name = plName });
+        //_dbContext.Remove(new PlaylistData { Name = plName });
     }
 
     public Task<List<PlaylistData>> GetAllPlaylists()

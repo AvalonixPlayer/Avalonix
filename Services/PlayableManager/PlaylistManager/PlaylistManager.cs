@@ -60,7 +60,7 @@ public class PlaylistManager(
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
     {
-        var playlistData = new PlaylistData
+        var playlistData = new PlaylistData(title)
         {
             Tracks = tracks,
             LastListen = null,

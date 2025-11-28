@@ -11,7 +11,8 @@ public class PlaylistData
 {
     private List<Track.Track> _tracks = [];
 
-    [Key] public string Name { get; set; }
+    [Key]
+    public string Name {get; init;}
 
     public List<Track.Track> Tracks
     {
@@ -24,14 +25,19 @@ public class PlaylistData
         }
         set => _tracks = value;
     }
-
-    [JsonInclude] public DateTime? LastListen { get; set; }
-    [JsonInclude] public int? Rarity { get; set; } = 0;
-    [JsonInclude] public bool ObserveDirectory { get; set; } = true;
-    [JsonInclude] public string? ObservingDirectory { get; set; }
-
-    private void SetName()
+    public DateTime? LastListen { get; set; }
+    public int? Rarity { get; set; } = 0;
+    public bool ObserveDirectory { get; set; } = true;
+    public string? ObservingDirectory { get; set; }
+    
+    public PlaylistData()
     {
+        
+    }
+    
+    public PlaylistData(string name)
+    {
+        Name = name;
     }
 
     private void UpdateTracksByDirectoryObserving()
