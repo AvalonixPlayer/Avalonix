@@ -86,14 +86,13 @@ public record TrackMetadata
 
         if (cover != null)
         {
-            file.Tag.Pictures = [];
-            var picture = new Picture
-            {
-                Type = PictureType.FrontCover,
-                Description = "Cover",
-                Data = new ByteVector(cover)
-            };
-            file.Tag.Pictures = [picture];
+            file.Tag.Pictures =
+            [
+                new Picture
+                {
+                    Data = new ByteVector(cover)
+                }
+            ];
         }
 
         file.Save();
