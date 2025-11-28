@@ -57,7 +57,8 @@ public partial class EditMetadataWindow : Window
         if (!string.IsNullOrEmpty(_newCoverPath))
             cover = File.ReadAllBytes(_newCoverPath);
         new Task(() =>
-            Dispatcher.UIThread.Post(() => _track.Metadata.RewriteTags(Name.Text!, Album.Text!, Artist.Text!,
+            Dispatcher.UIThread.Post(() => _track.Metadata.RewriteTags(_track.TrackData.Path, Name.Text!, Album.Text!,
+                Artist.Text!,
                 Genre.Text!, int.Parse(Year.Text!),
                 Lyric.Text!, cover))).Start();
     }

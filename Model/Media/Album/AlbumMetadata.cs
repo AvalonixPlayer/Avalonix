@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Avalonix.Model.Media.Album;
 
@@ -7,19 +8,16 @@ public record AlbumMetadata
 {
     public AlbumMetadata(List<Track.Track> tracks)
     {
-        FillMetadata(tracks);
+        FillMetadata(tracks).GetAwaiter();
     }
 
     public string AlbumName { get; private set; } = string.Empty;
     public string? ArtistName { get; private set; }
 
-    private void FillMetadata(List<Track.Track> tracks)
+    private async Task FillMetadata(List<Track.Track> tracks)
     {
         foreach (var track in tracks)
-        {
-            track.Metadata.Init(track.TrackData.Path);
-            track.Metadata.FillBasicTrackMetaData();
-        }
+            await track.Metadata.FillBasicTrackMetaData(track.TrackData.Path);
 
         AlbumName = tracks[0].Metadata.Album ?? "none";
         var tracksMetadata = tracks.Select(x => x.Metadata).ToList();

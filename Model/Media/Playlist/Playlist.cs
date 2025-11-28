@@ -74,8 +74,7 @@ public record Playlist : IPlayable
     {
         foreach (var i in PlayQueue.Tracks)
         {
-            i.Metadata.Init(i.TrackData.Path);
-            await Task.Run(i.Metadata.FillBasicTrackMetaData);
+            await Task.Run(() => i.Metadata.FillBasicTrackMetaData(i.TrackData.Path));
         }
     }
 
