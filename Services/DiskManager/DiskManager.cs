@@ -16,12 +16,12 @@ namespace Avalonix.Services.DiskManager;
 public class DiskManager : IDiskManager
 {
     public const string Extension = ".avalonix";
-    public static readonly string[] MusicFilesExtensions = ["*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw"];
+    private static readonly string[] MusicFilesExtensions = ["*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw"];
 
     public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
 
-    private readonly IDatabaseService _databaseService;
+    private readonly IDatabaseService _databaseService; // unsupported now
     private readonly IDiskLoader _diskLoader;
 
     private readonly IDiskWriter _diskWriter;
@@ -63,21 +63,31 @@ public class DiskManager : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await _diskWriter.WritePlaylistToDb(playlist.PlaylistData);
+        await _diskWriter.WriteJsonAsync(playlist.PlaylistData, PlaylistsPath);
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.PlaylistData.Name);
     }
 
     public Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
-        _databaseService.RemovePlaylistData(name);
+        var path = Path.Combine(PlaylistsPath, name);
+        File.Delete(path);
         _logger.LogInformation("Playlist {name} was been removed", name);
         return Task.CompletedTask;
     }
 
     public async Task<List<PlaylistData>> GetAllPlaylists()
     {
-        return await _diskLoader.LoadAllPlaylistsFromDb();
+        var files = Directory.EnumerateFiles(PlaylistsPath, $"*{Extension}");
+        var playlists = new List<PlaylistData>();
+        foreach (var file in files)
+        {
+            var playlist = await _diskLoader.LoadAsyncFromJson<PlaylistData>(Path.GetFileNameWithoutExtension(file));
+            if (playlist == null!) continue;
+            playlists.Add(playlist);
+        }
+
+        return playlists;
     }
 
     public async Task CreateNewTheme(string name)

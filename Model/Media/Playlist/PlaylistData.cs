@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Avalonix.Model.Media.Playlist;
 
-public class PlaylistData
+public record PlaylistData
 {
     private List<Track.Track> _tracks = [];
 
@@ -26,18 +26,14 @@ public class PlaylistData
     }
     public DateTime? LastListen { get; set; }
     public int? Rarity { get; set; } = 0;
-    public bool ObserveDirectory { get; set; } = true;
+    public bool ObserveDirectory { get; init; } = true;
     public string? ObservingDirectory { get; set; }
-    
+
     public PlaylistData()
     {
-        
     }
-    
-    public PlaylistData(string name)
-    {
-        Name = name;
-    }
+
+    public PlaylistData(string name) => Name = name;
 
     private void UpdateTracksByDirectoryObserving()
     {

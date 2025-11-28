@@ -54,8 +54,6 @@ public class App : Application
             services.AddSingleton<IPlayboxManager, PlayboxManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();
             services.AddSingleton<IThemeManager, ThemeManager>();
-            services.AddDbContext<AppDbContext>();
-            services.AddSingleton<IDatabaseService, DatabaseService>();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();
