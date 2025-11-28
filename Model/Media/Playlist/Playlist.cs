@@ -12,14 +12,15 @@ public record Playlist : IPlayable
     private readonly IDiskManager _disk;
     private readonly ILogger _logger;
 
-    public Playlist(PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
+    public Playlist(string title, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
         PlaySettings settings)
     {
         PlaylistData = playlistData;
         _disk = disk;
         _logger = logger;
         PlayQueue = new PlayQueue(player, logger, settings);
-        Name = PlaylistData.Name;
+        PlaylistData.Name = title;
+        Name = playlistData.Name;
         PlayQueue.FillQueue(PlaylistData.Tracks);
 
         PlayQueue.QueueStopped += () => Task.Run(Save);

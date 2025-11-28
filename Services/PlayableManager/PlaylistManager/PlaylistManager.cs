@@ -60,7 +60,7 @@ public class PlaylistManager(
 
     public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
     {
-        var playlistData = new PlaylistData(title)
+        var playlistData = new PlaylistData
         {
             Tracks = tracks,
             LastListen = null,
@@ -69,7 +69,7 @@ public class PlaylistManager(
         };
 
         var settings = settingsManager.Settings!;
-        return new Playlist(playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
+        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }
 
     public async Task EditPlaylist(Playlist playlist)
@@ -145,7 +145,7 @@ public class PlaylistManager(
     {
         var allPlaylistData = await GetAllPlaylistData();
         return allPlaylistData.Select(data =>
-            new Playlist(data, player, diskManager, logger, _settings.Avalonix.PlaySettings)
+            new Playlist(data.Name, data, player, diskManager, logger, _settings.Avalonix.PlaySettings)
         ).Cast<IPlayable>().ToList();
     }
 }

@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Services.DatabaseService;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
 using Avalonix.Services.SettingsManager;
@@ -20,8 +19,7 @@ public class DiskManager : IDiskManager
 
     public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
-
-    private readonly IDatabaseService _databaseService; // unsupported now
+    
     private readonly IDiskLoader _diskLoader;
 
     private readonly IDiskWriter _diskWriter;
@@ -31,14 +29,13 @@ public class DiskManager : IDiskManager
     private readonly ISettingsManager _settingsManager;
 
     public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader,
-        ISettingsManager settingsManager, IDatabaseService databaseService)
+        ISettingsManager settingsManager)
     {
         _logger = logger;
         _diskWriter = diskWriter;
         _diskLoader = diskLoader;
         _player = player;
         _settingsManager = settingsManager;
-        _databaseService = databaseService;
 
         CheckDirectory(AvalonixFolderPath);
         CheckDirectory(PlaylistsPath);
@@ -63,7 +60,7 @@ public class DiskManager : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await _diskWriter.WriteJsonAsync(playlist.PlaylistData, PlaylistsPath);
+        await _diskWriter.WriteJsonAsync(playlist.PlaylistData, Path.Combine(PlaylistsPath, playlist.PlaylistData.Name + Extension));
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.PlaylistData.Name);
     }
 

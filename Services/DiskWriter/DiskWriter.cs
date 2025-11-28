@@ -4,12 +4,11 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Services.DatabaseService;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.DiskWriter;
 
-public class DiskWriter(ILogger logger, IDatabaseService databaseService) : IDiskWriter
+public class DiskWriter(ILogger logger) : IDiskWriter
 {
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
@@ -31,19 +30,6 @@ public class DiskWriter(ILogger logger, IDatabaseService databaseService) : IDis
         catch (Exception ex)
         {
             logger.LogError("Error while writing json: {ex}", ex.Message);
-        }
-    }
-
-    public async Task WritePlaylistToDb(PlaylistData playlist)
-    {
-        logger.LogInformation("Trying to Write Playlist: {plName}", playlist.Name);
-        try
-        {
-            await databaseService.WritePlaylistData(playlist);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Error while writing playlist to db: {ex}", ex);
         }
     }
 }

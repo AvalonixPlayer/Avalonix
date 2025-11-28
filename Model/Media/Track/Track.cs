@@ -1,15 +1,16 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Avalonix.Model.Media.Track;
 
 public class Track
 {
-    [NotMapped] public readonly TrackMetadata Metadata = new();
+    [JsonIgnore] public readonly TrackMetadata Metadata = new();
     public readonly TrackData TrackData;
-    [Key]public string Path { get; init; }
-    
+    [Key] public string Path { get; init; }
+
     public Track()
     {
     }

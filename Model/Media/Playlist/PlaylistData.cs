@@ -8,10 +8,8 @@ namespace Avalonix.Model.Media.Playlist;
 
 public record PlaylistData
 {
+    public string Name { get; set; }
     private List<Track.Track> _tracks = [];
-
-    [Key]
-    public string Name {get; init;}
 
     public List<Track.Track> Tracks
     {
@@ -24,6 +22,7 @@ public record PlaylistData
         }
         set => _tracks = value;
     }
+
     public DateTime? LastListen { get; set; }
     public int? Rarity { get; set; } = 0;
     public bool ObserveDirectory { get; init; } = true;
@@ -32,8 +31,6 @@ public record PlaylistData
     public PlaylistData()
     {
     }
-
-    public PlaylistData(string name) => Name = name;
 
     private void UpdateTracksByDirectoryObserving()
     {
