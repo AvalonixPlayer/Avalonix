@@ -1,18 +1,22 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Avalonix.Model.Media.Track;
 
 public class Track
 {
-    public readonly TrackMetadata Metadata = new();
+    [NotMapped] public readonly TrackMetadata Metadata = new();
     public readonly TrackData TrackData;
-
+    [Key]public string Path { get; init; }
+    
     public Track()
     {
     }
 
     public Track(string path)
     {
+        Path = path;
         TrackData = new TrackData(path);
     }
 
