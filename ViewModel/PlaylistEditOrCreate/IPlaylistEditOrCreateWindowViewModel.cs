@@ -11,5 +11,5 @@ public interface IPlaylistEditOrCreateWindowViewModel
     IPlayableWindowStrategy Strategy { get; }
     Task<List<string>?> OpenTrackFileDialogAsync(Window parent);
     Task<string?> OpenObservingDirectoryDialogAsync(Window parent);
-    Task ExecuteAsync(string playlistName, List<Track> tracksPaths, string? observingDirectory);
+    Task ExecuteAsync(string playlistName, List<string> tracksPaths, string? observingDirectory);
 }

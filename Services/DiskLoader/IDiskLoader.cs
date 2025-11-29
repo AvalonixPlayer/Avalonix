@@ -7,5 +7,4 @@ namespace Avalonix.Services.DiskLoader;
 public interface IDiskLoader
 {
     Task<T?> LoadAsyncFromJson<T>(string path);
-    Task<List<PlaylistData>> LoadAllPlaylistsFromDb();
 }

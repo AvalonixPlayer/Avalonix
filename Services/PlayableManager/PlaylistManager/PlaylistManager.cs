@@ -58,33 +58,32 @@ public class PlaylistManager(
         return await diskManager.GetAllPlaylists();
     }
 
-    public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
+    public Playlist ConstructPlaylist(string title, List<string> tracks, string? observingDirectory)
     {
         var playlistData = new PlaylistData
         {
-            Tracks = tracks,
-            LastListen = null,
-            ObserveDirectory = observingDirectory is not null,
-            ObservingDirectory = observingDirectory
+            Name = title,
+            TracksPaths = tracks,
+            ObservingDirectoryPath = observingDirectory ?? string.Empty
         };
 
         var settings = settingsManager.Settings!;
-        return new Playlist(playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
+        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
     }
 
     public async Task EditPlaylist(Playlist playlist)
     {
-        await playlist.Save();
+        await playlist.SavePlaylistDataAsync();
     }
 
     public async Task CreatePlaylist(Playlist playlist)
     {
-        await playlist.Save();
+        await playlist.SavePlaylistDataAsync();
     }
 
     public void DeletePlaylist(Playlist playlist)
     {
-        diskManager.RemovePlaylist(playlist.PlaylistData.Name);
+        diskManager.RemovePlaylist(playlist.Name);
     }
 
     public void StartPlayable(IPlayable playlist)
@@ -145,7 +144,7 @@ public class PlaylistManager(
     {
         var allPlaylistData = await GetAllPlaylistData();
         return allPlaylistData.Select(data =>
-            new Playlist(data, player, diskManager, logger, _settings.Avalonix.PlaySettings)
+            new Playlist(data.Name, data, player, diskManager, logger, _settings.Avalonix.PlaySettings)
         ).Cast<IPlayable>().ToList();
     }
 }

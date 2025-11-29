@@ -108,7 +108,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while select album: {ex}", ex);
+            _logger.LogError("Error while create playlist: {ex}", ex);
         }
     }
 
@@ -120,7 +120,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while select album: {ex}", ex);
+            _logger.LogError("Error while select playlist: {ex}", ex);
         }
     }
 

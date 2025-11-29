@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Services.DatabaseService;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
 using Avalonix.Services.SettingsManager;
@@ -16,12 +15,11 @@ namespace Avalonix.Services.DiskManager;
 public class DiskManager : IDiskManager
 {
     public const string Extension = ".avalonix";
-    public static readonly string[] MusicFilesExtensions = ["*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw"];
+    private static readonly string[] MusicFilesExtensions = ["*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw"];
 
     public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
 
-    private readonly IDatabaseService _databaseService;
     private readonly IDiskLoader _diskLoader;
 
     private readonly IDiskWriter _diskWriter;
@@ -31,14 +29,13 @@ public class DiskManager : IDiskManager
     private readonly ISettingsManager _settingsManager;
 
     public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader,
-        ISettingsManager settingsManager, IDatabaseService databaseService)
+        ISettingsManager settingsManager)
     {
         _logger = logger;
         _diskWriter = diskWriter;
         _diskLoader = diskLoader;
         _player = player;
         _settingsManager = settingsManager;
-        _databaseService = databaseService;
 
         CheckDirectory(AvalonixFolderPath);
         CheckDirectory(PlaylistsPath);
@@ -63,21 +60,31 @@ public class DiskManager : IDiskManager
 
     public async Task SavePlaylist(Playlist playlist)
     {
-        await _diskWriter.WritePlaylistToDb(playlist.PlaylistData);
-        _logger.LogDebug("Playlist({playlistName}) saved", playlist.PlaylistData.Name);
+        await _diskWriter.WriteJsonAsync(playlist.Data, Path.Combine(PlaylistsPath, playlist.Name + Extension));
+        _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
     public Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
-        _databaseService.RemovePlaylistData(name);
+        var path = Path.Combine(PlaylistsPath, name + Extension);
+        File.Delete(path);
         _logger.LogInformation("Playlist {name} was been removed", name);
         return Task.CompletedTask;
     }
 
     public async Task<List<PlaylistData>> GetAllPlaylists()
     {
-        return await _diskLoader.LoadAllPlaylistsFromDb();
+        var files = Directory.EnumerateFiles(PlaylistsPath, $"*{Extension}");
+        var playlists = new List<PlaylistData>();
+        foreach (var file in files)
+        {
+            var playlist = await _diskLoader.LoadAsyncFromJson<PlaylistData>(file);
+            if (playlist == null!) continue;
+            playlists.Add(playlist);
+        }
+
+        return playlists;
     }
 
     public async Task CreateNewTheme(string name)
@@ -97,7 +104,7 @@ public class DiskManager : IDiskManager
         return result;
     }
 
-    public List<string> GetMusicFiles()
+    public List<string> GetMusicFiles(string? path)
     {
         return FindFiles();
 
@@ -106,10 +113,8 @@ public class DiskManager : IDiskManager
             var files = new List<string>();
             foreach (var ext in MusicFilesExtensions)
             {
-                var foundFiles = Directory.EnumerateFiles(MusicPath, $"*{ext}", SearchOption.AllDirectories);
+                var foundFiles = Directory.EnumerateFiles(path ?? MusicPath, $"*{ext}", SearchOption.AllDirectories);
                 files.AddRange(foundFiles);
-                var f = Directory.EnumerateFiles("D:\\плейлисты", $"*{ext}", SearchOption.AllDirectories);
-                files.AddRange(f);
             }
 
             return files;

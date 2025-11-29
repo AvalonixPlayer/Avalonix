@@ -61,10 +61,9 @@ public record Album : IPlayable
 
     public async Task LoadBasicTracksMetadata()
     {
-        foreach (var i in PlayQueue.Tracks)
+        foreach (var track in PlayQueue.Tracks)
         {
-            i.Metadata.Init(i.TrackData.Path);
-            await Task.Run(i.Metadata.FillBasicTrackMetaData);
+            await Task.Run(() => track.Metadata.FillBasicTrackMetaData(track.TrackData.Path));
         }
     }
 

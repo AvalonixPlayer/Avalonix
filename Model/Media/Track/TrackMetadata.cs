@@ -8,7 +8,6 @@ namespace Avalonix.Model.Media.Track;
 
 public record TrackMetadata
 {
-    private string? _path;
     public Action? MetadataEdited;
 
     public Action? MetadataLoaded;
@@ -22,20 +21,14 @@ public record TrackMetadata
     public TimeSpan Duration { get; private set; }
     public byte[]? Cover { get; private set; }
 
-    public void Init(string path)
+    public Task FillTrackMetaData(string path)
     {
-        _path = path;
-    }
-
-    public Task FillTrackMetaData()
-    {
-        if (_path == null) return Task.CompletedTask;
-        var track = File.Create(_path);
+        var track = File.Create(path);
 
         var tag = track.Tag!;
 
-        TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(_path);
-        MediaFileFormat = Path.GetExtension(_path);
+        TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(path);
+        MediaFileFormat = Path.GetExtension(path);
         Album = tag.Album!;
         Artist = tag.FirstPerformer;
         Genre = tag.FirstGenre;
@@ -56,13 +49,12 @@ public record TrackMetadata
         return Task.CompletedTask;
     }
 
-    public Task FillBasicTrackMetaData()
+    public Task FillBasicTrackMetaData(string path)
     {
-        if (_path == null) return Task.CompletedTask;
-        var track = File.Create(_path);
+        var track = File.Create(path);
         var tag = track.Tag!;
 
-        TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(_path);
+        TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(path);
         Artist = tag.FirstPerformer;
         Album = tag.Album;
 
@@ -71,10 +63,11 @@ public record TrackMetadata
     }
 
     [Obsolete("Obsolete")]
-    public void RewriteTags(string title, string album, string? artist, string? genre, int year, string lyric,
+    public void RewriteTags(string path, string title, string album, string? artist, string? genre, int year,
+        string lyric,
         byte[]? cover)
     {
-        using var file = File.Create(_path);
+        using var file = File.Create(path);
         file.Tag.Title = title;
         file.Tag.Album = album;
         if (artist != null)
@@ -96,7 +89,7 @@ public record TrackMetadata
         }
 
         file.Save();
-        FillTrackMetaData();
+        FillTrackMetaData(path);
         MetadataEdited?.Invoke();
     }
 

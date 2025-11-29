@@ -7,7 +7,7 @@ using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Model.Media.Playlist;
+namespace Avalonix.Model.Media;
 
 public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings settings)
 {
@@ -47,7 +47,7 @@ public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings setting
 
                     PlayingIndex = i;
                     var track = Tracks[PlayingIndex];
-                    await Task.Run(track.Metadata.FillTrackMetaData);
+                    await Task.Run(() => track.Metadata.FillTrackMetaData(track.TrackData.Path));
 
                     StartedNewTrack?.Invoke();
                     track.IncreaseRarity(1);

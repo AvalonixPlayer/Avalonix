@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.DiskManager;
@@ -7,36 +11,26 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.Playlist;
 
-public record Playlist : IPlayable
+public class Playlist : IPlayable
 {
-    private readonly IDiskManager _disk;
-    private readonly ILogger _logger;
+    [JsonInclude] public string Name { get; }
+    [JsonInclude] public PlaylistData Data;
+    [JsonIgnore] public PlayQueue PlayQueue { get; }
+    [JsonIgnore] public IDiskManager DiskManager { get; }
 
-    public Playlist(PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
-        PlaySettings settings)
+    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager diskManager,
+        ILogger logger, PlaySettings settings)
     {
-        PlaylistData = playlistData;
-        _disk = disk;
-        _logger = logger;
+        DiskManager = diskManager;
+        Name = name;
+        Data = playlistData;
         PlayQueue = new PlayQueue(player, logger, settings);
-        Name = PlaylistData.Name;
-        PlayQueue.FillQueue(PlaylistData.Tracks);
-
-        PlayQueue.QueueStopped += () => Task.Run(Save);
-        PlayQueue.StartedNewTrack += () =>
-        {
-            PlaylistData.LastListen = DateTime.Now.Date;
-            PlaylistData.Rarity++;
-        };
+        PlayQueue.FillQueue(Data.TracksPaths.Select(path => new Track.Track(path)).ToList());
+        AddObservingDirectoryFiles();
     }
-
-    public PlaylistData PlaylistData { get; }
-    public string Name { get; }
-    public PlayQueue PlayQueue { get; }
 
     public async Task Play()
     {
-        await Task.Run(LoadBasicTracksMetadata);
         await PlayQueue.Play();
     }
 
@@ -72,10 +66,9 @@ public record Playlist : IPlayable
 
     public async Task LoadBasicTracksMetadata()
     {
-        foreach (var i in PlayQueue.Tracks)
+        foreach (var track in PlayQueue.Tracks)
         {
-            i.Metadata.Init(i.TrackData.Path);
-            await Task.Run(i.Metadata.FillBasicTrackMetaData);
+            await Task.Run(() => track.Metadata.FillBasicTrackMetaData(track.TrackData.Path));
         }
     }
 
@@ -84,9 +77,18 @@ public record Playlist : IPlayable
         return PlayQueue.QueueIsEmpty();
     }
 
-    public async Task Save()
+    public async Task SavePlaylistDataAsync()
     {
-        _logger.LogDebug("Playlist saved {playlistName}", PlaylistData.Name);
-        await _disk.SavePlaylist(this);
+        await DiskManager.SavePlaylist(this);
+    }
+
+    private void AddObservingDirectoryFiles()
+    {
+        if (string.IsNullOrEmpty(Data.ObservingDirectoryPath)) return;
+        var newTracksList = new List<Track.Track>();
+        newTracksList.AddRange(PlayQueue.Tracks);
+        newTracksList.AddRange(DiskManager.GetMusicFiles(Data.ObservingDirectoryPath)
+            .Select(path => new Track.Track(path)));
+        PlayQueue.FillQueue(newTracksList);
     }
 }

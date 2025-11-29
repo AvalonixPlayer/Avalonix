@@ -4,7 +4,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonix.Model.Media.MediaPlayer;
-using Avalonix.Services.DatabaseService;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.DiskWriter;
@@ -54,8 +53,6 @@ public class App : Application
             services.AddSingleton<IPlayboxManager, PlayboxManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();
             services.AddSingleton<IThemeManager, ThemeManager>();
-            services.AddDbContext<AppDbContext>();
-            services.AddSingleton<IDatabaseService, DatabaseService>();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();
