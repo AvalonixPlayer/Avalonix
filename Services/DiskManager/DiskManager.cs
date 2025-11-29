@@ -67,7 +67,7 @@ public class DiskManager : IDiskManager
     public Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);
-        var path = Path.Combine(PlaylistsPath, name);
+        var path = Path.Combine(PlaylistsPath, name + Extension);
         File.Delete(path);
         _logger.LogInformation("Playlist {name} was been removed", name);
         return Task.CompletedTask;
