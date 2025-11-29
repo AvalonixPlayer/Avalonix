@@ -7,7 +7,7 @@ namespace Avalonix.Services.PlayableManager.PlaylistManager;
 
 public interface IPlaylistManager : IPlayableManager
 {
-    Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory);
+    Playlist ConstructPlaylist(string title, List<string> tracks, string? observingDirectory);
     Task EditPlaylist(Playlist playlist);
     Task CreatePlaylist(Playlist playlist);
     void DeletePlaylist(Playlist playlist);

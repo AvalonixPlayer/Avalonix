@@ -13,15 +13,18 @@ namespace Avalonix.Model.Media.Playlist;
 public class Playlist : IPlayable
 {
     [JsonInclude] public string Name { get; }
-    // PlaylistData
+    [JsonInclude] public PlaylistData Data;
     [JsonIgnore] public PlayQueue PlayQueue { get; }
+    [JsonIgnore] public IDiskManager DiskManager { get; }
 
-    public Playlist(string name, IMediaPlayer player, ILogger logger, PlaySettings settings)
+    public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager diskManager,
+        ILogger logger, PlaySettings settings)
     {
+        DiskManager = diskManager;
         Name = name;
+        Data = playlistData;
         PlayQueue = new PlayQueue(player, logger, settings);
-        PlayQueue.FillQueue(Tracks.Select(path => new Track.Track(path)).ToList());
-        Task.Run(PlayQueue.FillQueue())
+        PlayQueue.FillQueue(Data.TracksPaths.Select(path => new Track.Track(path)).ToList());
     }
 
     public async Task Play()
@@ -70,5 +73,10 @@ public class Playlist : IPlayable
     public bool QueueIsEmpty()
     {
         return PlayQueue.QueueIsEmpty();
+    }
+
+    public async Task SavePlaylistDataAsync()
+    {
+        await DiskManager.SavePlaylist(this);
     }
 }

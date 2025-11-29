@@ -96,7 +96,7 @@ public class PlaylistEditOrCreateWindowViewModel(
         }
     }
 
-    public async Task ExecuteAsync(string playlistName, List<Track> tracksPaths, string? observingDirectory)
+    public async Task ExecuteAsync(string playlistName, List<string> tracksPaths, string? observingDirectory)
     {
         var playlist = playlistManager.ConstructPlaylist(playlistName,tracksPaths, observingDirectory);
         await Strategy.ExecuteAsync(playlist);

@@ -84,10 +84,8 @@ public partial class PlaylistCreateWindow : Window
         {
             var name = PlaylistName.Text;
             if (string.IsNullOrEmpty(name)) return;
-            var items = NewSongBox.Items.OfType<string>().ToList();
-            List<Track> tracks = [];
-            items.ForEach(item => tracks.Add(new Track(item)));
-            await _vm.ExecuteAsync(name, tracks, _observingDirectory);
+            var paths = NewSongBox.Items.OfType<string>().ToList();
+            await _vm.ExecuteAsync(name, paths, _observingDirectory);
             Close();
         }
         catch (Exception ex)

@@ -58,14 +58,12 @@ public class PlaylistManager(
         return await diskManager.GetAllPlaylists();
     }
 
-    public Playlist ConstructPlaylist(string title, List<Track> tracks, string? observingDirectory)
+    public Playlist ConstructPlaylist(string title, List<string> tracks, string? observingDirectory)
     {
         var playlistData = new PlaylistData
         {
-            Tracks = tracks,
-            LastListen = null,
-            ObserveDirectory = observingDirectory is not null,
-            ObservingDirectory = observingDirectory
+            Name = title,
+            TracksPaths = tracks
         };
 
         var settings = settingsManager.Settings!;
@@ -74,17 +72,17 @@ public class PlaylistManager(
 
     public async Task EditPlaylist(Playlist playlist)
     {
-        await playlist.Save();
+        await playlist.SavePlaylistDataAsync();
     }
 
     public async Task CreatePlaylist(Playlist playlist)
     {
-        await playlist.Save();
+        await playlist.SavePlaylistDataAsync();
     }
 
     public void DeletePlaylist(Playlist playlist)
     {
-        diskManager.RemovePlaylist(playlist.PlaylistData.Name);
+        diskManager.RemovePlaylist(playlist.Name);
     }
 
     public void StartPlayable(IPlayable playlist)
