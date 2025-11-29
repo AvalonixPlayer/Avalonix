@@ -6,6 +6,7 @@ namespace Avalonix.Model.Media.Playlist;
 
 public class PlaylistData
 {
-    [JsonInclude] public string Name = string.Empty;
-    [JsonInclude] public List<string> TracksPaths { get; set; } = [];
+    public string Name = string.Empty;
+    public List<string> TracksPaths = [];
+    public string? ObservingDirectoryPath = string.Empty;
 }

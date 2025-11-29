@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
@@ -25,6 +26,7 @@ public class Playlist : IPlayable
         Data = playlistData;
         PlayQueue = new PlayQueue(player, logger, settings);
         PlayQueue.FillQueue(Data.TracksPaths.Select(path => new Track.Track(path)).ToList());
+        AddObservingDirectoryFiles();
     }
 
     public async Task Play()
@@ -78,5 +80,15 @@ public class Playlist : IPlayable
     public async Task SavePlaylistDataAsync()
     {
         await DiskManager.SavePlaylist(this);
+    }
+
+    private void AddObservingDirectoryFiles()
+    {
+        if (string.IsNullOrEmpty(Data.ObservingDirectoryPath)) return;
+        var newTracksList = new List<Track.Track>();
+        newTracksList.AddRange(PlayQueue.Tracks);
+        newTracksList.AddRange(DiskManager.GetMusicFiles(Data.ObservingDirectoryPath)
+            .Select(path => new Track.Track(path)));
+        PlayQueue.FillQueue(newTracksList);
     }
 }

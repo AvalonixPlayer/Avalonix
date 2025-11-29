@@ -63,7 +63,8 @@ public class PlaylistManager(
         var playlistData = new PlaylistData
         {
             Name = title,
-            TracksPaths = tracks
+            TracksPaths = tracks,
+            ObservingDirectoryPath = observingDirectory ?? string.Empty
         };
 
         var settings = settingsManager.Settings!;

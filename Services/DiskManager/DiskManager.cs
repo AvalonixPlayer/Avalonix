@@ -19,7 +19,7 @@ public class DiskManager : IDiskManager
 
     public static readonly string AvalonixFolderPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
-    
+
     private readonly IDiskLoader _diskLoader;
 
     private readonly IDiskWriter _diskWriter;
@@ -104,7 +104,7 @@ public class DiskManager : IDiskManager
         return result;
     }
 
-    public List<string> GetMusicFiles()
+    public List<string> GetMusicFiles(string? path)
     {
         return FindFiles();
 
@@ -113,10 +113,8 @@ public class DiskManager : IDiskManager
             var files = new List<string>();
             foreach (var ext in MusicFilesExtensions)
             {
-                var foundFiles = Directory.EnumerateFiles(MusicPath, $"*{ext}", SearchOption.AllDirectories);
+                var foundFiles = Directory.EnumerateFiles(path ?? MusicPath, $"*{ext}", SearchOption.AllDirectories);
                 files.AddRange(foundFiles);
-                var f = Directory.EnumerateFiles("D:\\плейлисты", $"*{ext}", SearchOption.AllDirectories);
-                files.AddRange(f);
             }
 
             return files;
