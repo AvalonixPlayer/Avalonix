@@ -7,7 +7,7 @@ using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.Model.Media.Playlist;
+namespace Avalonix.Model.Media;
 
 public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings settings)
 {

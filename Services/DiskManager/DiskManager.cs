@@ -79,7 +79,7 @@ public class DiskManager : IDiskManager
         var playlists = new List<PlaylistData>();
         foreach (var file in files)
         {
-            var playlist = await _diskLoader.LoadAsyncFromJson<PlaylistData>(Path.GetFileNameWithoutExtension(file));
+            var playlist = await _diskLoader.LoadAsyncFromJson<PlaylistData>(file);
             if (playlist == null!) continue;
             playlists.Add(playlist);
         }

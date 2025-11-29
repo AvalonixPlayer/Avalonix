@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.DiskManager;
@@ -7,37 +10,22 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.Playlist;
 
-public record Playlist : IPlayable
+public class Playlist : IPlayable
 {
-    private readonly IDiskManager _disk;
-    private readonly ILogger _logger;
+    [JsonInclude] public string Name { get; }
+    // PlaylistData
+    [JsonIgnore] public PlayQueue PlayQueue { get; }
 
-    public Playlist(string title, PlaylistData playlistData, IMediaPlayer player, IDiskManager disk, ILogger logger,
-        PlaySettings settings)
+    public Playlist(string name, IMediaPlayer player, ILogger logger, PlaySettings settings)
     {
-        PlaylistData = playlistData;
-        _disk = disk;
-        _logger = logger;
+        Name = name;
         PlayQueue = new PlayQueue(player, logger, settings);
-        PlaylistData.Name = title;
-        Name = playlistData.Name;
-        PlayQueue.FillQueue(PlaylistData.Tracks);
-
-        PlayQueue.QueueStopped += () => Task.Run(Save);
-        PlayQueue.StartedNewTrack += () =>
-        {
-            PlaylistData.LastListen = DateTime.Now.Date;
-            PlaylistData.Rarity++;
-        };
+        PlayQueue.FillQueue(Tracks.Select(path => new Track.Track(path)).ToList());
+        Task.Run(PlayQueue.FillQueue())
     }
-
-    public PlaylistData PlaylistData { get; }
-    public string Name { get; }
-    public PlayQueue PlayQueue { get; }
 
     public async Task Play()
     {
-        await Task.Run(LoadBasicTracksMetadata);
         await PlayQueue.Play();
     }
 
@@ -73,20 +61,14 @@ public record Playlist : IPlayable
 
     public async Task LoadBasicTracksMetadata()
     {
-        foreach (var i in PlayQueue.Tracks)
+        foreach (var track in PlayQueue.Tracks)
         {
-            await Task.Run(() => i.Metadata.FillBasicTrackMetaData(i.TrackData.Path));
+            await Task.Run(() => track.Metadata.FillBasicTrackMetaData(track.TrackData.Path));
         }
     }
 
     public bool QueueIsEmpty()
     {
         return PlayQueue.QueueIsEmpty();
-    }
-
-    public async Task Save()
-    {
-        _logger.LogDebug("Playlist saved {playlistName}", PlaylistData.Name);
-        await _disk.SavePlaylist(this);
     }
 }
