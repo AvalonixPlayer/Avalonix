@@ -5,6 +5,7 @@ using Avalonix.Model.Media.Album;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.PlayBox;
 using Avalonix.Model.Media.Playlist;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
@@ -21,7 +22,8 @@ public class PlayablesManager(
     IAlbumManager albumManager,
     IPlayboxManager playboxManager,
     IMediaPlayer mediaPlayer,
-    ISettingsManager settingsManager) : IPlayablesManager
+    ISettingsManager settingsManager,
+    ICacheManager cacheManager) : IPlayablesManager
 {
     private readonly Settings _settings = settingsManager.Settings!;
     public IMediaPlayer MediaPlayer => mediaPlayer;

@@ -1,14 +1,30 @@
 using System;
-using System.Text.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
+using Avalonix.Model.Media.Track;
+using Avalonix.Services.DiskManager;
 
 namespace Avalonix.Services.CacheManager;
 
 public class CacheManager : ICacheManager
 {
-    private readonly IMemoryCache _cache;
+    private readonly IDiskManager _diskManager;
 
-    public CacheManager(IMemoryCache cache) =>
-        _cache = cache;
+    public List<KeyValuePair<string, TrackMetadata>>? TracksMetadataCache { get; private set; }
+
+    public CacheManager(IDiskManager diskManager)
+    {
+        _diskManager = diskManager;
+    }
+    
+    public async Task SetTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs)
+    {
+        TracksMetadataCache = pairs;
+        await _diskManager.SaveTracksMetadataCacheAsync(pairs);
+    }
+
+    public async Task LoadTracksMetadataCacheAsync()
+    {
+        await _diskManager.LoadTracksMetadataCacheAsync();
+    }
 }

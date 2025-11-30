@@ -20,7 +20,6 @@ using Avalonix.View;
 using Avalonix.ViewModel.Main;
 using Avalonix.ViewModel.PlayableSelectViewModel;
 using Avalonix.ViewModel.PlaylistEditOrCreate;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -56,7 +55,6 @@ public class App : Application
             services.AddSingleton<IPlayboxManager, PlayboxManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();
             services.AddSingleton<IThemeManager, ThemeManager>();
-            services.AddMemoryCache();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();

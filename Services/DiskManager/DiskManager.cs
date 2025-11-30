@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
+using Avalonix.Model.Media.Track;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
 using Avalonix.Services.SettingsManager;
@@ -18,34 +19,37 @@ public class DiskManager : IDiskManager
     private static readonly string[] MusicFilesExtensions = ["*.mp3", "*.flac", "*.m4a", "*.wav", "*.waw"];
 
     public static readonly string AvalonixFolderPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".avalonix");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Extension);
+
+    public static readonly string TracksMetadataCachePath =
+        Path.Combine(AvalonixFolderPath, "tracksMetadataCache" + Extension);
 
     private readonly IDiskLoader _diskLoader;
-
     private readonly IDiskWriter _diskWriter;
-
     private readonly ILogger _logger;
-    private readonly IMediaPlayer _player;
-    private readonly ISettingsManager _settingsManager;
 
-    public DiskManager(ILogger logger, IMediaPlayer player, IDiskWriter diskWriter, IDiskLoader diskLoader,
-        ISettingsManager settingsManager)
+    public DiskManager(ILogger logger, IDiskWriter diskWriter, IDiskLoader diskLoader)
     {
         _logger = logger;
         _diskWriter = diskWriter;
         _diskLoader = diskLoader;
-        _player = player;
-        _settingsManager = settingsManager;
 
         CheckDirectory(AvalonixFolderPath);
         CheckDirectory(PlaylistsPath);
         CheckDirectory(ThemesPath);
+        CheckFile(TracksMetadataCachePath);
         return;
 
         void CheckDirectory(string path)
         {
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
+        }
+
+        void CheckFile(string path)
+        {
+            if (!File.Exists(path))
+                File.Create(path).Close();
         }
     }
 
@@ -62,6 +66,18 @@ public class DiskManager : IDiskManager
     {
         await _diskWriter.WriteJsonAsync(playlist.Data, Path.Combine(PlaylistsPath, playlist.Name + Extension));
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
+    }
+
+    public async Task SaveTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs)
+    {
+        _logger.LogDebug("TracksMetadataCache saving");
+        await _diskWriter.WriteJsonAsync(pairs, TracksMetadataCachePath);
+    }
+
+    public async Task<List<KeyValuePair<string, TrackMetadata>>?> LoadTracksMetadataCacheAsync()
+    {
+        _logger.LogDebug("TracksMetadataCache loading");
+        return await _diskLoader.LoadAsyncFromJson<List<KeyValuePair<string, TrackMetadata>>>(TracksMetadataCachePath) ?? null;
     }
 
     public Task RemovePlaylist(string name)
