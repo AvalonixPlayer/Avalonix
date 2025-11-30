@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Model.Media.Track;
 
 namespace Avalonix.Services.PlayableManager.PlaylistManager;
 

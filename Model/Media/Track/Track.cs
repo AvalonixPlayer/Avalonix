@@ -1,19 +1,12 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Avalonix.Model.Media.Track;
 
 public class Track
 {
-    [JsonIgnore] public TrackMetadata Metadata = new();
-    [JsonInclude] public TrackData TrackData;
-
-    [JsonConstructor]
-    public Track()
-    {
-    }
+    public TrackMetadata Metadata = new();
+    public TrackData TrackData;
 
     public Track(string path)
     {

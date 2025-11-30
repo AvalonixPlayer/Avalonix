@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Avalonix.Model.Media.Playlist;
 
 namespace Avalonix.Services.DiskWriter;
 

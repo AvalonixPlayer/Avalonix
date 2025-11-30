@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
-using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +9,8 @@ namespace Avalonix.Model.Media.PlayBox;
 
 public class Playbox : IPlayable
 {
+    public string Name => "PlayBox";
+    public PlayQueue PlayQueue { get; }
     public Playbox(List<string> tracksPaths, IMediaPlayer player, ILogger logger, PlaySettings settings)
     {
         PlayQueue = new PlayQueue(player, logger, settings);
@@ -17,8 +18,6 @@ public class Playbox : IPlayable
         Task.Run(LoadBasicTracksMetadata).GetAwaiter();
     }
 
-    public string Name => "PlayBox";
-    public PlayQueue PlayQueue { get; }
 
     public async Task Play()
     {

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonix.Model.Media.Track;
 using Avalonix.ViewModel.Strategy;
 
 namespace Avalonix.ViewModel.PlaylistEditOrCreate;

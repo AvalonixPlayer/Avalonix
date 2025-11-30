@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonix.Model.Media.Track;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModel.PlaylistEditOrCreate;
 using Microsoft.Extensions.Logging;

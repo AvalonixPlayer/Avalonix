@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.DiskWriter;
@@ -19,6 +20,7 @@ using Avalonix.View;
 using Avalonix.ViewModel.Main;
 using Avalonix.ViewModel.PlayableSelectViewModel;
 using Avalonix.ViewModel.PlaylistEditOrCreate;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -41,6 +43,7 @@ public class App : Application
             services.AddTransient<MainWindow>();
             services.AddTransient<IVersionManager, VersionManager>();
             services.AddSingleton<ISettingsManager, SettingsManager>();
+            services.AddSingleton<ICacheManager, CacheManager>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IDiskManager, DiskManager>();
@@ -53,6 +56,7 @@ public class App : Application
             services.AddSingleton<IPlayboxManager, PlayboxManager>();
             services.AddSingleton<IAlbumManager, AlbumManager>();
             services.AddSingleton<IThemeManager, ThemeManager>();
+            services.AddMemoryCache();
         }).ConfigureLogging(log =>
         {
             log.ClearProviders();
@@ -60,6 +64,7 @@ public class App : Application
         });
 
         var hostBuilder = host.Build();
+        
         ServiceProvider = hostBuilder.Services;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

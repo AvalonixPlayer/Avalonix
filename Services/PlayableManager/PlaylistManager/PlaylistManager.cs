@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Model.Media.Track;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.UserSettings;
