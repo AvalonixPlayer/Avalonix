@@ -69,7 +69,7 @@ public class Playlist : IPlayable
     {
         foreach (var track in PlayQueue.Tracks)
         {
-            await Task.Run(() => track.Metadata.FillBasicTrackMetaData(track.TrackData.Path));
+            await track.FillTrackMetaData();
         }
     }
 
