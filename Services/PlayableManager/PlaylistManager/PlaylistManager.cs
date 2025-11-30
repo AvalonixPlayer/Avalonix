@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.UserSettings;
@@ -17,7 +18,7 @@ public class PlaylistManager(
     IMediaPlayer player,
     IDiskManager diskManager,
     ILogger logger,
-    ISettingsManager settingsManager)
+    ISettingsManager settingsManager, ICacheManager cacheManager)
     : IPlaylistManager
 {
     private readonly Settings _settings = settingsManager.Settings!;
@@ -67,7 +68,7 @@ public class PlaylistManager(
         };
 
         var settings = settingsManager.Settings!;
-        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings);
+        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings, cacheManager);
     }
 
     public async Task EditPlaylist(Playlist playlist)
@@ -143,7 +144,7 @@ public class PlaylistManager(
     {
         var allPlaylistData = await GetAllPlaylistData();
         return allPlaylistData.Select(data =>
-            new Playlist(data.Name, data, player, diskManager, logger, _settings.Avalonix.PlaySettings)
+            new Playlist(data.Name, data, player, diskManager, logger, _settings.Avalonix.PlaySettings, cacheManager)
         ).Cast<IPlayable>().ToList();
     }
 }

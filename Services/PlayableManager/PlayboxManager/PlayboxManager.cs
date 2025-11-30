@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.PlayBox;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ public class PlayboxManager(
     ILogger logger,
     IMediaPlayer player,
     ISettingsManager settingsManager,
-    IDiskManager diskManager) : IPlayboxManager
+    IDiskManager diskManager, ICacheManager cacheManager) : IPlayboxManager
 {
     public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }
@@ -63,7 +64,7 @@ public class PlayboxManager(
         var allMusicFiles = diskManager.GetMusicFiles(null!);
         if(settings.MusicFilesPath != null)
             allMusicFiles.AddRange(diskManager.GetMusicFiles(settings.MusicFilesPath));
-        var playbox = new Playbox(allMusicFiles, MediaPlayer, logger, settings.PlaySettings);
+        var playbox = new Playbox(allMusicFiles, MediaPlayer, logger, settings.PlaySettings, cacheManager);
         return Task.FromResult(new List<IPlayable> { playbox });
     }
 

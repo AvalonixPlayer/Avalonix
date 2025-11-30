@@ -7,6 +7,7 @@ using Avalonix.Model.Media;
 using Avalonix.Model.Media.Album;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Track;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.UserSettings;
@@ -19,7 +20,8 @@ public class AlbumManager(
     IMediaPlayer player,
     ISettingsManager settingsManager,
     IDiskManager diskManager,
-    IMediaPlayer mediaPlayer) : IAlbumManager
+    IMediaPlayer mediaPlayer,
+    ICacheManager cacheManager) : IAlbumManager
 {
     private readonly Settings _settings = settingsManager.Settings!;
     private readonly List<Track> _tracks = [];
@@ -134,7 +136,7 @@ public class AlbumManager(
         for (var i = 0; i < tracks.Length; i++)
         {
             var path = paths[i];
-            var track = new Track(path);
+            var track = new Track(path, cacheManager);
             await Task.Run(() => track.Metadata.FillBasicTrackMetaData(track.TrackData.Path));
             tracks[i] = track;
         }

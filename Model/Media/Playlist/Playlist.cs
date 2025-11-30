@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
@@ -15,15 +16,17 @@ public class Playlist : IPlayable
     [JsonInclude] public PlaylistData Data;
     [JsonIgnore] public PlayQueue PlayQueue { get; }
     [JsonIgnore] public IDiskManager DiskManager { get; }
+    private readonly ICacheManager _cacheManager;
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager diskManager,
-        ILogger logger, PlaySettings settings)
+        ILogger logger, PlaySettings settings, ICacheManager cacheManager)
     {
         DiskManager = diskManager;
         Name = name;
         Data = playlistData;
         PlayQueue = new PlayQueue(player, logger, settings);
-        PlayQueue.FillQueue(Data.TracksPaths.Select(path => new Track.Track(path)).ToList());
+        _cacheManager = cacheManager;
+        PlayQueue.FillQueue(Data.TracksPaths.Select(path => new Track.Track(path, _cacheManager)).ToList());
         AddObservingDirectoryFiles();
     }
 
@@ -86,7 +89,7 @@ public class Playlist : IPlayable
         var newTracksList = new List<Track.Track>();
         newTracksList.AddRange(PlayQueue.Tracks);
         newTracksList.AddRange(DiskManager.GetMusicFiles(Data.ObservingDirectoryPath)
-            .Select(path => new Track.Track(path)));
+            .Select(path => new Track.Track(path, _cacheManager)));
         PlayQueue.FillQueue(newTracksList);
     }
 }

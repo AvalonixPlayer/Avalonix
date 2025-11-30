@@ -47,7 +47,7 @@ public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings setting
 
                     PlayingIndex = i;
                     var track = Tracks[PlayingIndex];
-                    await Task.Run(() => track.Metadata.FillTrackMetaData(track.TrackData.Path));
+                    await Task.Run(() => track.FillTrackMetaData());
 
                     StartedNewTrack?.Invoke();
                     track.IncreaseRarity(1);

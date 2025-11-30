@@ -15,6 +15,7 @@ public class CacheManager : ICacheManager
     public CacheManager(IDiskManager diskManager)
     {
         _diskManager = diskManager;
+        LoadTracksMetadataCacheAsync().GetAwaiter();
     }
     
     public async Task SetTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs)
@@ -25,6 +26,7 @@ public class CacheManager : ICacheManager
 
     public async Task LoadTracksMetadataCacheAsync()
     {
-        await _diskManager.LoadTracksMetadataCacheAsync();
+        TracksMetadataCache = await _diskManager.LoadTracksMetadataCacheAsync();
+        Console.WriteLine(TracksMetadataCache.Count);
     }
 }

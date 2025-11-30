@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TagLib;
 using File = TagLib.File;
@@ -8,9 +9,9 @@ namespace Avalonix.Model.Media.Track;
 
 public record TrackMetadata
 {
-    public Action? MetadataEdited;
+    [JsonIgnore]public Action? MetadataEdited;
 
-    public Action? MetadataLoaded;
+    [JsonIgnore]public Action? MetadataLoaded;
     public string? TrackName { get; private set; }
     public string? Album { get; private set; }
     public string? MediaFileFormat { get; private set; }
