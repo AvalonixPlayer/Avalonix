@@ -10,7 +10,7 @@ public class CacheManager : ICacheManager
 {
     private readonly IDiskManager _diskManager;
 
-    public List<KeyValuePair<string, TrackMetadata>>? TracksMetadataCache { get; private set; }
+    public List<KeyValuePair<string, TrackMetadata>> TracksMetadataCache { get; private set; } = [];
 
     public CacheManager(IDiskManager diskManager)
     {

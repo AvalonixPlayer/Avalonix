@@ -9,18 +9,18 @@ namespace Avalonix.Model.Media.Track;
 
 public record TrackMetadata
 {
-    [JsonIgnore]public Action? MetadataEdited;
+    [JsonIgnore] public Action? MetadataEdited;
 
-    [JsonIgnore]public Action? MetadataLoaded;
-    public string? TrackName { get; private set; }
-    public string? Album { get; private set; }
-    public string? MediaFileFormat { get; private set; }
-    public string? Artist { get; private set; }
-    public string? Genre { get; private set; }
-    public uint? Year { get; private set; }
-    public string? Lyric { get; private set; }
-    public TimeSpan Duration { get; private set; }
-    public byte[]? Cover { get; private set; }
+    [JsonIgnore] public Action? MetadataLoaded;
+    [JsonInclude] public string? TrackName { get; private set; }
+    [JsonInclude] public string? Album { get; private set; }
+    [JsonInclude] public string? MediaFileFormat { get; private set; }
+    [JsonInclude] public string? Artist { get; private set; }
+    [JsonInclude] public string? Genre { get; private set; }
+    [JsonInclude] public uint? Year { get; private set; }
+    [JsonInclude] public string? Lyric { get; private set; }
+    [JsonInclude] public TimeSpan Duration { get; private set; }
+    [JsonInclude] public byte[]? Cover { get; private set; }
 
     public Task FillTrackMetaData(string path)
     {

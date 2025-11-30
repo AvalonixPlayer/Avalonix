@@ -11,7 +11,6 @@ public class DiskLoader(ILogger logger) : IDiskLoader
 {
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
-        WriteIndented = true,
         IncludeFields = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
