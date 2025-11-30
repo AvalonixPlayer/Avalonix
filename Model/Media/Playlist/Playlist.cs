@@ -65,7 +65,7 @@ public class Playlist : IPlayable
         PlayQueue.ForceStartTrackByIndex(index);
     }
 
-    public async Task LoadBasicTracksMetadata()
+    public async Task LoadTracksMetadata()
     {
         foreach (var track in PlayQueue.Tracks)
         {

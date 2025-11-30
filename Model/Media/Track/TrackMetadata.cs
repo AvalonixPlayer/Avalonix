@@ -50,19 +50,6 @@ public record TrackMetadata
         return Task.CompletedTask;
     }
 
-    public Task FillBasicTrackMetaData(string path)
-    {
-        var track = File.Create(path);
-        var tag = track.Tag!;
-
-        TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(path);
-        Artist = tag.FirstPerformer;
-        Album = tag.Album;
-
-        MetadataLoaded?.Invoke();
-        return Task.CompletedTask;
-    }
-
     [Obsolete("Obsolete")]
     public void RewriteTags(string path, string title, string album, string? artist, string? genre, int year,
         string lyric,

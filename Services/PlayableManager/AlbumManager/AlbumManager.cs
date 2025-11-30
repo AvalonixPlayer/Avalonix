@@ -137,7 +137,7 @@ public class AlbumManager(
         {
             var path = paths[i];
             var track = new Track(path, cacheManager);
-            await Task.Run(() => track.Metadata.FillBasicTrackMetaData(track.TrackData.Path));
+            await track.FillTrackMetaData();
             tracks[i] = track;
         }
 

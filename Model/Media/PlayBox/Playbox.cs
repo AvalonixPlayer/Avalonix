@@ -21,7 +21,7 @@ public class Playbox : IPlayable
         PlayQueue = new PlayQueue(player, logger, settings);
         _cacheManager = cacheManager;
         PlayQueue.FillQueue(tracksPaths.Select(path => new Track.Track(path, _cacheManager)).ToList());
-        Task.Run(LoadBasicTracksMetadata).GetAwaiter();
+        Task.Run(LoadTracksMetadata).GetAwaiter();
     }
 
 
@@ -60,7 +60,7 @@ public class Playbox : IPlayable
         PlayQueue.ForceStartTrackByIndex(index);
     }
 
-    public async Task LoadBasicTracksMetadata()
+    public async Task LoadTracksMetadata()
     {
         foreach (var track in PlayQueue.Tracks)
         {

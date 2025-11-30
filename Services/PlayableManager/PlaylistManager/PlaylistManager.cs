@@ -122,7 +122,7 @@ public class PlaylistManager(
 
         PlayableChanged?.Invoke();
 
-        Task.Run(PlayingPlayable.LoadBasicTracksMetadata);
+        Task.Run(PlayingPlayable.LoadTracksMetadata);
 
         _ = Task.Run(async () =>
         {

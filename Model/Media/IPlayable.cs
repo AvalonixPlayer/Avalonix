@@ -13,6 +13,6 @@ public interface IPlayable
     void NextTrack();
     void BackTrack();
     void ForceStartTrackByIndex(int index);
-    Task LoadBasicTracksMetadata();
+    Task LoadTracksMetadata();
     bool QueueIsEmpty();
 }
