@@ -8,4 +8,5 @@ public interface ICacheManager
 {
     List<KeyValuePair<string, TrackMetadata>>? TracksMetadataCache { get; }
     Task SetTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs);
+    Task LoadTracksMetadataCacheAsync();
 }
