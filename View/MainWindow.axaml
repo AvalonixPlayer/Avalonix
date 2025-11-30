@@ -76,6 +76,7 @@
                     </Button>
                     <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
                     <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
+                    <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Spacing="0" Margin="0">
                     <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume" />

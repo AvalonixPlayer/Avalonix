@@ -435,8 +435,9 @@ public partial class MainWindow : Window
         };
     }
 
-    protected sealed override async void OnClosed(EventArgs e)
-    {
+    protected sealed override async void OnClosed(EventArgs e) =>
         await _windowManager.CloseMainWindowAsync();
-    }
+
+    private async void OpenSettingsWindowButton_OnClick(object? sender, RoutedEventArgs e) =>
+        await _windowManager.SettingsWindow_Open().ShowDialog(this);
 }
