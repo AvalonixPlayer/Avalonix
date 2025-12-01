@@ -23,7 +23,7 @@ public class Track(string path, ICacheManager cacheManager)
                 await Metadata.FillPreviouslyMetaData(TrackData.Path);
                 var newCache = cacheManager.TracksMetadataCache;
                 newCache.Add(new KeyValuePair<string, TrackMetadata>(TrackData.Path, Metadata));
-                await cacheManager.SetTracksMetadataCacheAsync(newCache);
+                cacheManager.SetTracksMetadataCache(newCache);
             }
             else
                 Metadata = pair.Value;
@@ -32,7 +32,7 @@ public class Track(string path, ICacheManager cacheManager)
         {
             await Metadata.FillPreviouslyMetaData(TrackData.Path);
             var newCache = new List<KeyValuePair<string, TrackMetadata>> { new(TrackData.Path, Metadata) };
-            await cacheManager.SetTracksMetadataCacheAsync(newCache);
+            cacheManager.SetTracksMetadataCache(newCache);
         }
     }
     

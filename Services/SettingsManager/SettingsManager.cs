@@ -27,7 +27,7 @@ public class SettingsManager : ISettingsManager
 
     public Settings? Settings { get; }
 
-    public async Task SaveSettings()
+    public async Task SaveSettingsAsync()
     {
         await _diskWriter.WriteJsonAsync(Settings, SettingsPath);
         _logger.LogInformation("Settings saved");

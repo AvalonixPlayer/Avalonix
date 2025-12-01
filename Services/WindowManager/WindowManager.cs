@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonix.Model.Media.Track;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
@@ -27,20 +28,22 @@ public class WindowManager(
     IPlayablesManager playablesManager,
     IPlaylistManager playlistManager,
     IVersionManager versionManager,
-    IAlbumManager albumManager)
+    IAlbumManager albumManager,
+    ICacheManager cacheManager)
     : IWindowManager
 {
     public async Task CloseMainWindowAsync()
     {
         try
         {
-            await settingsManager.SaveSettings();
-            CloseMainWindow();
+            await cacheManager.SaveCacheAsync();
+            await settingsManager.SaveSettingsAsync();
+            await CloseMainWindow();
         }
         catch (Exception ex)
         {
             logger.LogCritical("Error during closing and saving: {ex}", ex);
-            CloseMainWindow();
+            await CloseMainWindow();
         }
     }
 
@@ -79,10 +82,11 @@ public class WindowManager(
         return AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
     }
 
-    private static void CloseMainWindow()
+    private static Task CloseMainWindow()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             desktop.Shutdown();
+        return Task.CompletedTask;
     }
 
     private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlayableWindowStrategy strategy)

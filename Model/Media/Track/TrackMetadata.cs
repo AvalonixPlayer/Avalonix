@@ -16,10 +16,10 @@ public record TrackMetadata
     [JsonInclude] public string? Album { get; private set; }
     [JsonInclude] public string? MediaFileFormat { get; private set; }
     [JsonInclude] public string? Artist { get; private set; }
-    [JsonInclude] public string? Genre { get; private set; }
-    [JsonInclude] public uint? Year { get; private set; }
-    [JsonInclude] public string? Lyric { get; private set; }
-    [JsonInclude] public TimeSpan Duration { get; private set; }
+    [JsonIgnore] public string? Genre { get; private set; }
+    [JsonIgnore] public uint? Year { get; private set; }
+    [JsonIgnore] public string? Lyric { get; private set; }
+    [JsonIgnore] public TimeSpan Duration { get; private set; }
     [JsonIgnore] public byte[]? Cover { get; private set; }
 
     public Task FillPreviouslyMetaData(string path)

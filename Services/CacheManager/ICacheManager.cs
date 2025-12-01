@@ -7,6 +7,7 @@ namespace Avalonix.Services.CacheManager;
 public interface ICacheManager
 {
     List<KeyValuePair<string, TrackMetadata>>? TracksMetadataCache { get; }
-    Task SetTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs);
+    void SetTracksMetadataCache(List<KeyValuePair<string, TrackMetadata>> pairs);
     Task LoadTracksMetadataCacheAsync();
+    Task SaveCacheAsync();
 }

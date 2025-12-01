@@ -18,12 +18,16 @@ public class CacheManager : ICacheManager
         LoadTracksMetadataCacheAsync().GetAwaiter();
     }
 
-    public async Task SetTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs)
+    public void SetTracksMetadataCache(List<KeyValuePair<string, TrackMetadata>> pairs)
     {
         TracksMetadataCache = pairs;
-        await _diskManager.SaveTracksMetadataCacheAsync(pairs);
     }
 
     public async Task LoadTracksMetadataCacheAsync() =>
         TracksMetadataCache = await _diskManager.LoadTracksMetadataCacheAsync();
+
+    public async Task SaveCacheAsync()
+    {
+        await _diskManager.SaveTracksMetadataCacheAsync(TracksMetadataCache);
+    }
 }
