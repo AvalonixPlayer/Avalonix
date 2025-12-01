@@ -69,7 +69,7 @@ public class Playlist : IPlayable
     {
         foreach (var track in PlayQueue.Tracks)
         {
-            await track.FillTrackMetaData();
+            await track.FillPrimaryMetaData();
         }
     }
 

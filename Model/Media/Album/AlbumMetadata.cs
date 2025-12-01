@@ -17,7 +17,7 @@ public record AlbumMetadata
     private async Task FillMetadata(List<Track.Track> tracks)
     {
         foreach (var track in tracks)
-            await track.FillTrackMetaData();
+            await track.FillPrimaryMetaData();
 
         AlbumName = tracks[0].Metadata.Album ?? "none";
         var tracksMetadata = tracks.Select(x => x.Metadata).ToList();

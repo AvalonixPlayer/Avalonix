@@ -8,44 +8,37 @@ using TagLib.Riff;
 
 namespace Avalonix.Model.Media.Track;
 
-public class Track
+public class Track(string path, ICacheManager cacheManager)
 {
     public TrackMetadata Metadata = new();
-    public TrackData TrackData;
+    public TrackData TrackData = new(path);
 
-    private readonly ICacheManager _cacheManager;
-
-    public Track(string path, ICacheManager cacheManager)
+    public async Task FillPrimaryMetaData()
     {
-        TrackData = new TrackData(path);
-        _cacheManager = cacheManager;
-    }
-
-    public async Task FillTrackMetaData()
-    {
-        if (_cacheManager.TracksMetadataCache != null)
+        if (cacheManager.TracksMetadataCache != null)
         {
-            var pair = _cacheManager.TracksMetadataCache.Find(kvp => kvp.Key == TrackData.Path);
+            var pair = cacheManager.TracksMetadataCache.Find(kvp => kvp.Key == TrackData.Path);
             if (string.IsNullOrEmpty(pair.Key))
             {
-                await Metadata.FillTrackMetaData(TrackData.Path);
-                var newCache = _cacheManager.TracksMetadataCache;
+                await Metadata.FillPreviouslyMetaData(TrackData.Path);
+                var newCache = cacheManager.TracksMetadataCache;
                 newCache.Add(new KeyValuePair<string, TrackMetadata>(TrackData.Path, Metadata));
-                await _cacheManager.SetTracksMetadataCacheAsync(newCache);
+                await cacheManager.SetTracksMetadataCacheAsync(newCache);
             }
             else
-            {
-                Console.WriteLine("Is not empty");
-
                 Metadata = pair.Value;
-            }
         }
         else
         {
-            await Metadata.FillTrackMetaData(TrackData.Path);
+            await Metadata.FillPreviouslyMetaData(TrackData.Path);
             var newCache = new List<KeyValuePair<string, TrackMetadata>> { new(TrackData.Path, Metadata) };
-            await _cacheManager.SetTracksMetadataCacheAsync(newCache);
+            await cacheManager.SetTracksMetadataCacheAsync(newCache);
         }
+    }
+    
+    public async Task FillSecondaryMetaData()
+    {
+        await Metadata.FillSecondaryMetaData(path);
     }
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;

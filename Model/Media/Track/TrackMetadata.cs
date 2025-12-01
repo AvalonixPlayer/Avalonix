@@ -22,7 +22,7 @@ public record TrackMetadata
     [JsonInclude] public TimeSpan Duration { get; private set; }
     [JsonIgnore] public byte[]? Cover { get; private set; }
 
-    public Task FillTrackMetaData(string path)
+    public Task FillPreviouslyMetaData(string path)
     {
         var track = File.Create(path);
 
@@ -31,6 +31,16 @@ public record TrackMetadata
         MediaFileFormat = Path.GetExtension(path);
         Album = tag.Album!;
         Artist = tag.FirstPerformer;
+
+        MetadataLoaded?.Invoke();
+        return Task.CompletedTask;
+    }
+    
+    public Task FillSecondaryMetaData(string path)
+    {
+        var track = File.Create(path);
+
+        var tag = track.Tag!;
         Genre = tag.FirstGenre;
         Year = tag.Year;
         Lyric = tag.Lyrics;
@@ -76,7 +86,7 @@ public record TrackMetadata
         }
 
         file.Save();
-        FillTrackMetaData(path);
+        FillPreviouslyMetaData(path);
         MetadataEdited?.Invoke();
     }
 
