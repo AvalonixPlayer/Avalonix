@@ -12,22 +12,21 @@ public record TrackMetadata
     [JsonIgnore] public Action? MetadataEdited;
 
     [JsonIgnore] public Action? MetadataLoaded;
-    [JsonInclude]public string? TrackName { get; private set; }
-    [JsonInclude]public string? Album { get; private set; }
-    [JsonInclude]public string? MediaFileFormat { get; private set; }
-    [JsonInclude]public string? Artist { get; private set; }
-    [JsonInclude]public string? Genre { get; private set; }
-    [JsonInclude]public uint? Year { get; private set; }
-    [JsonInclude]public string? Lyric { get; private set; }
-    [JsonInclude]public TimeSpan Duration { get; private set; }
-    [JsonInclude]public byte[]? Cover { get; private set; }
+    [JsonInclude] public string? TrackName { get; private set; }
+    [JsonInclude] public string? Album { get; private set; }
+    [JsonInclude] public string? MediaFileFormat { get; private set; }
+    [JsonInclude] public string? Artist { get; private set; }
+    [JsonInclude] public string? Genre { get; private set; }
+    [JsonInclude] public uint? Year { get; private set; }
+    [JsonInclude] public string? Lyric { get; private set; }
+    [JsonInclude] public TimeSpan Duration { get; private set; }
+    [JsonIgnore] public byte[]? Cover { get; private set; }
 
     public Task FillTrackMetaData(string path)
     {
         var track = File.Create(path);
 
         var tag = track.Tag!;
-
         TrackName = tag.Title ?? Path.GetFileNameWithoutExtension(path);
         MediaFileFormat = Path.GetExtension(path);
         Album = tag.Album!;
