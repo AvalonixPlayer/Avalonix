@@ -69,7 +69,7 @@ public class WindowManager(
 
     public EditMetadataWindow EditMetadataWindow_Open(Track track)
     {
-        return new EditMetadataWindow(logger, new EditMetadataWindowViewModel(logger, null!), track, playlistManager);
+        return new EditMetadataWindow(logger, new EditMetadataWindowViewModel(logger, null!), track, playablesManager);
     }
 
     public PlayableSelectWindow PlaylistDeleteWindow_Open()

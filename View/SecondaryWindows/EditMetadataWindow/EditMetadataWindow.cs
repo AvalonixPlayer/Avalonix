@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonix.Model.Media.Track;
+using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModel.EditMetadata;
@@ -15,18 +16,18 @@ namespace Avalonix.View.SecondaryWindows.EditMetadataWindow;
 public partial class EditMetadataWindow : Window
 {
     private readonly ILogger<WindowManager> _logger;
-    private readonly IPlaylistManager _playlistManager;
+    private readonly IPlayablesManager _playablesManager;
     private readonly Track _track;
     private readonly IEditMetadataWindowViewModel _vm;
     private string? _newCoverPath;
 
     public EditMetadataWindow(ILogger<WindowManager> logger, IEditMetadataWindowViewModel vm, Track track,
-        IPlaylistManager playlistManager)
+        IPlayablesManager playablesManager)
     {
         _logger = logger;
         _vm = vm;
         _track = track;
-        _playlistManager = playlistManager;
+        _playablesManager = playablesManager;
 
         InitializeComponent();
         InitializeFields(track);
@@ -50,16 +51,22 @@ public partial class EditMetadataWindow : Window
     }
 
     [Obsolete("Obsolete")]
-    private void Apply_OnClick(object? sender, RoutedEventArgs e)
+    private async void Apply_OnClick(object? sender, RoutedEventArgs e)
     {
-        _playlistManager.MediaPlayer.Stop();
+        _playablesManager.MediaPlayer.Stop();
         byte[]? cover = null;
         if (!string.IsNullOrEmpty(_newCoverPath))
             cover = File.ReadAllBytes(_newCoverPath);
-        new Task(() =>
-            Dispatcher.UIThread.Post(() => _track.Metadata.RewriteTags(_track.TrackData.Path, Name.Text!, Album.Text!,
-                Artist.Text!,
-                Genre.Text!, int.Parse(Year.Text!),
-                Lyric.Text!, cover))).Start();
+        var newMetadata = new TrackMetadata
+        {
+            TrackName = Name.Text,
+            Album = Album.Text,
+            Artist = Artist.Text,
+            Genre = Genre.Text,
+            Year = uint.Parse(Year.Text),
+            Lyric = Lyric.Text,
+            Cover = cover
+        };
+        await _track.RewriteMetaData(newMetadata);
     }
 }

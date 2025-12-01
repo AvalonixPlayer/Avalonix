@@ -35,10 +35,16 @@ public class Track(string path, ICacheManager cacheManager)
             cacheManager.SetTracksMetadataCache(newCache);
         }
     }
-    
+
     public async Task FillSecondaryMetaData()
     {
         await Metadata.FillSecondaryMetaData(path);
+    }
+
+    [Obsolete("Obsolete")]
+    public async Task RewriteMetaData(TrackMetadata metadata)
+    {
+        await Metadata.RewriteTags(TrackData.Path, metadata);
     }
 
     public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;

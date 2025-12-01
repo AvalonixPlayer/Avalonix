@@ -12,15 +12,15 @@ public record TrackMetadata
     [JsonIgnore] public Action? MetadataEdited;
 
     [JsonIgnore] public Action? MetadataLoaded;
-    [JsonInclude] public string? TrackName { get; private set; }
-    [JsonInclude] public string? Album { get; private set; }
-    [JsonInclude] public string? MediaFileFormat { get; private set; }
-    [JsonInclude] public string? Artist { get; private set; }
-    [JsonIgnore] public string? Genre { get; private set; }
-    [JsonIgnore] public uint? Year { get; private set; }
-    [JsonIgnore] public string? Lyric { get; private set; }
-    [JsonIgnore] public TimeSpan Duration { get; private set; }
-    [JsonIgnore] public byte[]? Cover { get; private set; }
+    [JsonInclude] public string? TrackName { get; set; }
+    [JsonInclude] public string? Album { get; set; }
+    [JsonInclude] public string? MediaFileFormat { get; set; }
+    [JsonInclude] public string? Artist { get; set; }
+    [JsonIgnore] public string? Genre { get; set; }
+    [JsonIgnore] public uint? Year { get; set; }
+    [JsonIgnore] public string? Lyric { get; set; }
+    [JsonIgnore] public TimeSpan Duration { get; set; }
+    [JsonIgnore] public byte[]? Cover { get; set; }
 
     public Task FillPreviouslyMetaData(string path)
     {
@@ -35,7 +35,7 @@ public record TrackMetadata
         MetadataLoaded?.Invoke();
         return Task.CompletedTask;
     }
-    
+
     public Task FillSecondaryMetaData(string path)
     {
         var track = File.Create(path);
@@ -60,27 +60,26 @@ public record TrackMetadata
     }
 
     [Obsolete("Obsolete")]
-    public void RewriteTags(string path, string title, string album, string? artist, string? genre, int year,
-        string lyric,
-        byte[]? cover)
+    public Task RewriteTags(string path, TrackMetadata metadata)
     {
         using var file = File.Create(path);
-        file.Tag.Title = title;
-        file.Tag.Album = album;
-        if (artist != null)
-            file.Tag.Artists = [artist];
-        if (genre != null)
-            file.Tag.Genres = [genre];
-        file.Tag.Year = (uint)year;
-        file.Tag.Lyrics = lyric;
+        file.Tag.Title = metadata.TrackName;
+        file.Tag.Album = metadata.Album;
+        
+        file.Tag.Artists = metadata.Artist != null ? [metadata.Artist] : null;
+        file.Tag.Genres = metadata.Genre != null ? [metadata.Genre] : null;
+        
+        file.Tag.Year = (uint)metadata.Year!;
+        file.Tag.Lyrics = metadata.Lyric;
 
-        if (cover != null)
+
+        if (metadata.Cover != null)
         {
             file.Tag.Pictures =
             [
                 new Picture
                 {
-                    Data = new ByteVector(cover)
+                    Data = new ByteVector(metadata.Cover)
                 }
             ];
         }
@@ -88,6 +87,7 @@ public record TrackMetadata
         file.Save();
         FillPreviouslyMetaData(path);
         MetadataEdited?.Invoke();
+        return Task.CompletedTask;
     }
 
     public static string ToHumanFriendlyString(TimeSpan timeSpan)
