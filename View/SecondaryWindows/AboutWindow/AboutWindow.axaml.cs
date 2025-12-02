@@ -19,7 +19,7 @@ public partial class AboutWindow : Window
     {
         _logger = logger;
         InitializeComponent();
-        var currentRelease = Task.Run(versionManager.GetCurrentRelease).Result;
+        var currentRelease = versionManager.CurrentRelease;
         var lastRelease = Task.Run(versionManager.GetLastRelease).Result;
         _logger.LogInformation("About window loaded");
         VersionLabel.Content = $"Version: {currentRelease.Version}";

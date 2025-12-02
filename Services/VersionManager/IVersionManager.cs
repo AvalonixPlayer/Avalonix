@@ -4,6 +4,6 @@ namespace Avalonix.Services.VersionManager;
 
 public interface IVersionManager
 {
+    Release CurrentRelease { get; }
     Task<Release> GetLastRelease();
-    Task<Release> GetCurrentRelease();
 }

@@ -10,6 +10,8 @@ public class VersionManager : IVersionManager
 {
     private const string ReleaseUrl = "https://github.com/AvalonixPlayer/Avalonix/blob/main/Release";
 
+    public Release CurrentRelease => new("2.0.0");
+
     public async Task<Release> GetLastRelease()
     {
         string version;
@@ -20,16 +22,6 @@ public class VersionManager : IVersionManager
             version = CutText(content, "AvalonixTAG_Version", "AvalonixTAG_Close");
         }
 
-        return new Release(version);
-    }
-
-    public async Task<Release> GetCurrentRelease()
-    {
-        var pathToRelease = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!,
-            "Release");
-        if (!Path.Exists(pathToRelease)) return new Release("null");
-        var content = await File.ReadAllTextAsync(pathToRelease);
-        var version = CutText(content, "AvalonixTAG_Version", "AvalonixTAG_Close");
         return new Release(version);
     }
 
