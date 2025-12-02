@@ -10,8 +10,6 @@ public interface IDiskManager
 {
     Task SavePlaylist(Playlist playlist);
     Task RemovePlaylist(string name);
-    Task SaveTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs);
-    Task<List<KeyValuePair<string, TrackMetadata>>?> LoadTracksMetadataCacheAsync();
     Task<List<PlaylistData>> GetAllPlaylists();
     Task CreateNewTheme(string name);
     Task SaveTheme(Theme theme);

@@ -12,6 +12,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonix.Model.Media.Track;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.SettingsManager;
@@ -42,11 +43,14 @@ public partial class MainWindow : Window
     private readonly Timer _timer;
     private readonly IMainWindowViewModel _vm;
     private readonly IWindowManager _windowManager;
+    private readonly ISettingsManager _settingsManager;
+    private readonly ICacheManager _cacheManager;
 
     private bool _isUserDragging;
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
-        ISettingsManager settingsManager, IPlayablesManager playablesManager, IWindowManager windowManager,
+        ISettingsManager settingsManager, ICacheManager cacheManager, IPlayablesManager playablesManager,
+        IWindowManager windowManager,
         IPlayboxManager playboxManager)
     {
         _logger = logger;
@@ -54,6 +58,8 @@ public partial class MainWindow : Window
         _playablesManager = playablesManager;
         _windowManager = windowManager;
         _playboxManager = playboxManager;
+        _settingsManager = settingsManager;
+        _cacheManager = cacheManager;
 
         InitializeComponent();
 
@@ -435,8 +441,12 @@ public partial class MainWindow : Window
         };
     }
 
-    protected sealed override async void OnClosed(EventArgs e)
+    protected sealed override async void OnClosing(WindowClosingEventArgs e)
     {
-        await _windowManager.CloseMainWindowAsync();
+        await Task.Run(() =>
+        {
+            _settingsManager.SaveSettingsAsync().GetAwaiter().GetResult();
+            _cacheManager.SaveCacheAsync().GetAwaiter().GetResult();
+        });
     }
 }

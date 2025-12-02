@@ -10,18 +10,6 @@ namespace Avalonix.ViewModel.Main;
 public class MainWindowViewModel(ILogger<MainWindowViewModel> logger, IWindowManager windowManager)
     : ViewModelBase, IMainWindowViewModel
 {
-    public async Task ExitAsync()
-    {
-        try
-        {
-            await windowManager.CloseMainWindowAsync();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Error while exiting app: {e}", ex.Message);
-        }
-    }
-
     public PlaylistCreateWindow PlaylistCreateWindow_Open()
     {
         try

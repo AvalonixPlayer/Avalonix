@@ -68,18 +68,6 @@ public class DiskManager : IDiskManager
         _logger.LogDebug("Playlist({playlistName}) saved", playlist.Name);
     }
 
-    public async Task SaveTracksMetadataCacheAsync(List<KeyValuePair<string, TrackMetadata>> pairs)
-    {
-        _logger.LogDebug("TracksMetadataCache saving");
-        await _diskWriter.WriteJsonAsync(pairs, TracksMetadataCachePath);
-    }
-
-    public async Task<List<KeyValuePair<string, TrackMetadata>>?> LoadTracksMetadataCacheAsync()
-    {
-        _logger.LogDebug("TracksMetadataCache loading");
-        return await _diskLoader.LoadAsyncFromJson<List<KeyValuePair<string, TrackMetadata>>>(TracksMetadataCachePath) ?? null;
-    }
-
     public Task RemovePlaylist(string name)
     {
         _logger.LogInformation("Removing playlist {name}", name);

@@ -28,24 +28,9 @@ public class WindowManager(
     IPlayablesManager playablesManager,
     IPlaylistManager playlistManager,
     IVersionManager versionManager,
-    IAlbumManager albumManager,
-    ICacheManager cacheManager)
+    IAlbumManager albumManager)
     : IWindowManager
 {
-    public async Task CloseMainWindowAsync()
-    {
-        try
-        {
-            await cacheManager.SaveCacheAsync();
-            await settingsManager.SaveSettingsAsync();
-            await CloseMainWindow();
-        }
-        catch (Exception ex)
-        {
-            logger.LogCritical("Error during closing and saving: {ex}", ex);
-            await CloseMainWindow();
-        }
-    }
 
     public PlaylistCreateWindow PlaylistCreateWindow_Open()
     {
@@ -80,13 +65,6 @@ public class WindowManager(
     public PlayableSelectWindow AlbumSelectAndPlayWindow_Open()
     {
         return AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
-    }
-
-    private static Task CloseMainWindow()
-    {
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            desktop.Shutdown();
-        return Task.CompletedTask;
     }
 
     private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlayableWindowStrategy strategy)
