@@ -1,7 +1,9 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonix.Model.UserSettings;
 using Avalonix.ViewModel.Settings;
 using Microsoft.Extensions.Logging;
 
@@ -24,5 +26,18 @@ public partial class SettingsWindow : Window
         _logger.LogInformation("Settings window is closed");
         base.OnClosed(e);
     }
+
+    private void ApplySettingsButton_OnClick(object? sender, RoutedEventArgs e) =>
+        _vm.SaveSettingsAsync(
+            new Settings
+            {
+                Avalonix =
+                {
+                    MusicFilesPath = PathBox.Text,
+                    Volume = (uint)VolumeBox.Value
+                }
+            });
+
+    private void ExitButton_OnClick(object? sender, RoutedEventArgs e) => Close();
 }
 

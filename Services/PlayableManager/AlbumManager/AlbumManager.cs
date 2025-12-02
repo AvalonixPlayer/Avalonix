@@ -10,7 +10,6 @@ using Avalonix.Model.Media.Track;
 using Avalonix.Model.UserSettings;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
-using Avalonix.Services.UserSettings;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.PlayableManager.AlbumManager;

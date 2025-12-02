@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Avalonix.Model.UserSettings;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
-using Avalonix.Services.UserSettings;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.SettingsManager;
@@ -47,7 +46,7 @@ public class SettingsManager : ISettingsManager
             }
 
             var result = await _diskLoader.LoadAsyncFromJson<Settings>(SettingsPath);
-            return result ?? default!;
+            return result ?? null!;
         }
         catch (Exception e)
         {

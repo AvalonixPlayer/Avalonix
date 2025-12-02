@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Playlist;
 using Avalonix.Model.UserSettings.Theme;
-using Avalonix.Services.UserSettings.Theme;
 
 namespace Avalonix.Services.DiskManager;
 

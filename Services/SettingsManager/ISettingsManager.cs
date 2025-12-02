@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Avalonix.Model.UserSettings;
-using Avalonix.Services.UserSettings;
 
 namespace Avalonix.Services.SettingsManager;
 

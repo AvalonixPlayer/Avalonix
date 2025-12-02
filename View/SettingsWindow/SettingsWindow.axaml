@@ -13,21 +13,21 @@
           <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
               <Label>Path</Label>
-              <TextBox HorizontalAlignment="Right" HorizontalContentAlignment="Right"></TextBox>
+              <TextBox Name="PathBox" HorizontalAlignment="Right" HorizontalContentAlignment="Right"></TextBox>
             </StackPanel>
           </StackPanel>
         </TabItem>
         <TabItem Header="Sound">
           <Grid RowDefinitions="*" ColumnDefinitions="*,*">
             <Label Grid.Column="0">Volume</Label>
-            <Slider Grid.Column="1" HorizontalAlignment="Right" ClipToBounds="True" Name="TrackPositionSlider" Width="120"
+            <Slider Grid.Column="1" HorizontalAlignment="Right" ClipToBounds="True" Name="VolumeBox" Width="120"
                     Height="30" />
           </Grid>
         </TabItem>
       </TabControl>
     <StackPanel Grid.Row="1" Orientation="Horizontal">
-      <Button Classes="h2">Apply</Button>
-      <Button Background="IndianRed" Classes="h2">Exit</Button>
+      <Button Classes="h2" Click="ApplySettingsButton_OnClick">Apply</Button>
+      <Button Background="IndianRed" Classes="h2" Click="ExitButton_OnClick">Exit</Button>
     </StackPanel>
   </Grid>
 </Window>
