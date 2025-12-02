@@ -95,7 +95,7 @@ public partial class MainWindow : Window
         _logger.LogInformation("MainWindow initialized");
     }
 
-    private void PlayAllTracksOnClick(object? sender, RoutedEventArgs e)
+    private void PlayAllTracks_OnClick(object? sender, RoutedEventArgs e)
     {
         _playablesManager.StartPlayable(_playboxManager.GetPlayables().Result[0]);
     }
@@ -136,7 +136,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void Pause(object sender, RoutedEventArgs e)
+    private void PauseButton_OnClick(object sender, RoutedEventArgs e)
     {
         var playingPlaylist = _playablesManager.PlayingPlayable;
         if (playingPlaylist == null) return;
@@ -152,7 +152,7 @@ public partial class MainWindow : Window
         _playablesManager.NextTrack();
     }
 
-    private void PlayTrackBefore(object sender, RoutedEventArgs e)
+    private void PlayTrackBefore_OnClick(object sender, RoutedEventArgs e)
     {
         _playablesManager.TrackBefore();
     }

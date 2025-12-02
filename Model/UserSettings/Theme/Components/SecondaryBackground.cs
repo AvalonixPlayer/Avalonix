@@ -1,4 +1,4 @@
-namespace Avalonix.Services.UserSettings.Theme.Components;
+namespace Avalonix.Model.UserSettings.Theme.Components;
 
 public class SecondaryBackground : IThemeComponent
 {

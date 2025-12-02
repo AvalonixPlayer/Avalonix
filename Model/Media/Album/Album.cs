@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
+using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.Album;

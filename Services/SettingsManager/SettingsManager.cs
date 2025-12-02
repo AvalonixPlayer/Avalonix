@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonix.Model.UserSettings;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
 using Avalonix.Services.UserSettings;

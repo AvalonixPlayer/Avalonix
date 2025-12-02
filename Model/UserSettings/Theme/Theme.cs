@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
-using Avalonix.Services.UserSettings.Theme.Components;
+using Avalonix.Model.UserSettings.Theme.Components;
 
-namespace Avalonix.Services.UserSettings.Theme;
+namespace Avalonix.Model.UserSettings.Theme;
 
-public class Theme
+public record Theme
 {
     [JsonConstructor]
     public Theme()

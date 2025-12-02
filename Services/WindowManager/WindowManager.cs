@@ -17,6 +17,7 @@ using Avalonix.View.SettingsWindow;
 using Avalonix.ViewModel.EditMetadata;
 using Avalonix.ViewModel.PlayableSelectViewModel;
 using Avalonix.ViewModel.PlaylistEditOrCreate;
+using Avalonix.ViewModel.Settings;
 using Avalonix.ViewModel.Strategy;
 using Microsoft.Extensions.Logging;
 
@@ -28,7 +29,8 @@ public class WindowManager(
     IPlayablesManager playablesManager,
     IPlaylistManager playlistManager,
     IVersionManager versionManager,
-    IAlbumManager albumManager)
+    IAlbumManager albumManager,
+    ISettingsWindowViewModel settingsWindowViewModel)
     : IWindowManager
 {
     public async Task CloseMainWindowAsync()
@@ -65,7 +67,7 @@ public class WindowManager(
     public PlayableSelectWindow AlbumSelectAndPlayWindow_Open() =>
         AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
 
-    public SettingsWindow SettingsWindow_Open() => new();
+    public SettingsWindow SettingsWindow_Open() => new(settingsWindowViewModel, logger);
 
     private static void CloseMainWindow()
     {

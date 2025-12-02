@@ -5,6 +5,7 @@ using Avalonix.Model.Media.Album;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.PlayBox;
 using Avalonix.Model.Media.Playlist;
+using Avalonix.Model.UserSettings;
 using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
@@ -80,7 +81,7 @@ public class PlayablesManager(
     public void ResetSnuffle()
     {
         logger.LogDebug("Changing shuffle mode");
-        _settings.Avalonix.SuffleChanged?.Invoke(!_settings.Avalonix.PlaySettings.Shuffle);
+        _settings.Avalonix.ShuffleChanged?.Invoke(!_settings.Avalonix.PlaySettings.Shuffle);
         _settings.Avalonix.PlaySettings.Shuffle = !_settings.Avalonix.PlaySettings.Shuffle;
     }
 
@@ -110,8 +111,8 @@ public class PlayablesManager(
 
     public event Action<bool> ShuffleChanged
     {
-        add => _settings.Avalonix.SuffleChanged += value;
-        remove => _settings.Avalonix.SuffleChanged -= value;
+        add => _settings.Avalonix.ShuffleChanged += value;
+        remove => _settings.Avalonix.ShuffleChanged -= value;
     }
 
     public event Action<bool> LoopChanged
