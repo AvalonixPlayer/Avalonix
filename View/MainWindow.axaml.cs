@@ -463,4 +463,7 @@ public partial class MainWindow : Window
             _cacheManager.SaveCacheAsync().GetAwaiter().GetResult();
         });
     }
+    
+    private async void OpenSettingsWindowButton_OnClick(object? sender, RoutedEventArgs e) =>
+        await _windowManager.SettingsWindow_Open().ShowDialog(this);
 }

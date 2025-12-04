@@ -4,8 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:main1="clr-namespace:Avalonix.ViewModel.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-        Width="1180" Height="600" CanMaximize="True"
-        MinHeight="800" MinWidth="1180"
+        Width="1000" Height="600" CanMaximize="True"
+        MinHeight="800" MinWidth="1000"
         x:Class="Avalonix.View.MainWindow"
         x:DataType="main1:MainWindowViewModel"
         Title="Avalonix">
@@ -59,6 +59,7 @@
                 <Button Click="LoopButton_OnClick" Name="Loop">
                     <Image Source="../Assets/buttons/EnableLoop.png" />
                 </Button>
+                <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
             </StackPanel>
         </Border>
 
@@ -76,15 +77,12 @@
                     </Button>
                     <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
                     <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
-                    <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Spacing="0" Margin="0">
                     <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume" />
                     <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider"
                             Background="Transparent" Height="30" Width="150" />
                 </StackPanel>
-                <Slider HorizontalAlignment="Right" ClipToBounds="True" Name="TrackPositionSlider" Width="120"
-                        Height="30" />
             </StackPanel>
         </Border>
 
@@ -105,6 +103,8 @@
                            BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"
                            HorizontalContentAlignment="Center" HorizontalAlignment="Center"
                            Foreground="White" />
+                    <Slider HorizontalAlignment="Center" ClipToBounds="True" Name="TrackPositionSlider" Width="120"
+                            Height="30" />
                 </StackPanel>
             </StackPanel>
         </Border>

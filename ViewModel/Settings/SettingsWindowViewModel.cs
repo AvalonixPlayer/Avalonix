@@ -8,7 +8,7 @@ public class SettingsWindowViewModel(ISettingsManager manager) : ViewModelBase, 
     public async Task SaveSettingsAsync(Model.UserSettings.Settings settings)
     {
         manager.Settings = settings;
-        await manager.SaveSettings();
+        await manager.SaveSettingsAsync();
     }
 
     public Task<Model.UserSettings.Settings?> GetSettingsAsync() =>

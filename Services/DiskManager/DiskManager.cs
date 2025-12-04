@@ -9,7 +9,6 @@ using Avalonix.Model.UserSettings.Theme;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
 using Avalonix.Services.SettingsManager;
-using Avalonix.Services.UserSettings.Theme;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.DiskManager;

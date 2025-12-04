@@ -7,7 +7,7 @@ public record AvalonixSettings
 {
     [JsonIgnore] public Action<bool>? LoopChanged;
     [JsonIgnore] public Action<bool>? ShuffleChanged;
-    public readonly PlaySettings PlaySettings = new();
-    public uint Volume = 100;
-    public string? MusicFilesPath { get; set; }
+    [JsonInclude] public PlaySettings PlaySettings = new();
+    [JsonInclude] public uint Volume = 100;
+    [JsonInclude] public string? MusicFilesPath { get; set; }
 }
