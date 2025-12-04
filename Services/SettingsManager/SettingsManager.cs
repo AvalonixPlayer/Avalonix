@@ -25,7 +25,7 @@ public class SettingsManager : ISettingsManager
     private static string SettingsPath { get; } =
         Path.Combine(DiskManager.DiskManager.AvalonixFolderPath, "settings" + DiskManager.DiskManager.Extension);
 
-    public Settings? Settings { get; }
+    public Settings? Settings { get; set; }
 
     public async Task SaveSettings()
     {

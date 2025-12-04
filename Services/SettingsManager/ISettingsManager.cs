@@ -5,6 +5,6 @@ namespace Avalonix.Services.SettingsManager;
 
 public interface ISettingsManager
 {
-    public Settings? Settings { get; }
+    public Settings? Settings { get; set; }
     Task SaveSettings();
 }
