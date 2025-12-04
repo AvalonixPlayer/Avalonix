@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonix.Model.UserSettings;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
-using Avalonix.Services.UserSettings;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.SettingsManager;
@@ -25,7 +25,7 @@ public class SettingsManager : ISettingsManager
     private static string SettingsPath { get; } =
         Path.Combine(DiskManager.DiskManager.AvalonixFolderPath, "settings" + DiskManager.DiskManager.Extension);
 
-    public Settings? Settings { get; }
+    public Settings? Settings { get; set; }
 
     public async Task SaveSettingsAsync()
     {
@@ -47,7 +47,7 @@ public class SettingsManager : ISettingsManager
             }
 
             var result = await _diskLoader.LoadAsyncFromJson<Settings>(SettingsPath);
-            return result ?? default!;
+            return result ?? null!;
         }
         catch (Exception e)
         {

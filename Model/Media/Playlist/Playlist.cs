@@ -4,8 +4,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.CacheManager;
+using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
 using Avalonix.Services.DiskManager;
-using Avalonix.Services.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.Playlist;

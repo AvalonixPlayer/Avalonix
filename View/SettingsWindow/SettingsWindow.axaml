@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="Avalonix.View.SettingsWindow.SettingsWindow"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="500" Height="450"
+        CanResize="True"
+        Title="Avalonix - Settings">
+  <Grid RowDefinitions="*,90">
+      <TabControl>
+        <TabItem Header="Main">
+          <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+              <Label>Path</Label>
+              <TextBox Name="PathBox" HorizontalAlignment="Right" HorizontalContentAlignment="Right"></TextBox>
+            </StackPanel>
+          </StackPanel>
+        </TabItem>
+        <TabItem Header="Sound">
+          <Grid RowDefinitions="*" ColumnDefinitions="*,*">
+            <Label Grid.Column="0">Volume</Label>
+            <Slider Grid.Column="1" HorizontalAlignment="Right" ClipToBounds="True" Name="VolumeBox" Width="120"
+                    Height="30" />
+          </Grid>
+        </TabItem>
+      </TabControl>
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
+      <Button Classes="h2" Click="ApplySettingsButton_OnClick">Apply</Button>
+      <Button Background="IndianRed" Classes="h2" Click="ExitButton_OnClick">Exit</Button>
+    </StackPanel>
+  </Grid>
+</Window>
+

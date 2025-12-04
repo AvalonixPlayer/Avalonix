@@ -41,7 +41,7 @@
                 <TabItem Header="Tracks">
                     <StackPanel Classes="vertical">
                         <StackPanel Classes="horizontal">
-                            <Button Click="PlayAllTracksOnClick" Classes="h2">Play</Button>
+                            <Button Click="PlayAllTracks_OnClick" Classes="h2">Play</Button>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
@@ -65,10 +65,10 @@
         <Border Grid.Row="1" Grid.Column="1" Height="70">
             <StackPanel Classes="center">
                 <StackPanel Classes="center">
-                    <Button Name="BackButton" Click="PlayTrackBefore">
+                    <Button Name="BackButton" Click="PlayTrackBefore_OnClick">
                         <Image Source="../Assets/buttons/back.png" />
                     </Button>
-                    <Button Name="PauseButton" Click="Pause">
+                    <Button Name="PauseButton" Click="PauseButton_OnClick">
                         <Image Source="../Assets/buttons/pause.png" />
                     </Button>
                     <Button Name="NextButton" Click="PlayNextTrack">
@@ -76,6 +76,7 @@
                     </Button>
                     <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
                     <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
+                    <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Spacing="0" Margin="0">
                     <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume" />

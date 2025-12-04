@@ -1,4 +1,4 @@
-namespace Avalonix.Services.UserSettings.AvalonixSettingsFiles;
+namespace Avalonix.Model.UserSettings.AvalonixSettingsFiles;
 
 public record PlaySettings
 {

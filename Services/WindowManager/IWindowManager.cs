@@ -5,6 +5,7 @@ using Avalonix.View.SecondaryWindows.EditMetadataWindow;
 using Avalonix.View.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.View.SecondaryWindows.PlaylistCreateWindow;
 using Avalonix.View.SecondaryWindows.ShowTrackWindow;
+using Avalonix.View.SettingsWindow;
 
 namespace Avalonix.Services.WindowManager;
 
@@ -17,4 +18,5 @@ public interface IWindowManager
     EditMetadataWindow EditMetadataWindow_Open(Track track);
     PlayableSelectWindow PlaylistDeleteWindow_Open();
     PlayableSelectWindow AlbumSelectAndPlayWindow_Open();
+    SettingsWindow SettingsWindow_Open();
 }
