@@ -14,7 +14,7 @@
 
 # 📌 **About**
 
-***Avalonix*** is a ***simple***, ***user-friendly***, ***cross-platform*** playlist player 🎧
+***Avalonix*** is a ***simple***, ***user-friendly***, ***cross-platform*** player 🎧
 
 ![screenshot](.github/screenshots/avalonix_screenshot.jpg)
 
