@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Avalonix"
-#define MyAppVersion "1.0.2"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "Avalonix Player"
 #define MyAppURL "https://github.com/AvalonixPlayer/Avalonix"
 #define MyAppExeName "Avalonix.exe"
@@ -32,9 +32,9 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=.\bin\Release\net9.0\win-x64\publish\LICENSE
-InfoBeforeFile=.\bin\Release\net9.0\win-x64\publish\LICENSES
-InfoAfterFile=.\bin\Release\net9.0\win-x64\publish\LICENSE
+LicenseFile=.\bin\Release\net10.0\win-x64\publish\LICENSE
+InfoBeforeFile=.\bin\Release\net10.0\win-x64\publish\LICENSES
+InfoAfterFile=.\bin\Release\net10.0\win-x64\publish\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
@@ -78,13 +78,12 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: ".\bin\Release\net9.0\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Release\net9.0\win-x64\publish\libSkiaSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Release\net9.0\win-x64\publish\libHarfBuzzSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Release\net9.0\win-x64\publish\bass.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Release\net9.0\win-x64\publish\av_libglesv2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Release\net9.0\win-x64\publish\av_libglesv2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Release\net9.0\win-x64\publish\Release"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\Release\net10.0\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\Release\net10.0\win-x64\publish\libSkiaSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\Release\net10.0\win-x64\publish\libHarfBuzzSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\Release\net10.0\win-x64\publish\bass.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\Release\net10.0\win-x64\publish\av_libglesv2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\Release\net10.0\win-x64\publish\av_libglesv2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\Assets\avalonix-logo.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
