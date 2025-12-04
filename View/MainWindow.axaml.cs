@@ -247,8 +247,21 @@ public partial class MainWindow : Window
     private void TrackPositionChange(object? sender, RangeBaseValueChangedEventArgs rangeBaseValueChangedEventArgs)
     {
         if (_isUserDragging)
-            Dispatcher.UIThread.Post(async void () =>
-                _playablesManager.MediaPlayer.SetPosition(TrackPositionSlider.Value));
+            Dispatcher.UIThread.Post(void () =>
+            {
+                _playablesManager.MediaPlayer.SetPosition(TrackPositionSlider.Value);
+                UpdateTrackTime();
+            });
+    }
+
+    private void UpdateTrackTime()
+    {
+        if(_playablesManager.MediaPlayer.CurrentTrack == null) return;
+        TrackDuration.Content = PostProcessedText(
+            TrackMetadata.ToHumanFriendlyString(TimeSpan.FromSeconds(_playablesManager.MediaPlayer.GetPosition())),
+            25) + @"/" + PostProcessedText(
+            TrackMetadata.ToHumanFriendlyString(_playablesManager.CurrentTrack!.Metadata.Duration),
+            25);
     }
 
     private void UpdateTrackPositionSlider(object? sender,
@@ -259,6 +272,7 @@ public partial class MainWindow : Window
             {
                 if (!_isUserDragging)
                     TrackPositionSlider.Value = _playablesManager.MediaPlayer.GetPosition();
+                UpdateTrackTime();
             });
     }
 

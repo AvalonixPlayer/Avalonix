@@ -93,7 +93,7 @@ public record TrackMetadata
     public static string ToHumanFriendlyString(TimeSpan timeSpan)
     {
         if (timeSpan.Hours > 0)
-            return $"{timeSpan.Hours}H {timeSpan.Minutes}M {timeSpan.Seconds}S";
-        return timeSpan.Minutes > 0 ? $"{timeSpan.Minutes}M {timeSpan.Seconds}S" : $"{timeSpan.Seconds}S";
+            return $"{timeSpan.Hours}: {timeSpan.Minutes}: {timeSpan.Seconds}";
+        return timeSpan.Minutes > 0 ? $"{timeSpan.Minutes}: {timeSpan.Seconds}" : $"{timeSpan.Seconds}";
     }
 }
