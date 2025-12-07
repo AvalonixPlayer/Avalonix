@@ -1,9 +1,6 @@
 using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonix.Model.UserSettings;
 using Avalonix.ViewModel.Settings;
 using Microsoft.Extensions.Logging;
 

@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Track;
 using Avalonix.Services.DiskLoader;
-using Avalonix.Services.DiskManager;
 using Avalonix.Services.DiskWriter;
 using Microsoft.Extensions.Logging;
 

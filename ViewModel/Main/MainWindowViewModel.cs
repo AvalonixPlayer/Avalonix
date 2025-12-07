@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Avalonix.Services.WindowManager;
 using Avalonix.View.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.View.SecondaryWindows.PlaylistCreateWindow;

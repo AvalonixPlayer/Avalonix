@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Model.Media.Track;
 using Avalonix.Model.UserSettings.Theme;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
-using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.DiskManager;

@@ -7,7 +7,6 @@ using Avalonix.Model.Media;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
 using Avalonix.Services.CacheManager;
-using Avalonix.Model.Media.Track;
 using Avalonix.Model.UserSettings;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
