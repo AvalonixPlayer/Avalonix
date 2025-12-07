@@ -117,7 +117,8 @@ public class DiskManager : IDiskManager
             var files = new List<string>();
             foreach (var ext in MusicFilesExtensions)
             {
-                var foundFiles = Directory.EnumerateFiles(path ?? MusicPath, $"*{ext}", SearchOption.AllDirectories);
+                var usingPath = string.IsNullOrEmpty(path) ? MusicPath : path;
+                var foundFiles = Directory.EnumerateFiles(usingPath, $"*{ext}", SearchOption.AllDirectories);
                 files.AddRange(foundFiles);
             }
 
