@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Avalonix"
-#define MyAppVersion "2.0.0"
+#define MyAppVersion "2.0.1"
 #define MyAppPublisher "Avalonix Player"
 #define MyAppURL "https://github.com/AvalonixPlayer/Avalonix"
 #define MyAppExeName "Avalonix.exe"
