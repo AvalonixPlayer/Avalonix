@@ -13,6 +13,7 @@ using Avalonix.Services.PlayableManager.AlbumManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
+using Avalonix.Services.StatisticManager;
 using Avalonix.Services.ThemeManager;
 using Avalonix.Services.VersionManager;
 using Avalonix.Services.WindowManager;
@@ -45,6 +46,7 @@ public class App : Application
             services.AddTransient<IVersionManager, VersionManager>();
             services.AddSingleton<ISettingsManager, SettingsManager>();
             services.AddSingleton<ICacheManager, CacheManager>();
+            services.AddSingleton<IStatisticManager, StatisticManager>();
             services.AddSingleton<ILogger, Logger>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IDiskManager, DiskManager>();

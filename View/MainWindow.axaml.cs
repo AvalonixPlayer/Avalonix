@@ -16,6 +16,7 @@ using Avalonix.Services.CacheManager;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.SettingsManager;
+using Avalonix.Services.StatisticManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModel.Main;
 using Microsoft.Extensions.Logging;
@@ -45,11 +46,13 @@ public partial class MainWindow : Window
     private readonly IWindowManager _windowManager;
     private readonly ISettingsManager _settingsManager;
     private readonly ICacheManager _cacheManager;
+    private readonly IStatisticManager _statisticManager;
 
     private bool _isUserDragging;
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
-        ISettingsManager settingsManager, ICacheManager cacheManager, IPlayablesManager playablesManager,
+        ISettingsManager settingsManager, ICacheManager cacheManager, IStatisticManager statisticManager,
+        IPlayablesManager playablesManager,
         IWindowManager windowManager,
         IPlayboxManager playboxManager)
     {
@@ -60,6 +63,7 @@ public partial class MainWindow : Window
         _playboxManager = playboxManager;
         _settingsManager = settingsManager;
         _cacheManager = cacheManager;
+        _statisticManager = statisticManager;
 
         InitializeComponent();
 
@@ -256,7 +260,7 @@ public partial class MainWindow : Window
 
     private void UpdateTrackTime()
     {
-        if(_playablesManager.MediaPlayer.CurrentTrack == null) return;
+        if (_playablesManager.MediaPlayer.CurrentTrack == null) return;
         TrackDuration.Content = PostProcessedText(
             TrackMetadata.ToHumanFriendlyString(TimeSpan.FromSeconds(_playablesManager.MediaPlayer.GetPosition())),
             25) + @"/" + PostProcessedText(
@@ -461,9 +465,10 @@ public partial class MainWindow : Window
         {
             _settingsManager.SaveSettingsAsync().GetAwaiter().GetResult();
             _cacheManager.SaveCacheAsync().GetAwaiter().GetResult();
+            _statisticManager.SaveStatistics().GetAwaiter().GetResult();
         });
     }
-    
+
     private async void OpenSettingsWindowButton_OnClick(object? sender, RoutedEventArgs e) =>
         await _windowManager.SettingsWindow_Open().ShowDialog(this);
 }
