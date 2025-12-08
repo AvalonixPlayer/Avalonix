@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
+using Avalonix.Services.StatisticManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.Album;
@@ -10,9 +11,10 @@ public record Album : IPlayable
 {
     public AlbumMetadata? Metadata;
 
-    public Album(List<Track.Track> tracks, IMediaPlayer player, ILogger logger, PlaySettings settings)
+    public Album(List<Track.Track> tracks, IMediaPlayer player, ILogger logger, PlaySettings settings,
+        IStatisticManager statisticManager)
     {
-        PlayQueue = new PlayQueue(player, logger, settings);
+        PlayQueue = new PlayQueue(player, logger, statisticManager, settings);
 
         Metadata = new AlbumMetadata(tracks);
         Name = Metadata.AlbumName;

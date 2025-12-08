@@ -5,11 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
+using Avalonix.Services.StatisticManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media;
 
-public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings settings)
+public class PlayQueue(IMediaPlayer player, ILogger logger, IStatisticManager statisticManager, PlaySettings settings)
 {
     private readonly Random _random = new();
     private CancellationTokenSource? _cancellationTokenSource;

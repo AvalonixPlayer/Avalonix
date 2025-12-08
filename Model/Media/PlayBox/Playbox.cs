@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.CacheManager;
 using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
+using Avalonix.Services.StatisticManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.PlayBox;
@@ -16,9 +17,9 @@ public class Playbox : IPlayable
     private ICacheManager _cacheManager;
 
     public Playbox(List<string> tracksPaths, IMediaPlayer player, ILogger logger, PlaySettings settings,
-        ICacheManager cacheManager)
+        ICacheManager cacheManager, IStatisticManager statisticManager)
     {
-        PlayQueue = new PlayQueue(player, logger, settings);
+        PlayQueue = new PlayQueue(player, logger, statisticManager, settings);
         _cacheManager = cacheManager;
         PlayQueue.FillQueue(tracksPaths.Select(path => new Track.Track(path, _cacheManager)).ToList());
         Task.Run(LoadTracksMetadata).GetAwaiter();

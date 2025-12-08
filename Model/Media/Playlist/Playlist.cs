@@ -6,6 +6,7 @@ using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Services.CacheManager;
 using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
 using Avalonix.Services.DiskManager;
+using Avalonix.Services.StatisticManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.Playlist;
@@ -19,12 +20,12 @@ public class Playlist : IPlayable
     private readonly ICacheManager _cacheManager;
 
     public Playlist(string name, PlaylistData playlistData, IMediaPlayer player, IDiskManager diskManager,
-        ILogger logger, PlaySettings settings, ICacheManager cacheManager)
+        ILogger logger, PlaySettings settings, ICacheManager cacheManager, IStatisticManager statisticManager)
     {
         DiskManager = diskManager;
         Name = name;
         Data = playlistData;
-        PlayQueue = new PlayQueue(player, logger, settings);
+        PlayQueue = new PlayQueue(player, logger, statisticManager, settings);
         _cacheManager = cacheManager;
         PlayQueue.FillQueue(Data.TracksPaths.Select(path => new Track.Track(path, _cacheManager)).ToList());
         AddObservingDirectoryFiles();

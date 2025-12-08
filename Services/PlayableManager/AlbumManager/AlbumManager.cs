@@ -11,6 +11,7 @@ using Avalonix.Services.CacheManager;
 using Avalonix.Model.UserSettings;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
+using Avalonix.Services.StatisticManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Services.PlayableManager.AlbumManager;
@@ -21,7 +22,8 @@ public class AlbumManager(
     ISettingsManager settingsManager,
     IDiskManager diskManager,
     IMediaPlayer mediaPlayer,
-    ICacheManager cacheManager) : IAlbumManager
+    ICacheManager cacheManager,
+    IStatisticManager statisticManager) : IAlbumManager
 {
     private readonly Settings _settings = settingsManager.Settings!;
     private readonly List<Track> _tracks = [];
@@ -119,7 +121,7 @@ public class AlbumManager(
         var albumGroups = allValidTracks.GroupBy(track => new { track.Metadata.Artist, track.Metadata.Album });
 
         return albumGroups.Select(group =>
-            new Album(group.ToList(), player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
+            new Album(group.ToList(), player, logger, settingsManager.Settings!.Avalonix.PlaySettings, statisticManager)).ToList();
     }
 
     private async Task LoadTracks()

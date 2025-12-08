@@ -30,7 +30,7 @@ public class StatisticManager : IStatisticManager
         _diskWriter = diskWriter;
         _logger = logger;
 
-        Statistic = LoadStatistics().ConfigureAwait(false).GetAwaiter().GetResult();
+        Statistic = Task.Run(async () => await LoadStatistics()).Result;
     }
 
     private async Task<Statistic> LoadStatistics()
