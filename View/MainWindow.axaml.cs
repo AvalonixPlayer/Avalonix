@@ -100,14 +100,15 @@ public partial class MainWindow : Window
 
         _logger.LogInformation("MainWindow initialized");
     }
-    
-    private void SelectTab(object sender, RoutedEventArgs e)  // Изменили тип параметра
+
+    private void SelectTab(object sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: string tabName }) return;
         PlContent.IsVisible = false;
         AlContent.IsVisible = false;
         TrContent.IsVisible = false;
         PQContent.IsVisible = false;
+        IContent.IsVisible = false;
         switch (tabName)
         {
             case "Pl":
@@ -121,6 +122,9 @@ public partial class MainWindow : Window
                 break;
             case "PQ":
                 PQContent.IsVisible = true;
+                break;
+            case "I":
+                IContent.IsVisible = true;
                 break;
         }
     }
@@ -280,7 +284,7 @@ public partial class MainWindow : Window
 
     private void UpdateTrackTime()
     {
-        if(_playablesManager.MediaPlayer.CurrentTrack == null) return;
+        if (_playablesManager.MediaPlayer.CurrentTrack == null) return;
         TrackDuration.Content = PostProcessedText(
             TrackMetadata.ToHumanFriendlyString(TimeSpan.FromSeconds(_playablesManager.MediaPlayer.GetPosition())),
             25) + @"/" + PostProcessedText(
@@ -346,7 +350,7 @@ public partial class MainWindow : Window
 
         SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
             .Where(track => !string.IsNullOrEmpty(track.Metadata.TrackName)).ToList()
-            .Select(track => PostProcessedText(track.Metadata.TrackName, 30));
+            .Select(track => PostProcessedText(track.Metadata.TrackName, 20));
     }
 
     private void UpdateTrackPositionSlider()
@@ -487,7 +491,7 @@ public partial class MainWindow : Window
             _cacheManager.SaveCacheAsync().GetAwaiter().GetResult();
         });
     }
-    
+
     private async void OpenSettingsWindowButton_OnClick(object? sender, RoutedEventArgs e) =>
         await _windowManager.SettingsWindow_Open().ShowDialog(this);
 }

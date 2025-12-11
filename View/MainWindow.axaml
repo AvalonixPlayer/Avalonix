@@ -4,8 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:main1="clr-namespace:Avalonix.ViewModel.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-        Width="1000" Height="600" CanMaximize="True"
-        MinHeight="800" MinWidth="1000"
+        Width="800" Height="600" CanMaximize="True"
+        MinHeight="600" MinWidth="800"
         x:Class="Avalonix.View.MainWindow"
         x:DataType="main1:MainWindowViewModel"
         Title="Avalonix">
@@ -14,12 +14,12 @@
         <main1:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,90" ColumnDefinitions="400,*" ShowGridLines="False" Margin="10">
+    <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="False" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
-            <Grid ColumnDefinitions="50,*">
+            <Grid ColumnDefinitions="40,*">
 
-                <StackPanel Grid.Column="0" Orientation="Vertical">
-                    <Button Tag="Pl" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
+                <StackPanel Grid.Column="0" Orientation="Vertical" Margin="5">
+                    <Button Tag="Pl" Click="SelectTab" Padding="5,3" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center">
                         <TextBlock Text="Pl" />
                     </Button>
@@ -35,47 +35,43 @@
                             HorizontalContentAlignment="Center">
                         <TextBlock Text="PQ" />
                     </Button>
+                    <Button Tag="I" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        <TextBlock Text="I" />
+                    </Button>
                 </StackPanel>
-                
+
                 <Grid Grid.Column="1" x:Name="ContentArea">
                     <Border x:Name="PlContent" IsVisible="True" VerticalAlignment="Top">
-                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="10">
+                        <WrapPanel Orientation="Horizontal" Margin="10">
                             <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button>
                             <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button>
                             <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button>
-                        </StackPanel>
+                        </WrapPanel>
                     </Border>
 
                     <Border x:Name="AlContent" IsVisible="False" VerticalAlignment="Top">
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <Button Click="SelectAlbum_OnClick" Classes="h2">Select</Button>
-                        </StackPanel>
+                        <Button Click="SelectAlbum_OnClick" Classes="h2">Select</Button>
                     </Border>
-                    
+
                     <Border x:Name="TrContent" IsVisible="False" VerticalAlignment="Top">
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <Button Click="PlayAllTracks_OnClick" Classes="h2">Play</Button>
-                        </StackPanel>
+                        <Button Click="PlayAllTracks_OnClick" Classes="h2">Play</Button>
                     </Border>
 
                     <Border x:Name="PQContent" IsVisible="False" VerticalAlignment="Top">
-                        <ListBox MinHeight="600" MaxHeight="600" Name="SongBox" />
+                        <ListBox MinHeight="300" MaxHeight="300" Name="SongBox" />
+                    </Border>
+
+                    <Border x:Name="IContent" IsVisible="False" VerticalAlignment="Top">
+                        <WrapPanel Orientation="Horizontal" Margin="10">
+                            <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
+                            <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
+                            <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
+                            <Button Click="AboutButton_OnClick" Content="?" />
+                        </WrapPanel>
                     </Border>
                 </Grid>
             </Grid>
-        </Border>
-        
-        <Border Grid.Row="1" Grid.Column="0" Height="70">
-            <StackPanel Classes="horizontal">
-                <Button Click="AboutButton_OnClick" Content="?" />
-                <Button Click="ShuffleButton_OnClick" Name="Shuffle">
-                    <Image Source="../Assets/buttons/EnableSnuffle.png" />
-                </Button>
-                <Button Click="LoopButton_OnClick" Name="Loop">
-                    <Image Source="../Assets/buttons/EnableLoop.png" />
-                </Button>
-                <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
-            </StackPanel>
         </Border>
 
         <Border Grid.Row="1" Grid.Column="1" Height="70">
@@ -90,37 +86,44 @@
                     <Button Name="NextButton" Click="PlayNextTrack">
                         <Image Source="../Assets/buttons/next.png" />
                     </Button>
-                    <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
-                    <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
-                </StackPanel>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Spacing="0" Margin="0">
-                    <Label FontWeight="Bold" HorizontalContentAlignment="Center" Content="Volume" />
-                    <Slider HorizontalAlignment="Right" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider"
-                            Background="Transparent" Height="30" Width="150" />
+                    <Button Click="ShuffleButton_OnClick" Name="Shuffle">
+                        <Image Source="../Assets/buttons/EnableSnuffle.png" />
+                    </Button>
+                    <Button Click="LoopButton_OnClick" Name="Loop">
+                        <Image Source="../Assets/buttons/EnableLoop.png" />
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </Border>
 
         <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-                <Border Name="AlbumCover" Height="300" Width="300" Background="#cc212121"
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content=""
+                       HorizontalContentAlignment="Center" HorizontalAlignment="Center" />
+                <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold"
+                       BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"
+                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                       Foreground="White" />
+                <Border Name="AlbumCover" Height="200" Width="200" Background="#cc212121"
                         CornerRadius="25" ClipToBounds="True">
                     <Image Source="" />
                 </Border>
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="2">
-                    <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content=""
-                           HorizontalContentAlignment="Center" HorizontalAlignment="Center" />
-                    <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold"
-                           BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"
-                           HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="White" />
-                    <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold"
-                           BorderBrush="DimGray" Content="" Margin="0, 0, 0, 5"
-                           HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="White" />
-                    <Slider HorizontalAlignment="Center" ClipToBounds="True" Name="TrackPositionSlider" Width="120"
-                            Height="30" />
-                </StackPanel>
+                
+                <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold"
+                       BorderBrush="DimGray" Content="0:0" Margin="0, 0, 0, 5"
+                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                       Foreground="White" />
+                
+                <Slider HorizontalAlignment="Center" ClipToBounds="True" Name="TrackPositionSlider" Width="120"
+                        Height="30" />
+                
+                <Label FontSize="14" FontWeight="ExtraBold"
+                       BorderBrush="DimGray" Content="Volume" Margin="0, 0, 0, 5"
+                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                       Foreground="White"/>
+                <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged" Name="VolumeSlider"
+                        Background="Transparent" Height="30" Width="150" />
             </StackPanel>
         </Border>
     </Grid>
