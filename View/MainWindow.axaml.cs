@@ -100,6 +100,30 @@ public partial class MainWindow : Window
 
         _logger.LogInformation("MainWindow initialized");
     }
+    
+    private void SelectTab(object sender, RoutedEventArgs e)  // Изменили тип параметра
+    {
+        if (sender is not Button { Tag: string tabName }) return;
+        PlContent.IsVisible = false;
+        AlContent.IsVisible = false;
+        TrContent.IsVisible = false;
+        PQContent.IsVisible = false;
+        switch (tabName)
+        {
+            case "Pl":
+                PlContent.IsVisible = true;
+                break;
+            case "Al":
+                AlContent.IsVisible = true;
+                break;
+            case "Tr":
+                TrContent.IsVisible = true;
+                break;
+            case "PQ":
+                PQContent.IsVisible = true;
+                break;
+        }
+    }
 
     private void PlayAllTracks_OnClick(object? sender, RoutedEventArgs e)
     {

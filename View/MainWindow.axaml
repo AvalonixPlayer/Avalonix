@@ -16,40 +16,55 @@
 
     <Grid RowDefinitions="*,90" ColumnDefinitions="400,*" ShowGridLines="False" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
-            <TabControl>
-                <TabControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </TabControl.ItemsPanel>
-                <TabItem Header="Playlists">
-                    <StackPanel Classes="vertical">
-                        <StackPanel Classes="horizontal">
+            <Grid ColumnDefinitions="50,*">
+
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <Button Tag="Pl" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        <TextBlock Text="Pl" />
+                    </Button>
+                    <Button Tag="Al" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        <TextBlock Text="Al" />
+                    </Button>
+                    <Button Tag="Tr" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        <TextBlock Text="Tr" />
+                    </Button>
+                    <Button Tag="PQ" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center">
+                        <TextBlock Text="PQ" />
+                    </Button>
+                </StackPanel>
+                
+                <Grid Grid.Column="1" x:Name="ContentArea">
+                    <Border x:Name="PlContent" IsVisible="True" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="10">
                             <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button>
                             <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button>
                             <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button>
                         </StackPanel>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Albums">
-                    <StackPanel Classes="vertical">
-                        <StackPanel Classes="horizontal">
+                    </Border>
+
+                    <Border x:Name="AlContent" IsVisible="False" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal" Margin="10">
                             <Button Click="SelectAlbum_OnClick" Classes="h2">Select</Button>
                         </StackPanel>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Tracks">
-                    <StackPanel Classes="vertical">
-                        <StackPanel Classes="horizontal">
+                    </Border>
+                    
+                    <Border x:Name="TrContent" IsVisible="False" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal" Margin="10">
                             <Button Click="PlayAllTracks_OnClick" Classes="h2">Play</Button>
                         </StackPanel>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Play queue">
-                    <ListBox MinHeight="600" MaxHeight="600" Name="SongBox" />
-                </TabItem>
-            </TabControl>
+                    </Border>
+
+                    <Border x:Name="PQContent" IsVisible="False" VerticalAlignment="Top">
+                        <ListBox MinHeight="600" MaxHeight="600" Name="SongBox" />
+                    </Border>
+                </Grid>
+            </Grid>
         </Border>
+        
         <Border Grid.Row="1" Grid.Column="0" Height="70">
             <StackPanel Classes="horizontal">
                 <Button Click="AboutButton_OnClick" Content="?" />
