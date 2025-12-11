@@ -7,23 +7,22 @@
         Width="500" Height="450"
         CanResize="True"
         Title="Avalonix - Settings">
-  <Grid RowDefinitions="*,90">
-      <TabControl>
-        <TabItem Header="Main">
-          <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-              <Label>Path</Label>
-              <TextBox Name="PathBox" HorizontalAlignment="Right" HorizontalContentAlignment="Right"></TextBox>
-            </StackPanel>
-          </StackPanel>
-        </TabItem>
-        <TabItem Header="Sound">
-        </TabItem>
-      </TabControl>
-    <StackPanel Grid.Row="1" Orientation="Horizontal">
-      <Button Classes="h2" Click="ApplySettingsButton_OnClick">Apply</Button>
-      <Button Background="IndianRed" Classes="h2" Click="ExitButton_OnClick">Exit</Button>
-    </StackPanel>
-  </Grid>
+    <Grid RowDefinitions="*,90">
+        <TabControl>
+            <TabItem Header="Main">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label>Path</Label>
+                        <TextBox Name="PathBox" HorizontalAlignment="Right" HorizontalContentAlignment="Right"></TextBox>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Sound">
+            </TabItem>
+        </TabControl>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Classes="h2" Click="ApplySettingsButton_OnClick">Apply</Button>
+            <Button Background="IndianRed" Classes="h2" Click="ExitButton_OnClick">Exit</Button>
+        </StackPanel>
+    </Grid>
 </Window>
-
