@@ -134,8 +134,7 @@
                        Foreground="White" Background="Transparent" />
 
                 <Border Name="AlbumCover" Height="300" Width="300"
-                        CornerRadius="25" ClipToBounds="True"
-                        Background="#cc212121">
+                        CornerRadius="25" ClipToBounds="True">
                     <Image Source="" />
                 </Border>
 

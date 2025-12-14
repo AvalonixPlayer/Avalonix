@@ -509,7 +509,10 @@ public partial class MainWindow : Window
         return new Image
         {
             Source =
-                new Bitmap(AssetLoader.Open(new Uri($"avares://Avalonix/Assets/{partOfPath}")))
+                new Bitmap(AssetLoader.Open(new Uri($"avares://Avalonix/Assets/{partOfPath}"))),
+            Width = 35,
+            Height = 35,
+            Stretch = Stretch.Uniform
         };
     }
 
