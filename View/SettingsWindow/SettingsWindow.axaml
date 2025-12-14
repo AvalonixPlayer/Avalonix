@@ -6,7 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="500" Height="450"
         CanResize="True"
-        Title="Avalonix - Settings">
+        Title="Avalonix - Settings"
+        Icon="/Assets/avalonix-logo.ico">
     <Grid RowDefinitions="*,90">
         <TabControl>
             <TabItem Header="Main">

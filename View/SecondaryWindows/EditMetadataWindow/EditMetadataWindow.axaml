@@ -6,7 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="500" Height="700"
         CanResize="False"
-        Title="Avalonix - ">
+        Title="Avalonix - "
+        Icon="/Assets/avalonix-logo.ico">
     <StackPanel Classes="vertical">
         <Border>
             <StackPanel Orientation="Vertical">

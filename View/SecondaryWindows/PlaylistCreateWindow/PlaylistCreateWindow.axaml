@@ -7,7 +7,8 @@
         Width="300" Height="700" CanResize="False"
         x:Class="Avalonix.View.SecondaryWindows.PlaylistCreateWindow.PlaylistCreateWindow"
         x:DataType="playlistEditOrCreate:PlaylistEditOrCreateWindowViewModel"
-        Title="Avalonix - ">
+        Title="Avalonix - "
+        Icon="/Assets/avalonix-logo.ico">
 
     <StackPanel Margin="10">
         <Border>

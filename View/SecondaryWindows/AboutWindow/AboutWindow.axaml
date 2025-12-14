@@ -6,7 +6,8 @@
         CanResize="False"
         Width="350" Height="350"
         x:Class="Avalonix.View.SecondaryWindows.AboutWindow.AboutWindow"
-        Title="Avalonix - About">
+        Title="Avalonix - About"
+        Icon="/Assets/avalonix-logo.ico">
 
     <StackPanel Classes="vertical">
         <Border Margin="10">

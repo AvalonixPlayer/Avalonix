@@ -8,7 +8,8 @@
         MinHeight="600" MinWidth="800"
         x:Class="Avalonix.View.MainWindow"
         x:DataType="main1:MainWindowViewModel"
-        Title="Avalonix">
+        Title="Avalonix"
+        Icon="/Assets/avalonix-logo.ico">
 
     <Design.DataContext>
         <main1:MainWindowViewModel />
@@ -107,7 +108,7 @@
                            Orientation="Horizontal" Margin="5,0,5,5"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top">
-                    <ListBox Name="SongBox" Width="" Height="300"/>
+                    <ListBox Name="SongBox" Width="" Height="300" />
                 </WrapPanel>
             </Grid>
         </Border>
@@ -146,29 +147,29 @@
 
         <Border Grid.Row="1" Grid.Column="1" Height="70">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Click="ShuffleButton_OnClick" Name="Shuffle"
+                        Width="50" Height="50" Margin="5,0">
+                    <Image Source="../Assets/buttons/EnableSnuffle.png" Width="35" Height="35" />
+                </Button>
+
                 <Button Name="BackButton" Click="PlayTrackBefore_OnClick"
-                        Width="60" Height="60">
-                    <Image Source="../Assets/buttons/back.png" Width="24" Height="24" />
+                        Width="50" Height="50" Margin="5,0">
+                    <Image Source="../Assets/buttons/back.png" Width="35" Height="35" />
                 </Button>
 
                 <Button Name="PauseButton" Click="PauseButton_OnClick"
-                        Width="60" Height="60">
-                    <Image Source="../Assets/buttons/pause.png" Width="24" Height="24" />
+                        Width="50" Height="50" Margin="5,0">
+                    <Image Source="../Assets/buttons/pause.png" Width="35" Height="35" />
                 </Button>
 
                 <Button Name="NextButton" Click="PlayNextTrack"
-                        Width="60" Height="60">
-                    <Image Source="../Assets/buttons/next.png" Width="24" Height="24" />
-                </Button>
-
-                <Button Click="ShuffleButton_OnClick" Name="Shuffle"
-                        Width="60" Height="60">
-                    <Image Source="../Assets/buttons/EnableSnuffle.png" Width="24" Height="24" />
+                        Width="50" Height="50" Margin="5,0">
+                    <Image Source="../Assets/buttons/next.png" Width="35" Height="35" />
                 </Button>
 
                 <Button Click="LoopButton_OnClick" Name="Loop"
-                        Width="60" Height="60">
-                    <Image Source="../Assets/buttons/EnableLoop.png" Width="24" Height="24" />
+                        Width="50" Height="50" Margin="5,0">
+                    <Image Source="../Assets/buttons/EnableLoop.png" Width="35" Height="35" />
                 </Button>
             </StackPanel>
         </Border>
