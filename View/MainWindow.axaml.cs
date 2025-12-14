@@ -136,6 +136,29 @@ public partial class MainWindow : Window
         }
     }
 
+    private void DisableTabs()
+    {
+        PlaylistsContent.IsVisible = false;
+        PlayQueueContent.IsVisible = false;
+        MetadataTabContent.IsVisible = false;
+        SettingsTabContent.IsVisible = false;
+        GlobalTabs.IsVisible = false;
+
+        PlayboxesTabContent.IsVisible = false;
+        MetadataTabContent.IsVisible = false;
+        SettingsTabContent.IsVisible = false;
+    }
+
+    private void SetRightPartVisible(int index)
+    {
+        MainWindowPlayerButtons.IsVisible = index > 0;
+        VolumeSlider.IsVisible = index > 1;
+        TrackName.IsVisible = index > 2;
+        ArtistName.IsVisible = index > 3;
+        TrackPositionSlider.IsVisible = index > 4;
+        TrackDuration.IsVisible = index > 5;
+    }
+
     private void PlayAllTracks_OnClick(object? sender, RoutedEventArgs e)
     {
         _playablesManager.StartPlayable(_playboxManager.GetPlayables().Result[0]);
@@ -501,4 +524,54 @@ public partial class MainWindow : Window
 
     private async void OpenSettingsWindowButton_OnClick(object? sender, RoutedEventArgs e) =>
         await _windowManager.SettingsWindow_Open().ShowDialog(this);
+
+    private void MainWindow_OnSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        var height = e.NewSize.Height;
+
+        switch (height)
+        {
+            case <= 400:
+                SetRightPartVisible(0);
+                break;
+            case <= 430:
+                SetRightPartVisible(1);
+                break;
+            case <= 450:
+                SetRightPartVisible(2);
+                break;
+            case <= 500:
+                SetRightPartVisible(3);
+                break;
+            case <= 550:
+                SetRightPartVisible(4);
+                break;
+            case <= 600:
+                SetRightPartVisible(5);
+                break;
+            default:
+                SetRightPartVisible(6);
+                break;
+        }
+
+        if (e.NewSize.Width <= 610)
+        {
+            var mainWindowTrackInfo = this.FindControl<Border>("MainWindowTrackInfo")!;
+            var mainWindowPlayerButtons = this.FindControl<Border>("MainWindowPlayerButtons")!;
+            mainWindowTrackInfo.SetValue(Grid.ColumnProperty, 0);
+            mainWindowPlayerButtons.SetValue(Grid.ColumnProperty, 0);
+            DisableTabs();
+        }
+        else
+        {
+            var mainWindowTrackInfo = this.FindControl<Border>("MainWindowTrackInfo")!;
+            var mainWindowPlayerButtons = this.FindControl<Border>("MainWindowPlayerButtons")!;
+            mainWindowTrackInfo.SetValue(Grid.ColumnProperty, 1);
+            mainWindowPlayerButtons.SetValue(Grid.ColumnProperty, 1);
+            GlobalTabs.IsVisible = true;
+        }
+
+        _logger.LogInformation("Window size changed : Width: {width}, Height: {height}", e.NewSize.Width,
+            e.NewSize.Height);
+    }
 }

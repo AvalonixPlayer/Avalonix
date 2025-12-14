@@ -5,11 +5,12 @@
         xmlns:main1="clr-namespace:Avalonix.ViewModel.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="800" Height="600" CanMaximize="True"
-        MinHeight="600" MinWidth="800"
+        MinHeight="350" MinWidth="325"
         x:Class="Avalonix.View.MainWindow"
         x:DataType="main1:MainWindowViewModel"
         Title="Avalonix"
-        Icon="/Assets/avalonix-logo.ico">
+        Icon="/Assets/avalonix-logo.ico"
+        SizeChanged="MainWindow_OnSizeChanged">
 
     <Design.DataContext>
         <main1:MainWindowViewModel />
@@ -18,7 +19,6 @@
     <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="False" Margin="10">
         <Border Grid.Row="0" Grid.Column="0">
             <Grid ColumnDefinitions="100,*">
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -29,7 +29,7 @@
                               HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Visible"
                               Margin="5">
-                    <WrapPanel Tag="GlobalTabs"
+                    <WrapPanel Tag="GlobalTabs" Name="GlobalTabs"
                                VerticalAlignment="Center"
                                Orientation="Horizontal">
                         <Button Tag="PlayboxesTab" Name="PlayboxesTab" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
@@ -113,7 +113,7 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MainWindowTrackInfo">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content=""
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
@@ -145,7 +145,7 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="1" Height="70">
+        <Border Grid.Row="1" Grid.Column="1" Height="70" Name="MainWindowPlayerButtons">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Click="ShuffleButton_OnClick" Name="Shuffle"
                         Width="50" Height="50" Margin="5,0">
