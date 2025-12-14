@@ -15,7 +15,7 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="False" Margin="10">
-        <Border Grid.Row="0" Grid.Column="0" >
+        <Border Grid.Row="0" Grid.Column="0">
             <Grid ColumnDefinitions="100,*">
 
                 <Grid.RowDefinitions>
@@ -27,7 +27,7 @@
                               HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Disabled"
                               Margin="5">
-                    <WrapPanel Tag="GlobalTabs" 
+                    <WrapPanel Tag="GlobalTabs"
                                VerticalAlignment="Center"
                                Orientation="Horizontal">
                         <Button Tag="Playboxes" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
@@ -41,7 +41,7 @@
                         </Button>
                     </WrapPanel>
                 </ScrollViewer>
-                
+
                 <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                            x:Name="PlContent" IsVisible="True"
                            Orientation="Horizontal" Margin="5,0,5,5"
@@ -133,9 +133,9 @@
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
                        Foreground="White" Background="Transparent" />
 
-                <Slider HorizontalAlignment="Center" ClipToBounds="True"
+                <Slider HorizontalAlignment="Center"
                         Name="TrackPositionSlider" Width="120" Height="30"
-                        Background="Transparent" Margin="0,0,0,5" />
+                        Background="Transparent" />
 
                 <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold"
                        Content="0:0" Margin="0, 0, 0, 5"
@@ -158,31 +158,31 @@
             <StackPanel Classes="center" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Name="BackButton" Click="PlayTrackBefore_OnClick"
                         Classes="IconButton"
-                        Width="48" Height="48">
+                        Width="60" Height="60">
                     <Image Source="../Assets/buttons/back.png" Width="24" Height="24" />
                 </Button>
-                    
+
                 <Button Name="PauseButton" Click="PauseButton_OnClick"
                         Classes="IconButton"
-                        Width="48" Height="48">
+                        Width="60" Height="60">
                     <Image Source="../Assets/buttons/pause.png" Width="24" Height="24" />
                 </Button>
-                    
+
                 <Button Name="NextButton" Click="PlayNextTrack"
                         Classes="IconButton"
-                        Width="48" Height="48">
+                        Width="60" Height="60">
                     <Image Source="../Assets/buttons/next.png" Width="24" Height="24" />
                 </Button>
-                    
+
                 <Button Click="ShuffleButton_OnClick" Name="Shuffle"
                         Classes="IconButton"
-                        Width="48" Height="48">
+                        Width="60" Height="60">
                     <Image Source="../Assets/buttons/EnableSnuffle.png" Width="24" Height="24" />
                 </Button>
-                    
+
                 <Button Click="LoopButton_OnClick" Name="Loop"
                         Classes="IconButton"
-                        Width="48" Height="48">
+                        Width="60" Height="60">
                     <Image Source="../Assets/buttons/EnableLoop.png" Width="24" Height="24" />
                 </Button>
             </StackPanel>
