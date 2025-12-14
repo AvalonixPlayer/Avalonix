@@ -79,7 +79,7 @@ public partial class MainWindow : Window
         _timer.Enabled = true;
         _timer.Start();
 
-        //SongBox.Tapped += SongBox_OnSelectionChanged;
+        SongBox.Tapped += SongBox_OnSelectionChanged;
 
         Dispatcher.UIThread.Post(void () =>
             VolumeSlider.Value = settingsManager.Settings!.Avalonix.Volume);
@@ -105,36 +105,35 @@ public partial class MainWindow : Window
     {
         if (sender is not Button { Tag: string tabName }) return;
 
+        PlaylistsContent.IsVisible = false;
+        PlayQueueContent.IsVisible = false;
+        MetadataTabContent.IsVisible = false;
+        SettingsTabContent.IsVisible = false;
+
         switch (tabName)
         {
-            
-        }
-        
-        /*
-        PlContent.IsVisible = false;
-        AlContent.IsVisible = false;
-        TrContent.IsVisible = false;
-        PQContent.IsVisible = false;
-        IContent.IsVisible = false;
-        switch (tabName)
-        {
-            case "Pl":
-                PlContent.IsVisible = true;
+            case "PlayboxesTab":
+                PlayboxesTabContent.IsVisible = true;
+                MetadataTabContent.IsVisible = false;
+                SettingsTabContent.IsVisible = false;
                 break;
-            case "Al":
-                AlContent.IsVisible = true;
+            case "MetadataTab":
+                PlayboxesTabContent.IsVisible = false;
+                MetadataTabContent.IsVisible = true;
+                SettingsTabContent.IsVisible = false;
                 break;
-            case "Tr":
-                TrContent.IsVisible = true;
+            case "SettingsTab":
+                PlayboxesTabContent.IsVisible = false;
+                MetadataTabContent.IsVisible = false;
+                SettingsTabContent.IsVisible = true;
                 break;
-            case "PQ":
-                PQContent.IsVisible = true;
+            case "PlaylistsTab":
+                PlaylistsContent.IsVisible = true;
                 break;
-            case "I":
-                IContent.IsVisible = true;
+            case "PlayQueueTab":
+                PlayQueueContent.IsVisible = true;
                 break;
         }
-        */
     }
 
     private void PlayAllTracks_OnClick(object? sender, RoutedEventArgs e)
@@ -356,10 +355,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        /*SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
+        SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
             .Where(track => !string.IsNullOrEmpty(track.Metadata.TrackName)).ToList()
             .Select(track => PostProcessedText(track.Metadata.TrackName, 20));
-            */
     }
 
     private void UpdateTrackPositionSlider()

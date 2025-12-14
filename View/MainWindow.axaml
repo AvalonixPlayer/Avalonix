@@ -21,29 +21,79 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                               HorizontalScrollBarVisibility="Auto"
-                              VerticalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Visible"
                               Margin="5">
                     <WrapPanel Tag="GlobalTabs"
                                VerticalAlignment="Center"
                                Orientation="Horizontal">
-                        <Button Tag="Playboxes" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                        <Button Tag="PlayboxesTab" Name="PlayboxesTab" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
                             <TextBlock Text="Playboxes" />
                         </Button>
-                        <Button Tag="Metadata" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                        <Button Tag="MetadataTab" Name="MetadataTab" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
                             <TextBlock Text="Metadata" />
                         </Button>
-                        <Button Tag="Settings" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                        <Button Tag="SettingsTab" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
                             <TextBlock Text="Settings" />
                         </Button>
                     </WrapPanel>
                 </ScrollViewer>
 
-                <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                           x:Name="PlContent" IsVisible="True"
+                <ScrollViewer Tag="PlayboxesTabContent" Name="PlayboxesTabContent" Grid.Row="1" Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Visible"
+                              Margin="5" IsVisible="False">
+                    <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center">
+                        <Button Tag="PlaylistsTab" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                            <TextBlock Text="Playlists" />
+                        </Button>
+
+                        <Button Tag="Albums" Click="SelectAlbum_OnClick" Classes="h2" Margin="0,0,5,0">
+                            <TextBlock Text="Albums" />
+                        </Button>
+
+                        <Button Tag="Tracks" Click="PlayAllTracks_OnClick" Classes="h2" Margin="0,0,5,0">
+                            <TextBlock Text="Tracks" />
+                        </Button>
+
+                        <Button Tag="PlayQueueTab" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                            <TextBlock Text="Play queue" />
+                        </Button>
+                    </WrapPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Tag="MetadataTabContent" Name="MetadataTabContent" Grid.Row="1" Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Visible"
+                              Margin="5" IsVisible="False">
+                    <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center">
+                        <Button Tag="ShowTrack" Click="OpenTrackButton_OnClick" Classes="h2" Margin="0,0,5,0">Show Track</Button>
+                        <Button Tag="EditTrack" Click="OpenEditTrackButton_OnClick" Classes="h2" Margin="0,0,5,0">Edit Track</Button>
+                    </WrapPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Tag="SettingsTabContent" Name="SettingsTabContent" Grid.Row="1" Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Visible"
+                              Margin="5" IsVisible="False">
+                    <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center">
+                        <Button Click="OpenSettingsWindowButton_OnClick" Classes="h2" Margin="0,0,5,0">Open Settings</Button>
+                        <Button Click="AboutButton_OnClick" Classes="h2" Margin="0,0,5,0" Content="?" />
+                    </WrapPanel>
+                </ScrollViewer>
+
+                <WrapPanel Tag="PlaylistsContent" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                           x:Name="PlaylistsContent" IsVisible="False"
                            Orientation="Horizontal" Margin="5,0,5,5"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top">
@@ -52,73 +102,14 @@
                     <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button>
                 </WrapPanel>
 
-                <!--
-                <StackPanel Grid.Column="0" Orientation="Vertical" Margin="5">
-                    <Button Tag="Pl" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Background="Transparent" BorderThickness="0">
-                        <TextBlock Text="Pl" />
-                    </Button>
-                    <Button Tag="Al" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Background="Transparent" BorderThickness="0">
-                        <TextBlock Text="Al" />
-                    </Button>
-                    <Button Tag="Tr" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Background="Transparent" BorderThickness="0">
-                        <TextBlock Text="Tr" />
-                    </Button>
-                    <Button Tag="PQ" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Background="Transparent" BorderThickness="0">
-                        <TextBlock Text="PQ" />
-                    </Button>
-                    <Button Tag="I" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Background="Transparent" BorderThickness="0">
-                        <TextBlock Text="I" />
-                    </Button>
-                </StackPanel>
-
-                <Grid Grid.Column="1" x:Name="ContentArea" Background="Transparent">
-                    <WrapPanel x:Name="PlContent" IsVisible="True" 
-                               Orientation="Horizontal" Margin="10" 
-                               VerticalAlignment="Top">
-                        <Button Click="NewPlaylistButton_OnClick" Classes="h2">New</Button>
-                        <Button Click="SelectPlaylist_OnClick" Classes="h2">Select</Button>
-                        <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button>
-                    </WrapPanel>
-
-                    <Button x:Name="AlContent" IsVisible="False" 
-                            Click="SelectAlbum_OnClick" Classes="h2"
-                            Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top">
-                        Select
-                    </Button>
-
-                    <Button x:Name="TrContent" IsVisible="False" 
-                            Click="PlayAllTracks_OnClick" Classes="h2"
-                            Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top">
-                        Play
-                    </Button>
-
-                    <ListBox x:Name="PQContent" IsVisible="False"
-                             MinHeight="300" MaxHeight="300" Name="SongBox" 
-                             Background="Transparent" Margin="5" VerticalAlignment="Top"/>
-
-                    <WrapPanel x:Name="IContent" IsVisible="False" 
-                               Orientation="Horizontal" Margin="10" 
-                               VerticalAlignment="Top">
-                        <Button Click="OpenTrackButton_OnClick" MaxWidth="120" Width="120">Show Track</Button>
-                        <Button Click="OpenEditTrackButton_OnClick" MaxWidth="120" Width="120">Edit Track</Button>
-                        <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
-                        <Button Click="AboutButton_OnClick" Content="?" />
-                    </WrapPanel>
-                    
-                </Grid>
-                
-                </StackPanel>
-                -->
+                <WrapPanel Tag="PlayQueueContent" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                           x:Name="PlayQueueContent" IsVisible="False"
+                           Orientation="Horizontal" Margin="5,0,5,5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top">
+                    <ListBox MinHeight="300" MaxHeight="300" Name="SongBox"
+                             Background="Transparent" Margin="5" VerticalAlignment="Top" />
+                </WrapPanel>
             </Grid>
         </Border>
 
