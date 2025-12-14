@@ -8,6 +8,6 @@
         <local:ViewLocator />
     </Application.DataTemplates>
     <Application.Styles>
-        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Purple" SecondaryColor="Lime" />
+        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
     </Application.Styles>
 </Application>
