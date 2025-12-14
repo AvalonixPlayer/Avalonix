@@ -10,7 +10,7 @@ public class VersionManager : IVersionManager
 {
     private const string ReleaseUrl = "https://github.com/AvalonixPlayer/Avalonix/blob/main/Release";
 
-    public Release CurrentRelease => new("2.1.0");
+    public Release CurrentRelease => new("2.1.1");
 
     public async Task<Release> GetLastRelease()
     {
