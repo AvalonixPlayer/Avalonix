@@ -79,7 +79,7 @@ public partial class MainWindow : Window
         _timer.Enabled = true;
         _timer.Start();
 
-        SongBox.Tapped += SongBox_OnSelectionChanged;
+        //SongBox.Tapped += SongBox_OnSelectionChanged;
 
         Dispatcher.UIThread.Post(void () =>
             VolumeSlider.Value = settingsManager.Settings!.Avalonix.Volume);
@@ -104,6 +104,13 @@ public partial class MainWindow : Window
     private void SelectTab(object sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: string tabName }) return;
+
+        switch (tabName)
+        {
+            
+        }
+        
+        /*
         PlContent.IsVisible = false;
         AlContent.IsVisible = false;
         TrContent.IsVisible = false;
@@ -127,6 +134,7 @@ public partial class MainWindow : Window
                 IContent.IsVisible = true;
                 break;
         }
+        */
     }
 
     private void PlayAllTracks_OnClick(object? sender, RoutedEventArgs e)
@@ -348,9 +356,10 @@ public partial class MainWindow : Window
             return;
         }
 
-        SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
+        /*SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
             .Where(track => !string.IsNullOrEmpty(track.Metadata.TrackName)).ToList()
             .Select(track => PostProcessedText(track.Metadata.TrackName, 20));
+            */
     }
 
     private void UpdateTrackPositionSlider()

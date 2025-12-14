@@ -15,8 +15,44 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,90" ColumnDefinitions="300,*" ShowGridLines="False" Margin="10">
-        <Border Grid.Row="0" Grid.Column="0">
-            <Grid ColumnDefinitions="40,*">
+        <Border Grid.Row="0" Grid.Column="0" >
+            <Grid ColumnDefinitions="100,*">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled"
+                              Margin="5">
+                    <WrapPanel Tag="GlobalTabs" 
+                               VerticalAlignment="Center"
+                               Orientation="Horizontal">
+                        <Button Tag="Playboxes" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                            <TextBlock Text="Playboxes" />
+                        </Button>
+                        <Button Tag="Metadata" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                            <TextBlock Text="Metadata" />
+                        </Button>
+                        <Button Tag="Settings" Click="SelectTab" Classes="h2" Margin="0,0,5,0">
+                            <TextBlock Text="Settings" />
+                        </Button>
+                    </WrapPanel>
+                </ScrollViewer>
+                
+                <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                           x:Name="PlContent" IsVisible="True"
+                           Orientation="Horizontal" Margin="5,0,5,5"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top">
+                    <Button Click="NewPlaylistButton_OnClick" Classes="h2" Margin="5,0,0,0">New</Button>
+                    <Button Click="SelectPlaylist_OnClick" Classes="h2" Margin="5,0,0,0">Select</Button>
+                    <Button Click="DeletePlaylistButton_OnClick" Classes="h2">Delete</Button>
+                </WrapPanel>
+
+                <!--
                 <StackPanel Grid.Column="0" Orientation="Vertical" Margin="5">
                     <Button Tag="Pl" Click="SelectTab" Padding="10,5" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
@@ -78,39 +114,43 @@
                         <Button Click="OpenSettingsWindowButton_OnClick" MaxWidth="120" Width="120">Open Settings</Button>
                         <Button Click="AboutButton_OnClick" Content="?" />
                     </WrapPanel>
+                    
                 </Grid>
+                
+                </StackPanel>
+                -->
             </Grid>
         </Border>
-        
+
         <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content=""
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Background="Transparent"/>
-                
+                       Background="Transparent" />
+
                 <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold"
                        Content="" Margin="0, 0, 0, 5"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="White" Background="Transparent"/>
-                
-                <Slider HorizontalAlignment="Center" ClipToBounds="True" 
+                       Foreground="White" Background="Transparent" />
+
+                <Slider HorizontalAlignment="Center" ClipToBounds="True"
                         Name="TrackPositionSlider" Width="120" Height="30"
-                        Background="Transparent" Margin="0,0,0,5"/>
-                
+                        Background="Transparent" Margin="0,0,0,5" />
+
                 <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold"
                        Content="0:0" Margin="0, 0, 0, 5"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="White" Background="Transparent"/>
-                
-                <Border Name="AlbumCover" Height="300" Width="300" 
+                       Foreground="White" Background="Transparent" />
+
+                <Border Name="AlbumCover" Height="300" Width="300"
                         CornerRadius="25" ClipToBounds="True"
                         Background="#cc212121">
                     <Image Source="" />
                 </Border>
-                
-                <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged" 
+
+                <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
                         Name="VolumeSlider" Width="150" Height="30"
-                        Background="Transparent"/>
+                        Background="Transparent" />
             </StackPanel>
         </Border>
 
