@@ -96,7 +96,7 @@
 
     <Style Selector="Button">
         <Setter Property="MaxHeight" Value="70" />
-        <Setter Property="Height" Value="60" />
+        <Setter Property="Height" Value="60"/>
         <Setter Property="Width" Value="60" />
         <Setter Property="BorderBrush" Value="#70707080" />
         <Setter Property="BorderThickness" Value="1" />
