@@ -5,16 +5,23 @@
         x:Class="Avalonix.View.SettingsWindow.SettingsWindow"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="500" Height="450"
-        CanResize="True"
+        CanResize="False"
         Title="Avalonix - Settings"
         Icon="/Assets/avalonix-logo.ico">
     <Grid RowDefinitions="*,90">
         <TabControl>
             <TabItem Header="Main">
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <Label>Path</Label>
-                        <TextBox Name="PathBox" HorizontalAlignment="Right" HorizontalContentAlignment="Right"></TextBox>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Label>Music paths</Label>
+                        <ScrollViewer Height="200">
+                            <WrapPanel Name="PathsPanel" Orientation="Vertical"
+                                       HorizontalAlignment="Right">
+                            </WrapPanel>
+                        </ScrollViewer>
+                        <Button Name="AddPath" Click="AddPath_OnClick" VerticalAlignment="Top" Height="50" Width="100">
+                            <TextBlock Text="Add path" />
+                        </Button>
                     </StackPanel>
                 </StackPanel>
             </TabItem>
