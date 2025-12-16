@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
@@ -28,11 +29,14 @@ public class DiskManager : IDiskManager
     private readonly IDiskWriter _diskWriter;
     private readonly ILogger _logger;
 
-    public DiskManager(ILogger logger, IDiskWriter diskWriter, IDiskLoader diskLoader)
+    private readonly ISettingsManager _settingsManager;
+
+    public DiskManager(ILogger logger, IDiskWriter diskWriter, IDiskLoader diskLoader, ISettingsManager settingsManager)
     {
         _logger = logger;
         _diskWriter = diskWriter;
         _diskLoader = diskLoader;
+        _settingsManager = settingsManager;
 
         CheckDirectory(AvalonixFolderPath);
         CheckDirectory(PlaylistsPath);
@@ -108,20 +112,25 @@ public class DiskManager : IDiskManager
         return result;
     }
 
-    public List<string> GetMusicFiles(string? path)
+    public List<string> GetMusicFiles()
     {
-        return FindFiles();
+        var paths = _settingsManager.Settings!.Avalonix.MusicFilesPaths;
+        var result = FindFiles(true);
+        result.AddRange(FindFiles(false));
+        return result;
 
-        List<string> FindFiles()
+        List<string> FindFiles(bool standart)
         {
             var files = new List<string>();
-            foreach (var ext in MusicFilesExtensions)
-            {
-                var usingPath = string.IsNullOrEmpty(path) ? MusicPath : path;
-                var foundFiles = Directory.EnumerateFiles(usingPath, $"*{ext}", SearchOption.AllDirectories);
-                files.AddRange(foundFiles);
-            }
-
+            if (standart)
+                foreach (var ext in MusicFilesExtensions)
+                    files.AddRange(Directory.EnumerateFiles(MusicPath, $"*{ext}", SearchOption.AllDirectories));
+            else
+                foreach (var foundFiles in from path in paths
+                         from ext in MusicFilesExtensions
+                         select Directory.EnumerateFiles(path, $"*{ext}", SearchOption.AllDirectories))
+                    files.AddRange(foundFiles);
+            
             return files;
         }
     }

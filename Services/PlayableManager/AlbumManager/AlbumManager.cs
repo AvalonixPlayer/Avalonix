@@ -125,9 +125,8 @@ public class AlbumManager(
     private async Task LoadTracks()
     {
         var settings = settingsManager.Settings!.Avalonix;
-        var paths = diskManager.GetMusicFiles(null!);
-        if (settings.MusicFilesPath != null)
-            paths.AddRange(diskManager.GetMusicFiles(settings.MusicFilesPath));
+        var paths = diskManager.GetMusicFiles();
+
         _tracks.Clear();
         _tracksLoaded = false;
 

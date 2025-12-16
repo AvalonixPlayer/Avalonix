@@ -19,7 +19,11 @@ public partial class SettingsWindow : Window
         _logger = logger;
         InitializeComponent();
         _logger.LogInformation("Settings Window Open");
-        PathBox.Text = _vm.GetSettingsAsync().GetAwaiter().GetResult().Avalonix.MusicFilesPath;
+
+        var settings = _vm.GetSettingsAsync().GetAwaiter().GetResult()!;
+        
+        if(settings.Avalonix.MusicFilesPaths.Count > 0)
+            PathBox.Text = settings.Avalonix.MusicFilesPaths[0];
     }
 
     protected override void OnClosed(EventArgs e)
@@ -31,7 +35,7 @@ public partial class SettingsWindow : Window
     private void ApplySettingsButton_OnClick(object? sender, RoutedEventArgs e)
     {
         var settings = _vm.GetSettingsAsync().GetAwaiter().GetResult();
-        settings!.Avalonix.MusicFilesPath = PathBox.Text;
+        settings!.Avalonix.MusicFilesPaths = [PathBox.Text];
         _vm.SaveSettingsAsync(
             settings);
     }
