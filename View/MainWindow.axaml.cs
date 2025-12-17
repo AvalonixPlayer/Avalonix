@@ -407,7 +407,7 @@ public partial class MainWindow : Window
         PauseButton.Content = pause ? _playButtonImage : _pauseButtonImage;
     }
 
-    private void UpdateAlbumCover()
+    public void UpdateAlbumCover()
     {
         if (!Dispatcher.UIThread.CheckAccess())
         {
@@ -421,7 +421,18 @@ public partial class MainWindow : Window
 
         if (coverData == null || coverData.Length == 0)
         {
-            AlbumCover.Child = null;
+            var path = _settingsManager.Settings?.Avalonix.AutoAlbumCoverPath;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) AlbumCover.Child = null;
+            else
+            {
+                using var memoryStream = new MemoryStream(File.ReadAllBytes(path));
+                AlbumCover.Child = AlbumCover.Child = new Image
+                {
+                    Source = new Bitmap(memoryStream),
+                    Stretch = Stretch.UniformToFill
+                };
+            }
+
             return;
         }
 
@@ -531,7 +542,6 @@ public partial class MainWindow : Window
     private void MainWindow_OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         var height = e.NewSize.Height;
-
         switch (height)
         {
             case <= 400:

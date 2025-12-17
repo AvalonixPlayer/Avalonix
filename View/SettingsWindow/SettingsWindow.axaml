@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Class="Avalonix.View.SettingsWindow.SettingsWindow"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Width="500" Height="450"
+        Width="600" Height="600"
         CanResize="False"
         Title="Avalonix - Settings"
         Icon="/Assets/avalonix-logo.ico">
@@ -12,11 +12,11 @@
         <TabControl>
             <TabItem Header="Main">
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <Label>Music paths</Label>
-                        <ScrollViewer Height="200">
-                            <WrapPanel Name="PathsPanel" Orientation="Vertical"
-                                       HorizontalAlignment="Right">
+                    <Label HorizontalAlignment="Center">Music paths</Label>
+                    <StackPanel Orientation="Horizontal">
+                        <ScrollViewer Height="300">
+                            <WrapPanel Name="PathsPanel" Margin="50,0" Orientation="Vertical"
+                                       HorizontalAlignment="Left">
                             </WrapPanel>
                         </ScrollViewer>
                         <Button Name="AddPath" Click="AddPath_OnClick" VerticalAlignment="Top" Height="50" Width="100">
@@ -25,7 +25,19 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Sound">
+            <TabItem Header="Play panel">
+                <ScrollViewer Height="300">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                        <Border Name="AlbumCover" Height="300" Width="300"
+                                CornerRadius="25" ClipToBounds="True" Background="DimGray">
+                            <Image Source="" />
+                        </Border>
+                        <Button Name="AddImage" Click="AddImage_OnClick" VerticalAlignment="Top" Height="50"
+                                Width="100">
+                            <TextBlock Text="Add image" />
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
         <StackPanel Grid.Row="1" Orientation="Horizontal">

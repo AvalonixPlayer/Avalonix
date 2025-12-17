@@ -115,26 +115,26 @@
 
         <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MainWindowTrackInfo">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content=""
+                <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content="" IsVisible="True"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
                        Background="Transparent" />
 
-                <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold"
+                <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold" IsVisible="True"
                        Content="" Margin="0, 0, 0, 5"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
                        Foreground="White" Background="Transparent" />
 
-                <Slider HorizontalAlignment="Center"
+                <Slider HorizontalAlignment="Center" IsVisible="True"
                         Name="TrackPositionSlider" Width="120" Height="30"
                         Background="Transparent" />
 
-                <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold"
+                <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
                        Content="0:0" Margin="0, 0, 0, 5"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
                        Foreground="White" Background="Transparent" />
 
-                <Border Name="AlbumCover" Height="300" Width="300"
-                        CornerRadius="25" ClipToBounds="True">
+                <Border Name="AlbumCover" Height="300" Width="300" IsVisible="True"
+                        CornerRadius="25" ClipToBounds="True" Background="DimGray">
                     <Image Source="" />
                 </Border>
 

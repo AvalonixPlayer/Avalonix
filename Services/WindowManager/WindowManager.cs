@@ -34,7 +34,6 @@ public class WindowManager(
     ISettingsWindowViewModel settingsWindowViewModel)
     : IWindowManager
 {
-
     public PlaylistCreateWindow PlaylistCreateWindow_Open() =>
         PlaylistCreateWindow_Open(new CreatePlaylistWindowStrategy(playlistManager));
 
@@ -45,7 +44,7 @@ public class WindowManager(
 
     public ShowTrackWindow ShowTrackWindow_Open(Track track) =>
         new(logger, track);
-    
+
     public EditMetadataWindow EditMetadataWindow_Open(Track track)
     {
         return new EditMetadataWindow(logger, new EditMetadataWindowViewModel(logger, null!), track, playablesManager);
@@ -57,7 +56,7 @@ public class WindowManager(
     public PlayableSelectWindow AlbumSelectAndPlayWindow_Open() =>
         AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
 
-    public SettingsWindow SettingsWindow_Open() => new(settingsWindowViewModel, logger);
+    public SettingsWindow SettingsWindow_Open() => new(settingsWindowViewModel, settingsManager, logger);
 
     private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlayableWindowStrategy strategy)
     {
