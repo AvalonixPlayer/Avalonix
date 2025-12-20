@@ -24,4 +24,25 @@
     <Style Selector="Button:pointerover">
         <Setter Property="RenderTransform" Value="scale(1.1)" />
     </Style>
+    
+    <Style Selector="Slider">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="MinHeight" Value="40"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,5,0,15"/>
+
+        <Setter Property="ClipToBounds" Value="False"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Track">
+        <Setter Property="Height" Value="6"/>
+        <Setter Property="MinHeight" Value="6"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Thumb">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+    </Style>
 </Styles>

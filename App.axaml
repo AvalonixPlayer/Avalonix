@@ -6,19 +6,22 @@
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
+    
     <Application.Resources>
         <!-- Window -->
         <Color x:Key="WindowBackground">#232323</Color>
-        
+
         <!-- Texts -->
         <Color x:Key="LabelsForeground">White</Color>
-        
+
         <!-- panels -->
         <Color x:Key="PanelsColor">#323232</Color>
         <CornerRadius x:Key="PanelsCornerRadius">10</CornerRadius>
         <Thickness x:Key="PanelsPadding">20</Thickness>
     </Application.Resources>
+    
     <Application.Styles>
+        <FluentTheme />
         <StyleInclude Source="../Styles/Default.axaml"></StyleInclude>
     </Application.Styles>
 </Application>
