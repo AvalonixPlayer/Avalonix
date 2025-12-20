@@ -27,7 +27,8 @@
 
                 <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                               HorizontalScrollBarVisibility="Visible"
-                              VerticalScrollBarVisibility="Disabled">
+                              VerticalScrollBarVisibility="Disabled"
+                              HorizontalAlignment="Center">
                     <WrapPanel Tag="GlobalTabs" Name="GlobalTabs"
                                VerticalAlignment="Center"
                                Orientation="Horizontal">

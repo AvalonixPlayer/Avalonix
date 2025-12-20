@@ -5,6 +5,11 @@
         <Setter Property="ClipToBounds" Value="False"></Setter>
         <Setter Property="Margin" Value="5" />
         <Setter Property="Foreground" Value="{DynamicResource LabelsForeground}"></Setter>
+        <Setter Property="MinWidth" Value="60"></Setter>
+        <Setter Property="MinHeight" Value="30"></Setter>
+        <Setter Property="CornerRadius" Value="10"></Setter>
+        <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+        <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
     </Style>
 
     <Style Selector="Button:pointerover">
