@@ -116,8 +116,7 @@
                 Name="MainWindowTrackInfo" Classes="Panel">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content="" IsVisible="True"
-                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Background="Transparent" />
+                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
 
                 <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold" IsVisible="True"
                        Content="" Margin="0, 0, 0, 5"
@@ -125,13 +124,12 @@
                        Foreground="White" Background="Transparent" />
 
                 <Slider HorizontalAlignment="Center" IsVisible="True"
-                        Name="TrackPositionSlider" Width="120" Height="30"
-                        Background="Transparent" />
+                        Name="TrackPositionSlider" Width="120" Height="30"/>
 
                 <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
                        Content="0:0"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="White" Background="Transparent" />
+                       Foreground="White"/>
 
                 <Border Name="AlbumCover" Height="300" Width="300" IsVisible="True"
                         CornerRadius="25" Background="DimGray">
