@@ -10,7 +10,7 @@
         Icon="/Assets/avalonix-logo.ico">
 
     <StackPanel Classes="vertical">
-        <Border Margin="10">
+        <Border>
             <StackPanel Classes="vertical">
                 <Label FontSize="40" FontWeight="ExtraBold">Avalonix</Label>
                 <Border Background="Black">
@@ -18,12 +18,12 @@
                 </Border>
             </StackPanel>
         </Border>
-        <Border Padding="5" Margin="10" VerticalAlignment="Bottom">
+        <Border Padding="5" VerticalAlignment="Bottom">
             <StackPanel Classes="horizontal">
                 <Label Name="VersionLabel">Default</Label>
             </StackPanel>
         </Border>
-        <Border Padding="5" Margin="10" VerticalAlignment="Bottom">
+        <Border Padding="5" VerticalAlignment="Bottom">
             <StackPanel>
                 <Label Name="LastVersionLabel">Default</Label>
                 <HyperlinkButton Click="OpenUrlButton_OnClick">Avalonix source code</HyperlinkButton>

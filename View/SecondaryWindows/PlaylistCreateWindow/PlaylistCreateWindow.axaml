@@ -10,14 +10,14 @@
         Title="Avalonix - "
         Icon="/Assets/avalonix-logo.ico">
 
-    <StackPanel Margin="10">
+    <StackPanel>
         <Border>
             <StackPanel>
                 <Label Padding="10" Name="NameLabel">Playlist Name</Label>
                 <TextBox Name="PlaylistName" Height="50" Watermark="Playlist Name" />
             </StackPanel>
         </Border>
-        <Border Padding="5" Margin="5">
+        <Border Padding="5">
             <StackPanel>
                 <Label Padding="10">Songs</Label>
                 <ListBox Height="300" Name="NewSongBox" />

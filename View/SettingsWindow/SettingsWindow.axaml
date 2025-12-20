@@ -29,7 +29,7 @@
                 <ScrollViewer Height="300">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <Border Name="AlbumCover" Height="300" Width="300"
-                                CornerRadius="25" ClipToBounds="True" Background="DimGray">
+                                CornerRadius="25" Background="DimGray">
                             <Image Source="" />
                         </Border>
                         <Button Name="AddImage" Click="AddImage_OnClick" VerticalAlignment="Top" Height="50"

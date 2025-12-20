@@ -6,6 +6,9 @@
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
+    <Application.Resources>
+        
+    </Application.Resources>
     <Application.Styles>
         <StyleInclude Source="../Styles/Default.axaml"></StyleInclude>
     </Application.Styles>

@@ -14,8 +14,8 @@
         <playableSelectViewModel1:PlayableSelectViewModel />
     </Design.DataContext>
 
-    <StackPanel Margin="10">
-        <Border CornerRadius="12" Padding="5" Margin="5">
+    <StackPanel>
+        <Border CornerRadius="12" Padding="5">
             <StackPanel>
                 <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Height="50"
                          Watermark="Search" />
