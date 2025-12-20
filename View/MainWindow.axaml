@@ -124,7 +124,7 @@
                        Foreground="White" Background="Transparent" />
 
                 <Slider HorizontalAlignment="Center" IsVisible="True"
-                        Name="TrackPositionSlider" Width="120" Height="30"/>
+                        Name="TrackPositionSlider"/>
 
                 <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
                        Content="0:0"
@@ -137,8 +137,7 @@
                 </Border>
 
                 <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
-                        Name="VolumeSlider" Width="150" Height="30"
-                        Background="Transparent" />
+                        Name="VolumeSlider"/>
             </StackPanel>
         </Border>
 

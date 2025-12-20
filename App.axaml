@@ -14,14 +14,20 @@
         <!-- Texts -->
         <Color x:Key="LabelsForeground">White</Color>
 
-        <!-- panels -->
+        <!-- Panels -->
         <Color x:Key="PanelsColor">#323232</Color>
         <CornerRadius x:Key="PanelsCornerRadius">10</CornerRadius>
         <Thickness x:Key="PanelsPadding">20</Thickness>
+        
+        <!-- Buttons -->
+        <Color x:Key="ButtonsColor">#8300D5</Color>
+        <Color x:Key="ButtonsColorPointerover">#6A00BA</Color>
+        <Color x:Key="ButtonsColorClick">#C313FF</Color>
+        
+        <!-- Sliders -->
     </Application.Resources>
     
     <Application.Styles>
-        <FluentTheme />
         <StyleInclude Source="../Styles/Default.axaml"></StyleInclude>
     </Application.Styles>
 </Application>

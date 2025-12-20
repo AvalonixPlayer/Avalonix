@@ -1,0 +1,8 @@
+<Style xmlns="https://github.com/avaloniaui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Border.Panel">
+        <Setter Property="Background" Value="{DynamicResource PanelsColor}"></Setter>
+        <Setter Property="CornerRadius" Value="{DynamicResource PanelsCornerRadius}"></Setter>
+        <Setter Property="Padding" Value="{DynamicResource PanelsPadding}"></Setter>
+    </Style>
+</Style>

@@ -1,48 +1,9 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Style Selector="Window">
-        <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
-    </Style>
-
-    <Style Selector="Label">
-        <Setter Property="Foreground" Value="{DynamicResource LabelsForeground}"></Setter>
-    </Style>
-
-    <Style Selector="Border.Panel">
-        <Setter Property="Background" Value="{DynamicResource PanelsColor}"></Setter>
-        <Setter Property="CornerRadius" Value="{DynamicResource PanelsCornerRadius}"></Setter>
-        <Setter Property="Padding" Value="{DynamicResource PanelsPadding}"></Setter>
-    </Style>
-
-    <Style Selector="Button">
-        <Setter Property="ClipToBounds" Value="False"></Setter>
-        <Setter Property="Margin" Value="5" />
-        <Setter Property="Foreground" Value="{DynamicResource LabelsForeground}"></Setter>
-    </Style>
-
-    <Style Selector="Button:pointerover">
-        <Setter Property="RenderTransform" Value="scale(1.1)" />
-    </Style>
-    
-    <Style Selector="Slider">
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="MinHeight" Value="40"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,5,0,15"/>
-
-        <Setter Property="ClipToBounds" Value="False"/>
-    </Style>
-
-    <Style Selector="Slider /template/ Track">
-        <Setter Property="Height" Value="6"/>
-        <Setter Property="MinHeight" Value="6"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,0,0"/>
-    </Style>
-
-    <Style Selector="Slider /template/ Thumb">
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,0,0"/>
-    </Style>
+    <StyleInclude Source="Controls/Window.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/Labels.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/Panels.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/Buttons.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/Slider.axaml"></StyleInclude>
 </Styles>

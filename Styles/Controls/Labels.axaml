@@ -1,0 +1,6 @@
+<Style xmlns="https://github.com/avaloniaui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Label">
+        <Setter Property="Foreground" Value="{DynamicResource LabelsForeground}"></Setter>
+    </Style>
+</Style>
