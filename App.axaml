@@ -2,12 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Avalonix.App"
              xmlns:local="using:Avalonix"
-             RequestedThemeVariant="Dark"
-             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles">
+             RequestedThemeVariant="Dark">
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
     <Application.Styles>
-        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
+        <StyleInclude Source="../Styles/Default.axaml"></StyleInclude>
     </Application.Styles>
 </Application>
