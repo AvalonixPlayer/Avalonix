@@ -51,8 +51,17 @@ public partial class PlayableSelectWindow : Window
         {
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
-            var selectedPlaylist = _playables.FirstOrDefault(p => p.Name == castedSender.SelectedItem?.ToString());
-            await _vm.ExecuteAction(selectedPlaylist!);
+            
+            var searchBoxText = SearchBox.Text;
+            var playablesResult = string.IsNullOrWhiteSpace(searchBoxText)
+                ? _playables
+                : _playables.Where(i => i.Name.Contains(searchBoxText, StringComparison.CurrentCultureIgnoreCase))
+                    .ToList();
+
+            var selectedPlaylist =
+                playablesResult
+                    [castedSender.SelectedIndex];
+            await _vm.ExecuteAction(selectedPlaylist);
             Close();
         }
         catch (Exception ex)
