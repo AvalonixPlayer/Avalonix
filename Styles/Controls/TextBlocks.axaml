@@ -1,6 +1,7 @@
 <Style xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style Selector="Label">
+    <Style Selector="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource TextsForeground}"></Setter>
+        <Setter Property="FontWeight" Value="DemiBold"></Setter>
     </Style>
 </Style>

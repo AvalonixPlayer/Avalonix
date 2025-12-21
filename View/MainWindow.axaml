@@ -26,7 +26,7 @@
                 </Grid.RowDefinitions>
 
                 <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                              HorizontalScrollBarVisibility="Visible"
+                              HorizontalScrollBarVisibility="Hidden"
                               VerticalScrollBarVisibility="Disabled"
                               HorizontalAlignment="Center">
                     <WrapPanel Tag="GlobalTabs" Name="GlobalTabs"
@@ -46,7 +46,7 @@
 
                 <ScrollViewer Tag="PlayboxesTabContent" Name="PlayboxesTabContent" Grid.Row="1" Grid.Column="0"
                               Grid.ColumnSpan="2"
-                              HorizontalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden"
                               VerticalScrollBarVisibility="Disabled"
                               IsVisible="False">
                     <WrapPanel Orientation="Horizontal"
@@ -71,25 +71,33 @@
 
                 <ScrollViewer Tag="MetadataTabContent" Name="MetadataTabContent" Grid.Row="1" Grid.Column="0"
                               Grid.ColumnSpan="2"
-                              HorizontalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden"
                               VerticalScrollBarVisibility="Disabled"
                               IsVisible="False">
                     <WrapPanel Orientation="Horizontal"
                                HorizontalAlignment="Center">
-                        <Button Tag="ShowTrack" Click="OpenTrackButton_OnClick">Show Track</Button>
-                        <Button Tag="EditTrack" Click="OpenEditTrackButton_OnClick">Edit Track</Button>
+                        <Button Tag="ShowTrack" Click="OpenTrackButton_OnClick">
+                            <TextBlock Text="Show Track" />
+                        </Button>
+                        <Button Tag="EditTrack" Click="OpenEditTrackButton_OnClick">
+                            <TextBlock Text="Edit Track" />
+                        </Button>
                     </WrapPanel>
                 </ScrollViewer>
 
                 <ScrollViewer Tag="SettingsTabContent" Name="SettingsTabContent" Grid.Row="1" Grid.Column="0"
                               Grid.ColumnSpan="2"
-                              HorizontalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden"
                               VerticalScrollBarVisibility="Disabled"
                               Margin="5" IsVisible="False">
                     <WrapPanel Orientation="Horizontal"
                                HorizontalAlignment="Center">
-                        <Button Click="OpenSettingsWindowButton_OnClick">Open Settings</Button>
-                        <Button Click="AboutButton_OnClick" Content="?" />
+                        <Button Click="OpenSettingsWindowButton_OnClick">
+                            <TextBlock Text="Open Settings" />
+                        </Button>
+                        <Button Click="AboutButton_OnClick">
+                            <TextBlock Text="?" />
+                        </Button>
                     </WrapPanel>
                 </ScrollViewer>
 
@@ -98,9 +106,15 @@
                            Orientation="Horizontal"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top">
-                    <Button Click="NewPlaylistButton_OnClick">New</Button>
-                    <Button Click="SelectPlaylist_OnClick">Select</Button>
-                    <Button Click="DeletePlaylistButton_OnClick">Delete</Button>
+                    <Button Click="NewPlaylistButton_OnClick">
+                        <TextBlock Text="New" />
+                    </Button>
+                    <Button Click="SelectPlaylist_OnClick">
+                        <TextBlock Text="Select" />
+                    </Button>
+                    <Button Click="DeletePlaylistButton_OnClick">
+                        <TextBlock Text="Delete" />
+                    </Button>
                 </WrapPanel>
 
                 <WrapPanel Tag="PlayQueueContent" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
@@ -116,29 +130,34 @@
         <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
                 Name="MainWindowTrackInfo" Classes="Panel">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" Content="" IsVisible="True"
-                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" IsVisible="True"
+                       HorizontalContentAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="" />
+                </Label>
 
                 <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold" IsVisible="True"
-                       Content="" Margin="0, 0, 0, 5"
+                       Margin="0, 0, 0, 5"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="White" Background="Transparent" />
+                       Foreground="White" Background="Transparent">
+                    <TextBlock Text="" />
+                </Label>
 
                 <Slider HorizontalAlignment="Center" IsVisible="True"
-                        Name="TrackPositionSlider"/>
+                        Name="TrackPositionSlider" />
 
                 <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
-                       Content="0:0"
                        HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="White"/>
+                       Foreground="White">
+                    <TextBlock Text="0:0" />
+                </Label>
 
                 <Border Name="AlbumCover" Height="300" Width="300" IsVisible="True"
-                        CornerRadius="25" Background="DimGray">
+                        Background="DimGray" Classes="Image">
                     <Image Source="" />
                 </Border>
 
                 <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
-                        Name="VolumeSlider"/>
+                        Name="VolumeSlider" />
             </StackPanel>
         </Border>
 

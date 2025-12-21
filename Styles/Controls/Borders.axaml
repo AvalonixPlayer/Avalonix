@@ -5,4 +5,8 @@
         <Setter Property="CornerRadius" Value="{DynamicResource PanelsCornerRadius}"></Setter>
         <Setter Property="Padding" Value="{DynamicResource PanelsPadding}"></Setter>
     </Style>
+    <Style Selector="Border.Image">
+        <Setter Property="ClipToBounds" Value="True"></Setter>
+        <Setter Property="CornerRadius" Value="{DynamicResource ImagesCorner}"></Setter>
+    </Style>
 </Style>

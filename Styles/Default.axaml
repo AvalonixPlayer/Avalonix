@@ -3,7 +3,8 @@
 
     <StyleInclude Source="Controls/Window.axaml"></StyleInclude>
     <StyleInclude Source="Controls/Labels.axaml"></StyleInclude>
-    <StyleInclude Source="Controls/Panels.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/Borders.axaml"></StyleInclude>
     <StyleInclude Source="Controls/Buttons.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/TextBlocks.axaml"></StyleInclude>
     <StyleInclude Source="Controls/Slider.axaml"></StyleInclude>
 </Styles>

@@ -12,12 +12,15 @@
         <Color x:Key="WindowBackground">#232323</Color>
 
         <!-- Texts -->
-        <Color x:Key="LabelsForeground">White</Color>
+        <Color x:Key="TextsForeground">White</Color>
 
         <!-- Panels -->
         <Color x:Key="PanelsColor">#323232</Color>
         <CornerRadius x:Key="PanelsCornerRadius">10</CornerRadius>
         <Thickness x:Key="PanelsPadding">20</Thickness>
+        
+        <!-- Images -->
+        <CornerRadius x:Key="ImagesCorner">30</CornerRadius>
         
         <!-- Buttons -->
         <Color x:Key="ButtonsColor">#8300D5</Color>
