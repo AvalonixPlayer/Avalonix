@@ -4,6 +4,7 @@
         <Setter Property="Background" Value="{DynamicResource PanelsColor}"></Setter>
         <Setter Property="CornerRadius" Value="{DynamicResource PanelsCornerRadius}"></Setter>
         <Setter Property="Padding" Value="{DynamicResource PanelsPadding}"></Setter>
+        <Setter Property="Margin" Value="5"></Setter>
     </Style>
     <Style Selector="Border.Image">
         <Setter Property="ClipToBounds" Value="True"></Setter>

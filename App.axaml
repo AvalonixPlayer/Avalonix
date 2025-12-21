@@ -17,7 +17,7 @@
         <!-- Panels -->
         <Color x:Key="PanelsColor">#323232</Color>
         <CornerRadius x:Key="PanelsCornerRadius">10</CornerRadius>
-        <Thickness x:Key="PanelsPadding">20</Thickness>
+        <Thickness x:Key="PanelsPadding">10</Thickness>
         
         <!-- Images -->
         <CornerRadius x:Key="ImagesCorner">30</CornerRadius>
