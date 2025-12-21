@@ -13,13 +13,13 @@
     <StackPanel>
         <Border>
             <StackPanel>
-                <Label Padding="10" Name="NameLabel">Playlist Name</Label>
+                <TextBlock Padding="10" Name="NameLabel">Playlist Name</TextBlock>
                 <TextBox Name="PlaylistName" Height="50" Watermark="Playlist Name" />
             </StackPanel>
         </Border>
         <Border Padding="5">
             <StackPanel>
-                <Label Padding="10">Songs</Label>
+                <TextBlock Padding="10">Songs</TextBlock>
                 <ListBox Height="300" Name="NewSongBox" />
                 <CheckBox Name="ObserveDirectory">Observe directory</CheckBox>
                 <Button Name="ObservingDirectory" Click="ObservingDirectory_OnClick" IsEnabled="False" />

@@ -315,7 +315,7 @@ public partial class MainWindow : Window
     private void UpdateTrackTime()
     {
         if (_playablesManager.MediaPlayer.CurrentTrack == null) return;
-        TrackDuration.Content = PostProcessedText(
+        TrackDuration.Text = PostProcessedText(
             TrackMetadata.ToHumanFriendlyString(TimeSpan.FromSeconds(_playablesManager.MediaPlayer.GetPosition())),
             25) + @"/" + PostProcessedText(
             TrackMetadata.ToHumanFriendlyString(_playablesManager.CurrentTrack!.Metadata.Duration),
@@ -472,9 +472,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        TrackName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.TrackName, 25);
-        ArtistName.Content = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 25);
-        TrackDuration.Content =
+        TrackName.Text = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.TrackName, 25);
+        ArtistName.Text = PostProcessedText(_playablesManager.CurrentTrack?.Metadata.Artist, 25);
+        TrackDuration.Text =
             PostProcessedText(TrackMetadata.ToHumanFriendlyString(_playablesManager.CurrentTrack!.Metadata.Duration),
                 25);
     }

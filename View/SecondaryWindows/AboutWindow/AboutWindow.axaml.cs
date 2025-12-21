@@ -22,8 +22,8 @@ public partial class AboutWindow : Window
         var currentRelease = versionManager.CurrentRelease;
         var lastRelease = Task.Run(versionManager.GetLastRelease).Result;
         _logger.LogInformation("About window loaded");
-        VersionLabel.Content = $"Version: {currentRelease.Version}";
-        LastVersionLabel.Content = $"Last Version: {lastRelease.Version}";
+        VersionLabel.Text = $"Version: {currentRelease.Version}";
+        LastVersionLabel.Text = $"Last Version: {lastRelease.Version}";
     }
 
     private void OpenUrlButton_OnClick(object? sender, RoutedEventArgs e)

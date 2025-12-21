@@ -125,26 +125,23 @@
         <Border Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
                 Name="MainWindowTrackInfo" Classes="Panel">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Label Name="TrackName" FontSize="23" FontWeight="ExtraBold" IsVisible="True"
-                       HorizontalContentAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="" />
-                </Label>
+                <TextBlock Name="TrackName" FontSize="23" FontWeight="ExtraBold" IsVisible="True"
+                           TextAlignment="Center" HorizontalAlignment="Center">
+                </TextBlock>
 
-                <Label Name="ArtistName" FontSize="16" FontWeight="ExtraBold" IsVisible="True"
+                <TextBlock Name="ArtistName" FontSize="16" FontWeight="ExtraBold" IsVisible="True"
                        Margin="0, 0, 0, 5"
-                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                       TextAlignment="Center" HorizontalAlignment="Center"
                        Foreground="White" Background="Transparent">
-                    <TextBlock Text="" />
-                </Label>
+                </TextBlock>
 
                 <Slider HorizontalAlignment="Center" IsVisible="True"
                         Name="TrackPositionSlider" />
 
-                <Label Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
-                       HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="White">
-                    <TextBlock Text="0:0" />
-                </Label>
+                <TextBlock Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
+                           TextAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="White">
+                </TextBlock>
 
                 <Border Name="AlbumCover" Height="300" Width="300" IsVisible="True"
                         Background="DimGray" Classes="Image">
@@ -165,22 +162,22 @@
                 </Button>
 
                 <Button Name="BackButton" Click="PlayTrackBefore_OnClick"
-                        Width="50" Height="50" Margin="5,0">
+                        Width="50" Height="50">
                     <Image Source="../Assets/buttons/back.png" Width="35" Height="35" />
                 </Button>
 
                 <Button Name="PauseButton" Click="PauseButton_OnClick"
-                        Width="50" Height="50" Margin="5,0">
+                        Width="50" Height="50">
                     <Image Source="../Assets/buttons/pause.png" Width="35" Height="35" />
                 </Button>
 
                 <Button Name="NextButton" Click="PlayNextTrack"
-                        Width="50" Height="50" Margin="5,0">
+                        Width="50" Height="50">
                     <Image Source="../Assets/buttons/next.png" Width="35" Height="35" />
                 </Button>
 
                 <Button Click="LoopButton_OnClick" Name="Loop"
-                        Width="50" Height="50" Margin="5,0">
+                        Width="50" Height="50">
                     <Image Source="../Assets/buttons/EnableLoop.png" Width="35" Height="35" />
                 </Button>
             </StackPanel>

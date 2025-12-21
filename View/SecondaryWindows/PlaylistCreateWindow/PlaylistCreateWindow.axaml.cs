@@ -22,7 +22,7 @@ public partial class PlaylistCreateWindow : Window
         InitializeComponent();
         _logger.LogInformation("PlayableCreateWindow opened");
         MainActionButton.Content = _vm.Strategy.ActionButtonText;
-        NameLabel.Content = _vm.Strategy.WindowTitle;
+        NameLabel.Text = _vm.Strategy.WindowTitle;
         Title += _vm.Strategy.WindowTitle;
         ObserveDirectory.IsCheckedChanged += ObserveDirectoryCheckedChanged;
     }

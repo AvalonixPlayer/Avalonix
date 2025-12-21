@@ -19,17 +19,17 @@ public partial class ShowTrackWindow : Window
 
     private void InitializeAdditionalFields(Track track)
     {
-        Album.Content += " " + track.Metadata.Album;
-        Genre.Content += " " + track.Metadata.Genre;
-        MediaFileFormat.Content += " " + track.Metadata.MediaFileFormat;
-        Year.Content += " " + track.Metadata.Year;
-        Duration.Content += " " + TrackMetadata.ToHumanFriendlyString(track.Metadata.Duration);
+        Album.Text += " " + track.Metadata.Album;
+        Genre.Text += " " + track.Metadata.Genre;
+        MediaFileFormat.Text += " " + track.Metadata.MediaFileFormat;
+        Year.Text += " " + track.Metadata.Year;
+        Duration.Text += " " + TrackMetadata.ToHumanFriendlyString(track.Metadata.Duration);
     }
 
     private void InitializeMainFields(Track track)
     {
-        Name.Content += " " + track.Metadata.TrackName;
-        Artist.Content += " " + track.Metadata.Artist;
+        Name.Text += " " + track.Metadata.TrackName;
+        Artist.Text += " " + track.Metadata.Artist;
         Lyrics.Text = track.Metadata.Lyric;
     }
 }

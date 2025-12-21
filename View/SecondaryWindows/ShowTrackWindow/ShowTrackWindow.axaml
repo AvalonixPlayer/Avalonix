@@ -12,22 +12,22 @@
     <StackPanel Classes="vertical">
         <Border>
             <StackPanel Orientation="Vertical">
-                <Label FontWeight="DemiBold" Name="Name">Title: </Label>
-                <Label FontSize="13" FontWeight="Light" Name="Artist">Artist: </Label>
+                <TextBlock FontWeight="DemiBold" Name="Name">Title: </TextBlock>
+                <TextBlock FontSize="13" FontWeight="Light" Name="Artist">Artist: </TextBlock>
             </StackPanel>
         </Border>
         <Border>
             <StackPanel Orientation="Vertical">
-                <Label FontSize="13" FontWeight="Light" Name="Album">Album: </Label>
-                <Label FontSize="13" FontWeight="Light" Name="Genre">Genre: </Label>
-                <Label FontSize="13" FontWeight="Light" Name="MediaFileFormat">Format: </Label>
-                <Label FontSize="13" FontWeight="Light" Name="Year">Year: </Label>
-                <Label FontSize="13" FontWeight="Light" Name="Duration">Duration: </Label>
+                <TextBlock FontSize="13" FontWeight="Light" Name="Album">Album: </TextBlock>
+                <TextBlock FontSize="13" FontWeight="Light" Name="Genre">Genre: </TextBlock>
+                <TextBlock FontSize="13" FontWeight="Light" Name="MediaFileFormat">Format: </TextBlock>
+                <TextBlock FontSize="13" FontWeight="Light" Name="Year">Year: </TextBlock>
+                <TextBlock FontSize="13" FontWeight="Light" Name="Duration">Duration: </TextBlock>
             </StackPanel>
         </Border>
         <Border>
             <StackPanel Orientation="Vertical">
-                <Label FontWeight="DemiBold">Lyrics</Label>
+                <TextBlock FontWeight="DemiBold">Lyrics</TextBlock>
                 <ScrollViewer Height="150" VerticalScrollBarVisibility="Auto">
                     <SelectableTextBlock FontWeight="SemiLight" FontStyle="Italic" Name="Lyrics"
                                          Text="Not found" TextWrapping="Wrap" />

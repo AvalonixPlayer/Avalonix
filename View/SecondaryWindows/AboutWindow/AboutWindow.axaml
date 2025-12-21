@@ -12,7 +12,7 @@
     <StackPanel Classes="vertical">
         <Border>
             <StackPanel Classes="vertical">
-                <Label FontSize="40" FontWeight="ExtraBold">Avalonix</Label>
+                <TextBlock FontSize="40" FontWeight="ExtraBold">Avalonix</TextBlock>
                 <Border Background="Black">
                     <Image Source="../../../../Assets/avalonix-logo.ico" Height="100" Width="100" />
                 </Border>
@@ -20,12 +20,12 @@
         </Border>
         <Border Padding="5" VerticalAlignment="Bottom">
             <StackPanel Classes="horizontal">
-                <Label Name="VersionLabel">Default</Label>
+                <TextBlock Name="VersionLabel">Default</TextBlock>
             </StackPanel>
         </Border>
         <Border Padding="5" VerticalAlignment="Bottom">
             <StackPanel>
-                <Label Name="LastVersionLabel">Default</Label>
+                <TextBlock Name="LastVersionLabel">Default</TextBlock>
                 <HyperlinkButton Click="OpenUrlButton_OnClick">Avalonix source code</HyperlinkButton>
             </StackPanel>
         </Border>

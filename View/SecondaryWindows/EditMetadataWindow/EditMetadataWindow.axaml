@@ -12,17 +12,17 @@
         <Border>
             <StackPanel Orientation="Vertical">
                 <Button Name="Apply" Click="Apply_OnClick">Apply</Button>
-                <Label>Title: </Label>
+                <TextBlock>Title: </TextBlock>
                 <TextBox FontWeight="DemiBold" Name="Name">Title: </TextBox>
-                <Label>Artist: </Label>
+                <TextBlock>Artist: </TextBlock>
                 <TextBox FontSize="13" FontWeight="DemiBold" Name="Artist">Artist: </TextBox>
-                <Label>Album: </Label>
+                <TextBlock>Album: </TextBlock>
                 <TextBox FontSize="13" FontWeight="DemiBold" Name="Album">Album: </TextBox>
-                <Label>Genre: </Label>
+                <TextBlock>Genre: </TextBlock>
                 <TextBox FontSize="13" FontWeight="DemiBold" Name="Genre">Genre: </TextBox>
-                <Label>Year: </Label>
+                <TextBlock>Year: </TextBlock>
                 <TextBox FontSize="13" FontWeight="DemiBold" Name="Year">Year: </TextBox>
-                <Label>Lyric: </Label>
+                <TextBlock>Lyric: </TextBlock>
                 <TextBox FontSize="13" Height="100" FontWeight="DemiBold" Name="Lyric" AcceptsReturn="True">Lyric: </TextBox>
                 <Button Name="ChangeAlbumCover" Click="SelectCover">Cover</Button>
             </StackPanel>
