@@ -6,5 +6,6 @@
     <StyleInclude Source="Controls/Borders.axaml"></StyleInclude>
     <StyleInclude Source="Controls/Buttons.axaml"></StyleInclude>
     <StyleInclude Source="Controls/TextBlocks.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/TextBoxes.axaml"></StyleInclude>
     <StyleInclude Source="Controls/Slider.axaml"></StyleInclude>
 </Styles>

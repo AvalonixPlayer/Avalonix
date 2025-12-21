@@ -5,7 +5,7 @@
         xmlns:main1="clr-namespace:Avalonix.ViewModel.Main"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="800" Height="600" CanMaximize="True"
-        MinHeight="350" MinWidth="325"
+        MinHeight="430" MinWidth="410"
         x:Class="Avalonix.View.MainWindow"
         x:DataType="main1:MainWindowViewModel"
         Title="Avalonix"
@@ -25,9 +25,9 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="Panel">
+                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="Panel" Tag="GlobalTabs"
+                        Name="GlobalTabs">
                     <WrapPanel
-                        Tag="GlobalTabs" Name="GlobalTabs"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
@@ -130,9 +130,9 @@
                 </TextBlock>
 
                 <TextBlock Name="ArtistName" FontSize="16" FontWeight="ExtraBold" IsVisible="True"
-                       Margin="0, 0, 0, 5"
-                       TextAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="White" Background="Transparent">
+                           Margin="0, 0, 0, 5"
+                           TextAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="White" Background="Transparent">
                 </TextBlock>
 
                 <Slider HorizontalAlignment="Center" IsVisible="True"
@@ -153,31 +153,26 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="1" Name="MainWindowPlayerButtons" HorizontalAlignment="Center"
-                VerticalAlignment="Center" Classes="Panel">
+        <Border Grid.Row="1" Grid.Column="1" Name="MainWindowPlayerButtons" HorizontalAlignment="Left"
+                VerticalAlignment="Center" Classes="Panel" Width="400">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Click="ShuffleButton_OnClick" Name="Shuffle"
-                        Width="50" Height="50" Margin="5,0">
+                <Button Click="ShuffleButton_OnClick" Name="Shuffle">
                     <Image Source="../Assets/buttons/EnableSnuffle.png" Width="35" Height="35" />
                 </Button>
 
-                <Button Name="BackButton" Click="PlayTrackBefore_OnClick"
-                        Width="50" Height="50">
+                <Button Name="BackButton" Click="PlayTrackBefore_OnClick">
                     <Image Source="../Assets/buttons/back.png" Width="35" Height="35" />
                 </Button>
 
-                <Button Name="PauseButton" Click="PauseButton_OnClick"
-                        Width="50" Height="50">
+                <Button Name="PauseButton" Click="PauseButton_OnClick">
                     <Image Source="../Assets/buttons/pause.png" Width="35" Height="35" />
                 </Button>
 
-                <Button Name="NextButton" Click="PlayNextTrack"
-                        Width="50" Height="50">
+                <Button Name="NextButton" Click="PlayNextTrack">
                     <Image Source="../Assets/buttons/next.png" Width="35" Height="35" />
                 </Button>
 
-                <Button Click="LoopButton_OnClick" Name="Loop"
-                        Width="50" Height="50">
+                <Button Click="LoopButton_OnClick" Name="Loop">
                     <Image Source="../Assets/buttons/EnableLoop.png" Width="35" Height="35" />
                 </Button>
             </StackPanel>

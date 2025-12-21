@@ -13,7 +13,7 @@
             <StackPanel Orientation="Vertical">
                 <Button Name="Apply" Click="Apply_OnClick">Apply</Button>
                 <TextBlock>Title: </TextBlock>
-                <TextBox FontWeight="DemiBold" Name="Name">Title: </TextBox>
+                <TextBox FontSize="13" FontWeight="DemiBold" Name="Name">Title: </TextBox>
                 <TextBlock>Artist: </TextBlock>
                 <TextBox FontSize="13" FontWeight="DemiBold" Name="Artist">Artist: </TextBox>
                 <TextBlock>Album: </TextBlock>

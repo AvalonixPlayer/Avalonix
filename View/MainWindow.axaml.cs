@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -151,7 +152,7 @@ public partial class MainWindow : Window
 
     private void SetRightPartVisible(int index)
     {
-        MainWindowPlayerButtons.IsVisible = index > 0;
+        //MainWindowPlayerButtons.IsVisible = index > 0;
         VolumeSlider.IsVisible = index > 1;
         TrackName.IsVisible = index > 2;
         ArtistName.IsVisible = index > 3;
@@ -544,13 +545,13 @@ public partial class MainWindow : Window
         var height = e.NewSize.Height;
         switch (height)
         {
-            case <= 400:
+            case <= 415:
                 SetRightPartVisible(0);
                 break;
-            case <= 430:
+            case <= 435:
                 SetRightPartVisible(1);
                 break;
-            case <= 450:
+            case <= 465:
                 SetRightPartVisible(2);
                 break;
             case <= 500:
@@ -567,12 +568,13 @@ public partial class MainWindow : Window
                 break;
         }
 
-        if (e.NewSize.Width <= 610)
+        if (e.NewSize.Width <= 765)
         {
             var mainWindowTrackInfo = this.FindControl<Border>("MainWindowTrackInfo")!;
             var mainWindowPlayerButtons = this.FindControl<Border>("MainWindowPlayerButtons")!;
             mainWindowTrackInfo.SetValue(Grid.ColumnProperty, 0);
             mainWindowPlayerButtons.SetValue(Grid.ColumnProperty, 0);
+            mainWindowPlayerButtons.HorizontalAlignment = HorizontalAlignment.Left;
             DisableTabs();
         }
         else
@@ -581,6 +583,7 @@ public partial class MainWindow : Window
             var mainWindowPlayerButtons = this.FindControl<Border>("MainWindowPlayerButtons")!;
             mainWindowTrackInfo.SetValue(Grid.ColumnProperty, 1);
             mainWindowPlayerButtons.SetValue(Grid.ColumnProperty, 1);
+            mainWindowPlayerButtons.HorizontalAlignment = HorizontalAlignment.Center;
             GlobalTabs.IsVisible = true;
         }
 
