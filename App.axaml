@@ -28,6 +28,8 @@
         <Color x:Key="ButtonsColorClick">#C313FF</Color>
         
         <!-- Sliders -->
+        <Color x:Key="SliderBackgroundColor">#88310096</Color>
+        <Color x:Key="SliderForegroundColor">#6A00BA</Color>
     </Application.Resources>
     
     <Application.Styles>
