@@ -39,8 +39,8 @@
                         <Thumb Name="PART_Thumb"
                                Width="20"
                                Height="20"
-                               Background="#CFCF70"
-                               BorderBrush="#1E1E2E"
+                               Background="{DynamicResource SliderThumbColor}"
+                               BorderBrush="{DynamicResource SliderThumbColor}"
                                BorderThickness="2"
                                CornerRadius="10"
                                VerticalAlignment="Center">
