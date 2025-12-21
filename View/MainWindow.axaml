@@ -16,7 +16,7 @@
         <main1:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,90" ColumnDefinitions="350,*" ShowGridLines="False">
+    <Grid RowDefinitions="*,90" ColumnDefinitions="350,*" ShowGridLines="False" Name="MainGrid">
         <Border Grid.Row="0" Grid.Column="0">
             <Grid ColumnDefinitions="100,*">
                 <Grid.RowDefinitions>
@@ -152,8 +152,8 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="1" Name="MainWindowPlayerButtons" HorizontalAlignment="Left"
-                VerticalAlignment="Center" Classes="Panel" Width="400">
+        <Border Grid.Row="1" Grid.Column="1" Name="MainWindowPlayerButtons" HorizontalAlignment="Center"
+                VerticalAlignment="Center" Classes="Panel">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Click="ShuffleButton_OnClick" Name="Shuffle">
                     <Image Source="../Assets/buttons/EnableSnuffle.png" Width="35" Height="35" />

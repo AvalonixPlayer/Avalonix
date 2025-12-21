@@ -49,6 +49,9 @@ public partial class MainWindow : Window
 
     private bool _isUserDragging;
 
+    private string _mainGridColumnsDefinitionBase;
+    private string _mainGridColumnsDefinitionMiniWidth = "0,*";
+
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
         ISettingsManager settingsManager, ICacheManager cacheManager, IPlayablesManager playablesManager,
         IWindowManager windowManager,
@@ -98,6 +101,8 @@ public partial class MainWindow : Window
                 _isUserDragging = false;
         };
         TrackPositionSlider.ValueChanged += TrackPositionChange;
+
+        _mainGridColumnsDefinitionBase = MainGrid.ColumnDefinitions.ToString();
 
         _logger.LogInformation("MainWindow initialized");
     }
@@ -568,22 +573,14 @@ public partial class MainWindow : Window
                 break;
         }
 
-        if (e.NewSize.Width <= 765)
+        if (e.NewSize.Width <= 755)
         {
-            var mainWindowTrackInfo = this.FindControl<Border>("MainWindowTrackInfo")!;
-            var mainWindowPlayerButtons = this.FindControl<Border>("MainWindowPlayerButtons")!;
-            mainWindowTrackInfo.SetValue(Grid.ColumnProperty, 0);
-            mainWindowPlayerButtons.SetValue(Grid.ColumnProperty, 0);
-            mainWindowPlayerButtons.HorizontalAlignment = HorizontalAlignment.Left;
+            MainGrid.ColumnDefinitions = ColumnDefinitions.Parse(_mainGridColumnsDefinitionMiniWidth); 
             DisableTabs();
         }
         else
         {
-            var mainWindowTrackInfo = this.FindControl<Border>("MainWindowTrackInfo")!;
-            var mainWindowPlayerButtons = this.FindControl<Border>("MainWindowPlayerButtons")!;
-            mainWindowTrackInfo.SetValue(Grid.ColumnProperty, 1);
-            mainWindowPlayerButtons.SetValue(Grid.ColumnProperty, 1);
-            mainWindowPlayerButtons.HorizontalAlignment = HorizontalAlignment.Center;
+            MainGrid.ColumnDefinitions = ColumnDefinitions.Parse(_mainGridColumnsDefinitionBase);
             GlobalTabs.IsVisible = true;
         }
 
