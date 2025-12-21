@@ -2,7 +2,7 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style Selector="Slider">
-        <Setter Property="CornerRadius" Value="25"></Setter>
+        <Setter Property="CornerRadius" Value="25" />
         <Setter Property="Background" Value="{DynamicResource SliderBackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource SliderForegroundColor}" />
         <Setter Property="MinHeight" Value="32" />

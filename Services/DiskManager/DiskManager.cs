@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Model.Media.Track;
 using Avalonix.Model.UserSettings.Theme;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskWriter;
@@ -130,7 +128,7 @@ public class DiskManager : IDiskManager
                          from ext in MusicFilesExtensions
                          select Directory.EnumerateFiles(path, $"*{ext}", SearchOption.AllDirectories))
                     files.AddRange(foundFiles);
-            
+
             return files;
         }
     }

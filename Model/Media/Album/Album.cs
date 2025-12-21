@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
-using Avalonix.Model.Media.Playlist;
 using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
 using Microsoft.Extensions.Logging;
 
@@ -61,10 +60,7 @@ public record Album : IPlayable
 
     public async Task LoadTracksMetadata()
     {
-        foreach (var track in PlayQueue.Tracks)
-        {
-            await track.FillPrimaryMetaData();
-        }
+        foreach (var track in PlayQueue.Tracks) await track.FillPrimaryMetaData();
     }
 
     public bool QueueIsEmpty()

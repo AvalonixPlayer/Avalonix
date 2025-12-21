@@ -2,19 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
-using Avalonix.Services.CacheManager;
-using Avalonix.Model.Media.Playlist;
 using Avalonix.Model.UserSettings.AvalonixSettingsFiles;
+using Avalonix.Services.CacheManager;
 using Microsoft.Extensions.Logging;
 
 namespace Avalonix.Model.Media.PlayBox;
 
 public class Playbox : IPlayable
 {
-    public string Name => "PlayBox";
-    public PlayQueue PlayQueue { get; }
-
-    private ICacheManager _cacheManager;
+    private readonly ICacheManager _cacheManager;
 
     public Playbox(List<string> tracksPaths, IMediaPlayer player, ILogger logger, PlaySettings settings,
         ICacheManager cacheManager)
@@ -24,6 +20,9 @@ public class Playbox : IPlayable
         PlayQueue.FillQueue(tracksPaths.Select(path => new Track.Track(path, _cacheManager)).ToList());
         Task.Run(LoadTracksMetadata).GetAwaiter();
     }
+
+    public string Name => "PlayBox";
+    public PlayQueue PlayQueue { get; }
 
 
     public async Task Play()
@@ -63,10 +62,7 @@ public class Playbox : IPlayable
 
     public async Task LoadTracksMetadata()
     {
-        foreach (var track in PlayQueue.Tracks)
-        {
-            await track.FillPrimaryMetaData();
-        }
+        foreach (var track in PlayQueue.Tracks) await track.FillPrimaryMetaData();
     }
 
     public bool QueueIsEmpty()

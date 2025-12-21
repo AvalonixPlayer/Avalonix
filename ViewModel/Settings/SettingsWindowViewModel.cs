@@ -51,13 +51,15 @@ public class SettingsWindowViewModel(ISettingsManager manager, ILogger logger) :
             return null;
         }
     }
-    
+
     public async Task SaveSettingsAsync(Model.UserSettings.Settings settings)
     {
         manager.Settings = settings;
         await manager.SaveSettingsAsync();
     }
 
-    public Task<Model.UserSettings.Settings?> GetSettingsAsync() =>
-        Task.FromResult(manager.Settings);
+    public Task<Model.UserSettings.Settings?> GetSettingsAsync()
+    {
+        return Task.FromResult(manager.Settings);
+    }
 }

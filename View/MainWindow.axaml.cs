@@ -7,7 +7,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -26,6 +25,7 @@ namespace Avalonix.View;
 
 public partial class MainWindow : Window
 {
+    private readonly ICacheManager _cacheManager;
     private readonly Image _disableLoopImage = GetImageFromAvares("buttons/DisableLoop.png");
 
     private readonly Image _disableShuffleImage = GetImageFromAvares("buttons/DisableSnuffle.png");
@@ -35,22 +35,21 @@ public partial class MainWindow : Window
     private readonly Image _enableShuffleImage = GetImageFromAvares("buttons/EnableSnuffle.png");
     private readonly ILogger<MainWindow> _logger;
 
+    private readonly string _mainGridColumnsDefinitionBase;
+    private readonly string _mainGridColumnsDefinitionMiniWidth = "0,*";
+
     private readonly Image _pauseButtonImage = GetImageFromAvares("buttons/pause.png");
     private readonly IPlayablesManager _playablesManager;
     private readonly IPlayboxManager _playboxManager;
 
     private readonly Image _playButtonImage = GetImageFromAvares("buttons/play.png");
+    private readonly ISettingsManager _settingsManager;
 
     private readonly Timer _timer;
     private readonly IMainWindowViewModel _vm;
     private readonly IWindowManager _windowManager;
-    private readonly ISettingsManager _settingsManager;
-    private readonly ICacheManager _cacheManager;
 
     private bool _isUserDragging;
-
-    private string _mainGridColumnsDefinitionBase;
-    private string _mainGridColumnsDefinitionMiniWidth = "0,*";
 
     public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
         ISettingsManager settingsManager, ICacheManager cacheManager, IPlayablesManager playablesManager,
@@ -428,7 +427,10 @@ public partial class MainWindow : Window
         if (coverData == null || coverData.Length == 0)
         {
             var path = _settingsManager.Settings?.Avalonix.AutoAlbumCoverPath;
-            if (string.IsNullOrEmpty(path) || !File.Exists(path)) AlbumCover.Child = null;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                AlbumCover.Child = null;
+            }
             else
             {
                 using var memoryStream = new MemoryStream(File.ReadAllBytes(path));
@@ -542,8 +544,10 @@ public partial class MainWindow : Window
         });
     }
 
-    private async void OpenSettingsWindowButton_OnClick(object? sender, RoutedEventArgs e) =>
+    private async void OpenSettingsWindowButton_OnClick(object? sender, RoutedEventArgs e)
+    {
         await _windowManager.SettingsWindow_Open().ShowDialog(this);
+    }
 
     private void MainWindow_OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
@@ -575,7 +579,7 @@ public partial class MainWindow : Window
 
         if (e.NewSize.Width <= 755)
         {
-            MainGrid.ColumnDefinitions = ColumnDefinitions.Parse(_mainGridColumnsDefinitionMiniWidth); 
+            MainGrid.ColumnDefinitions = ColumnDefinitions.Parse(_mainGridColumnsDefinitionMiniWidth);
             DisableTabs();
         }
         else

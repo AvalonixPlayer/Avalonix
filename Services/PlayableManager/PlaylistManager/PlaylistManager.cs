@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.Playlist;
-using Avalonix.Services.CacheManager;
-using Avalonix.Model.Media.Track;
 using Avalonix.Model.UserSettings;
+using Avalonix.Services.CacheManager;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
@@ -19,7 +18,8 @@ public class PlaylistManager(
     IMediaPlayer player,
     IDiskManager diskManager,
     ILogger logger,
-    ISettingsManager settingsManager, ICacheManager cacheManager)
+    ISettingsManager settingsManager,
+    ICacheManager cacheManager)
     : IPlaylistManager
 {
     private readonly Settings _settings = settingsManager.Settings!;
@@ -69,7 +69,8 @@ public class PlaylistManager(
         };
 
         var settings = settingsManager.Settings!;
-        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings, cacheManager);
+        return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings,
+            cacheManager);
     }
 
     public async Task EditPlaylist(Playlist playlist)

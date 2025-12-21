@@ -9,39 +9,39 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="github\" />
-        <AvaloniaResource Include="Assets\**" />
-        <Folder Include="Model\" />
+        <Folder Include="github\"/>
+        <AvaloniaResource Include="Assets\**"/>
+        <Folder Include="Model\"/>
     </ItemGroup>
 
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\avalonix-logo.ico" />
-        <PackageReference Include="Avalonia" Version="11.3.7" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
+        <AvaloniaResource Include="Assets\avalonix-logo.ico"/>
+        <PackageReference Include="Avalonia" Version="11.3.7"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.3.7"/>
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.2"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="Avalonia.Diagnostics" Version="11.3.7">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.7" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.7"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0-preview.7.25380.108" />
-        <PackageReference Include="NeoSimpleLogger" Version="1.4.0" />
-        <PackageReference Include="radio42.Bass.Net.core" Version="2.4.17.8" />
-        <PackageReference Include="TagLibSharp" Version="2.3.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0-preview.7.25380.108"/>
+        <PackageReference Include="NeoSimpleLogger" Version="1.4.0"/>
+        <PackageReference Include="radio42.Bass.Net.core" Version="2.4.17.8"/>
+        <PackageReference Include="TagLibSharp" Version="2.3.0"/>
     </ItemGroup>
 
 
     <ItemGroup>
-        <AdditionalFiles Include="Styles\Default.axaml" />
-        <AdditionalFiles Include="View\SecondaryWindows\PlaylistCreateWindow\PlaylistCreateWindow.axaml" />
+        <AdditionalFiles Include="Styles\Default.axaml"/>
+        <AdditionalFiles Include="View\SecondaryWindows\PlaylistCreateWindow\PlaylistCreateWindow.axaml"/>
     </ItemGroup>
 
 
@@ -54,7 +54,7 @@
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="View\SettingsWindow\SettingsWindow.axaml.cs">
-          <DependentUpon>SettingsWindow.axaml</DependentUpon>
+            <DependentUpon>SettingsWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
 

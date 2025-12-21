@@ -16,8 +16,7 @@
                     <StackPanel Orientation="Horizontal">
                         <ScrollViewer Height="300">
                             <WrapPanel Name="PathsPanel" Margin="50,0" Orientation="Vertical"
-                                       HorizontalAlignment="Left">
-                            </WrapPanel>
+                                       HorizontalAlignment="Left" />
                         </ScrollViewer>
                         <Button Name="AddPath" Click="AddPath_OnClick" VerticalAlignment="Top" Height="50" Width="100">
                             <TextBlock Text="Add path" />

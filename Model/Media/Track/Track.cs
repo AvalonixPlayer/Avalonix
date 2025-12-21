@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonix.Services.CacheManager;
-using TagLib.Riff;
 
 namespace Avalonix.Model.Media.Track;
 
@@ -26,7 +23,9 @@ public class Track(string path, ICacheManager cacheManager)
                 cacheManager.SetTracksMetadataCache(newCache);
             }
             else
+            {
                 Metadata = pair.Value;
+            }
         }
         else
         {
@@ -47,7 +46,13 @@ public class Track(string path, ICacheManager cacheManager)
         await Metadata.RewriteTags(TrackData.Path, metadata);
     }
 
-    public void IncreaseRarity(int rarity) => TrackData.Rarity += rarity;
+    public void IncreaseRarity(int rarity)
+    {
+        TrackData.Rarity += rarity;
+    }
 
-    public void UpdateLastListenDate() => TrackData.LastListen = DateTime.Now.TimeOfDay;
+    public void UpdateLastListenDate()
+    {
+        TrackData.LastListen = DateTime.Now.TimeOfDay;
+    }
 }

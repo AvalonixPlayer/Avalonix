@@ -1,23 +1,23 @@
 <Style xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style Selector="Button">
-        <Setter Property="Background" Value="{DynamicResource ButtonsColor}"></Setter>
-        <Setter Property="ClipToBounds" Value="False"></Setter>
+        <Setter Property="Background" Value="{DynamicResource ButtonsColor}" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Margin" Value="5" />
-        <Setter Property="MinWidth" Value="65"></Setter>
-        <Setter Property="MinHeight" Value="30"></Setter>
-        <Setter Property="CornerRadius" Value="10"></Setter>
-        <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
-        <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        <Setter Property="MinWidth" Value="65" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
     <Style Selector="Button:pointerover">
         <Setter Property="RenderTransform" Value="scale(1.1)" />
-        <Setter Property="Background" Value="{DynamicResource ButtonsColorPointerover}"></Setter>
+        <Setter Property="Background" Value="{DynamicResource ButtonsColorPointerover}" />
     </Style>
 
     <Style Selector="Button:pressed">
         <Setter Property="RenderTransform" Value="scale(0.95)" />
-        <Setter Property="Background" Value="{DynamicResource ButtonsColorClick}"></Setter>
+        <Setter Property="Background" Value="{DynamicResource ButtonsColorClick}" />
     </Style>
 </Style>

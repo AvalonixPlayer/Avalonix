@@ -1,11 +1,11 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StyleInclude Source="Controls/Window.axaml"></StyleInclude>
-    <StyleInclude Source="Controls/Labels.axaml"></StyleInclude>
-    <StyleInclude Source="Controls/Borders.axaml"></StyleInclude>
-    <StyleInclude Source="Controls/Buttons.axaml"></StyleInclude>
-    <StyleInclude Source="Controls/TextBlocks.axaml"></StyleInclude>
-    <StyleInclude Source="Controls/TextBoxes.axaml"></StyleInclude>
-    <StyleInclude Source="Controls/Slider.axaml"></StyleInclude>
+    <StyleInclude Source="Controls/Window.axaml" />
+    <StyleInclude Source="Controls/Labels.axaml" />
+    <StyleInclude Source="Controls/Borders.axaml" />
+    <StyleInclude Source="Controls/Buttons.axaml" />
+    <StyleInclude Source="Controls/TextBlocks.axaml" />
+    <StyleInclude Source="Controls/TextBoxes.axaml" />
+    <StyleInclude Source="Controls/Slider.axaml" />
 </Styles>

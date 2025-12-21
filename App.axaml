@@ -6,7 +6,7 @@
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
-    
+
     <Application.Resources>
         <!-- Window -->
         <Color x:Key="WindowBackground">#232323</Color>
@@ -18,22 +18,22 @@
         <Color x:Key="PanelsColor">#323232</Color>
         <CornerRadius x:Key="PanelsCornerRadius">10</CornerRadius>
         <Thickness x:Key="PanelsPadding">10</Thickness>
-        
+
         <!-- Images -->
         <CornerRadius x:Key="ImagesCorner">30</CornerRadius>
-        
+
         <!-- Buttons -->
         <Color x:Key="ButtonsColor">#8300D5</Color>
         <Color x:Key="ButtonsColorPointerover">#6A00BA</Color>
         <Color x:Key="ButtonsColorClick">#C313FF</Color>
-        
+
         <!-- Sliders -->
         <Color x:Key="SliderBackgroundColor">#88310096</Color>
         <Color x:Key="SliderForegroundColor">#6A00BA</Color>
         <Color x:Key="SliderThumbColor">#6A00BA</Color>
     </Application.Resources>
-    
+
     <Application.Styles>
-        <StyleInclude Source="../Styles/Default.axaml"></StyleInclude>
+        <StyleInclude Source="../Styles/Default.axaml" />
     </Application.Styles>
 </Application>

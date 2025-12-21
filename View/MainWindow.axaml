@@ -126,21 +126,18 @@
                 Name="MainWindowTrackInfo" Classes="Panel">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Name="TrackName" FontSize="23" FontWeight="ExtraBold" IsVisible="True"
-                           TextAlignment="Center" HorizontalAlignment="Center" Text="No track">
-                </TextBlock>
+                           TextAlignment="Center" HorizontalAlignment="Center" Text="No track" />
 
                 <TextBlock Name="ArtistName" FontSize="16" FontWeight="ExtraBold" IsVisible="True"
                            TextAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="White" Background="Transparent" Text="No artist">
-                </TextBlock>
+                           Foreground="White" Background="Transparent" Text="No artist" />
 
                 <Slider HorizontalAlignment="Center" IsVisible="True"
                         Name="TrackPositionSlider" />
 
                 <TextBlock Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
                            TextAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="White" Text="0:0">
-                </TextBlock>
+                           Foreground="White" Text="0:0" />
 
                 <Border Name="AlbumCover" Height="300" Width="300" IsVisible="True"
                         Background="DimGray" Classes="Image">

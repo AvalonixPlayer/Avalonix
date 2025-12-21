@@ -7,8 +7,8 @@ namespace Avalonix.Model.UserSettings.AvalonixSettingsFiles;
 public record AvalonixSettings
 {
     [JsonIgnore] public Action<bool>? LoopChanged;
-    [JsonIgnore] public Action<bool>? ShuffleChanged;
     [JsonInclude] public PlaySettings PlaySettings = new();
+    [JsonIgnore] public Action<bool>? ShuffleChanged;
     [JsonInclude] public uint Volume = 100;
     [JsonInclude] public List<string> MusicFilesPaths { get; set; } = [];
     [JsonInclude] public string? AutoAlbumCoverPath { get; set; }

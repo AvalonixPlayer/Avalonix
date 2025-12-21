@@ -65,16 +65,15 @@ public record TrackMetadata
         using var file = File.Create(path);
         file.Tag.Title = metadata.TrackName;
         file.Tag.Album = metadata.Album;
-        
+
         file.Tag.Artists = metadata.Artist != null ? [metadata.Artist] : null;
         file.Tag.Genres = metadata.Genre != null ? [metadata.Genre] : null;
-        
+
         file.Tag.Year = (uint)metadata.Year!;
         file.Tag.Lyrics = metadata.Lyric;
 
 
         if (metadata.Cover != null)
-        {
             file.Tag.Pictures =
             [
                 new Picture
@@ -82,7 +81,6 @@ public record TrackMetadata
                     Data = new ByteVector(metadata.Cover)
                 }
             ];
-        }
 
         file.Save();
         FillPreviouslyMetaData(path);

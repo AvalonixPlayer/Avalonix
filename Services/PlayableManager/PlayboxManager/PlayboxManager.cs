@@ -16,7 +16,8 @@ public class PlayboxManager(
     ILogger logger,
     IMediaPlayer player,
     ISettingsManager settingsManager,
-    IDiskManager diskManager, ICacheManager cacheManager) : IPlayboxManager
+    IDiskManager diskManager,
+    ICacheManager cacheManager) : IPlayboxManager
 {
     public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }

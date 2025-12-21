@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,10 +17,10 @@ namespace Avalonix.View.SettingsWindow;
 
 public partial class SettingsWindow : Window
 {
-    private readonly ISettingsWindowViewModel _vm;
-    private ISettingsManager _settingsManager;
     private readonly ILogger _logger;
     private readonly Settings _settings;
+    private readonly ISettingsManager _settingsManager;
+    private readonly ISettingsWindowViewModel _vm;
     private string? _autoCoverPath;
 
     public SettingsWindow(ISettingsWindowViewModel vm, ISettingsManager settingsManager, ILogger logger)
@@ -34,7 +33,7 @@ public partial class SettingsWindow : Window
 
         _settings = _settingsManager.Settings!;
         _autoCoverPath = _settings.Avalonix.AutoAlbumCoverPath;
-        
+
         LoadMusicPaths();
         LoadAutoCover();
     }
@@ -52,7 +51,10 @@ public partial class SettingsWindow : Window
         await _settingsManager.SaveSettingsAsync();
     }
 
-    private void ExitButton_OnClick(object? sender, RoutedEventArgs e) => Close();
+    private void ExitButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 
     private void AddPath_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -67,10 +69,7 @@ public partial class SettingsWindow : Window
 
     private void RemovePathIfEmpty(object sender, EventArgs e)
     {
-        if (sender is TextBox tb && string.IsNullOrEmpty(tb.Text))
-        {
-            PathsPanel.Children.Remove(tb);
-        }
+        if (sender is TextBox tb && string.IsNullOrEmpty(tb.Text)) PathsPanel.Children.Remove(tb);
     }
 
     private async void AddImage_OnClick(object? sender, RoutedEventArgs e)
@@ -83,7 +82,6 @@ public partial class SettingsWindow : Window
     {
         if (_settings.Avalonix.MusicFilesPaths.Count <= 0) return;
         for (var i = 0; i < _settings.Avalonix.MusicFilesPaths.Count; i++)
-        {
             if (PathsPanel.Children.Count <= i)
             {
                 var textBox = new TextBox
@@ -96,8 +94,9 @@ public partial class SettingsWindow : Window
             }
 
             else
+            {
                 ((TextBox)PathsPanel.Children[i]).Text = _settings.Avalonix.MusicFilesPaths[i];
-        }
+            }
     }
 
     private void LoadAutoCover()

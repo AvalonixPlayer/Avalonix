@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonix.Model.Media.Track;
 using Avalonix.Services.DiskLoader;
-using Avalonix.Services.DiskManager;
 using Avalonix.Services.DiskWriter;
 using Microsoft.Extensions.Logging;
 
@@ -11,11 +9,9 @@ namespace Avalonix.Services.CacheManager;
 
 public class CacheManager : ICacheManager
 {
-    private readonly IDiskWriter _diskWriter;
     private readonly IDiskLoader _diskLoader;
+    private readonly IDiskWriter _diskWriter;
     private readonly ILogger _logger;
-
-    public List<KeyValuePair<string, TrackMetadata>> TracksMetadataCache { get; private set; } = [];
 
     public CacheManager(IDiskWriter diskWriter, IDiskLoader diskLoader, ILogger logger)
     {
@@ -24,6 +20,8 @@ public class CacheManager : ICacheManager
         _logger = logger;
         LoadTracksMetadataCacheAsync().GetAwaiter();
     }
+
+    public List<KeyValuePair<string, TrackMetadata>> TracksMetadataCache { get; private set; } = [];
 
     public void SetTracksMetadataCache(List<KeyValuePair<string, TrackMetadata>> pairs)
     {

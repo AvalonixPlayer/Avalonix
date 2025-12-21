@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonix.Model.Media.MediaPlayer;
@@ -65,7 +64,7 @@ public class App : Application
         });
 
         var hostBuilder = host.Build();
-        
+
         ServiceProvider = hostBuilder.Services;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
