@@ -1,5 +1,6 @@
 <Style xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
     <Style Selector="Button">
         <Setter Property="Background" Value="{DynamicResource ButtonsColor}" />
         <Setter Property="ClipToBounds" Value="False" />
@@ -11,12 +12,12 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    <Style Selector="Button:pointerover">
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
         <Setter Property="RenderTransform" Value="scale(1.1)" />
         <Setter Property="Background" Value="{DynamicResource ButtonsColorPointerover}" />
     </Style>
 
-    <Style Selector="Button:pressed">
+    <Style Selector="Button:pressed /template/ ContentPresenter">
         <Setter Property="RenderTransform" Value="scale(0.95)" />
         <Setter Property="Background" Value="{DynamicResource ButtonsColorClick}" />
     </Style>

@@ -3,9 +3,8 @@
     <Style Selector="TextBox">
         <Setter Property="Foreground" Value="{DynamicResource TextsForeground}" />
         <Setter Property="FontWeight" Value="DemiBold" />
-        <Setter Property="MinWidth" Value="450" />
+        <Setter Property="MinWidth" Value="250" />
         <Setter Property="MinHeight" Value="60" />
-        <Setter Property="Background" Value="Green" />
-        <Setter Property="BorderBrush" Value="Green" />
+        <Setter Property="MaxWidth" Value="300"></Setter>
     </Style>
 </Style>
