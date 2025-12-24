@@ -118,7 +118,7 @@
                 <WrapPanel Tag="PlayQueueContent" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                            x:Name="PlayQueueContent" IsVisible="False"
                            Orientation="Horizontal"
-                           HorizontalAlignment="Left"
+                           HorizontalAlignment="Center"
                            VerticalAlignment="Top"
                            ItemsAlignment="Center">
                     <ListBox Name="SongBox" Width="300" Height="300" />
