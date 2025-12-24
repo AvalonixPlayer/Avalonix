@@ -145,7 +145,7 @@
                 </Border>
 
                 <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
-                        Name="VolumeSlider" />
+                        Name="VolumeSlider"/>
             </StackPanel>
         </Border>
 

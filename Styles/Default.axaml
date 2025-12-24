@@ -1,7 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles">
 
-    <SimpleTheme />
+    <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
     <StyleInclude Source="Controls/Window.axaml" />
     <StyleInclude Source="Controls/Labels.axaml" />
     <StyleInclude Source="Controls/Borders.axaml" />
