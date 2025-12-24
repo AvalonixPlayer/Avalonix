@@ -47,20 +47,20 @@
                         Tag="PlayboxesTabContent" Name="PlayboxesTabContent">
                     <WrapPanel
                         Orientation="Horizontal"
-                        HorizontalAlignment="Center">
-                        <Button Tag="PlaylistsTab" Click="SelectTab" Classes="h2">
+                        HorizontalAlignment="Center" ItemsAlignment="Center">
+                        <Button Tag="PlaylistsTab" Click="SelectTab">
                             <TextBlock Text="Playlists" />
                         </Button>
 
-                        <Button Tag="Albums" Click="SelectAlbum_OnClick" Classes="h2">
+                        <Button Tag="Albums" Click="SelectAlbum_OnClick">
                             <TextBlock Text="Albums" />
                         </Button>
 
-                        <Button Tag="Tracks" Click="PlayAllTracks_OnClick" Classes="h2">
+                        <Button Tag="Tracks" Click="PlayAllTracks_OnClick">
                             <TextBlock Text="Tracks" />
                         </Button>
 
-                        <Button Tag="PlayQueueTab" Click="SelectTab" Classes="h2">
+                        <Button Tag="PlayQueueTab" Click="SelectTab">
                             <TextBlock Text="Play queue" />
                         </Button>
                     </WrapPanel>
@@ -70,7 +70,8 @@
                         Tag="MetadataTabContent" Name="MetadataTabContent">
                     <WrapPanel
                         Orientation="Horizontal"
-                        HorizontalAlignment="Center">
+                        HorizontalAlignment="Center"
+                        ItemsAlignment="Center">
                         <Button Tag="ShowTrack" Click="OpenTrackButton_OnClick">
                             <TextBlock Text="Show Track" />
                         </Button>
@@ -84,7 +85,8 @@
                         Tag="SettingsTabContent" Name="SettingsTabContent">
                     <WrapPanel
                         Orientation="Horizontal"
-                        HorizontalAlignment="Center">
+                        HorizontalAlignment="Center"
+                        ItemsAlignment="Center">
                         <Button Click="OpenSettingsWindowButton_OnClick">
                             <TextBlock Text="Open Settings" />
                         </Button>
@@ -99,7 +101,8 @@
                     <WrapPanel
                         Orientation="Horizontal"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Top">
+                        VerticalAlignment="Top"
+                        ItemsAlignment="Center">
                         <Button Click="NewPlaylistButton_OnClick">
                             <TextBlock Text="New" />
                         </Button>
@@ -116,7 +119,8 @@
                            x:Name="PlayQueueContent" IsVisible="False"
                            Orientation="Horizontal"
                            HorizontalAlignment="Left"
-                           VerticalAlignment="Top">
+                           VerticalAlignment="Top"
+                           ItemsAlignment="Center">
                     <ListBox Name="SongBox" Width="300" Height="300" />
                 </WrapPanel>
             </Grid>
@@ -145,7 +149,7 @@
                 </Border>
 
                 <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
-                        Name="VolumeSlider"/>
+                        Name="VolumeSlider" />
             </StackPanel>
         </Border>
 
