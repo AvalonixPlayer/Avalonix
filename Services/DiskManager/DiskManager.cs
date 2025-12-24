@@ -132,4 +132,12 @@ public class DiskManager : IDiskManager
             return files;
         }
     }
+
+    public List<string> GetMusicFiles(string path)
+    {
+        var result = new List<string>();
+        foreach (var ext in MusicFilesExtensions)
+            result.AddRange(Directory.EnumerateFiles(path, ext, SearchOption.AllDirectories));
+        return result;
+    }
 }

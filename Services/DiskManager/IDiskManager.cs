@@ -14,4 +14,5 @@ public interface IDiskManager
     Task SaveTheme(Theme theme);
     Task<Theme?> GetTheme(string name);
     List<string> GetMusicFiles();
+    List<string> GetMusicFiles(string path);
 }

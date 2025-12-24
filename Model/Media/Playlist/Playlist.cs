@@ -86,7 +86,7 @@ public class Playlist : IPlayable
         if (string.IsNullOrEmpty(Data.ObservingDirectoryPath)) return;
         var newTracksList = new List<Track.Track>();
         newTracksList.AddRange(PlayQueue.Tracks);
-        newTracksList.AddRange(DiskManager.GetMusicFiles()
+        newTracksList.AddRange(DiskManager.GetMusicFiles(Data.ObservingDirectoryPath)
             .Select(path => new Track.Track(path, _cacheManager)));
         PlayQueue.FillQueue(newTracksList);
     }
