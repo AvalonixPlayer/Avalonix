@@ -18,7 +18,7 @@
                             <WrapPanel Name="PathsPanel" Margin="50,0" Orientation="Vertical"
                                        HorizontalAlignment="Left" />
                         </ScrollViewer>
-                        <Button Name="AddPath" Click="AddPath_OnClick" VerticalAlignment="Top" Height="50" Width="100">
+                        <Button Name="AddPath" Click="AddPath_OnClick" VerticalAlignment="Top">
                             <TextBlock Text="Add path" />
                         </Button>
                     </StackPanel>
@@ -28,11 +28,10 @@
                 <ScrollViewer Height="300">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <Border Name="AlbumCover" Height="300" Width="300"
-                                CornerRadius="25" Background="DimGray">
+                                CornerRadius="25" Background="DimGray" Classes="Image">
                             <Image Source="" />
                         </Border>
-                        <Button Name="AddImage" Click="AddImage_OnClick" VerticalAlignment="Top" Height="50"
-                                Width="100">
+                        <Button Name="AddImage" Click="AddImage_OnClick" VerticalAlignment="Top">
                             <TextBlock Text="Add image" />
                         </Button>
                     </StackPanel>
