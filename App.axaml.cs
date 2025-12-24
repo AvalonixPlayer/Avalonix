@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonix.Model.Media.MediaPlayer;
+using Avalonix.Model.Media.PlayBox;
 using Avalonix.Services.CacheManager;
+using Avalonix.Services.CommandLineInitializer;
 using Avalonix.Services.DiskLoader;
 using Avalonix.Services.DiskManager;
 using Avalonix.Services.DiskWriter;
@@ -43,6 +46,7 @@ public class App : Application
             services.AddTransient<ISettingsWindowViewModel, SettingsWindowViewModel>();
             services.AddTransient<MainWindow>();
             services.AddTransient<IVersionManager, VersionManager>();
+            services.AddTransient<ICommandLineInitializer, CommandLineInitializer>();
             services.AddSingleton<ISettingsManager, SettingsManager>();
             services.AddSingleton<ICacheManager, CacheManager>();
             services.AddSingleton<ILogger, Logger>();
@@ -72,7 +76,7 @@ public class App : Application
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = ServiceProvider.GetRequiredService<MainWindow>();
         }
-
+        
         base.OnFrameworkInitializationCompleted();
     }
 

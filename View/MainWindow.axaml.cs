@@ -13,6 +13,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonix.Model.Media.Track;
 using Avalonix.Services.CacheManager;
+using Avalonix.Services.CommandLineInitializer;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.SettingsManager;
@@ -51,7 +52,7 @@ public partial class MainWindow : Window
 
     private bool _isUserDragging;
 
-    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm,
+    public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel vm, ICommandLineInitializer cli,
         ISettingsManager settingsManager, ICacheManager cacheManager, IPlayablesManager playablesManager,
         IWindowManager windowManager,
         IPlayboxManager playboxManager)
@@ -104,6 +105,8 @@ public partial class MainWindow : Window
         _mainGridColumnsDefinitionBase = MainGrid.ColumnDefinitions.ToString();
 
         _logger.LogInformation("MainWindow initialized");
+        
+        cli.Initialize();
     }
 
     private void SelectTab(object sender, RoutedEventArgs e)

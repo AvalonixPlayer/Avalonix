@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
@@ -12,6 +12,7 @@
         <Folder Include="github\" />
         <AvaloniaResource Include="Assets\**" />
         <Folder Include="Model\" />
+        <Folder Include="Model\Media\Artist\" />
     </ItemGroup>
 
 
