@@ -137,7 +137,7 @@
                            Foreground="White" Background="Transparent" Text="No artist" />
 
                 <Slider HorizontalAlignment="Center" IsVisible="True"
-                        Name="TrackPositionSlider" />
+                        Name="TrackPositionSlider" Width="250" />
 
                 <TextBlock Name="TrackDuration" FontSize="14" FontWeight="ExtraBold" IsVisible="True"
                            TextAlignment="Center" HorizontalAlignment="Center"
@@ -149,7 +149,7 @@
                 </Border>
 
                 <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
-                        Name="VolumeSlider" />
+                        Name="VolumeSlider" Width="250" />
             </StackPanel>
         </Border>
 
