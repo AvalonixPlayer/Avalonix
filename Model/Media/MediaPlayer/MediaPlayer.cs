@@ -9,6 +9,7 @@ namespace Avalonix.Model.Media.MediaPlayer;
 
 public class MediaPlayer : IMediaPlayer
 {
+    private readonly Lock _lock = new();
     private readonly ILogger _logger;
     private readonly ISettingsManager _settingsManager;
     private int _stream;
@@ -27,7 +28,6 @@ public class MediaPlayer : IMediaPlayer
 
     public event Action<bool>? PlaybackStateChanged;
     public event Action? TrackChanged;
-    private readonly Lock _lock = new();
 
     public void Play(Track.Track track)
     {
@@ -57,7 +57,6 @@ public class MediaPlayer : IMediaPlayer
             PlaybackStateChanged?.Invoke(false);
             TrackChanged?.Invoke();
         }
-        
     }
 
     public void Stop()

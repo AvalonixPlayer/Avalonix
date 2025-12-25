@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonix.Model.Media.MediaPlayer;
-using Avalonix.Model.Media.PlayBox;
 using Avalonix.Services.CacheManager;
 using Avalonix.Services.CommandLineInitializer;
 using Avalonix.Services.DiskLoader;
@@ -76,7 +74,7 @@ public class App : Application
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = ServiceProvider.GetRequiredService<MainWindow>();
         }
-        
+
         base.OnFrameworkInitializationCompleted();
     }
 

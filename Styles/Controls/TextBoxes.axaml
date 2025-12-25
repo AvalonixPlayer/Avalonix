@@ -5,6 +5,6 @@
         <Setter Property="FontWeight" Value="DemiBold" />
         <Setter Property="MinWidth" Value="250" />
         <Setter Property="MinHeight" Value="60" />
-        <Setter Property="MaxWidth" Value="300"></Setter>
+        <Setter Property="MaxWidth" Value="300" />
     </Style>
 </Style>

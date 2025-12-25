@@ -105,7 +105,7 @@ public partial class MainWindow : Window
         _mainGridColumnsDefinitionBase = MainGrid.ColumnDefinitions.ToString();
 
         _logger.LogInformation("MainWindow initialized");
-        
+
         cli.Initialize();
     }
 

@@ -11,7 +11,7 @@
     <StyleInclude Source="Controls/TextBoxes.axaml" />
     <StyleInclude Source="Controls/Slider.axaml" />
     <Style Selector="ListBox">
-        <Setter Property="Background" Value="{DynamicResource PanelsColor}"></Setter>
-        <Setter Property="CornerRadius" Value="10"></Setter>
+        <Setter Property="Background" Value="{DynamicResource PanelsColor}" />
+        <Setter Property="CornerRadius" Value="10" />
     </Style>
 </Styles>

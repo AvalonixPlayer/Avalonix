@@ -51,7 +51,7 @@ public partial class PlayableSelectWindow : Window
         {
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedItem?.ToString());
-            
+
             var searchBoxText = SearchBox.Text;
             var playablesResult = string.IsNullOrWhiteSpace(searchBoxText)
                 ? _playables

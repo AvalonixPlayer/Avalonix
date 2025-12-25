@@ -1,12 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Principal;
 using System.Threading;
-using System.Threading.Tasks;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.PlayBox;
 using Avalonix.Services.CacheManager;
