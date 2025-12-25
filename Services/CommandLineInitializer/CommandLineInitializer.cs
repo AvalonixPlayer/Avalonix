@@ -23,46 +23,45 @@ public class CommandLineInitializer(
     ISettingsManager settingsManager,
     ICacheManager cacheManager) : ICommandLineInitializer
 {
-
     private readonly string _appGuid = "AvalonixCLI";
+
+    // Don`t remove
+    // ReSharper disable NotAccessedField.Local
+    private PipeServer? _pipeServer;
+    private PipeClient? _pipeClient;
+    private static Mutex? _instanceCheckMutex;
+
     public void Initialize()
     {
-
         if (IsNew())
-            logger.LogInformation($"Firstly initializing");
+        {
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1 && File.Exists(args[1]))
+                StartPlayable(args[1]);
+            _pipeServer = new PipeServer();
+            _pipeServer.InformationReceived += s => { StartPlayable(s); };
+        }
         else
         {
-            logger.LogInformation($"Secondary initializing");
-            Console.ReadLine();
+            _pipeClient = new PipeClient();
             Environment.Exit(1);
-        }
-
-
-        var args = Environment.GetCommandLineArgs();
-        foreach (var VARIABLE in args)
-        {
-            Console.WriteLine(VARIABLE);
-        }
-
-        if (args.Length > 1 && File.Exists(args[1]))
-        {
-            var paths = new List<string> { args[1] };
-            playablesManager.StartPlayable(new Playbox(paths, mediaPlayer, logger,
-                settingsManager.Settings!.Avalonix.PlaySettings, cacheManager));
         }
     }
 
-    private static Mutex? _instanceCheckMutex;
+    private void StartPlayable(string path)
+    {
+        playablesManager.StartPlayable(new Playbox([path], mediaPlayer, logger,
+            settingsManager.Settings!.Avalonix.PlaySettings, cacheManager));
+    }
+
+
     private bool IsNew()
     {
-        bool result;
-        var mutex = new Mutex(true, _appGuid, out result);
+        var mutex = new Mutex(true, _appGuid, out var result);
         if (result)
             _instanceCheckMutex = mutex;
         else
             mutex.Dispose();
         return result;
     }
-    
-    
 }
