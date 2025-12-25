@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
@@ -26,32 +27,37 @@ public class MediaPlayer : IMediaPlayer
 
     public event Action<bool>? PlaybackStateChanged;
     public event Action? TrackChanged;
+    private readonly Lock _lock = new();
 
     public void Play(Track.Track track)
     {
-        CurrentTrack = track;
-        Bass.BASS_StreamFree(_stream);
-        try
+        lock (_lock)
         {
-            _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Create stream error: {e}", e.Message);
-        }
+            CurrentTrack = track;
+            Bass.BASS_StreamFree(_stream);
+            try
+            {
+                _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Create stream error: {e}", e.Message);
+            }
 
-        if (_stream == 0)
-        {
-            _logger.LogError("Could not create stream {TrackDataPath}", track.TrackData.Path);
-            return;
+            if (_stream == 0)
+            {
+                _logger.LogError("Could not create stream {TrackDataPath}", track.TrackData.Path);
+                return;
+            }
+
+            Bass.BASS_ChannelPlay(_stream, true);
+            ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
+            _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
+
+            PlaybackStateChanged?.Invoke(false);
+            TrackChanged?.Invoke();
         }
-
-        Bass.BASS_ChannelPlay(_stream, true);
-        ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
-        _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
-
-        PlaybackStateChanged?.Invoke(false);
-        TrackChanged?.Invoke();
+        
     }
 
     public void Stop()
