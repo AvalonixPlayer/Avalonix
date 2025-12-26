@@ -9,6 +9,7 @@ public interface IMediaPlayer
     bool IsPaused { get; }
     public Track.Track? CurrentTrack { get; }
 
+    void SetParametersEQ(int fx, int center, float gain);
     void Play(Track.Track track);
     void Stop();
     void Pause();

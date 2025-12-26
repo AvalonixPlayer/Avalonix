@@ -37,6 +37,20 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
+            <TabItem Header="Sound">
+                <ScrollViewer Height="300">
+                    <Border Classes="Panel">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Height="100">
+                            <Slider Name="Equalizer1" ValueChanged="EqualizerFx1_OnValueChanged" Minimum="-15" Maximum="15" Orientation="Horizontal" Width="300"></Slider>
+                            <Slider Name="Equalizer2" ValueChanged="EqualizerFx2_OnValueChanged" Minimum="-15" Maximum="15" Orientation="Horizontal" Width="300"></Slider>
+                            <Slider Name="Equalizer3" ValueChanged="EqualizerFx3_OnValueChanged" Minimum="-15" Maximum="15" Orientation="Horizontal" Width="300"></Slider>
+                            <Button Click="EqualizersReset_OnClick" Width="100">
+                                <TextBlock Text="Reset"></TextBlock>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
         </TabControl>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Classes="h2" Click="ApplySettingsButton_OnClick">Apply</Button>

@@ -26,17 +26,15 @@ public class MediaPlayer : IMediaPlayer
     private void InitFX()
     {
         for (var i = 0; i < _fx.Length; i++)
-        {
             _fx[i] = Bass.BASS_ChannelSetFX(_stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-        }
     }
 
-    public void SetParametersEQ(int fx, int center, float gain)
+    public void SetParametersEQ(int fxIndex, int center, float gain)
     {
         _eqPar.fBandwidth = 18.0f;
         _eqPar.fCenter = center;
         _eqPar.fGain = gain;
-        Bass.BASS_FXSetParameters(fx, _eqPar);
+        Bass.BASS_FXSetParameters(_fx[fxIndex], _eqPar);
     }
 
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
@@ -72,9 +70,9 @@ public class MediaPlayer : IMediaPlayer
             
             Bass.BASS_ChannelPlay(_stream, true);
             ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
-            SetParametersEQ(_fx[0], 100, -5);
-            SetParametersEQ(_fx[1], 1000, 0);
-            SetParametersEQ(_fx[2], 8000, 15);
+            SetParametersEQ(0, 100, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[0]);
+            SetParametersEQ(1, 1000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[1]);
+            SetParametersEQ(2, 8000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[2]);
             _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
 
             PlaybackStateChanged?.Invoke(false);

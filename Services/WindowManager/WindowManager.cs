@@ -66,7 +66,7 @@ public class WindowManager(
 
     public SettingsWindow SettingsWindow_Open()
     {
-        return new SettingsWindow(settingsWindowViewModel, settingsManager, logger);
+        return new SettingsWindow(settingsWindowViewModel, settingsManager, logger, playablesManager.MediaPlayer);
     }
 
     private PlaylistCreateWindow PlaylistCreateWindow_Open(IPlayableWindowStrategy strategy)

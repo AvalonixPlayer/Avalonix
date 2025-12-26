@@ -3,11 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.UserSettings;
 using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModel.Settings;
@@ -22,12 +24,15 @@ public partial class SettingsWindow : Window
     private readonly ISettingsManager _settingsManager;
     private readonly ISettingsWindowViewModel _vm;
     private string? _autoCoverPath;
+    private IMediaPlayer _mediaPlayer;
 
-    public SettingsWindow(ISettingsWindowViewModel vm, ISettingsManager settingsManager, ILogger logger)
+    public SettingsWindow(ISettingsWindowViewModel vm, ISettingsManager settingsManager, ILogger logger,
+        IMediaPlayer mediaPlayer)
     {
         _vm = vm;
         _logger = logger;
         _settingsManager = settingsManager;
+        _mediaPlayer = mediaPlayer;
         InitializeComponent();
         _logger.LogInformation("Settings Window Open");
 
@@ -115,5 +120,39 @@ public partial class SettingsWindow : Window
                 };
             });
         });
+    }
+
+    private void EqualizerFx1_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        _settings.Avalonix.EqualizerSettings._fxs[0] = (float)e.NewValue;
+        _mediaPlayer.SetParametersEQ(0, 100, (float)e.NewValue);
+    }
+
+    private void EqualizerFx2_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        _settings.Avalonix.EqualizerSettings._fxs[1] = (float)e.NewValue;
+        _mediaPlayer.SetParametersEQ(1, 1000, (float)e.NewValue);
+    }
+
+    private void EqualizerFx3_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        _settings.Avalonix.EqualizerSettings._fxs[2] = (float)e.NewValue;
+        _mediaPlayer.SetParametersEQ(2, 8000, (float)e.NewValue);
+    }
+
+    private void EqualizersReset_OnClick(object? sender, RoutedEventArgs e)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            _settings.Avalonix.EqualizerSettings._fxs[i] = 0;
+        }
+
+        _mediaPlayer.SetParametersEQ(0, 100, 0);
+        _mediaPlayer.SetParametersEQ(1, 1000, 0);
+        _mediaPlayer.SetParametersEQ(2, 8000, 0);
+
+        Equalizer1.Value = 0;
+        Equalizer2.Value = 0;
+        Equalizer3.Value = 0;
     }
 }
