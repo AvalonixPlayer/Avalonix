@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
+using Un4seen.Bass.AddOn.Fx;
 
 namespace Avalonix.Model.Media.MediaPlayer;
 
@@ -13,12 +14,53 @@ public class MediaPlayer : IMediaPlayer
     private readonly ILogger _logger;
     private readonly ISettingsManager _settingsManager;
     private int _stream;
+    private int _fxEQ;
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
         _logger = logger;
         _settingsManager = settingsManager;
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+    }
+
+    private void SetBFX_EQ()
+    {
+        // set peaking equalizer effect with no bands
+        _fxEQ = Bass.BASS_ChannelSetFX(_stream, BASSFXType.BASS_FX_BFX_PEAKEQ, 0);
+
+        // setup the EQ bands
+        BASS_BFX_PEAKEQ eq = new BASS_BFX_PEAKEQ();
+        eq.fQ = 0f;
+        eq.fBandwidth = 2.5f;
+        eq.lChannel = BASSFXChan.BASS_BFX_CHANALL;
+
+        // create 1st band for bass
+        eq.lBand = 0;
+        eq.fCenter = 125f;
+        Bass.BASS_FXSetParameters(_fxEQ, eq);
+        UpdateFX(0, 0f);
+
+        // create 2nd band for mid
+        eq.lBand = 1;
+        eq.fCenter = 1000f;
+        Bass.BASS_FXSetParameters(_fxEQ, eq);
+        UpdateFX(1, 0f);
+
+        // create 3rd band for treble
+        eq.lBand = 2;
+        eq.fCenter = 8000f;
+        Bass.BASS_FXSetParameters(_fxEQ, eq);
+        UpdateFX(2, 0f);
+    }
+
+    private void UpdateFX(int band, float gain)
+    {
+        var eq = new BASS_BFX_PEAKEQ();
+        // get values of the selected band
+        eq.lBand = band;
+        Bass.BASS_FXGetParameters(_fxEQ, eq);
+        eq.fGain = gain;
+        Bass.BASS_FXSetParameters(_fxEQ, eq);
     }
 
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
