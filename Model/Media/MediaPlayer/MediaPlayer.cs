@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Avalonix.Services.SettingsManager;
 using Microsoft.Extensions.Logging;
 using Un4seen.Bass;
-using Un4seen.Bass.AddOn.Fx;
 
 namespace Avalonix.Model.Media.MediaPlayer;
 
@@ -14,7 +13,8 @@ public class MediaPlayer : IMediaPlayer
     private readonly ILogger _logger;
     private readonly ISettingsManager _settingsManager;
     private int _stream;
-    private int _fxEQ;
+    private BASS_DX8_PARAMEQ _eqPar = new();
+    private int[] _fx = [0, 1, 2];
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
@@ -23,44 +23,20 @@ public class MediaPlayer : IMediaPlayer
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
     }
 
-    private void SetBFX_EQ()
+    private void InitFX()
     {
-        // set peaking equalizer effect with no bands
-        _fxEQ = Bass.BASS_ChannelSetFX(_stream, BASSFXType.BASS_FX_BFX_PEAKEQ, 0);
-
-        // setup the EQ bands
-        BASS_BFX_PEAKEQ eq = new BASS_BFX_PEAKEQ();
-        eq.fQ = 0f;
-        eq.fBandwidth = 2.5f;
-        eq.lChannel = BASSFXChan.BASS_BFX_CHANALL;
-
-        // create 1st band for bass
-        eq.lBand = 0;
-        eq.fCenter = 125f;
-        Bass.BASS_FXSetParameters(_fxEQ, eq);
-        UpdateFX(0, 0f);
-
-        // create 2nd band for mid
-        eq.lBand = 1;
-        eq.fCenter = 1000f;
-        Bass.BASS_FXSetParameters(_fxEQ, eq);
-        UpdateFX(1, 0f);
-
-        // create 3rd band for treble
-        eq.lBand = 2;
-        eq.fCenter = 8000f;
-        Bass.BASS_FXSetParameters(_fxEQ, eq);
-        UpdateFX(2, 0f);
+        for (var i = 0; i < _fx.Length; i++)
+        {
+            _fx[i] = Bass.BASS_ChannelSetFX(_stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+        }
     }
 
-    private void UpdateFX(int band, float gain)
+    public void SetParametersEQ(int fx, int center, float gain)
     {
-        var eq = new BASS_BFX_PEAKEQ();
-        // get values of the selected band
-        eq.lBand = band;
-        Bass.BASS_FXGetParameters(_fxEQ, eq);
-        eq.fGain = gain;
-        Bass.BASS_FXSetParameters(_fxEQ, eq);
+        _eqPar.fBandwidth = 18.0f;
+        _eqPar.fCenter = center;
+        _eqPar.fGain = gain;
+        Bass.BASS_FXSetParameters(fx, _eqPar);
     }
 
     public bool IsFree => Bass.BASS_ChannelIsActive(_stream) == BASSActive.BASS_ACTIVE_STOPPED;
@@ -79,7 +55,7 @@ public class MediaPlayer : IMediaPlayer
             Bass.BASS_StreamFree(_stream);
             try
             {
-                _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_DEFAULT);
+                _stream = Bass.BASS_StreamCreateFile(track.TrackData.Path, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT);
             }
             catch (Exception e)
             {
@@ -92,8 +68,13 @@ public class MediaPlayer : IMediaPlayer
                 return;
             }
 
+            InitFX();
+            
             Bass.BASS_ChannelPlay(_stream, true);
             ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
+            SetParametersEQ(_fx[0], 100, -5);
+            SetParametersEQ(_fx[1], 1000, 0);
+            SetParametersEQ(_fx[2], 8000, 15);
             _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
 
             PlaybackStateChanged?.Invoke(false);
