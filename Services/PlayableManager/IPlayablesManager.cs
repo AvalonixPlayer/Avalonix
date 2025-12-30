@@ -20,7 +20,7 @@ public interface IPlayablesManager
     void TrackBefore();
     void ResetSnuffle();
     void ResetLoop();
-    void ForceStartTrackByIndex(int index);
+    void ForceStartTrack(Track track);
 
     event Action? PlayableChanged;
     event Action<bool> PlaybackStateChanged;

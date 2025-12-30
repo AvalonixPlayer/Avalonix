@@ -117,8 +117,9 @@ public class PlayQueue(IMediaPlayer player, ILogger logger, PlaySettings setting
         logger.LogDebug("User skipped track");
     }
 
-    public void ForceStartTrackByIndex(int index)
+    public void ForceStartTrack(Track.Track track)
     {
+        var index = Tracks.IndexOf(track);
         _ = Play(index);
     }
 

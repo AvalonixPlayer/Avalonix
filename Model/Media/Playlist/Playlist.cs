@@ -61,9 +61,9 @@ public class Playlist : IPlayable
         PlayQueue.BackTrack();
     }
 
-    public void ForceStartTrackByIndex(int index)
+    public void ForceStartTrack(Track.Track track)
     {
-        PlayQueue.ForceStartTrackByIndex(index);
+        PlayQueue.ForceStartTrack(track);
     }
 
     public async Task LoadTracksMetadata()

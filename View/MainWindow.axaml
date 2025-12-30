@@ -121,6 +121,7 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top"
                            ItemsAlignment="Center">
+                    <TextBox Name="SongBoxFindText" TextChanged="SongBoxFindText_OnTextChanged" Watermark="Track name"/>
                     <ListBox Name="SongBox" Width="300" Height="300" />
                 </WrapPanel>
             </Grid>

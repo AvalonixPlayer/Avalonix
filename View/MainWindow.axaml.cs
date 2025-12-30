@@ -389,6 +389,7 @@ public partial class MainWindow : Window
         SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
             .Where(track => !string.IsNullOrEmpty(track.Metadata.TrackName)).ToList()
             .Select(track => PostProcessedText(track.Metadata.TrackName, 20));
+        SortSongBox();
     }
 
     private void UpdateTrackPositionSlider()
@@ -497,17 +498,45 @@ public partial class MainWindow : Window
             var castedSender = (ListBox)sender!;
             _logger.LogInformation(castedSender.SelectedIndex.ToString());
             var selectedIndex = castedSender.SelectedIndex;
-            var selectedTrack = _playablesManager.PlayingPlayable?.PlayQueue.Tracks[selectedIndex];
+
+
+            var sortedQueue = string.IsNullOrEmpty(SongBoxFindText.Text)
+                ? _playablesManager.PlayingPlayable!.PlayQueue.Tracks
+                : _playablesManager.PlayingPlayable?.PlayQueue.Tracks.Where(i =>
+                        i.Metadata.TrackName!.Contains(SongBoxFindText.Text!,
+                            StringComparison.CurrentCultureIgnoreCase))
+                    .ToList()!;
+
+            var selectedTrack = sortedQueue[selectedIndex];
             if (selectedTrack != null)
-                _playablesManager.ForceStartTrackByIndex(selectedIndex);
+                _playablesManager.ForceStartTrack(selectedTrack);
             else
                 _logger.LogError("No track selected");
             castedSender.Selection = null!;
+            SortSongBox();
         }
         catch (Exception ex)
         {
             _logger.LogError("Error while force starting song: {ex}", ex.Message);
         }
+    }
+
+    private void SongBoxFindText_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        SortSongBox();
+    }
+
+    private void SortSongBox()
+    {
+        if (string.IsNullOrEmpty(SongBoxFindText.Text))
+        {
+            SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks.Select(x => x.Metadata.TrackName).ToList();
+            return;
+        }
+        SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
+            .Where(track => !string.IsNullOrEmpty(track.Metadata.TrackName)).ToList().Where(i =>
+                i.Metadata.TrackName!.Contains(SongBoxFindText.Text!, StringComparison.CurrentCultureIgnoreCase))
+            .Select(track => PostProcessedText(track.Metadata.TrackName, 20));
     }
 
     private string PostProcessedText(string? enterText, int maxSymbols)

@@ -93,9 +93,9 @@ public class PlayablesManager(
         _settings.Avalonix.PlaySettings.Loop = !_settings.Avalonix.PlaySettings.Loop;
     }
 
-    public void ForceStartTrackByIndex(int index)
+    public void ForceStartTrack(Track track)
     {
-        PlayingPlayable?.ForceStartTrackByIndex(index);
+        PlayingPlayable?.ForceStartTrack(track);
     }
 
     public event Action<bool> PlaybackStateChanged
