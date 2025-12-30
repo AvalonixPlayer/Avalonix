@@ -51,8 +51,8 @@ public partial class SettingsWindow : Window
 
     private async void ApplySettingsButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _settings!.Avalonix.MusicFilesPaths = PathsPanel.Children.Select(t => ((TextBox)t).Text!).ToList();
-        _settings!.Avalonix.AutoAlbumCoverPath = _autoCoverPath;
+        _settings.Avalonix.MusicFilesPaths = PathsBox.Items.ToList().Select(x => x?.ToString()).ToList();
+        _settings.Avalonix.AutoAlbumCoverPath = _autoCoverPath;
         await _settingsManager.SaveSettingsAsync();
     }
 
@@ -61,21 +61,6 @@ public partial class SettingsWindow : Window
         Close();
     }
 
-    private void AddPath_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var textBox = new TextBox
-        {
-            Text = "Empty", HorizontalAlignment = HorizontalAlignment.Left,
-            HorizontalContentAlignment = HorizontalAlignment.Left
-        };
-        textBox.TextChanged += RemovePathIfEmpty!;
-        PathsPanel.Children.Add(textBox);
-    }
-
-    private void RemovePathIfEmpty(object sender, EventArgs e)
-    {
-        if (sender is TextBox tb && string.IsNullOrEmpty(tb.Text)) PathsPanel.Children.Remove(tb);
-    }
 
     private async void AddImage_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -86,22 +71,19 @@ public partial class SettingsWindow : Window
     private void LoadMusicPaths()
     {
         if (_settings.Avalonix.MusicFilesPaths.Count <= 0) return;
-        for (var i = 0; i < _settings.Avalonix.MusicFilesPaths.Count; i++)
-            if (PathsPanel.Children.Count <= i)
-            {
-                var textBox = new TextBox
-                {
-                    Text = _settings.Avalonix.MusicFilesPaths[i], HorizontalAlignment = HorizontalAlignment.Left,
-                    HorizontalContentAlignment = HorizontalAlignment.Left
-                };
-                textBox.TextChanged += RemovePathIfEmpty!;
-                PathsPanel.Children.Add(textBox);
-            }
-
-            else
-            {
-                ((TextBox)PathsPanel.Children[i]).Text = _settings.Avalonix.MusicFilesPaths[i];
-            }
+        foreach (var musicFilePath in _settings.Avalonix.MusicFilesPaths)
+            PathsBox.Items.Add(musicFilePath);
+    }
+    
+    private void AddPath_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if(Directory.Exists(PathToAdd.Text) && !PathsBox.Items.Contains(PathToAdd.Text))
+            PathsBox.Items.Add(PathToAdd.Text);
+    }
+    
+    private void RemoveSelectedPath_OnClick(object? sender, RoutedEventArgs e)
+    {
+        PathsBox.Items.Remove(PathsBox.SelectedItem);
     }
 
     private void LoadAutoCover()

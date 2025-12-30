@@ -11,6 +11,6 @@ public record AvalonixSettings
     [JsonInclude] public EqualizerSettings EqualizerSettings = new();
     [JsonIgnore] public Action<bool>? ShuffleChanged;
     [JsonInclude] public uint Volume = 100;
-    [JsonInclude] public List<string> MusicFilesPaths { get; set; } = [];
+    [JsonInclude] public List<string?> MusicFilesPaths { get; set; } = [];
     [JsonInclude] public string? AutoAlbumCoverPath { get; set; }
 }
