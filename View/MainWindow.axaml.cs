@@ -16,6 +16,7 @@ using Avalonix.Services.CacheManager;
 using Avalonix.Services.CommandLineInitializer;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
+using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModel.Main;

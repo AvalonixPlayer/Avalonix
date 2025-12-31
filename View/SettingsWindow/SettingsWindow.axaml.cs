@@ -41,6 +41,7 @@ public partial class SettingsWindow : Window
 
         LoadMusicPaths();
         LoadAutoCover();
+        LoadEqualizer();
     }
 
     protected override void OnClosed(EventArgs e)
@@ -74,13 +75,13 @@ public partial class SettingsWindow : Window
         foreach (var musicFilePath in _settings.Avalonix.MusicFilesPaths)
             PathsBox.Items.Add(musicFilePath);
     }
-    
+
     private void AddPath_OnClick(object? sender, RoutedEventArgs e)
     {
-        if(Directory.Exists(PathToAdd.Text) && !PathsBox.Items.Contains(PathToAdd.Text))
+        if (Directory.Exists(PathToAdd.Text) && !PathsBox.Items.Contains(PathToAdd.Text))
             PathsBox.Items.Add(PathToAdd.Text);
     }
-    
+
     private void RemoveSelectedPath_OnClick(object? sender, RoutedEventArgs e)
     {
         PathsBox.Items.Remove(PathsBox.SelectedItem);
@@ -104,37 +105,71 @@ public partial class SettingsWindow : Window
         });
     }
 
+    private void LoadEqualizer()
+    {
+        Equalizer1.Value = _settingsManager.Settings!.Avalonix.EqualizerSettings._fxs[0];
+        Equalizer2.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[1];
+        Equalizer3.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[2];
+        Equalizer4.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[3];
+        Equalizer5.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[4];
+        Equalizer6.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[5];
+    }
+
     private void EqualizerFx1_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         _settings.Avalonix.EqualizerSettings._fxs[0] = (float)e.NewValue;
-        _mediaPlayer.SetParametersEQ(0, 100, (float)e.NewValue);
+        _mediaPlayer.SetParametersEQ(0, 64, (float)e.NewValue);
     }
 
     private void EqualizerFx2_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         _settings.Avalonix.EqualizerSettings._fxs[1] = (float)e.NewValue;
-        _mediaPlayer.SetParametersEQ(1, 1000, (float)e.NewValue);
+        _mediaPlayer.SetParametersEQ(1, 125, (float)e.NewValue);
     }
 
     private void EqualizerFx3_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
         _settings.Avalonix.EqualizerSettings._fxs[2] = (float)e.NewValue;
-        _mediaPlayer.SetParametersEQ(2, 8000, (float)e.NewValue);
+        _mediaPlayer.SetParametersEQ(2, 250, (float)e.NewValue);
+    }
+
+    private void EqualizerFx4_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        _settings.Avalonix.EqualizerSettings._fxs[3] = (float)e.NewValue;
+        _mediaPlayer.SetParametersEQ(3, 500, (float)e.NewValue);
+    }
+
+    private void EqualizerFx5_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        _settings.Avalonix.EqualizerSettings._fxs[4] = (float)e.NewValue;
+        _mediaPlayer.SetParametersEQ(4, 1000, (float)e.NewValue);
+    }
+
+    private void EqualizerFx6_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        _settings.Avalonix.EqualizerSettings._fxs[5] = (float)e.NewValue;
+        _mediaPlayer.SetParametersEQ(5, 4000, (float)e.NewValue);
     }
 
     private void EqualizersReset_OnClick(object? sender, RoutedEventArgs e)
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 5; i++)
         {
             _settings.Avalonix.EqualizerSettings._fxs[i] = 0;
         }
 
-        _mediaPlayer.SetParametersEQ(0, 100, 0);
-        _mediaPlayer.SetParametersEQ(1, 1000, 0);
-        _mediaPlayer.SetParametersEQ(2, 8000, 0);
+        _mediaPlayer.SetParametersEQ(0, 64, 0);
+        _mediaPlayer.SetParametersEQ(1, 125, 0);
+        _mediaPlayer.SetParametersEQ(2, 250, 0);
+        _mediaPlayer.SetParametersEQ(3, 500, 0);
+        _mediaPlayer.SetParametersEQ(4, 1000, 0);
+        _mediaPlayer.SetParametersEQ(5, 4000, 0);
 
         Equalizer1.Value = 0;
         Equalizer2.Value = 0;
         Equalizer3.Value = 0;
+        Equalizer4.Value = 0;
+        Equalizer5.Value = 0;
+        Equalizer6.Value = 0;
     }
 }

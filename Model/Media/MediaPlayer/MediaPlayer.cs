@@ -14,7 +14,7 @@ public class MediaPlayer : IMediaPlayer
     private readonly ISettingsManager _settingsManager;
     private int _stream;
     private BASS_DX8_PARAMEQ _eqPar = new();
-    private int[] _fx = [0, 1, 2];
+    private int[] _fx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
@@ -70,9 +70,12 @@ public class MediaPlayer : IMediaPlayer
             
             Bass.BASS_ChannelPlay(_stream, true);
             ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
-            SetParametersEQ(0, 100, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[0]);
-            SetParametersEQ(1, 1000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[1]);
-            SetParametersEQ(2, 8000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[2]);
+            SetParametersEQ(0, 64, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[0]);
+            SetParametersEQ(1, 125, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[1]);
+            SetParametersEQ(2, 250, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[2]);
+            SetParametersEQ(3, 500, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[3]);
+            SetParametersEQ(4, 1000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[4]);
+            SetParametersEQ(5, 4000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[5]);
             _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
 
             PlaybackStateChanged?.Invoke(false);
