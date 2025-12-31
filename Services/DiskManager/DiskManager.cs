@@ -61,9 +61,6 @@ public class DiskManager : IDiskManager
     private static string ThemesPath { get; } =
         Path.Combine(AvalonixFolderPath, "themes");
 
-    private static string MusicPath { get; } =
-        Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-
     public async Task SavePlaylist(Playlist playlist)
     {
         await _diskWriter.WriteJsonAsync(playlist.Data, Path.Combine(PlaylistsPath, playlist.Name + Extension));
@@ -113,22 +110,16 @@ public class DiskManager : IDiskManager
     public List<string> GetMusicFiles()
     {
         var paths = _settingsManager.Settings!.Avalonix.MusicFilesPaths.Where(Directory.Exists);
-        var result = FindFiles(true);
-        result.AddRange(FindFiles(false));
+        var result = FindFiles();
         return result;
 
-        List<string> FindFiles(bool standart)
+        List<string> FindFiles()
         {
             var files = new List<string>();
-            if (standart)
-                foreach (var ext in MusicFilesExtensions)
-                    files.AddRange(Directory.EnumerateFiles(MusicPath, $"*{ext}", SearchOption.AllDirectories));
-            else
-                foreach (var foundFiles in from path in paths
-                         from ext in MusicFilesExtensions
-                         select Directory.EnumerateFiles(path, $"*{ext}", SearchOption.AllDirectories))
-                    files.AddRange(foundFiles);
-
+            foreach (var foundFiles in from path in paths
+                     from ext in MusicFilesExtensions
+                     select Directory.EnumerateFiles(path, $"*{ext}", SearchOption.AllDirectories))
+                files.AddRange(foundFiles);
             return files;
         }
     }
