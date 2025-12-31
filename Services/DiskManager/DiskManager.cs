@@ -116,11 +116,60 @@ public class DiskManager : IDiskManager
         List<string> FindFiles()
         {
             var files = new List<string>();
-            foreach (var foundFiles in from path in paths
-                     from ext in MusicFilesExtensions
-                     select Directory.EnumerateFiles(path, $"*{ext}", SearchOption.AllDirectories))
-                files.AddRange(foundFiles);
+
+            foreach (var path in paths)
+            {
+                foreach (var ext in MusicFilesExtensions)
+                {
+                    try
+                    {
+                        var foundFiles = Directory.EnumerateFiles(path, $"*{ext}", SearchOption.TopDirectoryOnly);
+                        files.AddRange(foundFiles);
+
+                        if (SearchOption.AllDirectories == SearchOption.AllDirectories)
+                        {
+                            TraverseSubdirectories(path, ext, files);
+                        }
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                    }
+                }
+            }
+
             return files;
+        }
+    }
+
+    private static void TraverseSubdirectories(string rootPath, string extension, List<string> files)
+    {
+        try
+        {
+            var directories = Directory.EnumerateDirectories(rootPath);
+
+            foreach (var directory in directories)
+            {
+                try
+                {
+                    var foundFiles =
+                        Directory.EnumerateFiles(directory, $"*{extension}", SearchOption.TopDirectoryOnly);
+                    files.AddRange(foundFiles);
+                    TraverseSubdirectories(directory, extension, files);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                }
+                catch (DirectoryNotFoundException)
+                {
+                }
+            }
+        }
+        catch (UnauthorizedAccessException)
+        {
+
         }
     }
 
