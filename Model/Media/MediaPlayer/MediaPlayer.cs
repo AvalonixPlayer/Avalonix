@@ -68,14 +68,14 @@ public class MediaPlayer : IMediaPlayer
 
             InitFX();
             
-            Bass.BASS_ChannelPlay(_stream, true);
-            ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
             SetParametersEQ(0, 64, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[0]);
             SetParametersEQ(1, 125, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[1]);
             SetParametersEQ(2, 250, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[2]);
             SetParametersEQ(3, 500, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[3]);
             SetParametersEQ(4, 1000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[4]);
             SetParametersEQ(5, 4000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[5]);
+            Bass.BASS_ChannelPlay(_stream, true);
+            ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
             _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
 
             PlaybackStateChanged?.Invoke(false);

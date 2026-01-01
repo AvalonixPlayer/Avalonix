@@ -8,7 +8,7 @@
         MinHeight="430" MinWidth="410"
         x:Class="Avalonix.View.MainWindow"
         x:DataType="main1:MainWindowViewModel"
-        Title="Avalonix 2025 31 of December update"
+        Title="Avalonix"
         Icon="/Assets/avalonix-logo.ico"
         SizeChanged="MainWindow_OnSizeChanged">
 
