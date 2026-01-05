@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +47,8 @@ public partial class MainWindow : Window
     private readonly Image _playButtonImage = GetImageFromAvares("buttons/play.png");
     private readonly ISettingsManager _settingsManager;
 
+    private Bitmap? _currentAlbumCoverBitmap; 
+
     private readonly Timer _timer;
     private readonly IMainWindowViewModel _vm;
     private readonly IWindowManager _windowManager;
@@ -68,7 +71,6 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _playablesManager.PlaybackStateChanged += UpdatePauseButtonImage;
-        SubscribePlayableChanged();
         SubscribeTrackChanged();
 
         _playablesManager.ShuffleChanged += UpdateShuffleButtonImage;
@@ -159,7 +161,6 @@ public partial class MainWindow : Window
 
     private void SetRightPartVisible(int index)
     {
-        //MainWindowPlayerButtons.IsVisible = index > 0;
         VolumeSlider.IsVisible = index > 1;
         TrackName.IsVisible = index > 2;
         ArtistName.IsVisible = index > 3;
@@ -342,34 +343,12 @@ public partial class MainWindow : Window
             });
     }
 
-    private void SubscribePlayableChanged()
-    {
-        _playablesManager.PlayableChanged += SubscribeTrackMetadataLoaded;
-        _playablesManager.PlayableChanged += UpdateSongBox;
-    }
-
     private void SubscribeTrackChanged()
     {
         _playablesManager.TrackChanged += UpdateAlbumCover;
         _playablesManager.TrackChanged += UpdateSongBox;
         _playablesManager.TrackChanged += UpdateTrackPositionSlider;
         _playablesManager.TrackChanged += UpdateTrackInfo;
-    }
-
-    private void SubscribeTrackMetadataLoaded()
-    {
-        if (_playablesManager.PlayingPlayable == null) return;
-
-        for (var i = 0; i < _playablesManager.PlayingPlayable!.PlayQueue.Tracks.Count; i++)
-        {
-            _playablesManager.PlayingPlayable.PlayQueue.Tracks[i].Metadata.MetadataLoaded += UpdateSongBox;
-            var i1 = i;
-            _playablesManager.PlayingPlayable.PlayQueue.Tracks[i].Metadata.MetadataLoaded += () =>
-            {
-                if (i1 == _playablesManager.PlayingPlayable.PlayQueue.PlayingIndex)
-                    UpdateAlbumCover();
-            };
-        }
     }
 
     private void UpdateSongBox()
@@ -420,54 +399,30 @@ public partial class MainWindow : Window
     {
         if (!Dispatcher.UIThread.CheckAccess())
         {
-            Dispatcher.UIThread.Post(UpdateAlbumCover);
+            _ = Task.Run(() => { Dispatcher.UIThread.Post(UpdateAlbumCover); });
             return;
         }
 
         var currentTrack = _playablesManager.CurrentTrack;
 
         var coverData = currentTrack?.Metadata.Cover;
-
-        if (coverData == null || coverData.Length == 0)
+        
+        _currentAlbumCoverBitmap?.Dispose();
+        
+        if (coverData == null)
         {
-            var path = _settingsManager.Settings?.Avalonix.AutoAlbumCoverPath;
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
-            {
-                AlbumCover.Child = null;
-            }
-            else
-            {
-                using var memoryStream = new MemoryStream(File.ReadAllBytes(path));
-                AlbumCover.Child = AlbumCover.Child = new Image
-                {
-                    Source = new Bitmap(memoryStream),
-                    Stretch = Stretch.UniformToFill
-                };
-            }
-
+            var pathToAutoCover = _settingsManager.Settings?.Avalonix.AutoAlbumCoverPath;
+            if (pathToAutoCover == null) return;
+            using var stream =
+                new MemoryStream(File.ReadAllBytes(_settingsManager.Settings!.Avalonix.AutoAlbumCoverPath!));
+            _currentAlbumCoverBitmap = new Bitmap(stream);
+            AlbumCover.Source = _currentAlbumCoverBitmap;
             return;
         }
 
-        try
-        {
-            _ = Task.Run(() =>
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    using var memoryStream = new MemoryStream(coverData);
-                    AlbumCover.Child = new Image
-                    {
-                        Source = new Bitmap(memoryStream),
-                        Stretch = Stretch.UniformToFill
-                    };
-                });
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error loading cover: {Error}", ex.Message);
-            AlbumCover.Child = null;
-        }
+        using var memoryStream = new MemoryStream(coverData);
+        _currentAlbumCoverBitmap = new Bitmap(memoryStream);
+        AlbumCover.Source = _currentAlbumCoverBitmap;
     }
 
     private void UpdateTrackInfo()

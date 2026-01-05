@@ -144,9 +144,9 @@
                            TextAlignment="Center" HorizontalAlignment="Center"
                            Foreground="White" Text="0:0" />
 
-                <Border Name="AlbumCover" Height="300" Width="300" IsVisible="True"
+                <Border Name="AlbumCoverBorder" Height="300" Width="300" IsVisible="True"
                         Background="DimGray" Classes="Image">
-                    <Image Source="" />
+                    <Image Source="" Name="AlbumCover" Stretch="UniformToFill"/>
                 </Border>
 
                 <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
