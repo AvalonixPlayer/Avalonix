@@ -118,30 +118,32 @@ public class DiskManager : IDiskManager
             var files = new List<string>();
 
             foreach (var path in paths)
-            {
-                foreach (var ext in MusicFilesExtensions)
+            foreach (var ext in MusicFilesExtensions)
+                try
                 {
-                    try
-                    {
-                        var foundFiles = Directory.EnumerateFiles(path, $"*{ext}", SearchOption.TopDirectoryOnly);
-                        files.AddRange(foundFiles);
+                    var foundFiles = Directory.EnumerateFiles(path, $"*{ext}", SearchOption.TopDirectoryOnly);
+                    files.AddRange(foundFiles);
 
-                        if (SearchOption.AllDirectories == SearchOption.AllDirectories)
-                        {
-                            TraverseSubdirectories(path, ext, files);
-                        }
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                    }
+                    if (SearchOption.AllDirectories == SearchOption.AllDirectories)
+                        TraverseSubdirectories(path, ext, files);
                 }
-            }
+                catch (UnauthorizedAccessException)
+                {
+                }
+                catch (DirectoryNotFoundException)
+                {
+                }
 
             return files;
         }
+    }
+
+    public List<string> GetMusicFiles(string path)
+    {
+        var result = new List<string>();
+        foreach (var ext in MusicFilesExtensions)
+            result.AddRange(Directory.EnumerateFiles(path, ext, SearchOption.AllDirectories));
+        return result;
     }
 
     private static void TraverseSubdirectories(string rootPath, string extension, List<string> files)
@@ -151,7 +153,6 @@ public class DiskManager : IDiskManager
             var directories = Directory.EnumerateDirectories(rootPath);
 
             foreach (var directory in directories)
-            {
                 try
                 {
                     var foundFiles =
@@ -165,19 +166,9 @@ public class DiskManager : IDiskManager
                 catch (DirectoryNotFoundException)
                 {
                 }
-            }
         }
         catch (UnauthorizedAccessException)
         {
-
         }
-    }
-
-    public List<string> GetMusicFiles(string path)
-    {
-        var result = new List<string>();
-        foreach (var ext in MusicFilesExtensions)
-            result.AddRange(Directory.EnumerateFiles(path, ext, SearchOption.AllDirectories));
-        return result;
     }
 }

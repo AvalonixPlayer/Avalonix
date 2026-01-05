@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -20,11 +19,11 @@ namespace Avalonix.View.SettingsWindow;
 public partial class SettingsWindow : Window
 {
     private readonly ILogger _logger;
+    private readonly IMediaPlayer _mediaPlayer;
     private readonly Settings _settings;
     private readonly ISettingsManager _settingsManager;
     private readonly ISettingsWindowViewModel _vm;
     private string? _autoCoverPath;
-    private IMediaPlayer _mediaPlayer;
 
     public SettingsWindow(ISettingsWindowViewModel vm, ISettingsManager settingsManager, ILogger logger,
         IMediaPlayer mediaPlayer)
@@ -153,10 +152,7 @@ public partial class SettingsWindow : Window
 
     private void EqualizersReset_OnClick(object? sender, RoutedEventArgs e)
     {
-        for (int i = 0; i < 5; i++)
-        {
-            _settings.Avalonix.EqualizerSettings._fxs[i] = 0;
-        }
+        for (var i = 0; i < 5; i++) _settings.Avalonix.EqualizerSettings._fxs[i] = 0;
 
         _mediaPlayer.SetParametersEQ(0, 64, 0);
         _mediaPlayer.SetParametersEQ(1, 125, 0);

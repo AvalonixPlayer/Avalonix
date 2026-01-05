@@ -16,8 +16,7 @@
                     <StackPanel Orientation="Horizontal">
                         <ComboBox Name="PathsBox" PlaceholderText="Select the path" IsTextSearchEnabled="True"
                                   HorizontalAlignment="Left" HorizontalContentAlignment="Right"
-                                  VerticalContentAlignment="Center">
-                        </ComboBox>
+                                  VerticalContentAlignment="Center" />
                         <TextBox Name="PathToAdd" Watermark="Path" />
                         <StackPanel>
                             <Button Name="AddPath" Click="AddPath_OnClick">
@@ -49,25 +48,19 @@
                     <Border Classes="Panel">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="125">
                             <Slider Name="Equalizer1" ValueChanged="EqualizerFx1_OnValueChanged" Minimum="-15"
-                                    Maximum="15" Orientation="Vertical" Height="200" Width="50">
-                            </Slider>
+                                    Maximum="15" Orientation="Vertical" Height="200" Width="50" />
                             <Slider Name="Equalizer2" ValueChanged="EqualizerFx2_OnValueChanged" Minimum="-15"
-                                    Maximum="15" Orientation="Vertical" Height="200" Width="50">
-                            </Slider>
+                                    Maximum="15" Orientation="Vertical" Height="200" Width="50" />
                             <Slider Name="Equalizer3" ValueChanged="EqualizerFx3_OnValueChanged" Minimum="-15"
-                                    Maximum="15" Orientation="Vertical" Height="200" Width="50">
-                            </Slider>
+                                    Maximum="15" Orientation="Vertical" Height="200" Width="50" />
                             <Slider Name="Equalizer4" ValueChanged="EqualizerFx4_OnValueChanged" Minimum="-15"
-                                    Maximum="15" Orientation="Vertical" Height="200" Width="50">
-                            </Slider>
+                                    Maximum="15" Orientation="Vertical" Height="200" Width="50" />
                             <Slider Name="Equalizer5" ValueChanged="EqualizerFx5_OnValueChanged" Minimum="-15"
-                                    Maximum="15" Orientation="Vertical" Height="200" Width="50">
-                            </Slider>
+                                    Maximum="15" Orientation="Vertical" Height="200" Width="50" />
                             <Slider Name="Equalizer6" ValueChanged="EqualizerFx6_OnValueChanged" Minimum="-15"
-                                    Maximum="15" Orientation="Vertical" Height="200" Width="50">
-                            </Slider>
+                                    Maximum="15" Orientation="Vertical" Height="200" Width="50" />
                             <Button Click="EqualizersReset_OnClick" Width="100">
-                                <TextBlock Text="Reset"></TextBlock>
+                                <TextBlock Text="Reset" />
                             </Button>
                         </StackPanel>
                     </Border>

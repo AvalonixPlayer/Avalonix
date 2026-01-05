@@ -16,7 +16,6 @@ using Avalonix.Services.CacheManager;
 using Avalonix.Services.CommandLineInitializer;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
-using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.WindowManager;
 using Avalonix.ViewModel.Main;
@@ -531,9 +530,11 @@ public partial class MainWindow : Window
     {
         if (string.IsNullOrEmpty(SongBoxFindText.Text))
         {
-            SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks.Select(x => x.Metadata.TrackName).ToList();
+            SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks.Select(x => x.Metadata.TrackName)
+                .ToList();
             return;
         }
+
         SongBox.ItemsSource = _playablesManager.PlayingPlayable?.PlayQueue.Tracks
             .Where(track => !string.IsNullOrEmpty(track.Metadata.TrackName)).ToList().Where(i =>
                 i.Metadata.TrackName!.Contains(SongBoxFindText.Text!, StringComparison.CurrentCultureIgnoreCase))

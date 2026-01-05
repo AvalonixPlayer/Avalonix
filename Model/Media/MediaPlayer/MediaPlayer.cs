@@ -9,24 +9,18 @@ namespace Avalonix.Model.Media.MediaPlayer;
 
 public class MediaPlayer : IMediaPlayer
 {
+    private readonly BASS_DX8_PARAMEQ _eqPar = new();
+    private readonly int[] _fx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
     private readonly Lock _lock = new();
     private readonly ILogger _logger;
     private readonly ISettingsManager _settingsManager;
     private int _stream;
-    private BASS_DX8_PARAMEQ _eqPar = new();
-    private int[] _fx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
     public MediaPlayer(ILogger logger, ISettingsManager settingsManager)
     {
         _logger = logger;
         _settingsManager = settingsManager;
         Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-    }
-
-    private void InitFX()
-    {
-        for (var i = 0; i < _fx.Length; i++)
-            _fx[i] = Bass.BASS_ChannelSetFX(_stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
     }
 
     public void SetParametersEQ(int fxIndex, int center, float gain)
@@ -67,7 +61,7 @@ public class MediaPlayer : IMediaPlayer
             }
 
             InitFX();
-            
+
             SetParametersEQ(0, 64, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[0]);
             SetParametersEQ(1, 125, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[1]);
             SetParametersEQ(2, 250, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[2]);
@@ -116,6 +110,12 @@ public class MediaPlayer : IMediaPlayer
     public void SetPosition(double position)
     {
         Bass.BASS_ChannelSetPosition(_stream, Bass.BASS_ChannelSeconds2Bytes(_stream, position));
+    }
+
+    private void InitFX()
+    {
+        for (var i = 0; i < _fx.Length; i++)
+            _fx[i] = Bass.BASS_ChannelSetFX(_stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
     }
 
     public void Reset()
