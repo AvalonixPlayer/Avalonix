@@ -395,7 +395,7 @@ public partial class MainWindow : Window
         PauseButton.Content = pause ? _playButtonImage : _pauseButtonImage;
     }
 
-    public void UpdateAlbumCover()
+    public async void UpdateAlbumCover()
     {
         if (!Dispatcher.UIThread.CheckAccess())
         {
@@ -414,7 +414,7 @@ public partial class MainWindow : Window
             var pathToAutoCover = _settingsManager.Settings?.Avalonix.AutoAlbumCoverPath;
             if (pathToAutoCover == null) return;
             using var stream =
-                new MemoryStream(File.ReadAllBytes(_settingsManager.Settings!.Avalonix.AutoAlbumCoverPath!));
+                new MemoryStream(await File.ReadAllBytesAsync(_settingsManager.Settings!.Avalonix.AutoAlbumCoverPath!));
             _currentAlbumCoverBitmap = new Bitmap(stream);
             AlbumCover.Source = _currentAlbumCoverBitmap;
             return;
