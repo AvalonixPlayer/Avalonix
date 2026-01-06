@@ -28,7 +28,7 @@ public partial class PlaylistCreateWindow : Window, ISecondaryWindow
     
     public void InitializeControls()
     {
-        Title += _vm.Strategy.WindowTitle;
+        Title = _vm.Strategy.WindowTitle;
         MainActionButton.Content = _vm.Strategy.ActionButtonText;
         NameLabel.Text = _vm.Strategy.WindowTitle;
     }

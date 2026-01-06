@@ -8,7 +8,7 @@ namespace Avalonix.ViewModel.Strategy;
 
 public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy
 {
-    public string WindowTitle => " to delete";
+    public string WindowTitle => "Select playlist to delete";
     public string ActionButtonText => "Playlist name to delete";
 
     public Task ExecuteAsync(IPlayable playlist)
@@ -20,7 +20,7 @@ public class SelectAndDeletePlaylistWindowStrategy(IPlaylistManager playlistMana
 
 public class SelectAndPlayPlaylistWindowStrategy(IPlayablesManager playablesManager) : IPlayableWindowStrategy
 {
-    public string WindowTitle => "to play";
+    public string WindowTitle => "Select playlist to play";
     public string ActionButtonText => "Playlist name to play";
 
     public async Task ExecuteAsync(IPlayable playlist)
@@ -31,7 +31,7 @@ public class SelectAndPlayPlaylistWindowStrategy(IPlayablesManager playablesMana
 
 public class SelectAndEditPlaylistWindowStrategy(IPlaylistManager playlistManager) : IPlayableWindowStrategy
 {
-    public string WindowTitle => "to edit";
+    public string WindowTitle => "Select playlist to edit";
     public string ActionButtonText => "Playlist name to edit";
 
     public async Task ExecuteAsync(IPlayable playlist)

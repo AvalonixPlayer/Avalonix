@@ -63,10 +63,6 @@
                         <Button Tag="Tracks" Click="PlayAllTracks_OnClick">
                             <TextBlock Text="Tracks" />
                         </Button>
-
-                        <Button Tag="PlayQueueTab" Click="SelectTab">
-                            <TextBlock Text="Play queue" />
-                        </Button>
                     </WrapPanel>
                 </Border>
 
@@ -95,7 +91,7 @@
                             <TextBlock Text="Open Settings" />
                         </Button>
                         <Button Click="AboutButton_OnClick">
-                            <TextBlock Text="?" />
+                            <TextBlock Text="About" />
                         </Button>
                     </WrapPanel>
                 </Border>
@@ -120,7 +116,7 @@
                 </Border>
 
                 <WrapPanel Tag="PlayQueueContent" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                           x:Name="PlayQueueContent" IsVisible="False"
+                           Name="PlayQueueContent"
                            Orientation="Horizontal"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top"

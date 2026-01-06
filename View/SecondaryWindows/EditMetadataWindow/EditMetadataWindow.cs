@@ -59,6 +59,7 @@ public partial class EditMetadataWindow : Window, ISecondaryWindow
     public void InitializeControls()
     {
         _newCoverPath = null;
+        Title += _track.Metadata.TrackName;
         Name.Text = _track.Metadata.TrackName;
         Artist.Text = _track.Metadata.Artist;
         Album.Text = _track.Metadata.Album;

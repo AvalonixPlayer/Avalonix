@@ -67,7 +67,7 @@ public partial class PlayableSelectWindow : Window, ISecondaryWindow
     public void InitializeControls()
     {
         PlaylistBox.ItemsSource = _playables.Select(p => p.Name).ToList();
-        Title += _vm.Strategy.WindowTitle;
+        Title = _vm.Strategy.WindowTitle;
         SearchBox.Watermark = _vm.Strategy.ActionButtonText;
     }
 }

@@ -116,7 +116,6 @@ public partial class MainWindow : Window
         if (sender is not Button { Tag: string tabName }) return;
 
         PlaylistsContent.IsVisible = false;
-        PlayQueueContent.IsVisible = false;
         MetadataTabContent.IsVisible = false;
         SettingsTabContent.IsVisible = false;
 
@@ -140,16 +139,12 @@ public partial class MainWindow : Window
             case "PlaylistsTab":
                 PlaylistsContent.IsVisible = true;
                 break;
-            case "PlayQueueTab":
-                PlayQueueContent.IsVisible = true;
-                break;
         }
     }
 
     private void DisableTabs()
     {
         PlaylistsContent.IsVisible = false;
-        PlayQueueContent.IsVisible = false;
         MetadataTabContent.IsVisible = false;
         SettingsTabContent.IsVisible = false;
         GlobalTabs.IsVisible = false;
@@ -164,6 +159,7 @@ public partial class MainWindow : Window
         VolumeSlider.IsVisible = index > 1;
         TrackName.IsVisible = index > 2;
         ArtistName.IsVisible = index > 3;
+        PlayQueueContent.IsVisible = index > 4;
         TrackPositionSlider.IsVisible = index > 4;
         TrackDuration.IsVisible = index > 5;
     }
