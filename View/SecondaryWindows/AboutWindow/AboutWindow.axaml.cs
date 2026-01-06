@@ -10,20 +10,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.AboutWindow;
 
-public partial class AboutWindow : Window
+public partial class AboutWindow : Window, ISecondaryWindow
 {
     private const string Url = "https://github.com/AvalonixPlayer/Avalonix";
     private readonly ILogger _logger;
-
+    private readonly IVersionManager _versionManager;
+    
     public AboutWindow(ILogger logger, IVersionManager versionManager)
     {
         _logger = logger;
         InitializeComponent();
-        var currentRelease = versionManager.CurrentRelease;
-        var lastRelease = Task.Run(versionManager.GetLastRelease).Result;
+        _versionManager = versionManager;
+        InitializeControls();
         _logger.LogInformation("About window loaded");
-        VersionLabel.Text = $"Version: {currentRelease.Version}";
-        LastVersionLabel.Text = $"Last Version: {lastRelease.Version}";
     }
 
     private void OpenUrlButton_OnClick(object? sender, RoutedEventArgs e)
@@ -57,5 +56,13 @@ public partial class AboutWindow : Window
         {
             _logger.LogError("An error occurred: {ExMessage}", ex.Message);
         }
+    }
+
+    public void InitializeControls()
+    {
+        var currentRelease = _versionManager.CurrentRelease;
+        var lastRelease = Task.Run(_versionManager.GetLastRelease).Result;
+        VersionLabel.Text = $"Version: {currentRelease.Version}";
+        LastVersionLabel.Text = $"Last Version: {lastRelease.Version}";
     }
 }

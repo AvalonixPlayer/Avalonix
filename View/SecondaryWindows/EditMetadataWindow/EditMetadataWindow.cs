@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.EditMetadataWindow;
 
-public partial class EditMetadataWindow : Window
+public partial class EditMetadataWindow : Window, ISecondaryWindow
 {
     private readonly ILogger<WindowManager> _logger;
     private readonly IPlayablesManager _playablesManager;
@@ -27,18 +27,7 @@ public partial class EditMetadataWindow : Window
         _playablesManager = playablesManager;
 
         InitializeComponent();
-        InitializeFields(track);
-    }
-
-    private void InitializeFields(Track track)
-    {
-        _newCoverPath = null;
-        Name.Text = track.Metadata.TrackName;
-        Artist.Text = track.Metadata.Artist;
-        Album.Text = track.Metadata.Album;
-        Genre.Text = track.Metadata.Genre;
-        Year.Text = track.Metadata.Year.ToString();
-        Lyric.Text = track.Metadata.Lyric;
+        InitializeControls();
     }
 
     private async void SelectCover(object? sender, RoutedEventArgs e)
@@ -65,5 +54,16 @@ public partial class EditMetadataWindow : Window
             Cover = cover
         };
         await _track.RewriteMetaData(newMetadata);
+    }
+
+    public void InitializeControls()
+    {
+        _newCoverPath = null;
+        Name.Text = _track.Metadata.TrackName;
+        Artist.Text = _track.Metadata.Artist;
+        Album.Text = _track.Metadata.Album;
+        Genre.Text = _track.Metadata.Genre;
+        Year.Text = _track.Metadata.Year.ToString();
+        Lyric.Text = _track.Metadata.Lyric;
     }
 }

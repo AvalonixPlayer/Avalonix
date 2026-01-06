@@ -23,7 +23,7 @@ public class AlbumManager(
     IMediaPlayer mediaPlayer,
     ICacheManager cacheManager) : IAlbumManager
 {
-    private readonly Settings _settings = settingsManager.Settings!;
+    private readonly Settings _settings = settingsManager.Settings;
     private readonly List<Track> _tracks = [];
     private bool _tracksLoaded;
 
@@ -119,12 +119,12 @@ public class AlbumManager(
         var albumGroups = allValidTracks.GroupBy(track => new { track.Metadata.Artist, track.Metadata.Album });
 
         return albumGroups.Select(group =>
-            new Album(group.ToList(), player, logger, settingsManager.Settings!.Avalonix.PlaySettings)).ToList();
+            new Album(group.ToList(), player, logger, settingsManager.Settings.Avalonix.PlaySettings)).ToList();
     }
 
     private async Task LoadTracks()
     {
-        var settings = settingsManager.Settings!.Avalonix;
+        var settings = settingsManager.Settings.Avalonix;
         var paths = diskManager.GetMusicFiles();
 
         _tracks.Clear();

@@ -3,8 +3,8 @@ using Avalonix.View.SecondaryWindows.AboutWindow;
 using Avalonix.View.SecondaryWindows.EditMetadataWindow;
 using Avalonix.View.SecondaryWindows.PlayableSelectWindow;
 using Avalonix.View.SecondaryWindows.PlaylistCreateWindow;
+using Avalonix.View.SecondaryWindows.SettingsWindow;
 using Avalonix.View.SecondaryWindows.ShowTrackWindow;
-using Avalonix.View.SettingsWindow;
 
 namespace Avalonix.Services.WindowManager;
 

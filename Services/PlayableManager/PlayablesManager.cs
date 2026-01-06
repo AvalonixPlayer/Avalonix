@@ -23,7 +23,7 @@ public class PlayablesManager(
     IMediaPlayer mediaPlayer,
     ISettingsManager settingsManager) : IPlayablesManager
 {
-    private readonly Settings _settings = settingsManager.Settings!;
+    private readonly Settings _settings = settingsManager.Settings;
     public IMediaPlayer MediaPlayer => mediaPlayer;
     public IPlayable? PlayingPlayable { get; private set; }
     public Track? CurrentTrack => MediaPlayer.CurrentTrack;

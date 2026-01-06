@@ -109,7 +109,7 @@ public class DiskManager : IDiskManager
 
     public List<string> GetMusicFiles()
     {
-        var paths = _settingsManager.Settings!.Avalonix.MusicFilesPaths.Where(Directory.Exists);
+        var paths = _settingsManager.Settings.Avalonix.MusicFilesPaths.Where(Directory.Exists);
         var result = FindFiles();
         return result;
 

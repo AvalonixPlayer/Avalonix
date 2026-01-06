@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.PlaylistCreateWindow;
 
-public partial class PlaylistCreateWindow : Window
+public partial class PlaylistCreateWindow : Window, ISecondaryWindow
 {
     private readonly ILogger<WindowManager> _logger;
     private readonly IPlaylistEditOrCreateWindowViewModel _vm;
@@ -20,11 +20,17 @@ public partial class PlaylistCreateWindow : Window
         _logger = logger;
         _vm = vm;
         InitializeComponent();
+        InitializeControls();
         _logger.LogInformation("PlayableCreateWindow opened");
+        
+        ObserveDirectory.IsCheckedChanged += ObserveDirectoryCheckedChanged;
+    }
+    
+    public void InitializeControls()
+    {
+        Title += _vm.Strategy.WindowTitle;
         MainActionButton.Content = _vm.Strategy.ActionButtonText;
         NameLabel.Text = _vm.Strategy.WindowTitle;
-        Title += _vm.Strategy.WindowTitle;
-        ObserveDirectory.IsCheckedChanged += ObserveDirectoryCheckedChanged;
     }
 
     private void ObserveDirectoryCheckedChanged(object? sender, RoutedEventArgs routedEventArgs)

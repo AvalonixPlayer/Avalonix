@@ -14,7 +14,7 @@ using Avalonix.Services.SettingsManager;
 using Avalonix.ViewModel.Settings;
 using Microsoft.Extensions.Logging;
 
-namespace Avalonix.View.SettingsWindow;
+namespace Avalonix.View.SecondaryWindows.SettingsWindow;
 
 public partial class SettingsWindow : Window
 {
@@ -35,7 +35,7 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         _logger.LogInformation("Settings Window Open");
 
-        _settings = _settingsManager.Settings!;
+        _settings = _settingsManager.Settings;
         _autoCoverPath = _settings.Avalonix.AutoAlbumCoverPath;
 
         LoadMusicPaths();
@@ -106,7 +106,7 @@ public partial class SettingsWindow : Window
 
     private void LoadEqualizer()
     {
-        Equalizer1.Value = _settingsManager.Settings!.Avalonix.EqualizerSettings._fxs[0];
+        Equalizer1.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[0];
         Equalizer2.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[1];
         Equalizer3.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[2];
         Equalizer4.Value = _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[3];

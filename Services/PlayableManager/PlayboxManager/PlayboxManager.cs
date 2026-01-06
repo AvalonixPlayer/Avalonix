@@ -61,7 +61,7 @@ public class PlayboxManager(
 
     public Task<List<IPlayable>> GetPlayables()
     {
-        var settings = settingsManager.Settings!.Avalonix;
+        var settings = settingsManager.Settings.Avalonix;
         var allMusicFiles = diskManager.GetMusicFiles();
         var playbox = new Playbox(allMusicFiles, MediaPlayer, logger, settings.PlaySettings, cacheManager);
         return Task.FromResult(new List<IPlayable> { playbox });

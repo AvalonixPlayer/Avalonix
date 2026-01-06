@@ -38,14 +38,15 @@ public class CommandLineInitializer(
         else
         {
             _pipeClient = new PipeClient();
-            Environment.Exit(1);
+            logger.LogDebug("Closing pipe client");
+            Environment.Exit(0);
         }
     }
 
     private void StartPlayable(string path)
     {
         playablesManager.StartPlayable(new Playbox([path], mediaPlayer, logger,
-            settingsManager.Settings!.Avalonix.PlaySettings, cacheManager));
+            settingsManager.Settings.Avalonix.PlaySettings, cacheManager));
     }
 
 

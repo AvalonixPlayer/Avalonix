@@ -22,7 +22,7 @@ public class PlaylistManager(
     ICacheManager cacheManager)
     : IPlaylistManager
 {
-    private readonly Settings _settings = settingsManager.Settings!;
+    private readonly Settings _settings = settingsManager.Settings;
     public IMediaPlayer MediaPlayer => player;
     public IPlayable? PlayingPlayable { get; set; }
     public CancellationTokenSource? GlobalCancellationTokenSource { get; private set; }
@@ -68,7 +68,7 @@ public class PlaylistManager(
             ObservingDirectoryPath = observingDirectory ?? string.Empty
         };
 
-        var settings = settingsManager.Settings!;
+        var settings = settingsManager.Settings;
         return new Playlist(title, playlistData, player, diskManager, logger, settings.Avalonix.PlaySettings,
             cacheManager);
     }

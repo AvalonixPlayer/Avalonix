@@ -5,31 +5,27 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.ShowTrackWindow;
 
-public partial class ShowTrackWindow : Window
+public partial class ShowTrackWindow : Window, ISecondaryWindow
 {
+    private readonly Track _track;
     public ShowTrackWindow(ILogger<WindowManager> logger, Track track)
     {
         InitializeComponent();
         logger.LogInformation("ShowTrackWindow initialized");
-        Title += track.Metadata.TrackName;
-
-        InitializeMainFields(track);
-        InitializeAdditionalFields(track);
+        _track = track;
+        InitializeControls();
     }
 
-    private void InitializeAdditionalFields(Track track)
+    public void InitializeControls()
     {
-        Album.Text += " " + track.Metadata.Album;
-        Genre.Text += " " + track.Metadata.Genre;
-        MediaFileFormat.Text += " " + track.Metadata.MediaFileFormat;
-        Year.Text += " " + track.Metadata.Year;
-        Duration.Text += " " + TrackMetadata.ToHumanFriendlyString(track.Metadata.Duration);
-    }
-
-    private void InitializeMainFields(Track track)
-    {
-        Name.Text += " " + track.Metadata.TrackName;
-        Artist.Text += " " + track.Metadata.Artist;
-        Lyrics.Text = track.Metadata.Lyric;
+        Title += _track.Metadata.TrackName;
+        Name.Text += " " + _track.Metadata.TrackName;
+        Artist.Text += " " + _track.Metadata.Artist;
+        Lyrics.Text = _track.Metadata.Lyric;
+        Album.Text += " " + _track.Metadata.Album;
+        Genre.Text += " " + _track.Metadata.Genre;
+        MediaFileFormat.Text += " " + _track.Metadata.MediaFileFormat;
+        Year.Text += " " + _track.Metadata.Year;
+        Duration.Text += " " + TrackMetadata.ToHumanFriendlyString(_track.Metadata.Duration);
     }
 }

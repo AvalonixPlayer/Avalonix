@@ -76,8 +76,8 @@ public partial class MainWindow : Window
         _playablesManager.ShuffleChanged += UpdateShuffleButtonImage;
         _playablesManager.LoopChanged += UpdateLoopButtonImage;
 
-        UpdateShuffleButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Shuffle);
-        UpdateLoopButtonImage(settingsManager.Settings!.Avalonix.PlaySettings.Loop);
+        UpdateShuffleButtonImage(settingsManager.Settings.Avalonix.PlaySettings.Shuffle);
+        UpdateLoopButtonImage(settingsManager.Settings.Avalonix.PlaySettings.Loop);
 
         _timer = new Timer(1000);
         _timer.Elapsed += UpdateTrackPositionSlider;
@@ -88,7 +88,7 @@ public partial class MainWindow : Window
         SongBox.Tapped += SongBox_OnSelectionChanged;
 
         Dispatcher.UIThread.Post(void () =>
-            VolumeSlider.Value = settingsManager.Settings!.Avalonix.Volume);
+            VolumeSlider.Value = settingsManager.Settings.Avalonix.Volume);
 
         var trackSliderPressed = false;
         TrackPositionSlider.PointerMoved += (_, _) => _isUserDragging = true;

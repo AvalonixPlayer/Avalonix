@@ -69,7 +69,7 @@ public class MediaPlayer : IMediaPlayer
             SetParametersEQ(4, 1000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[4]);
             SetParametersEQ(5, 4000, _settingsManager.Settings.Avalonix.EqualizerSettings._fxs[5]);
             Bass.BASS_ChannelPlay(_stream, true);
-            ChangeVolume(_settingsManager.Settings!.Avalonix.Volume);
+            ChangeVolume(_settingsManager.Settings.Avalonix.Volume);
             _logger.LogInformation("Now playing {MetadataTrackName}", track.Metadata.TrackName);
 
             PlaybackStateChanged?.Invoke(false);
@@ -97,7 +97,7 @@ public class MediaPlayer : IMediaPlayer
 
     public Task ChangeVolume(uint volume)
     {
-        var vol = _settingsManager.Settings!.Avalonix.Volume = volume;
+        var vol = _settingsManager.Settings.Avalonix.Volume = volume;
         Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, vol / 100F);
         return Task.CompletedTask;
     }

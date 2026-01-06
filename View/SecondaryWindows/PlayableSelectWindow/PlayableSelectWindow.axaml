@@ -19,7 +19,7 @@
             <StackPanel>
                 <TextBox AcceptsTab="False" TextChanged="SearchBox_OnTextChanged" Name="SearchBox" Height="50"
                          Watermark="Search" />
-                <ListBox Height="500" Name="PlaylistBox" SelectionChanged="ActionSelectedPlaylist" />
+                <ListBox Height="500" Name="PlaylistBox" SelectionChanged="ActionSelectedPlayable" />
             </StackPanel>
         </Border>
     </StackPanel>

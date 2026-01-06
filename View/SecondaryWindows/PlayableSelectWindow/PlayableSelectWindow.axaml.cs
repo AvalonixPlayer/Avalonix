@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Avalonix.View.SecondaryWindows.PlayableSelectWindow;
 
-public partial class PlayableSelectWindow : Window
+public partial class PlayableSelectWindow : Window, ISecondaryWindow
 {
     private readonly ILogger<WindowManager> _logger;
     private readonly List<IPlayable> _playables;
@@ -22,16 +22,10 @@ public partial class PlayableSelectWindow : Window
         _logger = logger;
         _vm = vm;
         _logger.LogInformation("PlayableCreateWindow opened");
-
         _playables = Task.Run(async () => await _vm.GetPlayableItems()).Result;
-
-        var result = _playables.Select(p => p.Name).ToList();
-        PlaylistBox.ItemsSource = result;
-        Title += _vm.Strategy.WindowTitle;
-        SearchBox.Watermark = _vm.Strategy.ActionButtonText;
+        InitializeControls();
     }
-
-
+    
     private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         var text = SearchBox.Text;
@@ -45,7 +39,7 @@ public partial class PlayableSelectWindow : Window
         PlaylistBox.ItemsSource = stringPlaylists;
     }
 
-    private async void ActionSelectedPlaylist(object? sender, SelectionChangedEventArgs e)
+    private async void ActionSelectedPlayable(object? sender, SelectionChangedEventArgs e)
     {
         try
         {
@@ -58,15 +52,22 @@ public partial class PlayableSelectWindow : Window
                 : _playables.Where(i => i.Name.Contains(searchBoxText, StringComparison.CurrentCultureIgnoreCase))
                     .ToList();
 
-            var selectedPlaylist =
+            var selectedPlayable =
                 playablesResult
                     [castedSender.SelectedIndex];
-            await _vm.ExecuteAction(selectedPlaylist);
+            await _vm.ExecuteAction(selectedPlayable);
             Close();
         }
         catch (Exception ex)
         {
             _logger.LogError("Error while starting playlist in SelectWindow: {ex}", ex.Message);
         }
+    }
+
+    public void InitializeControls()
+    {
+        PlaylistBox.ItemsSource = _playables.Select(p => p.Name).ToList();
+        Title += _vm.Strategy.WindowTitle;
+        SearchBox.Watermark = _vm.Strategy.ActionButtonText;
     }
 }
