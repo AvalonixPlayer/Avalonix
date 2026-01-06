@@ -1,6 +1,7 @@
 using Avalonix.Model.Media.Track;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
+using Avalonix.Services.PlayableManager.ArtistManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
 using Avalonix.Services.VersionManager;
@@ -26,6 +27,7 @@ public class WindowManager(
     IPlaylistManager playlistManager,
     IVersionManager versionManager,
     IAlbumManager albumManager,
+    IArtistManager artistManager,
     ISettingsWindowViewModel settingsWindowViewModel)
     : IWindowManager
 {
@@ -63,6 +65,11 @@ public class WindowManager(
     {
         return AlbumSelectWindow_Open(new SelectAndPlayAlbumWindowStrategy(playablesManager));
     }
+    
+    public PlayableSelectWindow ArtistSelectAndPlayWindow_Open()
+    {
+        return ArtistSelectAndPlayWindow_Open(new SelectAndPlayArtistWindowStrategy(playablesManager));
+    }
 
     public SettingsWindow SettingsWindow_Open()
     {
@@ -84,6 +91,12 @@ public class WindowManager(
     private PlayableSelectWindow AlbumSelectWindow_Open(IPlayableWindowStrategy strategy)
     {
         var vm = new PlayableSelectViewModel(albumManager, strategy);
+        return new PlayableSelectWindow(logger, vm);
+    }
+    
+    private PlayableSelectWindow ArtistSelectAndPlayWindow_Open(IPlayableWindowStrategy strategy)
+    {
+        var vm = new PlayableSelectViewModel(artistManager, strategy);
         return new PlayableSelectWindow(logger, vm);
     }
 

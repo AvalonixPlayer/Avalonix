@@ -19,7 +19,7 @@ public record AlbumMetadata
         foreach (var track in tracks)
             await track.FillPrimaryMetaData();
 
-        AlbumName = tracks[0].Metadata.Album ?? "none";
+        AlbumName = tracks[0].Metadata.Album ?? string.Empty;
         var tracksMetadata = tracks.Select(x => x.Metadata).ToList();
         foreach (var trackMetadata in
                  tracksMetadata.Where(trackMetadata => !string.IsNullOrEmpty(trackMetadata.Artist)))

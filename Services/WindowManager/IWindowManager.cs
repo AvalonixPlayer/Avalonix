@@ -17,5 +17,6 @@ public interface IWindowManager
     EditMetadataWindow EditMetadataWindow_Open(Track track);
     PlayableSelectWindow PlaylistDeleteWindow_Open();
     PlayableSelectWindow AlbumSelectAndPlayWindow_Open();
+    PlayableSelectWindow ArtistSelectAndPlayWindow_Open();
     SettingsWindow SettingsWindow_Open();
 }

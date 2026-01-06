@@ -2,11 +2,13 @@ using System;
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.Album;
+using Avalonix.Model.Media.Artist;
 using Avalonix.Model.Media.MediaPlayer;
 using Avalonix.Model.Media.PlayBox;
 using Avalonix.Model.Media.Playlist;
 using Avalonix.Model.UserSettings;
 using Avalonix.Services.PlayableManager.AlbumManager;
+using Avalonix.Services.PlayableManager.ArtistManager;
 using Avalonix.Services.PlayableManager.PlayboxManager;
 using Avalonix.Services.PlayableManager.PlaylistManager;
 using Avalonix.Services.SettingsManager;
@@ -19,6 +21,7 @@ public class PlayablesManager(
     ILogger logger,
     IPlaylistManager playlistManager,
     IAlbumManager albumManager,
+    IArtistManager artistManager,
     IPlayboxManager playboxManager,
     IMediaPlayer mediaPlayer,
     ISettingsManager settingsManager) : IPlayablesManager
@@ -32,6 +35,7 @@ public class PlayablesManager(
     {
         playlistManager.PlayingPlayable?.Stop();
         albumManager.PlayingPlayable?.Stop();
+        artistManager.PlayingPlayable?.Stop();
         playboxManager.PlayingPlayable?.Stop();
         PlayingPlayable = playable;
 
@@ -42,6 +46,9 @@ public class PlayablesManager(
                 break;
             case Album:
                 albumManager.StartPlayable(playable);
+                break;
+            case Artist:
+                artistManager.StartPlayable(playable);
                 break;
             case Playbox:
                 playboxManager.StartPlayable(playable);

@@ -208,6 +208,18 @@ public partial class MainWindow : Window
             _logger.LogError("Error while select album: {ex}", ex);
         }
     }
+    
+    private async void SelectArtist_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await _vm.ArtistSelectWindow_Open().ShowDialog(this);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error while select album: {ex}", ex);
+        }
+    }
 
     private void PauseButton_OnClick(object sender, RoutedEventArgs e)
     {

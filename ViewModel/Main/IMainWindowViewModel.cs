@@ -8,4 +8,5 @@ public interface IMainWindowViewModel
     PlaylistCreateWindow PlaylistCreateWindow_Open();
     PlayableSelectWindow PlaylistSelectWindow_Open();
     PlayableSelectWindow AlbumSelectWindow_Open();
+    PlayableSelectWindow ArtistSelectWindow_Open();
 }

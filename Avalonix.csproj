@@ -13,7 +13,6 @@
         <Folder Include="github\"/>
         <AvaloniaResource Include="Assets\**"/>
         <Folder Include="Model\"/>
-        <Folder Include="Model\Media\Artist\"/>
     </ItemGroup>
 
 

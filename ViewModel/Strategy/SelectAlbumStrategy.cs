@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Avalonix.Model.Media;
 using Avalonix.Model.Media.Album;
+using Avalonix.Model.Media.Artist;
 using Avalonix.Services.PlayableManager;
 using Avalonix.Services.PlayableManager.AlbumManager;
 
@@ -27,5 +28,16 @@ public class SelectAndDeleteAlbumWindowStrategy(IAlbumManager albumManager) : IP
     {
         albumManager.RemoveAlbum((album as Album)!);
         return Task.CompletedTask;
+    }
+}
+
+public class SelectAndPlayArtistWindowStrategy(IPlayablesManager playablesManager) : IPlayableWindowStrategy
+{
+    public string WindowTitle => "Select a artist to play";
+    public string ActionButtonText => "Artist name to play";
+
+    public async Task ExecuteAsync(IPlayable artist)
+    {
+        await playablesManager.StartPlayable((artist as Artist)!);
     }
 }

@@ -55,6 +55,10 @@
                         <Button Tag="Albums" Click="SelectAlbum_OnClick">
                             <TextBlock Text="Albums" />
                         </Button>
+                        
+                        <Button Tag="Artists" Click="SelectArtist_OnClick">
+                            <TextBlock Text="Artists" />
+                        </Button>
 
                         <Button Tag="Tracks" Click="PlayAllTracks_OnClick">
                             <TextBlock Text="Tracks" />
