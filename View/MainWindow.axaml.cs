@@ -578,6 +578,7 @@ public partial class MainWindow : Window
         {
             MainGrid.ColumnDefinitions = ColumnDefinitions.Parse(_mainGridColumnsDefinitionMiniWidth);
             DisableTabs();
+            PlayQueueContent.IsVisible = false;
         }
         else
         {
