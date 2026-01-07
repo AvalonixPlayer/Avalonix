@@ -24,13 +24,37 @@ public class SettingsWindowViewModel(ISettingsManager manager, ILogger logger) :
         ]
     };
 
+    private readonly FolderPickerOpenOptions _folderPickerOptions = new()
+    {
+        Title = "Select Folder",
+        AllowMultiple = false
+    };
+
+    public async Task<string?> OpenFolderDialogAsync(Window parent)
+    {
+        try
+        {
+            var storageProvider = parent.StorageProvider;
+            logger.LogInformation("Opening folder dialog");
+            var folder = await storageProvider.OpenFolderPickerAsync(_folderPickerOptions);
+            if (!folder.Count.Equals(0)) return folder.FirstOrDefault()?.Path.LocalPath;
+            logger.LogInformation("No folders selected");
+            return null;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to open folder");
+            return null;
+        }
+    }
+
     public async Task<string?> OpenCoverFileDialogAsync(Window parent)
     {
         try
         {
             var storageProvider = parent.StorageProvider;
 
-            logger.LogInformation("Opening track file dialog");
+            logger.LogInformation("Opening cover file dialog");
 
             var files = await storageProvider.OpenFilePickerAsync(_filePickerOptions);
 

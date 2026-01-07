@@ -32,7 +32,7 @@
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
                         <Button Tag="PlayboxesTab" Name="PlayboxesTab" Click="SelectTab" Classes="h2">
-                            <TextBlock Text="Playboxes" />
+                            <TextBlock Text="Music" />
                         </Button>
                         <Button Tag="MetadataTab" Name="MetadataTab" Click="SelectTab" Classes="h2">
                             <TextBlock Text="Metadata" />

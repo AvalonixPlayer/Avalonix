@@ -77,8 +77,10 @@ public partial class SettingsWindow : Window
 
     private void AddPath_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Directory.Exists(PathToAdd.Text) && !PathsBox.Items.Contains(PathToAdd.Text))
-            PathsBox.Items.Add(PathToAdd.Text);
+        var pathToAdd = Task.Run(() => _vm.OpenFolderDialogAsync(this)).Result;
+        if(pathToAdd == null) return;
+        if (Directory.Exists(pathToAdd) && !PathsBox.Items.Contains(pathToAdd))
+            PathsBox.Items.Add(pathToAdd);
     }
 
     private void RemoveSelectedPath_OnClick(object? sender, RoutedEventArgs e)

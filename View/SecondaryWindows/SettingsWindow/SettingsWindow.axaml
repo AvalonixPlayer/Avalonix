@@ -11,36 +11,38 @@
     <Grid RowDefinitions="*,90">
         <TabControl>
             <TabItem Header="Main">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock HorizontalAlignment="Center">Music paths</TextBlock>
-                    <StackPanel Orientation="Horizontal">
-                        <ComboBox Name="PathsBox" PlaceholderText="Select the path" IsTextSearchEnabled="True"
-                                  HorizontalAlignment="Left" HorizontalContentAlignment="Right"
-                                  VerticalContentAlignment="Center" />
-                        <TextBox Name="PathToAdd" Watermark="Path" />
-                        <StackPanel>
-                            <Button Name="AddPath" Click="AddPath_OnClick">
-                                <TextBlock Text="Add path" />
-                            </Button>
-                            <Button Name="RemoveSelectedPath" Click="RemoveSelectedPath_OnClick">
-                                <TextBlock Text="Remove selectedPath" />
-                            </Button>
+                <Border Classes="Panel">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock HorizontalAlignment="Center">Music paths</TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox Name="PathsBox" PlaceholderText="Select the path" IsTextSearchEnabled="True"
+                                      HorizontalAlignment="Left" HorizontalContentAlignment="Right"
+                                      VerticalContentAlignment="Center" />
+                            <StackPanel>
+                                <Button Name="AddPath" Click="AddPath_OnClick">
+                                    <TextBlock Text="Add path" />
+                                </Button>
+                                <Button Name="RemoveSelectedPath" Click="RemoveSelectedPath_OnClick">
+                                    <TextBlock Text="Remove selected path" />
+                                </Button>
+                            </StackPanel>
                         </StackPanel>
-
                     </StackPanel>
-                </StackPanel>
+                </Border>
             </TabItem>
             <TabItem Header="Play panel">
                 <ScrollViewer Height="300">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                        <Border Name="AlbumCover" Height="300" Width="300"
-                                CornerRadius="25" Background="DimGray" Classes="Image">
-                            <Image Source="" />
-                        </Border>
-                        <Button Name="AddImage" Click="AddImage_OnClick" VerticalAlignment="Top">
-                            <TextBlock Text="Add image" />
-                        </Button>
-                    </StackPanel>
+                    <Border Classes="Panel">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <Border Name="AlbumCover" Height="300" Width="300"
+                                    CornerRadius="25" Background="DimGray" Classes="Image">
+                                <Image Source="" />
+                            </Border>
+                            <Button Name="AddImage" Click="AddImage_OnClick" VerticalAlignment="Top">
+                                <TextBlock Text="Add image" />
+                            </Button>
+                        </StackPanel>
+                    </Border>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Sound">
