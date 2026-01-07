@@ -3,6 +3,8 @@
     <h2 align="center">Avalonix</h2>
 </p>
 
+> [!IMPORTANT]
+> At the moment, the development of the project is completed, but its continuation is not excluded.
 <p align="center">
     <img alt="GitHub Release" src="https://img.shields.io/github/v/release/AvalonixPlayer/Avalonix">
     <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/AvalonixPlayer/Avalonix/total">
