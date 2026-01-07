@@ -22,10 +22,10 @@ public partial class PlaylistCreateWindow : Window, ISecondaryWindow
         InitializeComponent();
         InitializeControls();
         _logger.LogInformation("PlayableCreateWindow opened");
-        
+
         ObserveDirectory.IsCheckedChanged += ObserveDirectoryCheckedChanged;
     }
-    
+
     public void InitializeControls()
     {
         Title = _vm.Strategy.WindowTitle;

@@ -8,15 +8,15 @@ namespace Avalonix.Model.Media.Artist;
 
 public record Artist : IPlayable
 {
-    public string Name { get; }
-    public PlayQueue PlayQueue { get; }
-
     public Artist(List<Track.Track> tracks, IMediaPlayer player, ILogger logger, PlaySettings settings)
     {
         PlayQueue = new PlayQueue(player, logger, settings);
         Name = tracks[0].Metadata.Artist ?? string.Empty;
         PlayQueue.FillQueue(tracks);
     }
+
+    public string Name { get; }
+    public PlayQueue PlayQueue { get; }
 
     public async Task Play()
     {

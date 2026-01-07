@@ -78,7 +78,7 @@ public partial class SettingsWindow : Window
     private void AddPath_OnClick(object? sender, RoutedEventArgs e)
     {
         var pathToAdd = Task.Run(() => _vm.OpenFolderDialogAsync(this)).Result;
-        if(pathToAdd == null) return;
+        if (pathToAdd == null) return;
         if (Directory.Exists(pathToAdd) && !PathsBox.Items.Contains(pathToAdd))
             PathsBox.Items.Add(pathToAdd);
     }

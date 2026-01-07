@@ -30,6 +30,7 @@ public class ArtistManager(
     public CancellationTokenSource? GlobalCancellationTokenSource { get; private set; }
     public IMediaPlayer MediaPlayer { get; } = mediaPlayer;
     public IPlayable? PlayingPlayable { get; set; }
+
     public async Task<List<IPlayable>> GetPlayables()
     {
         var result = await Task.Run(GetArtists);
@@ -72,46 +73,6 @@ public class ArtistManager(
         });
     }
 
-    private async Task<List<Artist>> GetArtists()
-    {
-        await Task.Run(LoadTracks);
-
-        if (!_tracksLoaded)
-        {
-            logger.LogWarning("Tracks metadata not loaded yet. Call LoadTracks() first.");
-            return [];
-        }
-
-        var allValidTracks = _tracks.Where(track =>
-            !string.IsNullOrEmpty(track.Metadata.Artist));
-
-        var albumGroups = allValidTracks.GroupBy(track => new { track.Metadata.Artist});
-
-        return albumGroups.Select(group =>
-            new Artist(group.ToList(), player, logger, settingsManager.Settings.Avalonix.PlaySettings)).ToList();
-    }
-    
-    private async Task LoadTracks()
-    {
-        var paths = diskManager.GetMusicFiles();
-
-        _tracks.Clear();
-        _tracksLoaded = false;
-
-        var tracks = new Track[paths.Count];
-
-        for (var i = 0; i < tracks.Length; i++)
-        {
-            var path = paths[i];
-            var track = new Track(path, cacheManager);
-            await track.FillPrimaryMetaData();
-            tracks[i] = track;
-        }
-
-        _tracks.AddRange(tracks);
-        _tracksLoaded = true;
-    }
-
     public event Action<bool> PlaybackStateChanged
     {
         add => player.PlaybackStateChanged += value;
@@ -137,4 +98,44 @@ public class ArtistManager(
     }
 
     public event Action? PlayableChanged;
+
+    private async Task<List<Artist>> GetArtists()
+    {
+        await Task.Run(LoadTracks);
+
+        if (!_tracksLoaded)
+        {
+            logger.LogWarning("Tracks metadata not loaded yet. Call LoadTracks() first.");
+            return [];
+        }
+
+        var allValidTracks = _tracks.Where(track =>
+            !string.IsNullOrEmpty(track.Metadata.Artist));
+
+        var albumGroups = allValidTracks.GroupBy(track => new { track.Metadata.Artist });
+
+        return albumGroups.Select(group =>
+            new Artist(group.ToList(), player, logger, settingsManager.Settings.Avalonix.PlaySettings)).ToList();
+    }
+
+    private async Task LoadTracks()
+    {
+        var paths = diskManager.GetMusicFiles();
+
+        _tracks.Clear();
+        _tracksLoaded = false;
+
+        var tracks = new Track[paths.Count];
+
+        for (var i = 0; i < tracks.Length; i++)
+        {
+            var path = paths[i];
+            var track = new Track(path, cacheManager);
+            await track.FillPrimaryMetaData();
+            tracks[i] = track;
+        }
+
+        _tracks.AddRange(tracks);
+        _tracksLoaded = true;
+    }
 }

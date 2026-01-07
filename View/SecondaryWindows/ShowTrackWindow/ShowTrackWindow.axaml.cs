@@ -8,6 +8,7 @@ namespace Avalonix.View.SecondaryWindows.ShowTrackWindow;
 public partial class ShowTrackWindow : Window, ISecondaryWindow
 {
     private readonly Track _track;
+
     public ShowTrackWindow(ILogger<WindowManager> logger, Track track)
     {
         InitializeComponent();

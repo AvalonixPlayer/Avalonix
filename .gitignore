@@ -6,3 +6,5 @@ publish
 Avalonix.sln
 nohup.out
 Output
+*.xz
+*.gz

@@ -30,6 +30,18 @@ public partial class EditMetadataWindow : Window, ISecondaryWindow
         InitializeControls();
     }
 
+    public void InitializeControls()
+    {
+        _newCoverPath = null;
+        Title += _track.Metadata.TrackName;
+        Name.Text = _track.Metadata.TrackName;
+        Artist.Text = _track.Metadata.Artist;
+        Album.Text = _track.Metadata.Album;
+        Genre.Text = _track.Metadata.Genre;
+        Year.Text = _track.Metadata.Year.ToString();
+        Lyric.Text = _track.Metadata.Lyric;
+    }
+
     private async void SelectCover(object? sender, RoutedEventArgs e)
     {
         _newCoverPath = await _vm.OpenTrackFileDialogAsync(this);
@@ -54,17 +66,5 @@ public partial class EditMetadataWindow : Window, ISecondaryWindow
             Cover = cover
         };
         await _track.RewriteMetaData(newMetadata);
-    }
-
-    public void InitializeControls()
-    {
-        _newCoverPath = null;
-        Title += _track.Metadata.TrackName;
-        Name.Text = _track.Metadata.TrackName;
-        Artist.Text = _track.Metadata.Artist;
-        Album.Text = _track.Metadata.Album;
-        Genre.Text = _track.Metadata.Genre;
-        Year.Text = _track.Metadata.Year.ToString();
-        Lyric.Text = _track.Metadata.Lyric;
     }
 }

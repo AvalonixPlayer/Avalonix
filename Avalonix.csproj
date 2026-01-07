@@ -44,7 +44,7 @@
     <ItemGroup>
         <AdditionalFiles Include="Styles\Default.axaml"/>
         <AdditionalFiles Include="View\SecondaryWindows\PlaylistCreateWindow\PlaylistCreateWindow.axaml"/>
-        <AdditionalFiles Include="View\SecondaryWindows\SettingsWindow\SettingsWindow.axaml" />
+        <AdditionalFiles Include="View\SecondaryWindows\SettingsWindow\SettingsWindow.axaml"/>
     </ItemGroup>
 
 
@@ -57,7 +57,7 @@
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="View\SecondaryWindows\EditMetadataWindow\EditMetadataWindow.cs">
-          <DependentUpon>EditMetadataWindow.axaml</DependentUpon>
+            <DependentUpon>EditMetadataWindow.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
 

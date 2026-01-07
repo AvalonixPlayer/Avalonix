@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,11 +46,11 @@ public partial class MainWindow : Window
     private readonly Image _playButtonImage = GetImageFromAvares("buttons/play.png");
     private readonly ISettingsManager _settingsManager;
 
-    private Bitmap? _currentAlbumCoverBitmap; 
-
     private readonly Timer _timer;
     private readonly IMainWindowViewModel _vm;
     private readonly IWindowManager _windowManager;
+
+    private Bitmap? _currentAlbumCoverBitmap;
 
     private bool _isUserDragging;
 
@@ -204,7 +203,7 @@ public partial class MainWindow : Window
             _logger.LogError("Error while select album: {ex}", ex);
         }
     }
-    
+
     private async void SelectArtist_OnClick(object? sender, RoutedEventArgs e)
     {
         try
@@ -414,9 +413,9 @@ public partial class MainWindow : Window
         var currentTrack = _playablesManager.CurrentTrack;
 
         var coverData = currentTrack?.Metadata.Cover;
-        
+
         _currentAlbumCoverBitmap?.Dispose();
-        
+
         if (coverData == null)
         {
             var pathToAutoCover = _settingsManager.Settings?.Avalonix.AutoAlbumCoverPath;

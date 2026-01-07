@@ -25,7 +25,14 @@ public partial class PlayableSelectWindow : Window, ISecondaryWindow
         _playables = Task.Run(async () => await _vm.GetPlayableItems()).Result;
         InitializeControls();
     }
-    
+
+    public void InitializeControls()
+    {
+        PlaylistBox.ItemsSource = _playables.Select(p => p.Name).ToList();
+        Title = _vm.Strategy.WindowTitle;
+        SearchBox.Watermark = _vm.Strategy.ActionButtonText;
+    }
+
     private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         var text = SearchBox.Text;
@@ -62,12 +69,5 @@ public partial class PlayableSelectWindow : Window, ISecondaryWindow
         {
             _logger.LogError("Error while starting playlist in SelectWindow: {ex}", ex.Message);
         }
-    }
-
-    public void InitializeControls()
-    {
-        PlaylistBox.ItemsSource = _playables.Select(p => p.Name).ToList();
-        Title = _vm.Strategy.WindowTitle;
-        SearchBox.Watermark = _vm.Strategy.ActionButtonText;
     }
 }

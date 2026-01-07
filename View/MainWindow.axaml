@@ -55,7 +55,7 @@
                         <Button Tag="Albums" Click="SelectAlbum_OnClick">
                             <TextBlock Text="Albums" />
                         </Button>
-                        
+
                         <Button Tag="Artists" Click="SelectArtist_OnClick">
                             <TextBlock Text="Artists" />
                         </Button>
@@ -146,7 +146,7 @@
 
                 <Border Name="AlbumCoverBorder" Height="300" Width="300" IsVisible="True"
                         Background="DimGray" Classes="Image">
-                    <Image Source="" Name="AlbumCover" Stretch="UniformToFill"/>
+                    <Image Source="" Name="AlbumCover" Stretch="UniformToFill" />
                 </Border>
 
                 <Slider HorizontalAlignment="Center" ValueChanged="VolumeSlider_OnValueChanged"
