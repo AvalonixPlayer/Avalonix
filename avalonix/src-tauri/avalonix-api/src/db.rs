@@ -1,10 +1,4 @@
-use crate::{
-    disk_manager,
-    media::{
-        metadata::Metadata,
-        track::{self, Track},
-    },
-};
+use crate::media::track::Track;
 use rkyv::{self};
 use sled::{Error as SledError, Tree};
 
@@ -88,21 +82,29 @@ impl MusicDB {
 
 #[test]
 fn test_db() {
+    use crate::disk_manager;
+    use crate::logger;
+    use crate::media::metadata::Metadata;
+
     let hash_path = disk_manager::avalonix_special_folder_path();
 
     let music_path =
         "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac";
 
-    let db = MusicDB::open(&hash_path).unwrap();
+    let db = MusicDB::open(&hash_path);
+    match db {
+        Ok(db) => {
+            let metadata = Metadata::from(music_path, &db).unwrap();
 
-    let metadata = Metadata::from(music_path, &db).unwrap();
+            let track = Track::new(music_path, metadata);
 
-    let track = Track::new(music_path, metadata);
+            _ = db.save_track(&track);
 
-    _ = db.save_track(&track);
-
-    let tracks = db.get_all_tracks().unwrap();
-    for track in tracks {
-        println!("{}", track.metadata);
+            let tracks = db.get_all_tracks().unwrap();
+            for track in tracks {
+                logger::debug(&format!("{}", track.metadata));
+            }
+        }
+        Err(err) => logger::error(&err.to_string()),
     }
 }

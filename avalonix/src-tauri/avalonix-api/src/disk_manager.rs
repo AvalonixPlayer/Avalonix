@@ -1,9 +1,5 @@
 use crate::utils::{OS, current_os};
-use std::{
-    collections::{HashMap, HashSet},
-    env::var,
-    path::PathBuf,
-};
+use std::{collections::HashSet, env::var, path::PathBuf};
 
 use glob::glob;
 
@@ -23,6 +19,8 @@ pub fn avalonix_special_folder_path() -> String {
 }
 
 pub fn get_all_tracks_paths() -> Vec<String> {
+    use crate::logger;
+
     let mut dirs_paths: Vec<String> = Vec::new();
 
     dirs_paths.push("D:\\music".to_string());
@@ -35,7 +33,7 @@ pub fn get_all_tracks_paths() -> Vec<String> {
             for entry in glob(&expr).unwrap() {
                 let str = entry.unwrap().to_str().unwrap().to_string();
                 hash_set.insert(str.clone());
-                println!("{}", str);
+                logger::debug(&format!("{}", str));
             }
         }
     }

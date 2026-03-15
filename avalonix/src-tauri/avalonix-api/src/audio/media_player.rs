@@ -1,17 +1,17 @@
 use std::{
     fs::File,
-    io::{BufReader, Error},
-    sync::{Arc, Mutex, RwLock, mpsc::channel},
+    io::BufReader,
+    sync::{Arc, Mutex},
     thread,
     time::Duration,
 };
 
 use rodio::{
-    Decoder, DeviceTrait, MixerDeviceSink, Player, Source,
-    cpal::{self, DeviceDescription, Host, traits::HostTrait},
-    mixer::Mixer,
-    source::SineWave,
+    Decoder, DeviceTrait, MixerDeviceSink, Player,
+    cpal::{DeviceDescription, Host, traits::HostTrait},
 };
+
+use crate::logger;
 
 struct Playback {
     mixer: MixerDeviceSink,
@@ -25,24 +25,46 @@ pub struct MediaPlayer {
 }
 
 impl<'a> Playback {
-    fn new() -> Self {
-        let sink_handle =
-            rodio::DeviceSinkBuilder::open_default_sink().expect("open default audio stream");
+    fn new() -> Result<Self, String> {
+        match rodio::DeviceSinkBuilder::open_default_sink() {
+            Ok(sink) => {
+                let mixer = sink.mixer();
+                let player = Player::connect_new(mixer);
 
-        let mixer = sink_handle.mixer();
-        let player = Player::connect_new(mixer);
+                let host = Host::default();
 
-        let host = Host::default();
-
-        Self {
-            mixer: sink_handle,
-            last_device_description: host.default_output_device().unwrap().description().unwrap(),
-            player,
-            last_playing_track_path: None,
-        }
+                return Ok(Self {
+                    mixer: sink,
+                    last_device_description: host
+                        .default_output_device()
+                        .unwrap()
+                        .description()
+                        .unwrap(),
+                    player,
+                    last_playing_track_path: None,
+                });
+            }
+            Err(_) => return Err("default device is None".to_string()),
+        };
     }
 
     fn change_device(&mut self) {
+        let new = Self::new();
+
+        match new {
+            Ok(new) => {
+                let host = Host::default();
+                let file_path = self.last_playing_track_path.as_ref().unwrap();
+                new.play(file_path.clone());
+
+                self.mixer = new.mixer;
+                self.last_device_description =
+                    host.default_output_device().unwrap().description().unwrap();
+                self.player = new.player;
+            }
+            Err(_) => {}
+        }
+        /*
         let sink_handle =
             rodio::DeviceSinkBuilder::open_default_sink().expect("open default audio stream");
 
@@ -62,6 +84,7 @@ impl<'a> Playback {
         self.mixer = sink_handle;
         self.last_device_description = host.default_output_device().unwrap().description().unwrap();
         self.player = player;
+        */
     }
 
     fn play(&self, file_path: String) {
@@ -93,9 +116,14 @@ impl<'a> Playback {
 }
 
 impl MediaPlayer {
-    pub fn new() -> Self {
-        Self {
-            playback: Some(Playback::new()),
+    pub fn new() -> Result<Self, String> {
+        let playback = Playback::new();
+        match playback {
+            Ok(pb) => Ok(Self { playback: Some(pb) }),
+            Err(err) => {
+                logger::error(&err);
+                Err(err)
+            }
         }
     }
 
@@ -133,7 +161,7 @@ impl MediaPlayer {
                 let device = host.default_output_device();
                 match device {
                     Some(_) => {}
-                    None => println!("can`t find default device"),
+                    None => logger::warn("can`t find default device"),
                 }
                 thread::sleep(Duration::new(1, 0));
                 {
@@ -158,18 +186,24 @@ impl MediaPlayer {
 
 #[test]
 fn test_play() {
-    let player = Arc::new(Mutex::new(MediaPlayer::new()));
+    let mp = MediaPlayer::new();
+    match mp {
+        Ok(player) => {
+            let player = Arc::new(Mutex::new(player));
 
-    let clone1 = player.clone();
-    let clone2 = player.clone();
+            let clone1 = player.clone();
+            let clone2 = player.clone();
 
-    let file_path =
+            let file_path =
         "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac"
             .to_string();
 
-    MediaPlayer::update(clone2);
+            MediaPlayer::update(clone2);
 
-    clone1.lock().as_mut().unwrap().play(file_path);
+            clone1.lock().as_mut().unwrap().play(file_path);
+        }
+        Err(_) => {}
+    }
 
     loop {}
 }

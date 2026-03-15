@@ -1,14 +1,11 @@
 #![allow(missing_docs)]
-use lofty::picture::Picture;
 use lofty::prelude::*;
 use lofty::probe::Probe;
 use rkyv::{Archive, Deserialize, Serialize};
-use sled::Db;
 use std::fmt;
-use std::{ffi::os_str::Display, path::Path};
+use std::path::Path;
 
 use crate::db::MusicDB;
-use crate::disk_manager;
 use crate::media::track::Track;
 
 #[derive(Archive, Deserialize, Serialize, Debug, Clone)]
@@ -36,7 +33,7 @@ impl Metadata {
         let mut track_hash = None;
 
         for track in all_tracks {
-            if (track.file_path == track_path) {
+            if track.file_path == track_path {
                 track_hash = Some(track.clone());
                 break;
             }
@@ -67,6 +64,7 @@ impl Metadata {
                     Some(v) => cover = Some(v.data().to_owned()),
                     None => cover = None,
                 }
+
                 let result = Metadata {
                     title: tag.title().map(String::from),
                     artist: tag.artist().map(String::from),
@@ -109,14 +107,21 @@ impl fmt::Display for Metadata {
 
 #[test]
 fn test_metadata_from() {
+    use crate::disk_manager;
+    use crate::logger;
+
     let hash_path = disk_manager::avalonix_special_folder_path();
 
     let music_path =
         "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac";
 
-    let db = MusicDB::open(&hash_path).unwrap();
+    let db = MusicDB::open(&hash_path);
+    match db {
+        Ok(db) => {
+            let metadata = Metadata::from(music_path, &db);
 
-    let metadata = Metadata::from(music_path, &db);
-
-    println!("{}", metadata.unwrap());
+            logger::debug(&format!("{}", metadata.unwrap()));
+        }
+        Err(err) => logger::error(&err.to_string()),
+    }
 }
