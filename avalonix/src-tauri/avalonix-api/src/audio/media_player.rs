@@ -24,7 +24,7 @@ pub struct MediaPlayer {
     playback: Option<Playback>,
 }
 
-impl<'a> Playback {
+impl Playback {
     fn new() -> Result<Self, String> {
         match rodio::DeviceSinkBuilder::open_default_sink() {
             Ok(sink) => {
