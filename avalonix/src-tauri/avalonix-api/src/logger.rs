@@ -1,21 +1,30 @@
 use colored::Colorize;
 
 pub fn info(msg: &str) {
-    println!("{}", "INFO ".green().to_string() + msg);
+    println!("{} {}", "INFO".green(), msg);
 }
 
 pub fn error(msg: &str) {
-    println!("{}", "ERROR ".red().to_string() + msg);
+    println!("{} {}", "ERROR".red(), msg);
 }
 
 pub fn debug(msg: &str) {
-    println!("{}", "DEBUG ".blue().to_string() + msg);
+    println!("{} {}", "DEBUG".blue(), msg);
 }
 
 pub fn fatal(msg: &str) {
-    println!("{}", "FATAL ".red().to_string() + msg);
+    println!("{} {}", "FATAL".red().bold(), msg);
 }
 
 pub fn warn(msg: &str) {
-    println!("{}", "WARN ".yellow().to_string() + msg);
+    println!("{} {}", "WARN".yellow(), msg);
+}
+
+#[test]
+fn test_logger() {
+    info("Test");
+    error("Test");
+    debug("Test");
+    warn("Test");
+    fatal("Test");
 }
