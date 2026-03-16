@@ -58,13 +58,14 @@ impl Metadata {
                 };
 
                 let album_name = tag.album().map(String::from);
+                let artist_name = tag.artist().map(String::from);
 
                 let album_cover_hash_path: Option<String>;
 
-                match album_name {
-                    Some(album_name) => {
+                match (artist_name, album_name) {
+                    (Some(artist_name), Some(album_name)) => {
                         let path = PathBuf::from(disk_manager::avalonix_special_folder_path())
-                            .join(format!("{}.jpg", album_name))
+                            .join(format!("{}-{}.jpg", artist_name, album_name))
                             .to_str()
                             .unwrap()
                             .to_string();
@@ -83,7 +84,7 @@ impl Metadata {
                             }
                         }
                     }
-                    None => album_cover_hash_path = None,
+                    _ => album_cover_hash_path = None,
                 }
 
                 let result = Metadata {
