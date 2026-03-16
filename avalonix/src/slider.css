@@ -4,12 +4,18 @@ input[type="range"] {
     transition: all 0.2s ease;
 }
 
-#slider-playback {
-  height: 10px;
-  width: 55%;
+#playtime-slider {
+  display: flex;
+  align-self: end;
+  width: 70%;
+  border-radius: 5px;
+  height: 5px;
+  margin-left: 25px;
+  margin-bottom: 22px;
+
+  transition: all 0.2s ease;
 }
 
-#slider-volume {
+#playtime-slider:hover {
   height: 10px;
-  width: 20%;
 }
