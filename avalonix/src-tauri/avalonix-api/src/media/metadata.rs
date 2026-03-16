@@ -2,10 +2,11 @@
 use lofty::prelude::*;
 use lofty::probe::Probe;
 use rkyv::{Archive, Deserialize, Serialize};
-use std::fmt;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::{fmt, fs};
 
 use crate::db::MusicDB;
+use crate::disk_manager;
 use crate::media::track::Track;
 
 #[derive(Archive, Deserialize, Serialize, Debug, Clone)]
@@ -17,7 +18,7 @@ pub struct Metadata {
     pub year: Option<u16>,
     pub lyrics: Option<String>,
     pub bitrate: Option<u32>,
-    pub cover: Option<Vec<u8>>,
+    pub album_cover_hash_path: Option<String>,
     pub duration_secs: u64, // u64 instead Duration
 }
 
@@ -56,13 +57,33 @@ impl Metadata {
                     None => tagged_file.first_tag().ok_or("ERROR: No tags found!")?,
                 };
 
-                let cover_opt = tag.pictures().first();
+                let album_name = tag.album().map(String::from);
 
-                let cover: Option<Vec<u8>>;
+                let album_cover_hash_path: Option<String>;
 
-                match cover_opt {
-                    Some(v) => cover = Some(v.data().to_owned()),
-                    None => cover = None,
+                match album_name {
+                    Some(album_name) => {
+                        let path = PathBuf::from(disk_manager::avalonix_special_folder_path())
+                            .join(format!("{}.jpg", album_name))
+                            .to_str()
+                            .unwrap()
+                            .to_string();
+
+                        if fs::exists(&path).unwrap() {
+                            album_cover_hash_path = Some(path);
+                        } else {
+                            let cover_opt = tag.pictures().first();
+
+                            match cover_opt {
+                                Some(v) => {
+                                    _ = fs::write(&path, v.data().to_owned());
+                                    album_cover_hash_path = Some(path);
+                                }
+                                None => album_cover_hash_path = None,
+                            }
+                        }
+                    }
+                    None => album_cover_hash_path = None,
                 }
 
                 let result = Metadata {
@@ -73,7 +94,7 @@ impl Metadata {
                     year: tag.date().map(|d| d.year),
                     lyrics: tag.get_string(ItemKey::Lyrics).map(String::from),
                     bitrate: properties.overall_bitrate(),
-                    cover: cover,
+                    album_cover_hash_path,
                     duration_secs: properties.duration().as_secs(),
                 };
                 let track = Track::new(track_path, result.clone());
@@ -123,5 +144,19 @@ fn test_metadata_from() {
             logger::debug(&format!("{}", metadata.unwrap()));
         }
         Err(err) => logger::error(&err.to_string()),
+    }
+}
+
+#[test]
+fn test_BBBBB() {
+    use crate::disk_manager;
+    use crate::logger;
+    let hash_path = disk_manager::avalonix_special_folder_path();
+    let all_tracks = disk_manager::get_all_tracks_paths();
+
+    let db = MusicDB::open(&hash_path).unwrap();
+
+    for track in all_tracks {
+        let a = Metadata::from(&track, &db);
     }
 }
