@@ -6,8 +6,8 @@ use std::path::{Path, PathBuf};
 use std::{fmt, fs};
 
 use crate::db::MusicDB;
-use crate::disk_manager;
 use crate::media::track::Track;
+use crate::{disk_manager, logger};
 
 #[derive(Archive, Deserialize, Serialize, Debug, Clone)]
 pub struct Metadata {
@@ -42,7 +42,7 @@ impl Metadata {
 
         match track_hash {
             Some(hash) => {
-                println!("metadata loaded from hash");
+                logger::debug("metadata loaded from hash");
                 Ok(hash.metadata.clone())
             }
             None => {
@@ -101,7 +101,7 @@ impl Metadata {
                 db.save_track(&track).unwrap();
                 drop(track);
 
-                println!("metadata loaded without hash");
+                logger::debug("metadata loaded without hash");
 
                 Ok(result)
             }
@@ -148,9 +148,8 @@ fn test_metadata_from() {
 }
 
 #[test]
-fn test_BBBBB() {
+fn test_load_all_metadata() {
     use crate::disk_manager;
-    use crate::logger;
     let hash_path = disk_manager::avalonix_special_folder_path();
     let all_tracks = disk_manager::get_all_tracks_paths();
 
