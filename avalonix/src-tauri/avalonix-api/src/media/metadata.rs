@@ -98,6 +98,7 @@ impl Metadata {
                     album_cover_hash_path,
                     duration_secs: properties.duration().as_secs(),
                 };
+
                 let track = Track::new(track_path, result.clone());
                 db.save_track(&track).unwrap();
                 drop(track);
