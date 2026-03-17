@@ -43,13 +43,19 @@ impl Metadata {
         match track_hash {
             Some(hash) => {
                 logger::debug("metadata loaded from hash");
-                Ok(hash.metadata.clone())
+                Ok(hash.metadata)
             }
             None => {
                 let tagged_file = Probe::open(path)
                     .map_err(|e| format!("ERROR: Bad path: {}", e))?
                     .read()
-                    .map_err(|e| format!("ERROR: Failed to read file: {}", e))?;
+                    .map_err(|e| {
+                        format!(
+                            "ERROR: Failed to read file \"{}\": {}",
+                            path.to_str().unwrap(),
+                            e
+                        )
+                    })?;
 
                 let properties = tagged_file.properties();
                 let tag = match tagged_file.primary_tag() {

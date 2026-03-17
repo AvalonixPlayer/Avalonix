@@ -39,6 +39,7 @@ fn test_track_container_new() {
     let cont = TracksContainer::new(&db);
 
     let tracks = &cont.all_tracks;
+
     for track in tracks {
         logger::debug(&format!("{}", track.metadata));
     }
