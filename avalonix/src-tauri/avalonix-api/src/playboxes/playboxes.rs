@@ -54,7 +54,14 @@ impl<'a> AlbumsContainer<'a> {
                         }
                     }
                 }
-                None => {}
+                None => match albums.get_mut("Unknown album") {
+                    Some(album) => album.push(track),
+                    None => {
+                        let mut vec = Vec::new();
+                        vec.push(track);
+                        albums.insert("Unknown album".to_string(), vec);
+                    }
+                },
             }
         }
 
