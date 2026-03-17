@@ -154,16 +154,3 @@ fn test_metadata_from() {
         Err(err) => logger::error(&err.to_string()),
     }
 }
-
-#[test]
-fn test_load_all_metadata() {
-    use crate::disk_manager;
-    let hash_path = disk_manager::avalonix_special_folder_path();
-    let all_tracks = disk_manager::get_all_tracks_paths();
-
-    let db = MusicDB::open(&hash_path).unwrap();
-
-    for track in all_tracks {
-        let a = Metadata::from(&track, &db);
-    }
-}

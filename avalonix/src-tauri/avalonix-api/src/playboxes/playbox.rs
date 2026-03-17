@@ -8,7 +8,7 @@ use crate::{
 };
 
 pub struct TracksContainer {
-    all_tracks: Vec<Track>,
+    pub all_tracks: Vec<Track>,
 }
 
 impl TracksContainer {
