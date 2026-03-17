@@ -1,2 +1,1 @@
-pub mod album;
-pub mod playbox;
+pub mod playboxes;
