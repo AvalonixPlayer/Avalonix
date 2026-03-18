@@ -8,7 +8,7 @@ use avalonix_api::{
     audio::media_player::{self, MediaPlayer},
     db::MusicDB,
     disk_manager, logger,
-    playboxes::playboxes::{AlbumsContainer, PlayboxesManager, TracksContainer},
+    playboxes::playboxes::{AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer},
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -42,7 +42,7 @@ fn init_api() -> Result<(Arc<Mutex<MediaPlayer>>), String> {
                 Ok(db) => {
                     let tracks_container = TracksContainer::new(&db);
                     let albums_container = AlbumsContainer::new(&tracks_container);
-                    let artists_container = AlbumsContainer::new(&tracks_container);
+                    let artists_container = AristsContainer::new(&tracks_container);
 
                     let playboxes_manager = PlayboxesManager::new(
                         tracks_container,
