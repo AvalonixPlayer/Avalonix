@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
 
 use crate::{
     db::MusicDB,
@@ -10,32 +10,34 @@ use crate::{
 };
 
 pub struct TracksContainer {
-    pub all_tracks: Vec<Track>,
+    pub all_tracks: Vec<Arc<Track>>,
 }
 
-pub struct AlbumsContainer<'a> {
-    pub albums: HashMap<String, Vec<&'a Track>>,
+pub struct AlbumsContainer {
+    pub albums: HashMap<String, Vec<Arc<Track>>>,
 }
 
-pub struct AristsContainer<'a> {
-    pub artists: HashMap<String, Vec<&'a Track>>,
+pub struct AristsContainer {
+    pub artists: HashMap<String, Vec<Arc<Track>>>,
 }
 
-pub struct PlayboxesManager<'a> {
+pub struct PlayboxesManager {
     pub tracks_container: TracksContainer,
-    pub albums_container: AlbumsContainer<'a>,
-    pub artists_container: AristsContainer<'a>,
+    pub albums_container: AlbumsContainer,
+    pub artists_container: AristsContainer,
 }
 
 impl TracksContainer {
     pub fn new(db: &MusicDB) -> TracksContainer {
         let all_tracks_paths = disk_manager::get_all_tracks_paths();
-        let mut result_tracks: Vec<Track> = Vec::new();
+        let mut result_tracks: Vec<Arc<Track>> = Vec::new();
 
         for track_path in all_tracks_paths {
             let track_metadata = Metadata::from(&track_path, &db);
             match track_metadata {
-                Ok(track_metadata) => result_tracks.push(Track::new(&track_path, track_metadata)),
+                Ok(track_metadata) => {
+                    result_tracks.push(Arc::new(Track::new(&track_path, track_metadata)))
+                }
                 Err(err) => logger::error(&err.to_string()),
             }
         }
@@ -45,11 +47,11 @@ impl TracksContainer {
     }
 }
 
-impl<'a> AlbumsContainer<'a> {
-    pub fn new(container: &'a TracksContainer) -> AlbumsContainer<'a> {
-        let all_tracks: Vec<&Track> = container.all_tracks.iter().collect();
+impl AlbumsContainer {
+    pub fn new(container: &TracksContainer) -> AlbumsContainer {
+        let all_tracks = container.all_tracks.clone();
 
-        let mut albums: HashMap<String, Vec<&'a Track>> = HashMap::new();
+        let mut albums: HashMap<String, Vec<Arc<Track>>> = HashMap::new();
 
         for track in all_tracks {
             match track.metadata.album.as_ref() {
@@ -59,7 +61,7 @@ impl<'a> AlbumsContainer<'a> {
                         Some(album) => album.push(track),
                         None => {
                             let mut vec = Vec::new();
-                            vec.push(track);
+                            vec.push(track.clone());
                             albums.insert(album_name.clone(), vec);
                         }
                     }
@@ -79,11 +81,11 @@ impl<'a> AlbumsContainer<'a> {
     }
 }
 
-impl<'a> AristsContainer<'a> {
-    pub fn new(container: &'a TracksContainer) -> AristsContainer<'a> {
-        let all_tracks: Vec<&Track> = container.all_tracks.iter().collect();
+impl AristsContainer {
+    pub fn new(container: &TracksContainer) -> AristsContainer {
+        let all_tracks = container.all_tracks.clone();
 
-        let mut artists: HashMap<String, Vec<&'a Track>> = HashMap::new();
+        let mut artists: HashMap<String, Vec<Arc<Track>>> = HashMap::new();
 
         for track in all_tracks {
             match track.metadata.artist.as_ref() {
@@ -93,7 +95,7 @@ impl<'a> AristsContainer<'a> {
                         Some(artist) => artist.push(track),
                         None => {
                             let mut vec = Vec::new();
-                            vec.push(track);
+                            vec.push(track.clone());
                             artists.insert(artist_name.clone(), vec);
                         }
                     }
@@ -113,12 +115,12 @@ impl<'a> AristsContainer<'a> {
     }
 }
 
-impl<'a> PlayboxesManager<'a> {
+impl PlayboxesManager {
     pub fn new(
         tracks_container: TracksContainer,
-        albums_container: AlbumsContainer<'a>,
-        artists_container: AristsContainer<'a>,
-    ) -> PlayboxesManager<'a> {
+        albums_container: AlbumsContainer,
+        artists_container: AristsContainer,
+    ) -> PlayboxesManager {
         PlayboxesManager {
             tracks_container,
             albums_container,
