@@ -1,4 +1,5 @@
 body {
-    font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+    font-family: system-ui, cursive !important;
+    font-size: 14pt;
     color: white;
 }
