@@ -158,6 +158,7 @@ impl MediaPlayer {
         thread::spawn(move || {
             let host = Host::default();
             loop {
+                println!("Checking for device");
                 let device = host.default_output_device();
                 match device {
                     Some(_) => {}

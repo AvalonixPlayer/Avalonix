@@ -21,6 +21,12 @@ pub struct AristsContainer<'a> {
     pub artists: HashMap<String, Vec<&'a Track>>,
 }
 
+pub struct PlayboxesManager<'a> {
+    pub tracks_container: TracksContainer,
+    pub albums_container: AlbumsContainer<'a>,
+    pub artists_container: AristsContainer<'a>,
+}
+
 impl TracksContainer {
     pub fn new(db: &MusicDB) -> TracksContainer {
         let all_tracks_paths = disk_manager::get_all_tracks_paths();
@@ -104,6 +110,20 @@ impl<'a> AristsContainer<'a> {
         }
 
         AristsContainer { artists }
+    }
+}
+
+impl<'a> PlayboxesManager<'a> {
+    pub fn new(
+        tracks_container: TracksContainer,
+        albums_container: AlbumsContainer<'a>,
+        artists_container: AristsContainer<'a>,
+    ) -> PlayboxesManager<'a> {
+        PlayboxesManager {
+            tracks_container,
+            albums_container,
+            artists_container,
+        }
     }
 }
 
