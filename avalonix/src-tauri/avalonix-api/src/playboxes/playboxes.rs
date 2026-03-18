@@ -17,6 +17,10 @@ pub struct AlbumsContainer<'a> {
     pub albums: HashMap<String, Vec<&'a Track>>,
 }
 
+pub struct AristsContainer<'a> {
+    pub artists: HashMap<String, Vec<&'a Track>>,
+}
+
 impl TracksContainer {
     pub fn new(db: &MusicDB) -> TracksContainer {
         let all_tracks_paths = disk_manager::get_all_tracks_paths();
@@ -69,6 +73,40 @@ impl<'a> AlbumsContainer<'a> {
     }
 }
 
+impl<'a> AristsContainer<'a> {
+    pub fn new(container: &'a TracksContainer) -> AristsContainer<'a> {
+        let all_tracks: Vec<&Track> = container.all_tracks.iter().collect();
+
+        let mut artists: HashMap<String, Vec<&'a Track>> = HashMap::new();
+
+        for track in all_tracks {
+            match track.metadata.artist.as_ref() {
+                Some(artist_name) => {
+                    let artist = artists.get_mut(artist_name);
+                    match artist {
+                        Some(artist) => artist.push(track),
+                        None => {
+                            let mut vec = Vec::new();
+                            vec.push(track);
+                            artists.insert(artist_name.clone(), vec);
+                        }
+                    }
+                }
+                None => match artists.get_mut("Unknown album") {
+                    Some(artist) => artist.push(track),
+                    None => {
+                        let mut vec = Vec::new();
+                        vec.push(track);
+                        artists.insert("Unknown album".to_string(), vec);
+                    }
+                },
+            }
+        }
+
+        AristsContainer { artists }
+    }
+}
+
 #[test]
 fn test_track_container_new() {
     let hash_path = disk_manager::avalonix_special_folder_path();
@@ -95,6 +133,25 @@ fn test_albums_container_new() {
             logger::debug(&format!(
                 "album - {}; track - {}",
                 album.0,
+                track.metadata.title.clone().unwrap()
+            ));
+        }
+    }
+}
+
+#[test]
+fn test_artists_container_new() {
+    let hash_path = disk_manager::avalonix_special_folder_path();
+    let db = MusicDB::open(&hash_path).unwrap();
+    let cont = TracksContainer::new(&db);
+
+    let artists_container = AristsContainer::new(&cont);
+
+    for artist in artists_container.artists {
+        for track in artist.1 {
+            logger::debug(&format!(
+                "artist - {}; track - {}",
+                artist.0.clone(),
                 track.metadata.title.clone().unwrap()
             ));
         }
