@@ -15,15 +15,36 @@ use avalonix_api::{
 //#[cfg(not(test))]
 
 pub fn run() {
-    init_api();
-    tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+    let api = init_api();
+    match api {
+        Ok(api) => {
+            let player = api.0;
+            let playboxes_manager = api.1;
+
+            let artists = &playboxes_manager.artists_container.artists;
+            let albums = &playboxes_manager.albums_container.albums;
+
+            let albums_names = albums.keys();
+
+            for album in albums_names {
+                println!("{}", album);
+                let album_it = albums.get(album).unwrap();
+                let first_track = &album_it[0];
+                player.lock().unwrap().play(first_track.file_path.clone());
+                break;
+            }
+
+            tauri::Builder::default()
+                .plugin(tauri_plugin_opener::init())
+                .invoke_handler(tauri::generate_handler![])
+                .run(tauri::generate_context!())
+                .expect("error while running tauri application");
+        }
+        Err(err) => logger::error(&err),
+    }
 }
 
-fn init_api() -> Result<(Arc<Mutex<MediaPlayer>>), String> {
+fn init_api() -> Result<(Arc<Mutex<MediaPlayer>>, PlayboxesManager), String> {
     let db_path = disk_manager::avalonix_special_folder_path();
     let db = MusicDB::open(&db_path);
 
@@ -49,7 +70,8 @@ fn init_api() -> Result<(Arc<Mutex<MediaPlayer>>), String> {
                         albums_container,
                         artists_container,
                     );
-                    Ok((player_clone2))
+
+                    Ok((player_clone2, playboxes_manager))
                 }
                 Err(err) => {
                     logger::error(&err.to_string());
