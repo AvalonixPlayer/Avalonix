@@ -52,8 +52,6 @@ body {
 }
 
 .section.playback-controll {
-  justify-content: center;
-
   display: flex;
   position: fixed;
 
@@ -62,7 +60,7 @@ body {
   left: 15px;
   right: 15px;
 
-  height: 150px;
+  height: 100px;
   
   background: linear-gradient(to right, var(--background-gradient1), var(--background-gradient2));
 

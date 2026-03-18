@@ -45,31 +45,34 @@ button {
 }
 
 .playback-player-contoll-btn {
-    margin: 5px;
+    margin-left: 35px;
+    margin-bottom: 20px;
     border-radius: 100%;
 
     border: none;
 
     background-color: transparent;
 
-    width: 100px;
-    height: 100px;
+    width: 10px;
+    height: 10px;
+
+    transition: all 0.2s ease;
 }
 
 .playback-player-contoll-btn img {
     position: absolute;
     transform: translate(-50%,-50%);
 
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
 
-    transition: all 0.1s ease;
+    transition: all 0.2s ease;
 }
 
 .playback-player-contoll-btn img:hover {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
 
     background-color: rgba(116, 116, 116, 0.219);
-    border-radius: 30%;
+    border-radius: 60%;
 }
