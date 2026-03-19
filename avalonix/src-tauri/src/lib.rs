@@ -8,8 +8,17 @@ use avalonix_api::{
     audio::media_player::{self, MediaPlayer},
     db::MusicDB,
     disk_manager, logger,
-    playboxes::playboxes::{AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer},
+    playboxes::playboxes::{
+        self, AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer,
+    },
 };
+use tauri::{window, Emitter};
+
+#[tauri::command]
+fn get_all_tracks(window: tauri::Window, playboxes: tauri::State<'_, PlayboxesManager>) {
+    let tracks = &playboxes.tracks_container.all_tracks;
+    window.emit("get_all_tracks", tracks).unwrap();
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 //#[cfg(not(test))]
@@ -36,7 +45,8 @@ pub fn run() {
 
             tauri::Builder::default()
                 .plugin(tauri_plugin_opener::init())
-                .invoke_handler(tauri::generate_handler![])
+                .invoke_handler(tauri::generate_handler![get_all_tracks])
+                .manage(playboxes_manager)
                 .run(tauri::generate_context!())
                 .expect("error while running tauri application");
         }

@@ -100,12 +100,12 @@ impl AristsContainer {
                         }
                     }
                 }
-                None => match artists.get_mut("Unknown album") {
+                None => match artists.get_mut("Unknown artist") {
                     Some(artist) => artist.push(track),
                     None => {
                         let mut vec = Vec::new();
                         vec.push(track);
-                        artists.insert("Unknown album".to_string(), vec);
+                        artists.insert("Unknown artist".to_string(), vec);
                     }
                 },
             }

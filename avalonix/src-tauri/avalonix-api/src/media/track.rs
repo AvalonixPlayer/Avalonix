@@ -2,7 +2,7 @@ use super::metadata::Metadata;
 use rkyv::{Archive, Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Archive, Deserialize, Serialize, Debug, Clone)]
+#[derive(serde::Serialize, Archive, Deserialize, Serialize, Debug, Clone)]
 pub struct Track {
     pub id: String,
     pub metadata: Metadata,

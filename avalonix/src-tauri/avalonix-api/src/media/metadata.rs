@@ -9,7 +9,7 @@ use crate::db::MusicDB;
 use crate::media::track::Track;
 use crate::{disk_manager, logger};
 
-#[derive(Archive, Deserialize, Serialize, Debug, Clone)]
+#[derive(serde::Serialize, Archive, Deserialize, Serialize, Debug, Clone)]
 pub struct Metadata {
     pub title: Option<String>,
     pub artist: Option<String>,

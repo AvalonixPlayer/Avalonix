@@ -1,6 +1,5 @@
 :root {
-    --playbar-btn-hover-color: rgb(96, 51, 117);
-    --playbar-btn-active-color: rgb(128, 59, 160);
+    --pick-btn-hover-color: rgb(96, 51, 117);
 }
 
 button {
@@ -34,6 +33,7 @@ button {
 }
 
 .pick-btn:hover {
+    color: var(--pick-btn-hover-color);
     background-color: rgba(87, 87, 87, 0.356);
     padding-left: 30px;
 }
