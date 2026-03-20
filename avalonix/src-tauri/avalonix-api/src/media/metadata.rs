@@ -23,17 +23,12 @@ pub struct Metadata {
 }
 
 impl Metadata {
-    pub fn from(track_path: &str, db: &MusicDB) -> Result<Self, String> {
+    pub fn from(track_path: &str, db: &MusicDB, tracks_hash: Vec<&Track>) -> Result<Self, String> {
         let path = Path::new(&track_path);
-
-        let all_tracks = match db.get_all_tracks() {
-            Ok(some) => some,
-            Err(_) => Vec::new(),
-        };
 
         let mut track_hash = None;
 
-        for track in all_tracks {
+        for track in tracks_hash {
             if track.file_path == track_path {
                 track_hash = Some(track.clone());
                 break;
@@ -145,9 +140,12 @@ fn test_metadata_from() {
         "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac";
 
     let db = MusicDB::open(&hash_path);
+
     match db {
         Ok(db) => {
-            let metadata = Metadata::from(music_path, &db);
+            let all_tracks = db.get_all_tracks().unwrap();
+            let tracks_hash = all_tracks.iter().collect();
+            let metadata = Metadata::from(music_path, &db, tracks_hash);
 
             logger::debug(&format!("{}", metadata.unwrap()));
         }

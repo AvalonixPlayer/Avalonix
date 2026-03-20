@@ -33,7 +33,10 @@ impl TracksContainer {
         let mut result_tracks: Vec<Arc<Track>> = Vec::new();
 
         for track_path in all_tracks_paths {
-            let track_metadata = Metadata::from(&track_path, &db);
+            let all_tracks = db.get_all_tracks().unwrap();
+            let tracks_hash = all_tracks.iter().collect();
+
+            let track_metadata = Metadata::from(&track_path, &db, tracks_hash);
             match track_metadata {
                 Ok(track_metadata) => {
                     result_tracks.push(Arc::new(Track::new(&track_path, track_metadata)))
