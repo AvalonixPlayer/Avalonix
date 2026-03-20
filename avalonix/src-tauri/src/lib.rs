@@ -1,27 +1,15 @@
-use std::{
-    sync::{Arc, Mutex},
-    thread,
-    time::Duration,
-};
+pub mod commands;
+
+use std::sync::{Arc, Mutex};
 
 use avalonix_api::{
-    audio::media_player::{self, MediaPlayer},
+    audio::media_player::MediaPlayer,
     db::MusicDB,
     disk_manager, logger,
-    playboxes::playboxes::{
-        self, AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer,
-    },
+    playboxes::playboxes::{AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer},
 };
-use tauri::{window, Emitter};
-
-#[tauri::command]
-fn get_all_tracks(window: tauri::Window, playboxes: tauri::State<'_, PlayboxesManager>) {
-    let tracks = &playboxes.tracks_container.all_tracks;
-    window.emit("get_all_tracks", tracks).unwrap();
-}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-//#[cfg(not(test))]
 
 pub fn run() {
     let api = init_api();
@@ -30,22 +18,10 @@ pub fn run() {
             let player = api.0;
             let playboxes_manager = api.1;
 
-            let artists = &playboxes_manager.artists_container.artists;
-            let albums = &playboxes_manager.albums_container.albums;
-
-            let albums_names = albums.keys();
-
-            for album in albums_names {
-                println!("{}", album);
-                let album_it = albums.get(album).unwrap();
-                let first_track = &album_it[0];
-                player.lock().unwrap().play(first_track.file_path.clone());
-                break;
-            }
-
             tauri::Builder::default()
                 .plugin(tauri_plugin_opener::init())
-                .invoke_handler(tauri::generate_handler![get_all_tracks])
+                .invoke_handler(tauri::generate_handler![commands::get_all_tracks])
+                .manage(player)
                 .manage(playboxes_manager)
                 .run(tauri::generate_context!())
                 .expect("error while running tauri application");

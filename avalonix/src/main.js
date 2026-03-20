@@ -12,6 +12,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
 });
 
+invoke('get_all_tracks').then((messge) => console.log(messge));
+
 setInterval(() => {
   let x = window.screenX /2 + window.innerWidth / 2;
   let y = window.screenY /2  + window.innerHeight /2;
