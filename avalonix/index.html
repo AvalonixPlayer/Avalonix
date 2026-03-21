@@ -2,17 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="main.css" />
-    <link rel="stylesheet" href="sections.css" />
-    <link rel="stylesheet" href="buttons.css" />
-    <link rel="stylesheet" href="main-container.css" />
-    <link rel="stylesheet" href="scrollbar.css" />
-    <link rel="stylesheet" href="img.css" />
-    <link rel="stylesheet" href="playback.css" />
-    <link rel="stylesheet" href="slider.css" />
+    <link rel="stylesheet" href="src/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="/main.js" defer></script>
-    <script src="/tabSwitcher.js" defer></script>
+    <script src="./src/main.ts" defer></script>
+    <script src="./src/tabSwitcher.js" defer></script>
     <title>Tauri App</title>
   </head>
   <body>
@@ -86,9 +79,9 @@
       </section>
       <section class="section playback-controll">
         <div style="align-content: end;">
-          <button class="playback-player-contoll-btn"><img src="assets/back.png"></button>
-          <button class="playback-player-contoll-btn"><img src="assets/pause.png"></button>
-          <button class="playback-player-contoll-btn"><img src="assets/next.png"></button>
+          <button class="playback-player-contoll-btn"><img src="src/assets/back.png"></button>
+          <button class="playback-player-contoll-btn"><img src="src/assets/pause.png"></button>
+          <button class="playback-player-contoll-btn"><img src="src/assets/next.png"></button>
         </div>
         <input type="range" id="playtime-slider">
       </section>

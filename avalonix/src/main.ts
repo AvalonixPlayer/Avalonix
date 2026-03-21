@@ -1,18 +1,5 @@
-const { invoke } = window.__TAURI__.core;
+import { invoke } from "@tauri-apps/api/core";
 
-let greetInputEl;
-let greetMsgEl;
-
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  greetMsgEl.textContent = await invoke("greet", { name: greetInputEl.value });
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-
-});
-
-invoke('get_all_tracks').then((messge) => console.log(messge));
 
 setInterval(() => {
   let x = window.screenX /2 + window.innerWidth / 2;

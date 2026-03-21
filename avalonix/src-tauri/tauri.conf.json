@@ -2,16 +2,19 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "avalonix",
   "version": "0.1.0",
-  "identifier": "com.avalonix.app",
+  "identifier": "avalonix",
   "build": {
-    "frontendDist": "../src"
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
   },
   "app": {
     "withGlobalTauri": true,
     "windows": [
       {
         "title": "avalonix",
-        "width": 1000,
+        "width": 800,
         "height": 600
       }
     ],
