@@ -1,9 +1,8 @@
-import {albumsElements, allTracks, appendTracksList, getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
+import {albumsElements, allTracks, getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
 
 await getAllTracks();
 await getAllAlbums();
 await getAllArtists();
-await appendTracksList();
 
 setInterval(() => {
   setBG();
