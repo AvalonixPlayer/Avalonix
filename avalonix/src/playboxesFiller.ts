@@ -50,7 +50,7 @@ async function appendTracksList() {
 
 function createTrackBtn(trackName: string): DocumentFragment {
     const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
-    const h3 = clone.querySelector("h3");
+    const h3 = clone.querySelector("h5");
     if (h3) h3.textContent = trackName;
     return clone;
 }
