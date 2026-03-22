@@ -12,7 +12,7 @@ button {
     height: 50px;
     width: 100%;
 
-    display: block;
+    display: flex;
 
     background-color: transparent;
     box-shadow: none;
@@ -28,8 +28,15 @@ button {
     user-select: none;
 }
 
-.pick-btn > h3 {
+.pick-btn > h5 {
+    align-self: center;
     padding-left: 20px;
+}
+
+.pick-btn > h6 {
+    font-style: italic;
+    margin-left: auto;
+    margin-right: 40px;
 }
 
 .pick-btn:hover {

@@ -43,14 +43,26 @@ async function appendTracksList() {
             name = name + "...";
         }
 
-        const clone = createTrackBtn(name);
+        var artist = track.metadata.artist || "Unknown Artist";
+
+        if(artist.length > 20)
+        {
+            artist = artist.slice(0,35);
+            artist = artist + "...";
+        }
+
+        const clone = createTrackBtn(name,artist);
         container.appendChild(clone);
     });
 }
 
-function createTrackBtn(trackName: string): DocumentFragment {
+function createTrackBtn(trackName: string, artistName: string): DocumentFragment {
     const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
-    const h3 = clone.querySelector("h5");
-    if (h3) h3.textContent = trackName;
+    
+    const trackNameClone = clone.querySelector("h5");
+    const artistNameClone = clone.querySelector("h6");
+
+    if (trackNameClone) trackNameClone.textContent = trackName;
+    if (artistNameClone) artistNameClone.textContent = artistName;
     return clone;
 }
