@@ -1,6 +1,6 @@
 .main-container {
     display: block;
-    height: 60%;
+    height: 60vh;
     overflow-y: auto;
     color: azure;
 }
