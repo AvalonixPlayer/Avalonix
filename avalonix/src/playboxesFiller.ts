@@ -20,10 +20,6 @@ export async function getAllArtists() {
     console.log(allAlbums);
 }
 
-export let albumsElements = await document.createElement("div");
-
-
-
 var pickBtnTempl = document.querySelector('#pick-track-btn-example') as HTMLTemplateElement;
 
 async function appendTracksList() {

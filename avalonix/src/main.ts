@@ -1,8 +1,11 @@
-import {albumsElements, allTracks, getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
+import {getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
+import './tabSwitcher.js';
 
-await getAllTracks();
-await getAllAlbums();
-await getAllArtists();
+(async () => {
+  await getAllTracks();
+  await getAllAlbums();
+  await getAllArtists();
+})();
 
 setInterval(() => {
   setBG();
