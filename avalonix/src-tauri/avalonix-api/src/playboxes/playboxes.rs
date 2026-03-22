@@ -9,14 +9,20 @@ use crate::{
     },
 };
 
+#[derive(ts_rs::TS)]
+#[ts(export, export_to = "..\\..\\..\\src\\bindings\\TracksContainer.ts")]
 pub struct TracksContainer {
     pub all_tracks: Vec<Arc<Track>>,
 }
 
+#[derive(ts_rs::TS)]
+#[ts(export, export_to = "..\\..\\..\\src\\bindings\\AlbumsContainer.ts")]
 pub struct AlbumsContainer {
     pub albums: HashMap<String, Vec<Arc<Track>>>,
 }
 
+#[derive(ts_rs::TS)]
+#[ts(export, export_to = "..\\..\\..\\src\\bindings\\AristsContainer.ts")]
 pub struct AristsContainer {
     pub artists: HashMap<String, Vec<Arc<Track>>>,
 }

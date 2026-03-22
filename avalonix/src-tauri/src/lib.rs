@@ -20,7 +20,11 @@ pub fn run() {
 
             tauri::Builder::default()
                 .plugin(tauri_plugin_opener::init())
-                .invoke_handler(tauri::generate_handler![commands::get_all_tracks])
+                .invoke_handler(tauri::generate_handler![
+                    commands::get_all_tracks,
+                    commands::get_all_albums,
+                    commands::get_all_artists
+                ])
                 .manage(player)
                 .manage(playboxes_manager)
                 .run(tauri::generate_context!())

@@ -1,3 +1,9 @@
+import {allTracks, getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
+
+getAllTracks();
+getAllAlbums();
+getAllArtists();
+
 setInterval(() => {
   setBG();
 }, 10);

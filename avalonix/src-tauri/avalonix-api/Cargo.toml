@@ -17,4 +17,4 @@ serde_json = {version="1.0.99"}
 sled = "0.34.7"
 uuid = { version = "1.22.0", features = ["v4"] }
 glob = "0.3.3"
-
+ts-rs = "12.0"

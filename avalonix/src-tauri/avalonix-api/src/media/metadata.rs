@@ -9,7 +9,8 @@ use crate::db::MusicDB;
 use crate::media::track::Track;
 use crate::{disk_manager, logger};
 
-#[derive(serde::Serialize, Archive, Deserialize, Serialize, Debug, Clone)]
+#[derive(ts_rs::TS, serde::Serialize, Archive, Deserialize, Serialize, Debug, Clone)]
+#[ts(export, export_to = "..\\..\\..\\src\\bindings\\Metadata.ts")]
 pub struct Metadata {
     pub title: Option<String>,
     pub artist: Option<String>,
