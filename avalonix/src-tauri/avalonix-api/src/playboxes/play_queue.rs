@@ -4,7 +4,8 @@ use crate::{
     db::MusicDB, disk_manager, logger, media::track::Track, playboxes::playboxes::TracksContainer,
 };
 
-#[derive(Debug)]
+#[derive(Debug, ts_rs::TS)]
+#[ts(export, export_to = "..\\..\\..\\src\\bindings\\PlayQueue.ts")]
 pub struct PlayQueue {
     pub tracks: Vec<Arc<Track>>,
 }
@@ -19,6 +20,10 @@ impl PlayQueue {
     }
 
     pub fn add_track(&mut self, track: Arc<Track>) {
+        logger::debug(&format!(
+            "track with id: {} added to play queue",
+            track.id.clone()
+        ));
         self.tracks.push(track);
     }
 

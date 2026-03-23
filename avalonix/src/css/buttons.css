@@ -6,49 +6,28 @@ button {
     font: inherit;
 }
 
-.pick-btn {
-    margin: 0;
-    padding: 0;
-    height: 50px;
-    width: 100%;
-
+.tab-sellect-btn {
     display: flex;
-
-    background-color: transparent;
-    box-shadow: none;
+    background: none;
     border: none;
-
-    box-sizing: border-box;
-
-    justify-items: left;
 
     color: azure;
 
     transition: all 0.2s ease;
-    user-select: none;
+
+    width: 100%;
 }
 
-.pick-btn > h5 {
-    align-self: center;
+.tab-sellect-btn:hover {
+    color: var(--pick-btn-hover-color);
+    background-color: rgba(184, 184, 184, 0.041);
     padding-left: 20px;
 }
 
-.pick-btn > h6 {
-    font-style: italic;
-    margin-left: auto;
-    margin-right: 40px;
-}
-
-.pick-btn:hover {
-    color: var(--pick-btn-hover-color);
-    background-color: rgba(87, 87, 87, 0.356);
-    padding-left: 30px;
-}
-
-.pick-btn:active {
+.tab-sellect-btn:active {
     background-color: rgba(184, 184, 184, 0.199);
     border-radius: 10px;
-    padding-left: 50px;
+    padding-left: 30px;
 }
 
 .playback-player-contoll-btn {
@@ -82,4 +61,56 @@ button {
 
     background-color: rgba(116, 116, 116, 0.219);
     border-radius: 60%;
+}
+
+.pick-media-btn.track {
+    padding-left: 10px;
+
+    display: flex;
+    background: none;
+    border: none;
+    
+    width: auto;
+    height: 60px;
+    justify-content: top;
+
+    transition: all 0.2s ease;
+}
+
+.pick-media-btn.track > h6 {
+    font-style: italic;
+    margin-left: auto;
+}
+
+.pick-media-btn.track:hover {
+    color: var(--pick-btn-hover-color);
+    padding-left: 25px;
+    background-color: rgba(116, 116, 116, 0.219);
+
+    border-radius: 10px;
+
+    border: none;
+}
+
+.add-btn {
+    white-space: nowrap;
+    overflow: hidden;
+    background: none;
+    border: none;
+    height: 5px;
+    padding-top: 60px;
+    scale: 0.8;
+
+    transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+    background-color: var(--pick-btn-hover-color);
+    border-radius: 5px;
+}
+
+.add-btn > img {
+    transform: translate(0%,-105%);
+    width: 50px;
+    height: 50px;
 }

@@ -1,8 +1,11 @@
-use std::{collections::HashMap, sync::Arc};
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
+};
 
 use avalonix_api::{
     media::track::Track,
-    playboxes::playboxes::{self, AlbumsContainer, PlayboxesManager},
+    playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
 };
 
 #[tauri::command]
@@ -22,4 +25,10 @@ pub fn get_all_artists(
     playboxes: tauri::State<'_, PlayboxesManager>,
 ) -> HashMap<String, Vec<Arc<Track>>> {
     playboxes.artists_container.artists.clone()
+}
+
+#[tauri::command]
+pub fn add_track_to_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>, track: Arc<Track>) {
+    let mut queue = play_queue.lock().unwrap();
+    queue.add_track(track);
 }

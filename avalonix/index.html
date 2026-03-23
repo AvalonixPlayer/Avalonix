@@ -10,22 +10,22 @@
   <body>
     <section class="sections-container">
       <section class="section tabs">
-        <button onclick="changeTab(0)" class="pick-btn">
+        <button onclick="changeTab(0)" class="tab-sellect-btn">
             <h3>Main</h3>
         </button>
-        <button onclick="changeTab(1)" class="pick-btn">
+        <button onclick="changeTab(1)" class="tab-sellect-btn">
             <h3>Tracks</h3>
         </button>
-        <button onclick="changeTab(2)" class="pick-btn">
+        <button onclick="changeTab(2)" class="tab-sellect-btn">
             <h3>Albums</h3>
         </button>
-        <button onclick="changeTab(3)" class="pick-btn">
+        <button onclick="changeTab(3)" class="tab-sellect-btn">
             <h3>Artists</h3>
         </button>
-        <button onclick="changeTab(4)" class="pick-btn">
+        <button onclick="changeTab(4)" class="tab-sellect-btn">
             <h3>Metadata</h3>
         </button>
-        <button onclick="changeTab(5)" class="pick-btn">
+        <button onclick="changeTab(5)" class="tab-sellect-btn">
             <h3>Settings</h3>
         </button>
       </section>
@@ -43,9 +43,7 @@
 
         <div class="main-container">
           <h2 class="main-presentable-text">Tracks list</h2>
-          <div class="media-list" id="tracks-list">
-
-          </div>
+          <div class="media-list" id="tracks-list"></div>
         </div>
 
         <div class="main-container">
@@ -89,10 +87,12 @@
   </body>
 
   <template id="pick-track-btn-example">
-    <button class="pick-btn">
-        <h5>Track name</h5>
-        <h6>Metallica</h6>
-    </button>
+    <div class="pick-media-btn track">
+      <button class="add-btn"><img src="src/assets/add.png"></button>
+      <h5>Track name</h5>    
+      <h6>Metallica</h6>
+    </div>
+    
   </template>
 
 </html>

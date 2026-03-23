@@ -30,35 +30,32 @@ async function appendTracksList() {
     let tracksIndex = 0;
     allTracks.forEach(track => {
         tracksIndex++;
-        var name = track.metadata.title || "Unknown Title";
-        name = tracksIndex + ". " + name;
 
-        if(name.length > 35)
-        {
-            name = name.slice(0,35);
-            name = name + "...";
-        }
-
-        var artist = track.metadata.artist || "Unknown Artist";
-
-        if(artist.length > 20)
-        {
-            artist = artist.slice(0,35);
-            artist = artist + "...";
-        }
-
-        const clone = createTrackBtn(name,artist);
+        const clone = createTrackBtn(track, tracksIndex);
         container.appendChild(clone);
     });
 }
 
-function createTrackBtn(trackName: string, artistName: string): DocumentFragment {
+function createTrackBtn(track: Track, index: number): DocumentFragment {
     const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
     
     const trackNameClone = clone.querySelector("h5");
     const artistNameClone = clone.querySelector("h6");
+    
+    var title = track.metadata.title || "Unknown Title";
+    var artist = track.metadata.artist || "Unknown Artist";
 
-    if (trackNameClone) trackNameClone.textContent = trackName;
-    if (artistNameClone) artistNameClone.textContent = artistName;
+    if(title.length > 35) {
+        title = title.slice(0,35);
+        title = title + "...";
+    }
+    title = index + ". " + title;
+    if(artist.length > 20) {
+        artist = artist.slice(0,35);
+        artist = artist + "...";
+    }
+
+    if (trackNameClone) trackNameClone.textContent = title;
+    if (artistNameClone) artistNameClone.textContent = artist;
     return clone;
 }

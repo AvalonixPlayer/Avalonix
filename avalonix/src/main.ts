@@ -1,5 +1,7 @@
-import {getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
+import { getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
 import './tabSwitcher.js';
+
+
 
 (async () => {
   await getAllTracks();
@@ -10,6 +12,8 @@ import './tabSwitcher.js';
 setInterval(() => {
   setBG();
 }, 10);
+
+
 
 async function setBG() {
   let x = window.screenX /2 + window.innerWidth / 2;

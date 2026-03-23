@@ -2,7 +2,9 @@ use super::metadata::Metadata;
 use rkyv::{Archive, Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(ts_rs::TS, serde::Serialize, Archive, Deserialize, Serialize, Debug, Clone)]
+#[derive(
+    ts_rs::TS, serde::Serialize, serde::Deserialize, Archive, Deserialize, Serialize, Debug, Clone,
+)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\Track.ts")]
 pub struct Track {
     pub id: String,
