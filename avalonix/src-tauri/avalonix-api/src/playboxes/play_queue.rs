@@ -20,6 +20,16 @@ impl PlayQueue {
     }
 
     pub fn add_track(&mut self, track: Arc<Track>) {
+        for i in self.tracks.clone() {
+            if i == track {
+                logger::warn(&format!(
+                    "track with id: {} also in play queue",
+                    track.id.clone()
+                ));
+                return;
+            };
+        }
+
         logger::debug(&format!(
             "track with id: {} added to play queue",
             track.id.clone()
@@ -29,7 +39,7 @@ impl PlayQueue {
 
     pub fn add_tracks(&mut self, tracks: Vec<Arc<Track>>) {
         for track in tracks {
-            self.tracks.push(track);
+            self.add_track(track);
         }
     }
 

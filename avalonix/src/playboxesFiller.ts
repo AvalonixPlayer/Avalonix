@@ -1,5 +1,6 @@
 import type { Track } from "./bindings/Track";
 import { invoke } from '@tauri-apps/api/core';
+import { addTrackToQueue } from "./playQueue";
 
 export let allTracks: Track[];
 export let allAlbums: { [key in string]: Array<Track> };
@@ -41,7 +42,13 @@ function createTrackBtn(track: Track, index: number): DocumentFragment {
     
     const trackNameClone = clone.querySelector("h5");
     const artistNameClone = clone.querySelector("h6");
+    const addBtn = clone.querySelector('.add-btn');
     
+    addBtn!.addEventListener("click", (_) => {
+        addTrackToQueue(track);
+    });
+
+
     var title = track.metadata.title || "Unknown Title";
     var artist = track.metadata.artist || "Unknown Artist";
 
