@@ -101,12 +101,19 @@ button {
     padding-top: 60px;
     scale: 0.5;
 
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
 }
 
 .add-btn:hover {
     background-color: var(--pick-btn-hover-color);
     border-radius: 5px;
+    scale: 0.55;
+}
+
+.add-btn:active {
+    background-color: var(--pick-btn-hover-color);
+    border-radius: 10px;
+    scale: 0.7;
 }
 
 .add-btn > img {
