@@ -99,7 +99,7 @@ button {
     border: none;
     height: 5px;
     padding-top: 60px;
-    scale: 0.8;
+    scale: 0.5;
 
     transition: all 0.3s ease;
 }
