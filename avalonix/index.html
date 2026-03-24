@@ -33,17 +33,12 @@
       <section class="section main">
         <div class="main-container tracks-queue">
           <h2 class="main-presentable-text">Play queue</h2>
-          <button class="pick-btn">
-            <h3>Track name</h3>
-          </button>
-          <button class="pick-btn">
-            <h3>Track name</h3>
-          </button>
+          <div class="playqueue-container" id="play-queue"></div>
         </div>
 
         <div class="main-container">
           <h2 class="main-presentable-text">Tracks list</h2>
-          <div class="media-list" id="tracks-list"></div>
+          <div class="media-list-container" id="tracks-list"></div>
         </div>
 
         <div class="main-container">
@@ -90,9 +85,16 @@
     <div class="pick-media-btn track">
       <button class="add-btn"><img src="src/assets/add.png"></button>
       <h5>Track name</h5>
-      <h6>Metallica</h6>
+      <h6>Artist</h6>
     </div>
-    
+  </template>
+
+  <template id="track-btn-example">
+    <div class="track-btn">
+        <button class="track-btn-play"><img src="src/assets/sellect-track-to-play.png"></button>
+        <h5>Track name</h5>
+        <h6>Artist</h6>
+      </div>
   </template>
 
 </html>

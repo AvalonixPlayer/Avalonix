@@ -121,3 +121,53 @@ button {
     width: 50px;
     height: 50px;
 }
+
+.track-btn {
+    width: auto;
+    display: flex;
+    transition: all 0.15s ease;
+}
+
+.track-btn:hover {
+    padding-left: 10px;
+    color: var(--pick-btn-hover-color);
+}
+
+.track-btn:hover > h5 {
+    padding-left: 10px;
+}
+
+.track-btn > h6 {
+    font-style: italic;
+    margin-left: auto;
+}
+
+.track-btn-play {
+    white-space: nowrap;
+    overflow: hidden;
+    background: none;
+    border: none;
+    height: 5px;
+    padding-top: 60px;
+    scale: 0.5;
+
+    transition: all 0.1s ease;
+}
+
+.track-btn-play > img {
+    transform: translate(0%,-105%);
+    width: 50px;
+    height: 50px;
+}
+
+.track-btn-play:hover {
+    background-color: var(--pick-btn-hover-color);
+    border-radius: 5px;
+    scale: 0.55;
+}
+
+.track-btn-play:active {
+    background-color: var(--pick-btn-hover-color);
+    border-radius: 10px;
+    scale: 0.7;
+}

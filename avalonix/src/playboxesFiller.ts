@@ -21,7 +21,7 @@ export async function getAllArtists() {
     console.log(allAlbums);
 }
 
-var pickBtnTempl = document.querySelector('#pick-track-btn-example') as HTMLTemplateElement;
+const pickBtnTempl = document.querySelector('#pick-track-btn-example') as HTMLTemplateElement;
 
 async function appendTracksList() {
     const container = document.getElementById("tracks-list");
@@ -47,7 +47,6 @@ function createTrackBtn(track: Track, index: number): DocumentFragment {
     addBtn!.addEventListener("click", (_) => {
         addTrackToQueue(track);
     });
-
 
     var title = track.metadata.title || "Unknown Title";
     var artist = track.metadata.artist || "Unknown Artist";

@@ -1,0 +1,20 @@
+.main-container {
+    display: block;
+    height: 60vh;
+    overflow-y: none;
+    color: azure;
+}
+
+.main-presentable-text {
+    text-align: center;
+}
+
+.playqueue-container {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.media-list-container {
+    overflow-y: auto;
+    height: 100%;
+}

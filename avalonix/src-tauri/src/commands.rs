@@ -32,3 +32,9 @@ pub fn add_track_to_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>, track:
     let mut queue = play_queue.lock().unwrap();
     queue.add_track(track);
 }
+
+#[tauri::command]
+pub fn get_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>) -> Vec<Arc<Track>> {
+    let queue = play_queue.lock().unwrap();
+    queue.tracks.clone()
+}

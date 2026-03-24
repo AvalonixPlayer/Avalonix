@@ -1,4 +1,5 @@
 import { getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
+import { UpdateTrackQueueUI } from './playQueue.js';
 import './tabSwitcher.js';
 
 
@@ -7,6 +8,7 @@ import './tabSwitcher.js';
   await getAllTracks();
   await getAllAlbums();
   await getAllArtists();
+  await UpdateTrackQueueUI();
 })();
 
 setInterval(() => {

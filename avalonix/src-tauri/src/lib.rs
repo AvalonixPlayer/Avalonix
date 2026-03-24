@@ -28,7 +28,8 @@ pub fn run() {
                     commands::get_all_tracks,
                     commands::get_all_albums,
                     commands::get_all_artists,
-                    commands::add_track_to_queue
+                    commands::add_track_to_queue,
+                    commands::get_queue
                 ])
                 .manage(player)
                 .manage(playboxes_manager)
