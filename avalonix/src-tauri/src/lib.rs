@@ -29,6 +29,8 @@ pub fn run() {
                     commands::get_all_albums,
                     commands::get_all_artists,
                     commands::add_track_to_queue,
+                    commands::clear_queue,
+                    commands::remove_track_from_queue,
                     commands::get_queue
                 ])
                 .manage(player)

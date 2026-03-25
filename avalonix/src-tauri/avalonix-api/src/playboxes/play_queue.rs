@@ -16,6 +16,7 @@ impl PlayQueue {
     }
 
     pub fn clear(&mut self) {
+        logger::debug("queue cleared");
         self.tracks.clear();
     }
 
@@ -48,10 +49,12 @@ impl PlayQueue {
         for i in self.tracks.clone() {
             if i == track {
                 self.tracks.remove(index);
-                break;
+                logger::debug(&format!("track with id: {} removed", track.id));
+                return;
             }
             index += 1;
         }
+        logger::warn(&format!("track with id: {} not found in queue", track.id));
     }
 }
 

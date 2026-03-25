@@ -131,6 +131,7 @@ button {
 .track-btn:hover {
     padding-left: 10px;
     color: var(--pick-btn-hover-color);
+    background-color: rgba(116, 116, 116, 0.219);
 }
 
 .track-btn:hover > h5 {
@@ -142,7 +143,7 @@ button {
     margin-left: auto;
 }
 
-.track-btn-play {
+.track-btn-play, .track-btn-remove {
     white-space: nowrap;
     overflow: hidden;
     background: none;
@@ -154,19 +155,19 @@ button {
     transition: all 0.1s ease;
 }
 
-.track-btn-play > img {
+.track-btn-play > img ,.track-btn-remove > img {
     transform: translate(0%,-105%);
     width: 50px;
     height: 50px;
 }
 
-.track-btn-play:hover {
+.track-btn-play:hover ,.track-btn-remove:hover {
     background-color: var(--pick-btn-hover-color);
     border-radius: 5px;
     scale: 0.55;
 }
 
-.track-btn-play:active {
+.track-btn-play:active ,.track-btn-remove:active {
     background-color: var(--pick-btn-hover-color);
     border-radius: 10px;
     scale: 0.7;

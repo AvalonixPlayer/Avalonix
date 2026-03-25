@@ -9,33 +9,49 @@ export async function addTrackToQueue(track: Track) {
 const pickBtnTempl = document.querySelector('#track-btn-example') as HTMLTemplateElement;
 
 export async function UpdateTrackQueueUI() {
-  console.log(1);
   var tracks = await invoke<Array<Track>>('get_queue');
-  console.log(2);
 
   const container = document.getElementById("play-queue");
   if (!container || !pickBtnTempl) return;
-  console.log(3);
 
   container.innerHTML = "";
 
   let index = 0;
-  tracks.forEach(track => {
+  tracks.forEach(async track => {
     index++;
-    const clone = createTrackBtn(track, index);
+    const clone = await createTrackBtn(track, index);
     container.appendChild(clone);
   });
 }
 
-function createTrackBtn(track: Track, index: number): DocumentFragment {
+async function ClearQueue() {
+  await invoke('clear_queue');
+  await UpdateTrackQueueUI();
+}
+
+(async() => {
+  console.log("dobav");
+  document.getElementById('clear-queue')!.addEventListener("click", async (_) => {
+    await ClearQueue();
+  })
+})();
+
+
+async function createTrackBtn(track: Track, index: number): Promise<DocumentFragment> {
     const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
     
     const trackNameClone = clone.querySelector("h5");
     const artistNameClone = clone.querySelector("h6");
     const playBtn = clone.querySelector('.track-btn-play');
-    
+    const removeBtn = clone.querySelector('.track-btn-remove')
+
     playBtn!.addEventListener("click", (_) => {
         console.log('Let`s play track: ' + track.metadata.title)
+    });
+
+    removeBtn!.addEventListener("click", async (_) => {
+      await invoke('remove_track_from_queue', {track: track});
+      await UpdateTrackQueueUI();
     });
 
     var title = track.metadata.title || "Unknown Title";

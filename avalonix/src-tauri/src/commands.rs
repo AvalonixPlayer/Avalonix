@@ -34,6 +34,18 @@ pub fn add_track_to_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>, track:
 }
 
 #[tauri::command]
+pub fn remove_track_from_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>, track: Arc<Track>) {
+    let mut queue = play_queue.lock().unwrap();
+    queue.remove_track(track);
+}
+
+#[tauri::command]
+pub fn clear_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>) {
+    let mut queue = play_queue.lock().unwrap();
+    queue.clear();
+}
+
+#[tauri::command]
 pub fn get_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>) -> Vec<Arc<Track>> {
     let queue = play_queue.lock().unwrap();
     queue.tracks.clone()

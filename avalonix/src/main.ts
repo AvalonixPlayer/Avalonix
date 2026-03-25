@@ -15,8 +15,6 @@ setInterval(() => {
   setBG();
 }, 10);
 
-
-
 async function setBG() {
   let x = window.screenX /2 + window.innerWidth / 2;
   let y = window.screenY /2  + window.innerHeight /2;
