@@ -7,7 +7,7 @@ use std::{
 };
 
 use rodio::{
-    Decoder, DeviceTrait, MixerDeviceSink, Player,
+    Decoder, DeviceTrait, MixerDeviceSink, Player, Source,
     cpal::{DeviceDescription, Host, traits::HostTrait},
 };
 
@@ -18,6 +18,7 @@ struct Playback {
     last_device_description: DeviceDescription,
     player: Player,
     last_playing_track_path: Option<String>,
+    total_time: Duration,
 }
 
 pub struct MediaPlayer {
@@ -42,6 +43,7 @@ impl Playback {
                         .unwrap(),
                     player,
                     last_playing_track_path: None,
+                    total_time: Duration::new(0, 0),
                 });
             }
             Err(_) => return Err("default device is None".to_string()),
@@ -52,7 +54,7 @@ impl Playback {
         let new = Self::new();
 
         match new {
-            Ok(new) => {
+            Ok(mut new) => {
                 let host = Host::default();
                 let file_path = self.last_playing_track_path.as_ref().unwrap();
                 new.play(file_path.clone());
@@ -64,32 +66,14 @@ impl Playback {
             }
             Err(_) => {}
         }
-        /*
-        let sink_handle =
-            rodio::DeviceSinkBuilder::open_default_sink().expect("open default audio stream");
-
-        let file_path = self.last_playing_track_path.as_ref().unwrap();
-
-        self.player.stop();
-
-        let player = Player::connect_new(&sink_handle.mixer());
-
-        let host = Host::default();
-
-        let file = BufReader::new(File::open(&file_path).unwrap());
-        let source = Decoder::new(file).unwrap();
-
-        player.append(source);
-
-        self.mixer = sink_handle;
-        self.last_device_description = host.default_output_device().unwrap().description().unwrap();
-        self.player = player;
-        */
     }
 
-    fn play(&self, file_path: String) {
+    fn play(&mut self, file_path: String) {
         let file = BufReader::new(File::open(file_path).unwrap());
         let source = Decoder::new(file).unwrap();
+
+        self.total_time = source.total_duration().unwrap().clone();
+
         self.player.stop();
         self.player.append(source);
     }
@@ -102,6 +86,10 @@ impl Playback {
         self.player.get_pos()
     }
 
+    fn get_len(&self) -> Duration {
+        self.total_time.clone()
+    }
+
     fn seek(&self, pos: Duration) {
         _ = self.player.try_seek(pos);
     }
@@ -110,8 +98,16 @@ impl Playback {
         self.player.pause();
     }
 
+    fn is_paused(&self) -> bool {
+        self.player.is_paused()
+    }
+
     fn cont(&self) {
         self.player.play();
+    }
+
+    fn empty(&self) -> bool {
+        self.player.empty()
     }
 }
 
@@ -142,6 +138,10 @@ impl MediaPlayer {
         self.playback.as_ref().unwrap().get_pos()
     }
 
+    pub fn get_len(&self) -> Duration {
+        self.playback.as_ref().unwrap().get_len()
+    }
+
     pub fn seek(&self, pos: Duration) {
         self.playback.as_ref().unwrap().seek(pos);
     }
@@ -152,6 +152,14 @@ impl MediaPlayer {
 
     pub fn cont(&self) {
         self.playback.as_ref().unwrap().cont();
+    }
+
+    pub fn is_paused(&self) -> bool {
+        self.playback.as_ref().unwrap().is_paused()
+    }
+
+    pub fn empty(&self) -> bool {
+        self.playback.as_ref().unwrap().empty()
     }
 
     pub fn update(clone: Arc<Mutex<MediaPlayer>>) {
@@ -179,7 +187,7 @@ impl MediaPlayer {
                                         playback.change_device();
                                     }
                                 }
-                                Err(err) => logger::error(&err.to_string()),
+                                Err(err) => logger::acceptable_error(&err.to_string()),
                             }
                         }
                         None => {}
@@ -199,6 +207,7 @@ fn test_play() {
 
             let clone1 = player.clone();
             let clone2 = player.clone();
+            let clone3 = player.clone();
 
             let file_path =
         "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac"
@@ -207,6 +216,11 @@ fn test_play() {
             MediaPlayer::update(clone2);
 
             clone1.lock().as_mut().unwrap().play(file_path);
+
+            logger::debug(&format!(
+                "len {}",
+                clone3.lock().as_ref().unwrap().get_len().clone().as_secs()
+            ));
         }
         Err(_) => {}
     }

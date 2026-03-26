@@ -1,18 +1,31 @@
-use std::{fmt, sync::Arc};
+use std::{
+    fmt,
+    sync::{Arc, Mutex},
+    thread,
+    time::Duration,
+};
 
 use crate::{
-    db::MusicDB, disk_manager, logger, media::track::Track, playboxes::playboxes::TracksContainer,
+    audio::media_player::{self, MediaPlayer},
+    db::MusicDB,
+    disk_manager, logger,
+    media::track::Track,
+    playboxes::playboxes::TracksContainer,
 };
 
 #[derive(Debug, ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\PlayQueue.ts")]
 pub struct PlayQueue {
     pub tracks: Vec<Arc<Track>>,
+    current_track_index: usize,
 }
 
 impl PlayQueue {
     pub fn new() -> Self {
-        PlayQueue { tracks: Vec::new() }
+        PlayQueue {
+            tracks: Vec::new(),
+            current_track_index: 0,
+        }
     }
 
     pub fn clear(&mut self) {
@@ -56,6 +69,65 @@ impl PlayQueue {
         }
         logger::warn(&format!("track with id: {} not found in queue", track.id));
     }
+
+    pub fn play(self_arc: &Arc<Mutex<Self>>, media_player_arc: &Arc<Mutex<MediaPlayer>>) {
+        let self_clone = self_arc.clone();
+        let media_player_clone = media_player_arc.clone();
+
+        thread::spawn(move || {
+            loop {
+                {
+                    let mut self_guard = self_clone.try_lock();
+                    match self_guard {
+                        Ok(mut self_guard) => {
+                            let mut media_player_guard = media_player_clone.try_lock();
+                            match media_player_guard {
+                                Ok(mut media_player_guard) => {
+                                    if media_player_guard.empty() {
+                                        if self_guard.current_track_index + 1
+                                            <= self_guard.tracks.len() - 1
+                                        {
+                                            self_guard.current_track_index += 1;
+                                            let track =
+                                                &self_guard.tracks[self_guard.current_track_index];
+                                            media_player_guard.play(track.file_path.clone());
+                                        } else {
+                                            self_guard.current_track_index = 0;
+                                            let track =
+                                                &self_guard.tracks[self_guard.current_track_index];
+                                            media_player_guard.play(track.file_path.clone());
+                                        }
+                                    }
+                                }
+                                Err(err) => logger::acceptable_error(&err.to_string()),
+                            }
+                        }
+                        Err(err) => logger::acceptable_error(&err.to_string()),
+                    }
+                }
+                thread::sleep(Duration::new(0, 1000));
+            }
+        });
+    }
+
+    pub fn pause_or_continue(&mut self, media_player_guard: Arc<Mutex<MediaPlayer>>) {
+        let media_player;
+        match media_player_guard.try_lock() {
+            Ok(mp) => {
+                media_player = mp;
+
+                match media_player.is_paused() {
+                    true => {
+                        media_player.cont();
+                    }
+                    false => {
+                        media_player.pause();
+                    }
+                }
+            }
+            Err(err) => logger::error(&err.to_string()),
+        }
+    }
 }
 
 #[test]
@@ -64,14 +136,30 @@ fn test_play_queue() {
     let db = MusicDB::open(&hash_path).unwrap();
     let cont = TracksContainer::new(&db);
 
-    let mut queue = PlayQueue::new();
+    let mp = MediaPlayer::new().unwrap();
 
-    let track = cont.all_tracks[0].clone();
-    queue.add_track(track.clone());
+    let media_player = Arc::new(Mutex::new(mp));
+    MediaPlayer::update(media_player.clone());
 
-    println!("{:#?}", queue);
+    let queue = Arc::new(Mutex::new(PlayQueue::new()));
+    {
+        let mut queue_guard = queue.lock().unwrap();
 
-    queue.remove_track(track.clone());
+        let track = cont.all_tracks[0].clone();
+        queue_guard.add_track(track.clone());
 
-    logger::debug(&format!("{:#?}", queue));
+        println!("{:#?}", queue);
+
+        queue_guard.remove_track(track.clone());
+
+        logger::debug(&format!("{:#?}", queue));
+
+        queue_guard.add_track(track.clone());
+
+        logger::debug(&format!("{:#?}", queue));
+    }
+
+    PlayQueue::play(&queue, &media_player);
+
+    loop {}
 }
