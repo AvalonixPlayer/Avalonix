@@ -147,18 +147,7 @@ fn test_play_queue() {
     {
         let mut queue_guard = queue.lock().unwrap();
 
-        let track = cont.all_tracks[0].clone();
-        queue_guard.add_track(track.clone());
-
-        println!("{:#?}", queue);
-
-        queue_guard.remove_track(track.clone());
-
-        logger::debug(&format!("{:#?}", queue));
-
-        queue_guard.add_track(track.clone());
-
-        logger::debug(&format!("{:#?}", queue));
+        queue_guard.add_tracks(cont.all_tracks.clone());
     }
 
     PlayQueue::play(&queue, &media_player);

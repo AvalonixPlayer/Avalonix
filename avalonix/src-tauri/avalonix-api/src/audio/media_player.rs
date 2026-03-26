@@ -14,7 +14,7 @@ use rodio::{
 use crate::logger;
 
 struct Playback {
-    mixer: MixerDeviceSink,
+    stream_handle: MixerDeviceSink,
     last_device_description: DeviceDescription,
     player: Player,
     last_playing_track_path: Option<String>,
@@ -27,15 +27,15 @@ pub struct MediaPlayer {
 
 impl Playback {
     fn new() -> Result<Self, String> {
-        match rodio::DeviceSinkBuilder::open_default_sink() {
-            Ok(sink) => {
-                let mixer = sink.mixer();
-                let player = Player::connect_new(mixer);
+        let stream_handle = rodio::DeviceSinkBuilder::open_default_sink();
+        match stream_handle {
+            Ok(stream_handle) => {
+                let player = Player::connect_new(&stream_handle.mixer());
 
                 let host = Host::default();
 
                 return Ok(Self {
-                    mixer: sink,
+                    stream_handle,
                     last_device_description: host
                         .default_output_device()
                         .unwrap()
@@ -59,7 +59,7 @@ impl Playback {
                 let file_path = self.last_playing_track_path.as_ref().unwrap();
                 new.play(file_path.clone());
 
-                self.mixer = new.mixer;
+                self.stream_handle = new.stream_handle;
                 self.last_device_description =
                     host.default_output_device().unwrap().description().unwrap();
                 self.player = new.player;
