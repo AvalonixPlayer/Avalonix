@@ -39,10 +39,7 @@ impl Metadata {
         }
 
         match track_hash {
-            Some(hash) => {
-                logger::debug("metadata loaded from hash");
-                Ok(hash.metadata)
-            }
+            Some(hash) => Ok(hash.metadata),
             None => {
                 let tagged_file = Probe::open(path)
                     .map_err(|e| format!("ERROR: Bad path: {}", e))?
@@ -106,8 +103,6 @@ impl Metadata {
                 let track = Track::new(track_path, result.clone());
                 db.save_track(&track).unwrap();
                 drop(track);
-
-                logger::debug("metadata loaded without hash");
 
                 Ok(result)
             }

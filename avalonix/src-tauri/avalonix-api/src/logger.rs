@@ -9,6 +9,7 @@ pub fn error(msg: &str) {
 }
 
 pub fn acceptable_error(msg: &str) {
+    // This means that this error will be handled and it is quite probable, for example, it is needed in mutex.try_lock()
     println!("{} {}", "ACCEPTABLE ERROR".purple(), msg);
 }
 

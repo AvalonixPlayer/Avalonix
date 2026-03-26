@@ -5,6 +5,7 @@ use std::{
 
 use avalonix_api::{
     audio::media_player::MediaPlayer,
+    logger,
     media::track::Track,
     playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
 };
@@ -30,8 +31,16 @@ pub fn get_all_artists(
 
 #[tauri::command]
 pub fn add_track_to_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>, track: Arc<Track>) {
-    let mut queue = play_queue.lock().unwrap();
-    queue.add_track(track);
+    loop {
+        let queue = play_queue.try_lock();
+        match queue {
+            Ok(mut queue) => {
+                queue.add_track(track);
+                break;
+            }
+            Err(err) => logger::acceptable_error(&err.to_string()),
+        }
+    }
 }
 
 #[tauri::command]
@@ -39,26 +48,41 @@ pub fn remove_track_from_queue(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     track: Arc<Track>,
 ) {
-    let mut queue = play_queue.lock().unwrap();
-    queue.remove_track(track);
+    loop {
+        let queue = play_queue.try_lock();
+        match queue {
+            Ok(mut queue) => {
+                queue.remove_track(track);
+                break;
+            }
+            Err(err) => logger::acceptable_error(&err.to_string()),
+        }
+    }
 }
 
 #[tauri::command]
 pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
-    let mut queue = play_queue.lock().unwrap();
-    queue.clear();
+    loop {
+        let queue = play_queue.try_lock();
+        match queue {
+            Ok(mut queue) => {
+                queue.clear();
+                break;
+            }
+            Err(err) => logger::acceptable_error(&err.to_string()),
+        }
+    }
 }
 
 #[tauri::command]
 pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Track>> {
-    let queue = play_queue.lock().unwrap();
-    queue.tracks.clone()
-}
-
-#[tauri::command]
-pub fn play_queue(
-    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
-    player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
-) {
-    //PlayQueue::play(&play_queue, &player);
+    loop {
+        let queue = play_queue.try_lock();
+        match queue {
+            Ok(queue) => return queue.tracks.clone(),
+            Err(err) => {
+                logger::acceptable_error(&err.to_string());
+            }
+        }
+    }
 }

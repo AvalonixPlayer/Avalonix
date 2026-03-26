@@ -32,8 +32,7 @@ pub fn get_all_tracks_paths() -> Vec<String> {
             let expr = format!("{}/**/{}", dir, t);
             for entry in glob(&expr).unwrap() {
                 let str = entry.unwrap().to_str().unwrap().to_string();
-                hash_set.insert(str.clone());
-                logger::debug(&format!("{}", str));
+                hash_set.insert(str);
             }
         }
     }

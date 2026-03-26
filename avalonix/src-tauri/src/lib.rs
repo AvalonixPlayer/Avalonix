@@ -31,8 +31,7 @@ pub fn run() {
                     commands::add_track_to_queue,
                     commands::clear_queue,
                     commands::remove_track_from_queue,
-                    commands::get_queue,
-                    commands::play_queue
+                    commands::get_queue
                 ])
                 .manage(player)
                 .manage(playboxes_manager)
