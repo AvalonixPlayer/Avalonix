@@ -77,25 +77,27 @@ impl PlayQueue {
         thread::spawn(move || {
             loop {
                 {
-                    let mut self_guard = self_clone.try_lock();
+                    let self_guard = self_clone.try_lock();
                     match self_guard {
                         Ok(mut self_guard) => {
-                            let mut media_player_guard = media_player_clone.try_lock();
+                            let media_player_guard = media_player_clone.try_lock();
                             match media_player_guard {
                                 Ok(mut media_player_guard) => {
-                                    if media_player_guard.empty() {
-                                        if self_guard.current_track_index + 1
-                                            <= self_guard.tracks.len() - 1
-                                        {
-                                            self_guard.current_track_index += 1;
-                                            let track =
-                                                &self_guard.tracks[self_guard.current_track_index];
-                                            media_player_guard.play(track.file_path.clone());
-                                        } else {
-                                            self_guard.current_track_index = 0;
-                                            let track =
-                                                &self_guard.tracks[self_guard.current_track_index];
-                                            media_player_guard.play(track.file_path.clone());
+                                    if self_guard.tracks.len() != 0 {
+                                        if media_player_guard.empty() {
+                                            if self_guard.current_track_index + 1
+                                                <= self_guard.tracks.len() - 1
+                                            {
+                                                self_guard.current_track_index += 1;
+                                                let track = &self_guard.tracks
+                                                    [self_guard.current_track_index];
+                                                media_player_guard.play(track.file_path.clone());
+                                            } else {
+                                                self_guard.current_track_index = 0;
+                                                let track = &self_guard.tracks
+                                                    [self_guard.current_track_index];
+                                                media_player_guard.play(track.file_path.clone());
+                                            }
                                         }
                                     }
                                 }
@@ -139,7 +141,7 @@ fn test_play_queue() {
     let mp = MediaPlayer::new().unwrap();
 
     let media_player = Arc::new(Mutex::new(mp));
-    MediaPlayer::update(media_player.clone());
+    MediaPlayer::update(&media_player);
 
     let queue = Arc::new(Mutex::new(PlayQueue::new()));
     {

@@ -71,3 +71,7 @@ async function createTrackBtn(track: Track, index: number): Promise<DocumentFrag
     if (artistNameClone) artistNameClone.textContent = artist;
     return clone;
 }
+
+export async function Play() {
+  await invoke('play_queue');
+}

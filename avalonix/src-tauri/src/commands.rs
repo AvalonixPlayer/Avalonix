@@ -4,6 +4,7 @@ use std::{
 };
 
 use avalonix_api::{
+    audio::media_player::MediaPlayer,
     media::track::Track,
     playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
 };
@@ -28,25 +29,36 @@ pub fn get_all_artists(
 }
 
 #[tauri::command]
-pub fn add_track_to_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>, track: Arc<Track>) {
+pub fn add_track_to_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>, track: Arc<Track>) {
     let mut queue = play_queue.lock().unwrap();
     queue.add_track(track);
 }
 
 #[tauri::command]
-pub fn remove_track_from_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>, track: Arc<Track>) {
+pub fn remove_track_from_queue(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    track: Arc<Track>,
+) {
     let mut queue = play_queue.lock().unwrap();
     queue.remove_track(track);
 }
 
 #[tauri::command]
-pub fn clear_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>) {
+pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
     let mut queue = play_queue.lock().unwrap();
     queue.clear();
 }
 
 #[tauri::command]
-pub fn get_queue(play_queue: tauri::State<'_, Mutex<PlayQueue>>) -> Vec<Arc<Track>> {
+pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Track>> {
     let queue = play_queue.lock().unwrap();
     queue.tracks.clone()
+}
+
+#[tauri::command]
+pub fn play_queue(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) {
+    //PlayQueue::play(&play_queue, &player);
 }

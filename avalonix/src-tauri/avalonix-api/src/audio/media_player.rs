@@ -162,7 +162,9 @@ impl MediaPlayer {
         self.playback.as_ref().unwrap().empty()
     }
 
-    pub fn update(clone: Arc<Mutex<MediaPlayer>>) {
+    pub fn update(player_arc: &Arc<Mutex<MediaPlayer>>) {
+        let clone = player_arc.clone();
+
         thread::spawn(move || {
             let host = Host::default();
             loop {
@@ -205,21 +207,24 @@ fn test_play() {
         Ok(player) => {
             let player = Arc::new(Mutex::new(player));
 
-            let clone1 = player.clone();
-            let clone2 = player.clone();
-            let clone3 = player.clone();
-
             let file_path =
         "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac"
             .to_string();
 
-            MediaPlayer::update(clone2);
+            MediaPlayer::update(&player);
 
-            clone1.lock().as_mut().unwrap().play(file_path);
+            player.clone().lock().as_mut().unwrap().play(file_path);
 
             logger::debug(&format!(
                 "len {}",
-                clone3.lock().as_ref().unwrap().get_len().clone().as_secs()
+                player
+                    .clone()
+                    .lock()
+                    .as_ref()
+                    .unwrap()
+                    .get_len()
+                    .clone()
+                    .as_secs()
             ));
         }
         Err(_) => {}

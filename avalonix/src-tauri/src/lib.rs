@@ -31,11 +31,12 @@ pub fn run() {
                     commands::add_track_to_queue,
                     commands::clear_queue,
                     commands::remove_track_from_queue,
-                    commands::get_queue
+                    commands::get_queue,
+                    commands::play_queue
                 ])
                 .manage(player)
                 .manage(playboxes_manager)
-                .manage(Mutex::new(play_queue))
+                .manage(play_queue)
                 .run(tauri::generate_context!())
                 .expect("error while running tauri application");
         }
@@ -43,7 +44,14 @@ pub fn run() {
     }
 }
 
-fn init_api() -> Result<(Arc<Mutex<MediaPlayer>>, PlayboxesManager, PlayQueue), String> {
+fn init_api() -> Result<
+    (
+        Arc<Mutex<MediaPlayer>>,
+        PlayboxesManager,
+        Arc<Mutex<PlayQueue>>,
+    ),
+    String,
+> {
     let db_path = disk_manager::avalonix_special_folder_path();
     let db = MusicDB::open(&db_path);
 
@@ -54,12 +62,11 @@ fn init_api() -> Result<(Arc<Mutex<MediaPlayer>>, PlayboxesManager, PlayQueue), 
             Ok(db) => {
                 let player = Arc::new(Mutex::new(media_player));
 
-                let player_clone1 = player.clone();
-                let player_clone2 = player.clone();
+                MediaPlayer::update(&player);
 
-                MediaPlayer::update(player_clone1);
+                let play_queue = Arc::new(Mutex::new(PlayQueue::new()));
 
-                let play_queue = PlayQueue::new();
+                PlayQueue::play(&play_queue, &player);
 
                 let tracks_container = TracksContainer::new(&db);
                 let albums_container = AlbumsContainer::new(&tracks_container);
@@ -68,7 +75,7 @@ fn init_api() -> Result<(Arc<Mutex<MediaPlayer>>, PlayboxesManager, PlayQueue), 
                 let playboxes_manager =
                     PlayboxesManager::new(tracks_container, albums_container, artists_container);
 
-                Ok((player_clone2, playboxes_manager, play_queue))
+                Ok((player, playboxes_manager, play_queue))
             }
             Err(err) => {
                 logger::error(&err.to_string());
