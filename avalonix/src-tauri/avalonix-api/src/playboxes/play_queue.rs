@@ -55,9 +55,12 @@ impl PlayQueue {
         let mut index: usize = 0;
         for i in self.tracks.clone() {
             if i == track {
-                if index == self.current_track_index as usize {}
                 if index as i32 <= self.current_track_index {
                     self.current_track_index -= 1;
+
+                    if index == self.current_track_index as usize {
+                        self.current_track_index -= 1;
+                    }
                 }
                 self.tracks.remove(index);
                 logger::debug(&format!("track with id: {} removed", track.id));
@@ -111,7 +114,11 @@ impl PlayQueue {
     ) {
         self_guard.current_track_index = index as i32;
         match self_guard.tracks.get(index) {
-            Some(track) => media_player_guard.play(track.file_path.clone()),
+            Some(track) => {
+                media_player_guard.play(track.file_path.clone());
+                let b = media_player_guard.get_len() - Duration::new(10, 0);
+                media_player_guard.seek(b);
+            }
             None => {}
         }
     }
