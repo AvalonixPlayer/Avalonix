@@ -189,7 +189,9 @@ impl MediaPlayer {
                                         playback.change_device();
                                     }
                                 }
-                                Err(_) => {}
+                                Err(err) => {
+                                    logger::acceptable_error(&err.to_string());
+                                }
                             }
                         }
                         None => {}

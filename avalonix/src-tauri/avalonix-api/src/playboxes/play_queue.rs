@@ -75,31 +75,31 @@ impl PlayQueue {
         thread::spawn(move || {
             loop {
                 {
-                    let self_guard = self_clone.try_lock();
-                    let media_player_guard = media_player_clone.try_lock();
-                    match (self_guard, media_player_guard) {
+                    match (self_clone.try_lock(), media_player_clone.try_lock()) {
                         (Ok(mut self_guard), Ok(mut media_player_guard)) => {
-                            if self_guard.tracks.len() == 0 {
-                                continue;
-                            }
-                            if !media_player_guard.empty() {
-                                continue;
-                            }
-                            if (self_guard.current_track_index + 1) as usize
-                                <= self_guard.tracks.len() - 1
-                            {
-                                let i = (self_guard.current_track_index + 1) as usize;
-                                println!("ТУТ БОБА С {}", i);
-                                Self::play_by_index(&mut self_guard, &mut media_player_guard, i);
-                            } else {
-                                println!("ТУТ БИБА С {}", 0);
-                                Self::play_by_index(&mut self_guard, &mut media_player_guard, 0);
+                            if self_guard.tracks.len() != 0 && media_player_guard.empty() {
+                                if (self_guard.current_track_index + 1) as usize
+                                    <= self_guard.tracks.len() - 1
+                                {
+                                    let i = (self_guard.current_track_index + 1) as usize;
+                                    Self::play_by_index(
+                                        &mut self_guard,
+                                        &mut media_player_guard,
+                                        i,
+                                    );
+                                } else {
+                                    Self::play_by_index(
+                                        &mut self_guard,
+                                        &mut media_player_guard,
+                                        0,
+                                    );
+                                }
                             }
                         }
                         (_, _) => {}
                     }
                 }
-                thread::sleep(Duration::new(0, 1000));
+                thread::sleep(Duration::from_millis(100));
             }
         });
     }
