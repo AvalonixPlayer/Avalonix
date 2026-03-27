@@ -19,8 +19,6 @@ pub fn avalonix_special_folder_path() -> String {
 }
 
 pub fn get_all_tracks_paths() -> Vec<String> {
-    use crate::logger;
-
     let mut dirs_paths: Vec<String> = Vec::new();
 
     dirs_paths.push("D:\\music".to_string());

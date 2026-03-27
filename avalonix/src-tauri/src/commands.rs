@@ -4,8 +4,6 @@ use std::{
 };
 
 use avalonix_api::{
-    audio::media_player::MediaPlayer,
-    logger,
     media::track::Track,
     playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
 };
@@ -38,7 +36,7 @@ pub fn add_track_to_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>, t
                 queue.add_track(track);
                 break;
             }
-            Err(err) => logger::acceptable_error(&err.to_string()),
+            Err(_) => {}
         }
     }
 }
@@ -55,7 +53,7 @@ pub fn remove_track_from_queue(
                 queue.remove_track(track);
                 break;
             }
-            Err(err) => logger::acceptable_error(&err.to_string()),
+            Err(_) => {}
         }
     }
 }
@@ -69,7 +67,7 @@ pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
                 queue.clear();
                 break;
             }
-            Err(err) => logger::acceptable_error(&err.to_string()),
+            Err(_) => {}
         }
     }
 }
@@ -80,9 +78,7 @@ pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc
         let queue = play_queue.try_lock();
         match queue {
             Ok(queue) => return queue.tracks.clone(),
-            Err(err) => {
-                logger::acceptable_error(&err.to_string());
-            }
+            Err(_) => {}
         }
     }
 }

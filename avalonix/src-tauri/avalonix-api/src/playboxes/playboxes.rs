@@ -3,10 +3,7 @@ use std::{collections::HashMap, sync::Arc};
 use crate::{
     db::MusicDB,
     disk_manager, logger,
-    media::{
-        metadata::Metadata,
-        track::{self, Track},
-    },
+    media::{metadata::Metadata, track::Track},
 };
 
 #[derive(ts_rs::TS)]

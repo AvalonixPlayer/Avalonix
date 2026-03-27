@@ -6,8 +6,8 @@ use std::path::{Path, PathBuf};
 use std::{fmt, fs};
 
 use crate::db::MusicDB;
+use crate::disk_manager;
 use crate::media::track::Track;
-use crate::{disk_manager, logger};
 
 #[derive(
     ts_rs::TS, serde::Serialize, serde::Deserialize, Archive, Deserialize, Serialize, Debug, Clone,

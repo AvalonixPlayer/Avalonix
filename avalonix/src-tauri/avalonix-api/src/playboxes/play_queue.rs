@@ -1,23 +1,17 @@
 use std::{
-    fmt,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, MutexGuard},
     thread,
     time::Duration,
+    usize,
 };
 
-use crate::{
-    audio::media_player::{self, MediaPlayer},
-    db::MusicDB,
-    disk_manager, logger,
-    media::track::Track,
-    playboxes::playboxes::TracksContainer,
-};
+use crate::{audio::media_player::MediaPlayer, logger, media::track::Track};
 
 #[derive(Debug, ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\PlayQueue.ts")]
 pub struct PlayQueue {
     pub tracks: Vec<Arc<Track>>,
-    current_track_index: usize,
+    current_track_index: i32,
 }
 
 impl PlayQueue {
@@ -58,9 +52,13 @@ impl PlayQueue {
     }
 
     pub fn remove_track(&mut self, track: Arc<Track>) {
-        let mut index = 0;
+        let mut index: usize = 0;
         for i in self.tracks.clone() {
             if i == track {
+                if index == self.current_track_index as usize {}
+                if index as i32 <= self.current_track_index {
+                    self.current_track_index -= 1;
+                }
                 self.tracks.remove(index);
                 logger::debug(&format!("track with id: {} removed", track.id));
                 return;
@@ -78,38 +76,44 @@ impl PlayQueue {
             loop {
                 {
                     let self_guard = self_clone.try_lock();
-                    match self_guard {
-                        Ok(mut self_guard) => {
-                            let media_player_guard = media_player_clone.try_lock();
-                            match media_player_guard {
-                                Ok(mut media_player_guard) => {
-                                    if self_guard.tracks.len() != 0 {
-                                        if media_player_guard.empty() {
-                                            if self_guard.current_track_index + 1
-                                                <= self_guard.tracks.len() - 1
-                                            {
-                                                self_guard.current_track_index += 1;
-                                                let track = &self_guard.tracks
-                                                    [self_guard.current_track_index];
-                                                media_player_guard.play(track.file_path.clone());
-                                            } else {
-                                                self_guard.current_track_index = 0;
-                                                let track = &self_guard.tracks
-                                                    [self_guard.current_track_index];
-                                                media_player_guard.play(track.file_path.clone());
-                                            }
-                                        }
-                                    }
-                                }
-                                Err(err) => logger::acceptable_error(&err.to_string()),
+                    let media_player_guard = media_player_clone.try_lock();
+                    match (self_guard, media_player_guard) {
+                        (Ok(mut self_guard), Ok(mut media_player_guard)) => {
+                            if self_guard.tracks.len() == 0 {
+                                continue;
+                            }
+                            if !media_player_guard.empty() {
+                                continue;
+                            }
+                            if (self_guard.current_track_index + 1) as usize
+                                <= self_guard.tracks.len() - 1
+                            {
+                                let i = (self_guard.current_track_index + 1) as usize;
+                                println!("ТУТ БОБА С {}", i);
+                                Self::play_by_index(&mut self_guard, &mut media_player_guard, i);
+                            } else {
+                                println!("ТУТ БИБА С {}", 0);
+                                Self::play_by_index(&mut self_guard, &mut media_player_guard, 0);
                             }
                         }
-                        Err(err) => logger::acceptable_error(&err.to_string()),
+                        (_, _) => {}
                     }
                 }
                 thread::sleep(Duration::new(0, 1000));
             }
         });
+    }
+
+    fn play_by_index(
+        self_guard: &mut MutexGuard<'_, Self>,
+        media_player_guard: &mut MutexGuard<'_, MediaPlayer>,
+        index: usize,
+    ) {
+        self_guard.current_track_index = index as i32;
+        match self_guard.tracks.get(index) {
+            Some(track) => media_player_guard.play(track.file_path.clone()),
+            None => {}
+        }
     }
 
     pub fn pause_or_continue(&mut self, media_player_guard: Arc<Mutex<MediaPlayer>>) {
@@ -134,6 +138,9 @@ impl PlayQueue {
 
 #[test]
 fn test_play_queue() {
+    use crate::db::MusicDB;
+    use crate::disk_manager;
+    use crate::playboxes::playboxes::TracksContainer;
     let hash_path = disk_manager::avalonix_special_folder_path();
     let db = MusicDB::open(&hash_path).unwrap();
     let cont = TracksContainer::new(&db);
