@@ -2,12 +2,16 @@
 use lofty::prelude::*;
 use lofty::probe::Probe;
 use rkyv::{Archive, Deserialize, Serialize};
+use rodio::buffer;
+use std::fs::File;
+use std::io::Read;
+use std::os::windows::io::AsRawHandle;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs};
 
 use crate::db::MusicDB;
-use crate::disk_manager;
 use crate::media::track::Track;
+use crate::{disk_manager, logger};
 
 #[derive(
     ts_rs::TS, serde::Serialize, serde::Deserialize, Archive, Deserialize, Serialize, Debug, Clone,
@@ -108,6 +112,53 @@ impl Metadata {
             }
         }
     }
+
+    pub fn get_album_cover_vec(&mut self) -> Option<Vec<u8>> {
+        match self.album_cover_hash_path.as_ref() {
+            Some(album_cover_hash_path) => match File::open(album_cover_hash_path) {
+                Ok(mut file) => {
+                    let mut buffer = Vec::new();
+                    _ = file.read_to_end(&mut buffer);
+                    Some(buffer)
+                }
+                Err(err) => {
+                    logger::error(&err.to_string());
+                    None
+                }
+            },
+            None => None,
+        }
+    }
+
+    pub fn get_track_cover_vec(&self, track_path: &str) -> Option<Vec<u8>> {
+        let path = Path::new(&track_path);
+        let tagged_file = Probe::open(path)
+            .map_err(|e| format!("ERROR: Bad path: {}", e))
+            .unwrap()
+            .read()
+            .map_err(|e| {
+                format!(
+                    "ERROR: Failed to read file \"{}\": {}",
+                    path.to_str().unwrap(),
+                    e
+                )
+            })
+            .unwrap();
+        let tag = match tagged_file.primary_tag() {
+            Some(primary_tag) => primary_tag,
+            None => tagged_file
+                .first_tag()
+                .ok_or("ERROR: No tags found!")
+                .unwrap(),
+        };
+
+        let pic = tag.pictures().first();
+
+        match pic {
+            Some(pic) => Some(pic.data().to_owned()),
+            None => None,
+        }
+    }
 }
 
 impl fmt::Display for Metadata {
@@ -145,7 +196,7 @@ fn test_metadata_from() {
             let tracks_hash = all_tracks.iter().collect();
             let metadata = Metadata::from(music_path, &db, tracks_hash);
 
-            logger::debug(&format!("{}", metadata.unwrap()));
+            logger::debug(&format!("{}", metadata.as_ref().unwrap()));
         }
         Err(err) => logger::error(&err.to_string()),
     }
