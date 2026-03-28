@@ -30,18 +30,8 @@ pub fn get_all_artists(
 
 #[tauri::command]
 pub fn add_track_to_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>, track: Arc<Track>) {
-    loop {
-        let queue = play_queue.try_lock();
-        match queue {
-            Ok(mut queue) => {
-                queue.add_track(track);
-                break;
-            }
-            Err(err) => {
-                logger::acceptable_error(&err.to_string());
-            }
-        }
-    }
+    let mut queue = play_queue.lock().unwrap();
+    queue.add_track(track);
 }
 
 #[tauri::command]
@@ -49,45 +39,18 @@ pub fn remove_track_from_queue(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     track: Arc<Track>,
 ) {
-    loop {
-        let queue = play_queue.try_lock();
-        match queue {
-            Ok(mut queue) => {
-                queue.remove_track(track);
-                break;
-            }
-            Err(err) => {
-                logger::acceptable_error(&err.to_string());
-            }
-        }
-    }
+    let mut queue = play_queue.lock().unwrap();
+    queue.remove_track(track);
 }
 
 #[tauri::command]
 pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
-    loop {
-        let queue = play_queue.try_lock();
-        match queue {
-            Ok(mut queue) => {
-                queue.clear();
-                break;
-            }
-            Err(err) => {
-                logger::acceptable_error(&err.to_string());
-            }
-        }
-    }
+    let mut queue = play_queue.lock().unwrap();
+    queue.clear();
 }
 
 #[tauri::command]
 pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Track>> {
-    loop {
-        let queue = play_queue.try_lock();
-        match queue {
-            Ok(queue) => return queue.tracks.clone(),
-            Err(err) => {
-                logger::acceptable_error(&err.to_string());
-            }
-        }
-    }
+    let queue = play_queue.lock().unwrap();
+    queue.tracks.clone()
 }

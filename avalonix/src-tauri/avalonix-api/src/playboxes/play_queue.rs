@@ -28,20 +28,10 @@ impl PlayQueue {
     }
 
     pub fn add_track(&mut self, track: Arc<Track>) {
-        for i in self.tracks.clone() {
-            if i == track {
-                logger::warn(&format!(
-                    "track with id: {} also in play queue",
-                    track.id.clone()
-                ));
-                return;
-            };
+        if self.tracks.iter().any(|t| t == &track) {
+            logger::warn(&format!("track with id: {} also in play queue", track.id));
+            return;
         }
-
-        logger::debug(&format!(
-            "track with id: {} added to play queue",
-            track.id.clone()
-        ));
         self.tracks.push(track);
     }
 
@@ -52,21 +42,15 @@ impl PlayQueue {
     }
 
     pub fn remove_track(&mut self, track: Arc<Track>) {
-        let mut index: usize = 0;
-        for i in self.tracks.clone() {
-            if i == track {
-                if index as i32 <= self.current_track_index {
-                    self.current_track_index -= 1;
+        if let Some(index) = self.tracks.iter().position(|f| f == &track) {
+            self.tracks.remove(index);
 
-                    if index == self.current_track_index as usize {
-                        self.current_track_index -= 1;
-                    }
-                }
-                self.tracks.remove(index);
-                logger::debug(&format!("track with id: {} removed", track.id));
-                return;
+            if (index as i32) <= self.current_track_index {
+                self.current_track_index -= 1;
             }
-            index += 1;
+
+            logger::debug(&format!("track with id: {} removed", track.id));
+            return;
         }
         logger::warn(&format!("track with id: {} not found in queue", track.id));
     }
@@ -77,31 +61,24 @@ impl PlayQueue {
 
         thread::spawn(move || {
             loop {
-                {
-                    match (self_clone.try_lock(), media_player_clone.try_lock()) {
-                        (Ok(mut self_guard), Ok(mut media_player_guard)) => {
-                            if self_guard.tracks.len() != 0 && media_player_guard.empty() {
-                                if (self_guard.current_track_index + 1) as usize
-                                    <= self_guard.tracks.len() - 1
-                                {
-                                    let i = (self_guard.current_track_index + 1) as usize;
-                                    Self::play_by_index(
-                                        &mut self_guard,
-                                        &mut media_player_guard,
-                                        i,
-                                    );
-                                } else {
-                                    Self::play_by_index(
-                                        &mut self_guard,
-                                        &mut media_player_guard,
-                                        0,
-                                    );
-                                }
-                            }
-                        }
-                        (_, _) => {}
-                    }
+                let mut queue = self_clone.lock().unwrap();
+                let mut player = media_player_clone.lock().unwrap();
+
+                if !queue.tracks.is_empty() && player.empty() {
+                    let next_index = (queue.current_track_index + 1) as usize;
+
+                    let i = if next_index < queue.tracks.len() {
+                        next_index
+                    } else {
+                        0
+                    };
+
+                    Self::play_by_index(&mut queue, &mut player, i);
                 }
+
+                drop(player);
+                drop(queue);
+
                 thread::sleep(Duration::from_millis(100));
             }
         });

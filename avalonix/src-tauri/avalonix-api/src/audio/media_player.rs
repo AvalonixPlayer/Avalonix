@@ -178,21 +178,14 @@ impl MediaPlayer {
                 {
                     match device {
                         Some(device) => {
-                            let guard = clone.try_lock();
-
-                            match guard {
-                                Ok(mut player) => {
-                                    if player.playback.as_mut().unwrap().last_device_description
-                                        != device.description().unwrap()
-                                    {
-                                        let playback = player.playback.as_mut().unwrap();
-                                        playback.change_device();
-                                    }
-                                }
-                                Err(err) => {
-                                    logger::acceptable_error(&err.to_string());
-                                }
+                            let mut player = clone.lock().unwrap();
+                            if player.playback.as_mut().unwrap().last_device_description
+                                != device.description().unwrap()
+                            {
+                                let playback = player.playback.as_mut().unwrap();
+                                playback.change_device();
                             }
+                            drop(player);
                         }
                         None => {}
                     }
