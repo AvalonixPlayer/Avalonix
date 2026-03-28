@@ -12,6 +12,7 @@ use crate::{audio::media_player::MediaPlayer, logger, media::track::Track};
 pub struct PlayQueue {
     pub tracks: Vec<Arc<Track>>,
     current_track_index: i32,
+    track_updated: bool,
 }
 
 impl PlayQueue {
@@ -19,6 +20,7 @@ impl PlayQueue {
         PlayQueue {
             tracks: Vec::new(),
             current_track_index: 0,
+            track_updated: false,
         }
     }
 
@@ -95,9 +97,14 @@ impl PlayQueue {
                 media_player_guard.play(track.file_path.clone());
                 let b = media_player_guard.get_len() - Duration::new(10, 0);
                 media_player_guard.seek(b);
+                self_guard.track_updated_state_change(true);
             }
             None => {}
         }
+    }
+
+    fn track_updated_state_change(&mut self, state: bool) {
+        self.track_updated = state;
     }
 
     pub fn pause_or_continue(&mut self, media_player_guard: Arc<Mutex<MediaPlayer>>) {

@@ -8,6 +8,7 @@ use avalonix_api::{
     media::track::Track,
     playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
 };
+use tauri::Emitter;
 
 #[tauri::command]
 pub fn get_all_tracks(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Arc<Track>> {
@@ -51,6 +52,12 @@ pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
 
 #[tauri::command]
 pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Track>> {
+    let queue = play_queue.lock().unwrap();
+    queue.tracks.clone()
+}
+
+#[tauri::command]
+pub fn get_len(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Track>> {
     let queue = play_queue.lock().unwrap();
     queue.tracks.clone()
 }

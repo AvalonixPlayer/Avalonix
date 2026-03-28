@@ -1,6 +1,10 @@
 pub mod commands;
 
-use std::sync::{Arc, Mutex};
+use std::{
+    cell::OnceCell,
+    sync::{mpsc, Arc, Mutex},
+    thread,
+};
 
 use avalonix_api::{
     audio::media_player::MediaPlayer,
@@ -11,8 +15,11 @@ use avalonix_api::{
         playboxes::{AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer},
     },
 };
+use tauri::AppHandle;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
+
+//сделай передачу через каналы: в api нужен отправитель, а тута только приниматель
 
 pub fn run() {
     let api = init_api();
@@ -22,8 +29,20 @@ pub fn run() {
             let playboxes_manager = api.1;
             let play_queue = api.2;
 
+            let player_clone = player.clone();
+
             tauri::Builder::default()
                 .plugin(tauri_plugin_opener::init())
+                .setup(move |app| {
+                    let (sender, reciver) = mpsc::channel();
+                    let sender_clone = sender.clone();
+                    player_clone.lock().unwrap().sender = Some(sender_clone);
+
+                    thread::spawn(move || {
+                        println!("{}", reciver.recv().unwrap());
+                    });
+                    Ok(())
+                })
                 .invoke_handler(tauri::generate_handler![
                     commands::get_all_tracks,
                     commands::get_all_albums,

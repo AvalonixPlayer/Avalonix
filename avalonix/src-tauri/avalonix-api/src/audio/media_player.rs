@@ -1,7 +1,7 @@
 use std::{
     fs::File,
     io::BufReader,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc},
     thread,
     time::Duration,
 };
@@ -23,6 +23,7 @@ struct Playback {
 
 pub struct MediaPlayer {
     playback: Option<Playback>,
+    pub sender: Option<mpsc::Sender<u32>>,
 }
 
 impl Playback {
@@ -115,7 +116,10 @@ impl MediaPlayer {
     pub fn new() -> Result<Self, String> {
         let playback = Playback::new();
         match playback {
-            Ok(pb) => Ok(Self { playback: Some(pb) }),
+            Ok(pb) => Ok(Self {
+                playback: Some(pb),
+                sender: None,
+            }),
             Err(err) => {
                 logger::error(&err);
                 Err(err)
@@ -125,6 +129,7 @@ impl MediaPlayer {
 
     pub fn play(&mut self, file_path: String) {
         let playback = self.playback.as_mut().unwrap();
+        self.sender.as_mut().unwrap().send(1);
 
         playback.last_playing_track_path = Some(file_path.clone());
         playback.play(file_path);
