@@ -1,7 +1,6 @@
 pub mod commands;
 
 use std::{
-    cell::OnceCell,
     sync::{mpsc, Arc, Mutex},
     thread,
 };
@@ -15,7 +14,6 @@ use avalonix_api::{
         playboxes::{AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer},
     },
 };
-use tauri::AppHandle;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 

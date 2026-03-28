@@ -2,10 +2,8 @@
 use lofty::prelude::*;
 use lofty::probe::Probe;
 use rkyv::{Archive, Deserialize, Serialize};
-use rodio::buffer;
 use std::fs::File;
 use std::io::Read;
-use std::os::windows::io::AsRawHandle;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs};
 

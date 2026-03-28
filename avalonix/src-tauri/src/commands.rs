@@ -8,7 +8,6 @@ use avalonix_api::{
     media::track::Track,
     playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
 };
-use tauri::Emitter;
 
 #[tauri::command]
 pub fn get_all_tracks(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Arc<Track>> {
