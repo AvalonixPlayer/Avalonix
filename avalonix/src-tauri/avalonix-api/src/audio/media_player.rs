@@ -11,13 +11,13 @@ use rodio::{
     cpal::{DeviceDescription, Host, traits::HostTrait},
 };
 
-use crate::logger;
+use crate::{db::MusicDB, disk_manager, logger, media::track::Track};
 
 struct Playback {
     stream_handle: MixerDeviceSink,
     last_device_description: DeviceDescription,
     player: Player,
-    last_playing_track_path: Option<String>,
+    last_playing_track: Option<Arc<Mutex<Track>>>,
     total_time: Duration,
 }
 
@@ -43,7 +43,7 @@ impl Playback {
                         .description()
                         .unwrap(),
                     player,
-                    last_playing_track_path: None,
+                    last_playing_track: None,
                     total_time: Duration::new(0, 0),
                 });
             }
@@ -57,8 +57,9 @@ impl Playback {
         match new {
             Ok(mut new) => {
                 let host = Host::default();
-                let file_path = self.last_playing_track_path.as_ref().unwrap();
-                new.play(file_path.clone());
+                let last_playing_track = self.last_playing_track.clone().unwrap();
+
+                new.play(&last_playing_track);
 
                 self.stream_handle = new.stream_handle;
                 self.last_device_description =
@@ -69,8 +70,10 @@ impl Playback {
         }
     }
 
-    fn play(&mut self, file_path: String) {
-        let file = BufReader::new(File::open(file_path).unwrap());
+    fn play(&mut self, track_arc: &Arc<Mutex<Track>>) {
+        let track_clone = track_arc.clone();
+
+        let file = BufReader::new(File::open(&track_clone.lock().unwrap().file_path).unwrap());
         let source = Decoder::new(file).unwrap();
 
         self.total_time = source.total_duration().unwrap().clone();
@@ -127,12 +130,13 @@ impl MediaPlayer {
         }
     }
 
-    pub fn play(&mut self, file_path: String) {
+    pub fn play(&mut self, track_arc: &Arc<Mutex<Track>>) {
+        let track_clone = track_arc.clone();
         let playback = self.playback.as_mut().unwrap();
         self.sender.as_mut().unwrap().send(1);
 
-        playback.last_playing_track_path = Some(file_path.clone());
-        playback.play(file_path);
+        playback.last_playing_track = Some(track_clone);
+        playback.play(track_arc);
     }
 
     pub fn stop(&self) {
@@ -213,7 +217,14 @@ fn test_play() {
 
             MediaPlayer::update(&player);
 
-            player.clone().lock().as_mut().unwrap().play(file_path);
+            let db = &MusicDB::open(&disk_manager::avalonix_special_folder_path()).unwrap();
+
+            let all_tracks = db.get_all_tracks().unwrap();
+            let tracks_hash = all_tracks.iter().collect();
+
+            let track = Arc::new(Mutex::new(Track::new(&file_path, db, tracks_hash).unwrap()));
+
+            player.clone().lock().as_mut().unwrap().play(&track);
 
             logger::debug(&format!(
                 "len {}",

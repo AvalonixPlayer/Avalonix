@@ -109,7 +109,7 @@ impl PlayQueue {
         self_guard.current_track_index = index as i32;
         match self_guard.tracks.get(index) {
             Some(track) => {
-                media_player_guard.play(track.lock().unwrap().file_path.clone());
+                media_player_guard.play(&track);
             }
             None => {}
         }
