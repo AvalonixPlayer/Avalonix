@@ -102,7 +102,7 @@ impl Metadata {
                     duration_secs: properties.duration().as_secs(),
                 };
 
-                let track = Track::new(track_path, result.clone());
+                let track = Track::from(track_path, &result);
                 db.save_track(&track).unwrap();
                 drop(track);
 

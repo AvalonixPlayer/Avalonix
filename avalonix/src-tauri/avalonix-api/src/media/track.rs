@@ -1,3 +1,7 @@
+use std::sync::{Arc, Mutex};
+
+use crate::{db::MusicDB, logger};
+
 use super::metadata::Metadata;
 use rkyv::{Archive, Deserialize, Serialize};
 use uuid::Uuid;
@@ -13,10 +17,22 @@ pub struct Track {
 }
 
 impl Track {
-    pub fn new(file_path: &str, metadata: Metadata) -> Self {
-        Track {
+    pub fn new(file_path: &str, db: &MusicDB, tracks_hash: Vec<&Track>) -> Result<Self, String> {
+        let metadata = Metadata::from(file_path, db, tracks_hash);
+        match metadata {
+            Ok(metadata) => Ok(Track {
+                id: Uuid::new_v4().to_string(),
+                metadata,
+                file_path: file_path.to_string(),
+            }),
+            Err(err) => Err(err),
+        }
+    }
+
+    pub fn from(file_path: &str, metadata: &Metadata) -> Self {
+        Self {
             id: Uuid::new_v4().to_string(),
-            metadata,
+            metadata: metadata.clone(),
             file_path: file_path.to_string(),
         }
     }

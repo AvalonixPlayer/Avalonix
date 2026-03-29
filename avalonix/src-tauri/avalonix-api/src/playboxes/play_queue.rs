@@ -10,7 +10,7 @@ use crate::{audio::media_player::MediaPlayer, logger, media::track::Track};
 #[derive(Debug, ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\PlayQueue.ts")]
 pub struct PlayQueue {
-    pub tracks: Vec<Arc<Track>>,
+    pub tracks: Vec<Arc<Mutex<Track>>>,
     current_track_index: i32,
 }
 
@@ -27,32 +27,49 @@ impl PlayQueue {
         self.tracks.clear();
     }
 
-    pub fn add_track(&mut self, track: Arc<Track>) {
-        if self.tracks.iter().any(|t| t == &track) {
-            logger::warn(&format!("track with id: {} also in play queue", track.id));
+    pub fn add_track(&mut self, track: Arc<Mutex<Track>>) {
+        if self
+            .tracks
+            .iter()
+            .any(|t| *t.lock().unwrap() == *track.lock().unwrap())
+        {
+            logger::warn(&format!(
+                "track with id: {} also in play queue",
+                track.lock().unwrap().id
+            ));
             return;
         }
         self.tracks.push(track);
     }
 
-    pub fn add_tracks(&mut self, tracks: Vec<Arc<Track>>) {
+    pub fn add_tracks(&mut self, tracks: Vec<Arc<Mutex<Track>>>) {
         for track in tracks {
             self.add_track(track);
         }
     }
 
-    pub fn remove_track(&mut self, track: Arc<Track>) {
-        if let Some(index) = self.tracks.iter().position(|f| f == &track) {
+    pub fn remove_track(&mut self, track: Arc<Mutex<Track>>) {
+        if let Some(index) = self
+            .tracks
+            .iter()
+            .position(|f| *f.lock().unwrap() == *track.lock().unwrap())
+        {
             self.tracks.remove(index);
 
             if (index as i32) <= self.current_track_index {
                 self.current_track_index -= 1;
             }
 
-            logger::debug(&format!("track with id: {} removed", track.id));
+            logger::debug(&format!(
+                "track with id: {} removed",
+                track.lock().unwrap().id
+            ));
             return;
         }
-        logger::warn(&format!("track with id: {} not found in queue", track.id));
+        logger::warn(&format!(
+            "track with id: {} not found in queue",
+            track.lock().unwrap().id
+        ));
     }
 
     pub fn play(self_arc: &Arc<Mutex<Self>>, media_player_arc: &Arc<Mutex<MediaPlayer>>) {
@@ -92,13 +109,14 @@ impl PlayQueue {
         self_guard.current_track_index = index as i32;
         match self_guard.tracks.get(index) {
             Some(track) => {
-                media_player_guard.play(track.file_path.clone());
+                media_player_guard.play(track.lock().unwrap().file_path.clone());
                 let b = media_player_guard.get_len() - Duration::new(10, 0);
                 media_player_guard.seek(b);
             }
             None => {}
         }
     }
+
     pub fn pause_or_continue(&mut self, media_player_guard: Arc<Mutex<MediaPlayer>>) {
         let media_player;
         match media_player_guard.try_lock() {

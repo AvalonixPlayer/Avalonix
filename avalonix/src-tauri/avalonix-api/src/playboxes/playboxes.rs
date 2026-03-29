@@ -1,27 +1,26 @@
-use std::{collections::HashMap, sync::Arc};
-
-use crate::{
-    db::MusicDB,
-    disk_manager, logger,
-    media::{metadata::Metadata, track::Track},
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
 };
+
+use crate::{db::MusicDB, disk_manager, logger, media::track::Track};
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\TracksContainer.ts")]
 pub struct TracksContainer {
-    pub all_tracks: Vec<Arc<Track>>,
+    pub all_tracks: Vec<Arc<Mutex<Track>>>,
 }
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\AlbumsContainer.ts")]
 pub struct AlbumsContainer {
-    pub albums: HashMap<String, Vec<Arc<Track>>>,
+    pub albums: HashMap<String, Vec<Arc<Mutex<Track>>>>,
 }
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\AristsContainer.ts")]
 pub struct AristsContainer {
-    pub artists: HashMap<String, Vec<Arc<Track>>>,
+    pub artists: HashMap<String, Vec<Arc<Mutex<Track>>>>,
 }
 
 pub struct PlayboxesManager {
@@ -33,17 +32,15 @@ pub struct PlayboxesManager {
 impl TracksContainer {
     pub fn new(db: &MusicDB) -> TracksContainer {
         let all_tracks_paths = disk_manager::get_all_tracks_paths();
-        let mut result_tracks: Vec<Arc<Track>> = Vec::new();
+        let mut result_tracks: Vec<Arc<Mutex<Track>>> = Vec::new();
 
         for track_path in all_tracks_paths {
             let all_tracks = db.get_all_tracks().unwrap();
             let tracks_hash = all_tracks.iter().collect();
 
-            let track_metadata = Metadata::from(&track_path, &db, tracks_hash);
-            match track_metadata {
-                Ok(track_metadata) => {
-                    result_tracks.push(Arc::new(Track::new(&track_path, track_metadata)))
-                }
+            let track = Track::new(&track_path, db, tracks_hash);
+            match track {
+                Ok(track) => result_tracks.push(Arc::new(Mutex::new(track))),
                 Err(err) => logger::error(&err.to_string()),
             }
         }
@@ -57,17 +54,20 @@ impl AlbumsContainer {
     pub fn new(container: &TracksContainer) -> AlbumsContainer {
         let all_tracks = container.all_tracks.clone();
 
-        let mut albums: HashMap<String, Vec<Arc<Track>>> = HashMap::new();
+        let mut albums: HashMap<String, Vec<Arc<Mutex<Track>>>> = HashMap::new();
 
         for track in all_tracks {
-            match track.metadata.album.as_ref() {
+            let track_clone = track.clone();
+            let track_guard = track_clone.lock().unwrap();
+
+            match &track_guard.metadata.album {
                 Some(album_name) => {
                     let album = albums.get_mut(album_name);
                     match album {
                         Some(album) => album.push(track),
                         None => {
                             let mut vec = Vec::new();
-                            vec.push(track.clone());
+                            vec.push(track);
                             albums.insert(album_name.clone(), vec);
                         }
                     }
@@ -91,23 +91,26 @@ impl AristsContainer {
     pub fn new(container: &TracksContainer) -> AristsContainer {
         let all_tracks = container.all_tracks.clone();
 
-        let mut artists: HashMap<String, Vec<Arc<Track>>> = HashMap::new();
+        let mut artists: HashMap<String, Vec<Arc<Mutex<Track>>>> = HashMap::new();
 
         for track in all_tracks {
-            match track.metadata.artist.as_ref() {
+            let track_clone = track.clone();
+            let track_guard = track_clone.lock().unwrap();
+
+            match &track_guard.metadata.artist {
                 Some(artist_name) => {
                     let artist = artists.get_mut(artist_name);
                     match artist {
-                        Some(artist) => artist.push(track),
+                        Some(album) => album.push(track),
                         None => {
                             let mut vec = Vec::new();
-                            vec.push(track.clone());
+                            vec.push(track);
                             artists.insert(artist_name.clone(), vec);
                         }
                     }
                 }
                 None => match artists.get_mut("Unknown artist") {
-                    Some(artist) => artist.push(track),
+                    Some(album) => album.push(track),
                     None => {
                         let mut vec = Vec::new();
                         vec.push(track);
@@ -144,7 +147,7 @@ fn test_track_container_new() {
     let tracks = &cont.all_tracks;
 
     for track in tracks {
-        logger::debug(&format!("{}", track.metadata));
+        logger::debug(&format!("{}", track.lock().unwrap().metadata));
     }
 }
 
@@ -161,7 +164,7 @@ fn test_albums_container_new() {
             logger::debug(&format!(
                 "album - {}; track - {}",
                 album.0,
-                track.metadata.title.clone().unwrap()
+                track.lock().unwrap().metadata.title.clone().unwrap()
             ));
         }
     }
@@ -180,7 +183,7 @@ fn test_artists_container_new() {
             logger::debug(&format!(
                 "artist - {}; track - {}",
                 artist.0.clone(),
-                track.metadata.title.clone().unwrap()
+                track.lock().unwrap().metadata.title.clone().unwrap()
             ));
         }
     }

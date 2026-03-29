@@ -96,9 +96,8 @@ fn test_db() {
         Ok(db) => {
             let all_tracks = db.get_all_tracks().unwrap();
             let tracks_hash = all_tracks.iter().collect();
-            let metadata = Metadata::from(music_path, &db, tracks_hash).unwrap();
 
-            let track = Track::new(music_path, metadata);
+            let track = Track::new(music_path, &db, tracks_hash).unwrap();
 
             _ = db.save_track(&track);
 

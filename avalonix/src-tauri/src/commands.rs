@@ -10,26 +10,29 @@ use avalonix_api::{
 };
 
 #[tauri::command]
-pub fn get_all_tracks(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Arc<Track>> {
+pub fn get_all_tracks(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Arc<Mutex<Track>>> {
     playboxes.tracks_container.all_tracks.clone()
 }
 
 #[tauri::command]
 pub fn get_all_albums(
     playboxes: tauri::State<'_, PlayboxesManager>,
-) -> HashMap<String, Vec<Arc<Track>>> {
+) -> HashMap<String, Vec<Arc<Mutex<Track>>>> {
     playboxes.albums_container.albums.clone()
 }
 
 #[tauri::command]
 pub fn get_all_artists(
     playboxes: tauri::State<'_, PlayboxesManager>,
-) -> HashMap<String, Vec<Arc<Track>>> {
+) -> HashMap<String, Vec<Arc<Mutex<Track>>>> {
     playboxes.artists_container.artists.clone()
 }
 
 #[tauri::command]
-pub fn add_track_to_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>, track: Arc<Track>) {
+pub fn add_track_to_queue(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    track: Arc<Mutex<Track>>,
+) {
     let mut queue = play_queue.lock().unwrap();
     queue.add_track(track);
 }
@@ -37,7 +40,7 @@ pub fn add_track_to_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>, t
 #[tauri::command]
 pub fn remove_track_from_queue(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
-    track: Arc<Track>,
+    track: Arc<Mutex<Track>>,
 ) {
     let mut queue = play_queue.lock().unwrap();
     queue.remove_track(track);
@@ -50,13 +53,13 @@ pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
 }
 
 #[tauri::command]
-pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Track>> {
+pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Mutex<Track>>> {
     let queue = play_queue.lock().unwrap();
     queue.tracks.clone()
 }
 
 #[tauri::command]
-pub fn get_len(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Track>> {
+pub fn get_len(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Mutex<Track>>> {
     let queue = play_queue.lock().unwrap();
     queue.tracks.clone()
 }
