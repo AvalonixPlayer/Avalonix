@@ -30,7 +30,6 @@ async function ClearQueue() {
 }
 
 (async() => {
-  console.log("dobav");
   document.getElementById('clear-queue')!.addEventListener("click", async (_) => {
     await ClearQueue();
   })
@@ -70,8 +69,4 @@ async function createTrackBtn(track: Track, index: number): Promise<DocumentFrag
     if (trackNameClone) trackNameClone.textContent = title;
     if (artistNameClone) artistNameClone.textContent = artist;
     return clone;
-}
-
-export async function Play() {
-  await invoke('play_queue');
 }

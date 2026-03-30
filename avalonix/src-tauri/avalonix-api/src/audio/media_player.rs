@@ -1,6 +1,7 @@
 use std::{
     fs::File,
     io::BufReader,
+    ops::DerefMut,
     sync::{Arc, Mutex, mpsc},
     thread,
     time::Duration,
@@ -11,7 +12,11 @@ use rodio::{
     cpal::{DeviceDescription, Host, traits::HostTrait},
 };
 
-use crate::{db::MusicDB, disk_manager, logger, media::track::Track};
+use crate::{
+    db::MusicDB,
+    disk_manager, logger,
+    media::{metadata::Metadata, track::Track},
+};
 
 struct Playback {
     stream_handle: MixerDeviceSink,
@@ -23,7 +28,7 @@ struct Playback {
 
 pub struct MediaPlayer {
     playback: Option<Playback>,
-    pub sender: Option<mpsc::Sender<u32>>,
+    pub sender: Option<mpsc::Sender<Metadata>>,
 }
 
 impl Playback {
@@ -133,7 +138,20 @@ impl MediaPlayer {
     pub fn play(&mut self, track_arc: &Arc<Mutex<Track>>) {
         let track_clone = track_arc.clone();
         let playback = self.playback.as_mut().unwrap();
-        self.sender.as_mut().unwrap().send(1);
+
+        {
+            let binding = track_clone.clone();
+            let mut track_guard = binding.lock().unwrap();
+
+            let fp = track_guard.file_path.clone();
+
+            track_guard.metadata.add_cover_to_metadata(&fp);
+            self.sender
+                .as_mut()
+                .unwrap()
+                .send(track_guard.metadata.clone())
+                .unwrap();
+        }
 
         playback.last_playing_track = Some(track_clone);
         playback.play(track_arc);
@@ -205,7 +223,7 @@ impl MediaPlayer {
 }
 
 #[test]
-fn test_play() {
+fn test_play_media_player() {
     let mp = MediaPlayer::new();
     match mp {
         Ok(player) => {

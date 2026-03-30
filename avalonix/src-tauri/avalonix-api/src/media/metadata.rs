@@ -5,6 +5,7 @@ use rkyv::{Archive, Deserialize, Serialize};
 use std::fs::File;
 use std::io::Read;
 use std::path::{Path, PathBuf};
+use std::sync::{Arc, Mutex};
 use std::{fmt, fs};
 
 use crate::db::MusicDB;
@@ -24,7 +25,8 @@ pub struct Metadata {
     pub lyrics: Option<String>,
     pub bitrate: Option<u32>,
     pub album_cover_hash_path: Option<String>,
-    pub duration_secs: u64, // u64 instead Duration
+    pub duration_secs: u64,
+    pub track_cover: Option<Vec<u8>>,
 }
 
 impl Metadata {
@@ -100,6 +102,7 @@ impl Metadata {
                     bitrate: properties.overall_bitrate(),
                     album_cover_hash_path,
                     duration_secs: properties.duration().as_secs(),
+                    track_cover: None,
                 };
 
                 let track = Track::from(track_path, &result);
@@ -128,8 +131,12 @@ impl Metadata {
         }
     }
 
-    pub fn get_track_cover_vec(&self, track_path: &str) -> Option<Vec<u8>> {
-        let path = Path::new(&track_path);
+    pub fn add_cover_to_metadata(&mut self, track_path: &str) {
+        if self.track_cover != None {
+            return;
+        }
+
+        let path = Path::new(track_path);
         let tagged_file = Probe::open(path)
             .map_err(|e| format!("ERROR: Bad path: {}", e))
             .unwrap()
@@ -153,9 +160,9 @@ impl Metadata {
         let pic = tag.pictures().first();
 
         match pic {
-            Some(pic) => Some(pic.data().to_owned()),
-            None => None,
-        }
+            Some(pic) => self.track_cover = Some(pic.data().to_owned()),
+            None => self.track_cover = None,
+        };
     }
 }
 
