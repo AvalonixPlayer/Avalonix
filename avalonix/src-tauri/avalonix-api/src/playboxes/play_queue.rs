@@ -5,7 +5,11 @@ use std::{
     usize,
 };
 
-use crate::{audio::media_player::MediaPlayer, logger, media::track::Track};
+use crate::{
+    audio::media_player::{self, MediaPlayer},
+    logger,
+    media::track::Track,
+};
 
 #[derive(Debug, ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\PlayQueue.ts")]
@@ -115,22 +119,18 @@ impl PlayQueue {
         }
     }
 
-    pub fn pause_or_continue(&mut self, media_player_guard: Arc<Mutex<MediaPlayer>>) {
-        let media_player;
-        match media_player_guard.try_lock() {
-            Ok(mp) => {
-                media_player = mp;
+    pub fn pause_or_continue(media_player_arc: &Arc<Mutex<MediaPlayer>>) {
+        let media_player = media_player_arc.clone();
+        let guard = media_player.lock().unwrap();
+        guard.pause();
 
-                match media_player.is_paused() {
-                    true => {
-                        media_player.cont();
-                    }
-                    false => {
-                        media_player.pause();
-                    }
-                }
+        match guard.is_paused() {
+            true => {
+                guard.cont();
             }
-            Err(err) => logger::error(&err.to_string()),
+            false => {
+                guard.pause();
+            }
         }
     }
 }
