@@ -1,13 +1,16 @@
-.album-cover {
+.track-cover {
     display: flex;
     border-radius: 15px;
 
     transition: all 0.2s ease;
 
-    max-width: 350px;
-    max-height: 350px;
+    max-width: 250px;
+    max-height: 250px;
+
+    min-width: 250px;
+    min-height: 250px;
 }
 
-.album-cover:hover {
-    scale: 1.2;
+.track-cover:hover {
+    scale: 1.1;
 }
