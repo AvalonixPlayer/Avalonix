@@ -52,7 +52,10 @@ pub fn run() {
                     commands::add_track_to_queue,
                     commands::clear_queue,
                     commands::remove_track_from_queue,
-                    commands::get_queue
+                    commands::get_queue,
+                    commands::pause_or_continue,
+                    commands::next_track,
+                    commands::previous_track
                 ])
                 .manage(player)
                 .manage(playboxes_manager)
@@ -84,7 +87,7 @@ fn init_api() -> Result<
 
                 MediaPlayer::update(&player);
 
-                let play_queue = Arc::new(Mutex::new(PlayQueue::new()));
+                let play_queue = Arc::new(Mutex::new(PlayQueue::new(&player)));
 
                 PlayQueue::play(&play_queue, &player);
 

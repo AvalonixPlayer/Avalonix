@@ -5,23 +5,22 @@ use std::{
     usize,
 };
 
-use crate::{
-    audio::media_player::{self, MediaPlayer},
-    logger,
-    media::track::Track,
-};
+use crate::{audio::media_player::MediaPlayer, logger, media::track::Track};
 
-#[derive(Debug, ts_rs::TS)]
+#[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\PlayQueue.ts")]
 pub struct PlayQueue {
     pub tracks: Vec<Arc<Mutex<Track>>>,
+    #[ts(skip)]
+    media_player: Arc<Mutex<MediaPlayer>>,
     current_track_index: i32,
 }
 
 impl PlayQueue {
-    pub fn new() -> Self {
+    pub fn new(media_player_arc: &Arc<Mutex<MediaPlayer>>) -> Self {
         PlayQueue {
             tracks: Vec::new(),
+            media_player: media_player_arc.clone(),
             current_track_index: 0,
         }
     }
@@ -119,10 +118,8 @@ impl PlayQueue {
         }
     }
 
-    pub fn pause_or_continue(media_player_arc: &Arc<Mutex<MediaPlayer>>) {
-        let media_player = media_player_arc.clone();
-        let guard = media_player.lock().unwrap();
-        guard.pause();
+    pub fn pause_or_continue(&self) {
+        let guard = self.media_player.lock().unwrap();
 
         match guard.is_paused() {
             true => {
@@ -132,6 +129,56 @@ impl PlayQueue {
                 guard.pause();
             }
         }
+    }
+
+    pub fn next_track(self_arc: &Arc<Mutex<Self>>, media_player_arc: &Arc<Mutex<MediaPlayer>>) {
+        let self_clone = self_arc.clone();
+        let mp_clone = media_player_arc.clone();
+        let mut self_guard = self_clone.lock().unwrap();
+        let mut media_player_guard = mp_clone.lock().unwrap();
+
+        if self_guard.tracks.len() == 0 {
+            return;
+        }
+
+        let mut next_index = self_guard.current_track_index;
+
+        if (self_guard.current_track_index + 1) as usize <= self_guard.tracks.len() - 1 {
+            next_index += 1;
+        } else {
+            next_index = 0;
+        }
+
+        Self::play_by_index(
+            &mut self_guard,
+            &mut media_player_guard,
+            next_index as usize,
+        );
+    }
+
+    pub fn previous_track(self_arc: &Arc<Mutex<Self>>, media_player_arc: &Arc<Mutex<MediaPlayer>>) {
+        let self_clone = self_arc.clone();
+        let mp_clone = media_player_arc.clone();
+        let mut self_guard = self_clone.lock().unwrap();
+        let mut media_player_guard = mp_clone.lock().unwrap();
+
+        if self_guard.tracks.len() == 0 {
+            return;
+        }
+
+        let mut previous_index = self_guard.current_track_index;
+
+        if self_guard.current_track_index - 1 >= 0 {
+            previous_index -= 1;
+        } else {
+            previous_index = (self_guard.tracks.len() - 1) as i32;
+        }
+
+        Self::play_by_index(
+            &mut self_guard,
+            &mut media_player_guard,
+            previous_index as usize,
+        );
     }
 }
 
@@ -149,7 +196,7 @@ fn test_play_queue() {
     let media_player = Arc::new(Mutex::new(mp));
     MediaPlayer::update(&media_player);
 
-    let queue = Arc::new(Mutex::new(PlayQueue::new()));
+    let queue = Arc::new(Mutex::new(PlayQueue::new(&media_player)));
     {
         let mut queue_guard = queue.lock().unwrap();
 

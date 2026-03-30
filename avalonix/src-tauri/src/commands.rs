@@ -4,6 +4,7 @@ use std::{
 };
 
 use avalonix_api::{
+    audio::media_player::MediaPlayer,
     logger,
     media::track::Track,
     playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
@@ -59,7 +60,31 @@ pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc
 }
 
 #[tauri::command]
-pub fn get_len(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Mutex<Track>>> {
+pub async fn get_len(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<Vec<Arc<Mutex<Track>>>, ()> {
     let queue = play_queue.lock().unwrap();
-    queue.tracks.clone()
+    Ok(queue.tracks.clone())
+}
+
+#[tauri::command]
+pub fn pause_or_continue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
+    let queue = play_queue.lock().unwrap();
+    queue.pause_or_continue();
+}
+
+#[tauri::command]
+pub fn next_track(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) {
+    PlayQueue::next_track(&play_queue, &media_player);
+}
+
+#[tauri::command]
+pub fn previous_track(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) {
+    PlayQueue::previous_track(&play_queue, &media_player);
 }

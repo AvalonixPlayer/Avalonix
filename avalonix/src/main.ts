@@ -2,6 +2,7 @@ import { Metadata } from './bindings/Metadata.js';
 import { getAllAlbums, getAllArtists, getAllTracks} from './playboxesFiller';
 import { UpdateTrackQueueUI } from './playQueue.js';
 import './tabSwitcher.js';
+import './playbackBtns.ts';
 import { UpdateTrackUI } from './metadataUpdate.ts'
 
 (async () => {
@@ -10,6 +11,7 @@ import { UpdateTrackUI } from './metadataUpdate.ts'
   await getAllArtists();
   await UpdateTrackQueueUI();
   await UpdateTrackUI(null);
+  await bindPlayback();
 })();
 
 setInterval(() => {
@@ -17,6 +19,7 @@ setInterval(() => {
 }, 10);
 
 import { listen } from '@tauri-apps/api/event';
+import { bindPlayback } from './playbackBtns.ts';
 
 listen<Metadata>('playing-track-updated', async (event) => {
   console.log(event.payload);
