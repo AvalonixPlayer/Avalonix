@@ -33,7 +33,7 @@ export async function UpdateTrackUI(metadata: Metadata | null) {
     function setOtherMetadata() {
         var title = document.getElementById('track-name') as HTMLTextAreaElement;
         var album = document.getElementById('album-name') as HTMLTextAreaElement;
-        title.textContent = metadata!.title;
-        album.textContent = metadata!.album;
+        title.textContent = metadata?.title || "No title";
+        album.textContent = metadata?.album || "No album";
     }
 }

@@ -110,8 +110,6 @@ impl PlayQueue {
         match self_guard.tracks.get(index) {
             Some(track) => {
                 media_player_guard.play(&track);
-                let time = media_player_guard.get_len() - Duration::new(5, 0);
-                media_player_guard.seek(time);
             }
             None => {}
         }
