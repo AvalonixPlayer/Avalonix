@@ -1,0 +1,33 @@
+:root {
+    --playable-search-text-area-bg: rgb(43, 43, 43);
+}
+
+input[type="text"].playable-search-text-area {
+    background-color: var(--playable-search-text-area-bg);
+
+    border: none;
+
+    display: flex;
+    width: 80%;
+    height: 60px;
+    color: azure;
+
+    border-radius: 10px;
+    font-size: larger;
+
+    justify-self: center;
+
+    transition: all 0.1s ease;
+    outline: none;
+
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.playable-search-text-area:hover {
+    scale: 1.02;
+}
+
+.playable-search-text-area:focus {
+    scale: 1.05;
+}

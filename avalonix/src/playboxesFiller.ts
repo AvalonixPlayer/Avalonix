@@ -24,17 +24,33 @@ export async function getAllArtists() {
 const pickBtnTempl = document.querySelector('#pick-track-btn-example') as HTMLTemplateElement;
 
 async function appendTracksList() {
-    const container = document.getElementById("tracks-list");
-    if (!container || !pickBtnTempl) return;
 
-    container.innerHTML = "";
-    let tracksIndex = 0;
-    allTracks.forEach(track => {
-        tracksIndex++;
+    let searcher = document.getElementById("track-search-area") as HTMLInputElement;
 
-        const clone = createTrackBtn(track, tracksIndex);
-        container.appendChild(clone);
+    searcher.addEventListener('input', async (_) => {
+        await fill();
     });
+    await fill();
+
+    async function fill() {
+        const container = document.getElementById("tracks-list");
+        if (!container || !pickBtnTempl) return;
+
+        container.innerHTML = "";
+        let index = 0;
+        allTracks.forEach(track => {
+            if (searcher!.value != "" && track.metadata.title != null && track.metadata.title.toLowerCase().includes(searcher!.value.toLowerCase())) {
+                index++;
+                const clone = createTrackBtn(track, index);
+                container.appendChild(clone);
+            }
+            else if (searcher!.value == "") {
+                index++;
+                const clone = createTrackBtn(track, index);
+                container.appendChild(clone);
+            }
+        });   
+    }
 }
 
 function createTrackBtn(track: Track, index: number): DocumentFragment {

@@ -9,19 +9,35 @@ export async function addTrackToQueue(track: Track) {
 const pickBtnTempl = document.querySelector('#track-btn-example') as HTMLTemplateElement;
 
 export async function UpdateTrackQueueUI() {
-  var tracks = await invoke<Array<Track>>('get_queue');
+  let searcher = document.getElementById("track-in-queue-search-area") as HTMLInputElement;
 
-  const container = document.getElementById("play-queue");
-  if (!container || !pickBtnTempl) return;
-
-  container.innerHTML = "";
-
-  let index = 0;
-  tracks.forEach(async track => {
-    index++;
-    const clone = await createTrackBtn(track, index);
-    container.appendChild(clone);
+  searcher.addEventListener('input', async (_) => {
+    await fill();
   });
+  await fill();
+
+  async function fill() {
+    var tracks = await invoke<Array<Track>>('get_queue');
+
+    const container = document.getElementById("play-queue");
+    if (!container || !pickBtnTempl) return;
+
+    container.innerHTML = "";
+    let index = 0;
+    
+    tracks.forEach(async track => {
+      if (searcher!.value != "" && track.metadata.title != null && track.metadata.title.toLowerCase().includes(searcher!.value.toLowerCase())) {
+        index++;
+        const clone = await createTrackBtn(track, index);
+        container!.appendChild(clone);
+      }
+      else if (searcher!.value == "") {
+        index++;
+        const clone = await createTrackBtn(track, index);
+        container!.appendChild(clone);
+      }
+    });
+  }
 }
 
 async function ClearQueue() {
