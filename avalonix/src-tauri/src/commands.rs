@@ -57,9 +57,7 @@ pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
 
 #[tauri::command]
 pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Mutex<Track>>> {
-    let start = Instant::now();
     let queue = play_queue.lock().unwrap();
-
     let clone = queue.tracks.clone();
     clone
 }

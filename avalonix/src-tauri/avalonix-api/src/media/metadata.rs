@@ -26,7 +26,6 @@ pub struct Metadata {
     pub bitrate: Option<u32>,
     pub album_cover_hash_path: Option<String>,
     pub duration_secs: u64,
-    #[ts(skip)]
     pub track_cover: Option<Vec<u8>>,
 }
 

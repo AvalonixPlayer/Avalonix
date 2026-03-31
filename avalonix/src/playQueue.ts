@@ -21,10 +21,7 @@ export async function UpdateTrackQueueUI() {
   const container = document.getElementById("play-queue");
   if (!container || !pickBtnTempl) return;
 
-  const start = performance.now();
   const tracks = await invoke<Array<Track>>("get_queue");
-  var end = performance.now();
-  console.log(`Время выполнения передачи: ${end - start} миллисекунд`);
 
   const filter = searcher.value.toLowerCase();
 
@@ -45,8 +42,6 @@ export async function UpdateTrackQueueUI() {
   }
 
   container.appendChild(fragment);
-  var end = performance.now();
-  console.log(`Время выполнения заполнения: ${end - start} миллисекунд`);
 }
 
 async function ClearQueue() {
