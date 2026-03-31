@@ -173,10 +173,8 @@ impl Metadata {
             Some(pic) => {
                 let buf = pic.data().to_owned();
                 let b64 = buf.to_base64(MIME);
-                let hex = buf.to_hex();
 
-                let uri = format!("data:image/{};base64,{}", get_type(&hex), b64); // ty https://gist.github.com/nathamanath/a5bda4bdbd07e579188f
-
+                let uri = format!("data:image/{};base64,{}", "jpg", b64); // ty https://gist.github.com/nathamanath/a5bda4bdbd07e579188f
                 self.track_cover_uri = Some(uri);
             }
             None => self.track_cover_uri = None,
@@ -222,17 +220,5 @@ fn test_metadata_from() {
             logger::debug(&format!("{}", metadata.as_ref().unwrap()));
         }
         Err(err) => logger::error(&err.to_string()),
-    }
-}
-
-fn get_type(file: &str) -> &str {
-    if Regex::new(r"^ffd8ffe0").unwrap().is_match(file) {
-        "jpg"
-    } else if Regex::new(r"^89504e47").unwrap().is_match(file) {
-        "png"
-    } else if Regex::new(r"^47494638").unwrap().is_match(file) {
-        "gif"
-    } else {
-        panic!("invalid file")
     }
 }
