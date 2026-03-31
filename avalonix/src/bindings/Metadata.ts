@@ -10,5 +10,5 @@ export type Metadata = {
   bitrate: number | null;
   album_cover_hash_path: string | null;
   duration_secs: bigint;
-  track_cover: Uint8Array | null;
+  track_cover_uri: string | null;
 };

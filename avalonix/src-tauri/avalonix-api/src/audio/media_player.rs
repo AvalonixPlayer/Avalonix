@@ -79,7 +79,7 @@ impl Playback {
         match self.last_playing_track.clone() {
             Some(last_playing_track) => {
                 let mut guard = last_playing_track.lock().unwrap();
-                guard.metadata.track_cover = None;
+                guard.metadata.track_cover_uri = None;
             }
             None => {}
         }

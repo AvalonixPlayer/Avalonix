@@ -1,8 +1,6 @@
-export async function createCoverUrlAsync(coverData: Uint8Array | null) {
-  if (coverData != null) {
-    const byteArray = new Uint8Array(coverData);
-    var blob = new Blob([byteArray], { type: "image/jpg" });
-    return URL.createObjectURL(blob);
+export function createCoverUrl(coverDataURI: string | null) {
+  if (coverDataURI != null) {
+    return coverDataURI;
   } else {
     const canvas = document.createElement("canvas");
     canvas.width = 1;

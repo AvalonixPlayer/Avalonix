@@ -1,11 +1,11 @@
 import { Metadata } from "./bindings/Metadata";
-import { createCoverUrlAsync } from "./coverWorker";
+import { createCoverUrl } from "./coverWorker";
 
 export async function UpdateTrackUI(metadata: Metadata | null) {
-  let coverData = metadata?.track_cover;
+  let coverData = metadata?.track_cover_uri;
 
   setOtherMetadata(metadata);
-  setCoverAsync(coverData != null ? coverData : null);
+  setCover(coverData != null ? coverData : null);
 }
 
 function setOtherMetadata(metadata: Metadata | null) {
@@ -15,9 +15,8 @@ function setOtherMetadata(metadata: Metadata | null) {
   album.textContent = metadata?.album || "No album";
 }
 
-async function setCoverAsync(track_cover: Uint8Array | null) {
-  await createCoverUrlAsync(track_cover).then((imgURL) => {
-    var img = document.getElementById("track-cover") as HTMLImageElement;
-    img.src = imgURL;
-  });
+function setCover(track_cover_uri: string | null) {
+  var img = document.getElementById("track-cover") as HTMLImageElement;
+
+  img.src = createCoverUrl(track_cover_uri);
 }

@@ -265,8 +265,10 @@ dependencies = [
  "glob",
  "lofty",
  "rand 0.10.0",
+ "regex",
  "rkyv",
  "rodio",
+ "rustc-serialize",
  "serde",
  "serde_bytes",
  "serde_json",
@@ -3397,6 +3399,12 @@ name = "rtrb"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7204ed6420f698836b76d4d5c2ec5dec7585fd5c3a788fd1cde855d1de598239"
+
+[[package]]
+name = "rustc-serialize"
+version = "0.3.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe834bc780604f4674073badbad26d7219cadfb4a2275802db12cbae17498401"
 
 [[package]]
 name = "rustc_version"

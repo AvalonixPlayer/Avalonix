@@ -1,10 +1,20 @@
 #![allow(missing_docs)]
+
+extern crate regex;
+extern crate rustc_serialize;
+
 use lofty::prelude::*;
 use lofty::probe::Probe;
+use regex::Regex;
 use rkyv::{Archive, Deserialize, Serialize};
+use rodio::buffer;
+use rustc_serialize::base64::{MIME, ToBase64};
+use rustc_serialize::hex::ToHex;
+use std::env;
 use std::fs::File;
-use std::io::Read;
-use std::path::{Path, PathBuf};
+use std::io::{Read, Write};
+use std::path::Path;
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::{fmt, fs};
 
@@ -26,7 +36,7 @@ pub struct Metadata {
     pub bitrate: Option<u32>,
     pub album_cover_hash_path: Option<String>,
     pub duration_secs: u64,
-    pub track_cover: Option<Vec<u8>>,
+    pub track_cover_uri: Option<String>,
 }
 
 impl Metadata {
@@ -102,7 +112,7 @@ impl Metadata {
                     bitrate: properties.overall_bitrate(),
                     album_cover_hash_path,
                     duration_secs: properties.duration().as_secs(),
-                    track_cover: None,
+                    track_cover_uri: None,
                 };
 
                 let track = Track::from(track_path, &result);
@@ -132,7 +142,7 @@ impl Metadata {
     }
 
     pub fn add_cover_to_metadata(&mut self, track_path: &str) {
-        if self.track_cover != None {
+        if self.track_cover_uri != None {
             return;
         }
 
@@ -160,8 +170,16 @@ impl Metadata {
         let pic = tag.pictures().first();
 
         match pic {
-            Some(pic) => self.track_cover = Some(pic.data().to_owned()),
-            None => self.track_cover = None,
+            Some(pic) => {
+                let buf = pic.data().to_owned();
+                let b64 = buf.to_base64(MIME);
+                let hex = buf.to_hex();
+
+                let uri = format!("data:image/{};base64,{}", get_type(&hex), b64); // ty https://gist.github.com/nathamanath/a5bda4bdbd07e579188f
+
+                self.track_cover_uri = Some(uri);
+            }
+            None => self.track_cover_uri = None,
         };
     }
 }
@@ -204,5 +222,17 @@ fn test_metadata_from() {
             logger::debug(&format!("{}", metadata.as_ref().unwrap()));
         }
         Err(err) => logger::error(&err.to_string()),
+    }
+}
+
+fn get_type(file: &str) -> &str {
+    if Regex::new(r"^ffd8ffe0").unwrap().is_match(file) {
+        "jpg"
+    } else if Regex::new(r"^89504e47").unwrap().is_match(file) {
+        "png"
+    } else if Regex::new(r"^47494638").unwrap().is_match(file) {
+        "gif"
+    } else {
+        panic!("invalid file")
     }
 }
