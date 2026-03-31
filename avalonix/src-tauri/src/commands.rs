@@ -44,7 +44,6 @@ pub fn remove_track_from_queue(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     trackPath: String,
 ) {
-    logger::fatal(&trackPath);
     let mut queue = play_queue.lock().unwrap();
     queue.remove_track(trackPath);
 }

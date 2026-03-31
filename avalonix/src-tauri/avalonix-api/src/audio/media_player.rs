@@ -13,8 +13,7 @@ use rodio::{
 };
 
 use crate::{
-    db::MusicDB,
-    disk_manager, logger,
+    logger,
     media::{metadata::Metadata, track::Track},
 };
 
