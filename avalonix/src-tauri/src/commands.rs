@@ -1,6 +1,7 @@
 use std::{
     collections::HashMap,
     sync::{Arc, Mutex},
+    time::Instant,
 };
 
 use avalonix_api::{
@@ -41,10 +42,11 @@ pub fn add_track_to_queue(
 #[tauri::command]
 pub fn remove_track_from_queue(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
-    track: Arc<Mutex<Track>>,
+    trackPath: String,
 ) {
+    logger::fatal(&trackPath);
     let mut queue = play_queue.lock().unwrap();
-    queue.remove_track(track);
+    queue.remove_track(trackPath);
 }
 
 #[tauri::command]
@@ -55,8 +57,11 @@ pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
 
 #[tauri::command]
 pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Mutex<Track>>> {
+    let start = Instant::now();
     let queue = play_queue.lock().unwrap();
-    queue.tracks.clone()
+
+    let clone = queue.tracks.clone();
+    clone
 }
 
 #[tauri::command]

@@ -1,7 +1,7 @@
 use std::{
     sync::{Arc, Mutex, MutexGuard},
     thread,
-    time::Duration,
+    time::{Duration, Instant},
     usize,
 };
 
@@ -31,15 +31,12 @@ impl PlayQueue {
     }
 
     pub fn add_track(&mut self, track: Arc<Mutex<Track>>) {
+        let file_path = track.lock().unwrap().file_path.clone();
         if self
             .tracks
             .iter()
-            .any(|t| *t.lock().unwrap() == *track.lock().unwrap())
+            .any(|t| t.lock().unwrap().file_path == file_path)
         {
-            logger::warn(&format!(
-                "track with id: {} also in play queue",
-                track.lock().unwrap().id
-            ));
             return;
         }
         self.tracks.push(track);
@@ -51,28 +48,20 @@ impl PlayQueue {
         }
     }
 
-    pub fn remove_track(&mut self, track: Arc<Mutex<Track>>) {
+    pub fn remove_track(&mut self, track_path: String) {
+        let start = Instant::now();
         if let Some(index) = self
             .tracks
             .iter()
-            .position(|f| *f.lock().unwrap() == *track.lock().unwrap())
+            .position(|f| f.lock().unwrap().file_path == track_path)
         {
             self.tracks.remove(index);
-
+            println!("{}", start.elapsed().as_micros());
             if (index as i32) <= self.current_track_index {
                 self.current_track_index -= 1;
             }
-
-            logger::debug(&format!(
-                "track with id: {} removed",
-                track.lock().unwrap().id
-            ));
             return;
         }
-        logger::warn(&format!(
-            "track with id: {} not found in queue",
-            track.lock().unwrap().id
-        ));
     }
 
     pub fn play(self_arc: &Arc<Mutex<Self>>, media_player_arc: &Arc<Mutex<MediaPlayer>>) {

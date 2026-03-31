@@ -81,10 +81,20 @@ impl Playback {
         let file = BufReader::new(File::open(&track_clone.lock().unwrap().file_path).unwrap());
         let source = Decoder::new(file).unwrap();
 
-        self.total_time = source.total_duration().unwrap().clone();
+        match source.total_duration() {
+            Some(total_duration) => {
+                self.total_time = total_duration;
 
-        self.player.stop();
-        self.player.append(source);
+                self.player.stop();
+                self.player.append(source);
+            }
+            None => {
+                logger::error(&format!(
+                    "track with file path {} has incorrect durration",
+                    track_clone.lock().unwrap().file_path
+                ));
+            }
+        }
     }
 
     fn stop(&self) {

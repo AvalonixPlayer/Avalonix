@@ -26,6 +26,8 @@ pub struct Metadata {
     pub bitrate: Option<u32>,
     pub album_cover_hash_path: Option<String>,
     pub duration_secs: u64,
+    #[serde(with = "serde_bytes")]
+    #[ts(type = "Uint8Array | null")]
     pub track_cover: Option<Vec<u8>>,
 }
 

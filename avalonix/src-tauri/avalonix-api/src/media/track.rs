@@ -37,9 +37,3 @@ impl Track {
         }
     }
 }
-
-impl PartialEq for Track {
-    fn eq(&self, other: &Self) -> bool {
-        self.id == other.id
-    }
-}
