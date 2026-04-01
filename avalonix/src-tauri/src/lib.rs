@@ -2,7 +2,10 @@ pub mod commands;
 
 use std::{
     clone,
-    sync::{mpsc, Arc, Mutex},
+    sync::{
+        mpsc::{self, Receiver, Sender},
+        Arc, Mutex,
+    },
     thread,
 };
 
@@ -11,7 +14,7 @@ use avalonix_api::{
     db::MusicDB,
     disk_manager, logger,
     playboxes::{
-        play_queue::PlayQueue,
+        play_queue::{PlayQueue, PlayQueueAction},
         playboxes::{AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer},
     },
 };
@@ -25,7 +28,9 @@ pub fn run() {
         Ok(api) => {
             let player = api.0;
             let playboxes_manager = api.1;
-            let play_queue = api.2;
+            let play_queue_action_sender = api.2;
+            let play_queue_action_compleated_reciver = api.3;
+            let play_queue = api.4;
 
             let player_clone = player.clone();
 
@@ -34,13 +39,22 @@ pub fn run() {
                 .plugin(prevent_default())
                 .setup(move |app| {
                     let (sender, reciver) = mpsc::channel();
+
                     let sender_clone = sender.clone();
                     player_clone.lock().unwrap().sender = Some(sender_clone);
 
-                    let handle = app.app_handle().clone();
+                    let handle1 = app.app_handle().clone();
+                    let handle2 = app.app_handle().clone();
 
                     thread::spawn(move || loop {
-                        _ = handle.emit("playing-track-updated", reciver.recv().unwrap());
+                        _ = handle1.emit("playing-track-updated", reciver.recv().unwrap());
+                    });
+
+                    thread::spawn(move || loop {
+                        _ = handle2.emit(
+                            "play-queue-action-compleated",
+                            play_queue_action_compleated_reciver.recv().unwrap(),
+                        );
                     });
 
                     Ok(())
@@ -59,6 +73,7 @@ pub fn run() {
                 ])
                 .manage(player)
                 .manage(playboxes_manager)
+                .manage(play_queue_action_sender)
                 .manage(play_queue)
                 .run(tauri::generate_context!())
                 .expect("error while running tauri application");
@@ -71,6 +86,8 @@ fn init_api() -> Result<
     (
         Arc<Mutex<MediaPlayer>>,
         PlayboxesManager,
+        Arc<Mutex<Sender<PlayQueueAction>>>,
+        Receiver<()>,
         Arc<Mutex<PlayQueue>>,
     ),
     String,
@@ -87,9 +104,24 @@ fn init_api() -> Result<
 
                 MediaPlayer::update(&player);
 
-                let play_queue = Arc::new(Mutex::new(PlayQueue::new(&player)));
+                let (playqueue_sender, playqueue_reciver) = mpsc::channel();
 
-                PlayQueue::play(&play_queue, &player);
+                let playqueue_sender_arc = Arc::new(Mutex::new(playqueue_sender));
+                let playqueue_reciver_arc = Arc::new(Mutex::new(playqueue_reciver));
+
+                let (playqueue_action_compleated_sender, playqueue_action_compleated_reciver) =
+                    mpsc::channel();
+
+                let playqueue_action_compleated_sender_arc =
+                    Arc::new(Mutex::new(playqueue_action_compleated_sender));
+
+                let play_queue = Arc::new(Mutex::new(PlayQueue::new(
+                    &player,
+                    &playqueue_reciver_arc,
+                    &playqueue_action_compleated_sender_arc,
+                )));
+
+                PlayQueue::play(&play_queue);
 
                 let tracks_container = TracksContainer::new(&db);
                 let albums_container = AlbumsContainer::new(&tracks_container);
@@ -98,7 +130,13 @@ fn init_api() -> Result<
                 let playboxes_manager =
                     PlayboxesManager::new(tracks_container, albums_container, artists_container);
 
-                Ok((player, playboxes_manager, play_queue))
+                Ok((
+                    player,
+                    playboxes_manager,
+                    playqueue_sender_arc,
+                    playqueue_action_compleated_reciver,
+                    play_queue,
+                ))
             }
             Err(err) => {
                 logger::error(&err.to_string());

@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    sync::{Arc, Mutex},
+    sync::{mpsc::Sender, Arc, Mutex},
     time::Instant,
 };
 
@@ -8,7 +8,10 @@ use avalonix_api::{
     audio::media_player::MediaPlayer,
     logger,
     media::track::Track,
-    playboxes::{play_queue::PlayQueue, playboxes::PlayboxesManager},
+    playboxes::{
+        play_queue::{PlayQueue, PlayQueueAction},
+        playboxes::PlayboxesManager,
+    },
 };
 
 #[tauri::command]
@@ -32,26 +35,30 @@ pub fn get_all_artists(
 
 #[tauri::command]
 pub fn add_track_to_queue(
-    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
     track: Arc<Mutex<Track>>,
 ) {
-    let mut queue = play_queue.lock().unwrap();
-    queue.add_track(track);
+    let sender = play_queue_action_sender.lock().unwrap();
+    sender.send(PlayQueueAction::AddTrack(track)).unwrap();
 }
 
 #[tauri::command]
 pub fn remove_track_from_queue(
-    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
     trackPath: String,
 ) {
-    let mut queue = play_queue.lock().unwrap();
-    queue.remove_track(trackPath);
+    let sender = play_queue_action_sender.lock().unwrap();
+    sender
+        .send(PlayQueueAction::RemoveTrack(trackPath))
+        .unwrap();
 }
 
 #[tauri::command]
-pub fn clear_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
-    let mut queue = play_queue.lock().unwrap();
-    queue.clear();
+pub fn clear_queue(
+    play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
+) {
+    let sender = play_queue_action_sender.lock().unwrap();
+    sender.send(PlayQueueAction::Clear).unwrap();
 }
 
 #[tauri::command]
@@ -70,23 +77,23 @@ pub async fn get_len(
 }
 
 #[tauri::command]
-pub fn pause_or_continue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) {
-    let queue = play_queue.lock().unwrap();
-    queue.pause_or_continue();
+pub fn pause_or_continue(
+    play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
+) {
+    let sender = play_queue_action_sender.lock().unwrap();
+    sender.send(PlayQueueAction::PauseOrContinue).unwrap();
 }
 
 #[tauri::command]
-pub fn next_track(
-    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
-    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
-) {
-    PlayQueue::next_track(&play_queue, &media_player);
+pub fn next_track(play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>) {
+    let sender = play_queue_action_sender.lock().unwrap();
+    sender.send(PlayQueueAction::Next).unwrap();
 }
 
 #[tauri::command]
 pub fn previous_track(
-    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
-    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+    play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
 ) {
-    PlayQueue::previous_track(&play_queue, &media_player);
+    let sender = play_queue_action_sender.lock().unwrap();
+    sender.send(PlayQueueAction::Previous).unwrap();
 }

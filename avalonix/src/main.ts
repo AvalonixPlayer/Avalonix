@@ -25,6 +25,10 @@ listen<Metadata>("playing-track-updated", async (event) => {
   await UpdateTrackUI(event.payload);
 });
 
+listen("play-queue-action-compleated", async (_) => {
+  await UpdateTrackQueueUI();
+});
+
 async function setBG() {
   let x = window.screenX / 2 + window.innerWidth / 2;
   let y = window.screenY / 2 + window.innerHeight / 2;
