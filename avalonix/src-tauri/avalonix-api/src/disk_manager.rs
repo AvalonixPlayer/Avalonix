@@ -29,7 +29,12 @@ pub fn get_all_tracks_paths() -> Vec<String> {
         for dir in &dirs_paths {
             let expr = format!("{}/**/{}", dir, t);
             for entry in glob(&expr).unwrap() {
-                let str = entry.unwrap().to_str().unwrap().to_string();
+                let str = entry
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .to_string()
+                    .replace("\\", "\\\\");
                 hash_set.insert(str);
             }
         }

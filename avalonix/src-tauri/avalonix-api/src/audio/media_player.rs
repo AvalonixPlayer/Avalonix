@@ -7,6 +7,7 @@ use std::{
     time::Duration,
 };
 
+use lofty::io::Length;
 use rodio::{
     Decoder, DeviceTrait, MixerDeviceSink, Player, Source,
     cpal::{DeviceDescription, Host, traits::HostTrait},
@@ -85,8 +86,14 @@ impl Playback {
         }
         let track_clone = track_arc.clone();
 
-        let file = BufReader::new(File::open(&track_clone.lock().unwrap().file_path).unwrap());
-        let source = Decoder::new(file).unwrap();
+        let file = File::open(&track_clone.lock().unwrap().file_path).unwrap();
+        let len = file.len().unwrap();
+
+        let source = Decoder::builder()
+            .with_data(file)
+            .with_byte_len(len)
+            .build()
+            .unwrap();
 
         match source.total_duration() {
             Some(total_duration) => {
