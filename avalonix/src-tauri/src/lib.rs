@@ -69,7 +69,8 @@ pub fn run() {
                     commands::get_queue,
                     commands::pause_or_continue,
                     commands::next_track,
-                    commands::previous_track
+                    commands::previous_track,
+                    commands::on_pause
                 ])
                 .manage(player)
                 .manage(playboxes_manager)
