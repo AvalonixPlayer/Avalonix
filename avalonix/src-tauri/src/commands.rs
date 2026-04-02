@@ -99,6 +99,15 @@ pub fn previous_track(
 }
 
 #[tauri::command]
+pub fn play_track(
+    play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
+    track: Arc<Mutex<Track>>,
+) {
+    let sender = play_queue_action_sender.lock().unwrap();
+    sender.send(PlayQueueAction::Switch(track)).unwrap();
+}
+
+#[tauri::command]
 pub fn on_pause(media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>) -> bool {
     let guard = media_player.lock().unwrap();
     guard.is_paused()

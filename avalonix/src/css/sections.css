@@ -61,11 +61,15 @@ body {
   right: 15px;
 
   height: 100px;
-  
-  background: linear-gradient(to right, var(--background-gradient1), var(--background-gradient2));
+
+  background: linear-gradient(
+    to right,
+    var(--background-gradient1),
+    var(--background-gradient2)
+  );
 
   border-radius: 10px;
-  border: solid var(--borders-color);  
+  border: solid var(--borders-color);
 
   transition: all 0.2s ease;
 }

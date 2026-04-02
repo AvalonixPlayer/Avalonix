@@ -68,8 +68,8 @@ async function createTrackBtn(
   const playBtn = clone.querySelector(".track-btn-play");
   const removeBtn = clone.querySelector(".track-btn-remove");
 
-  playBtn!.addEventListener("click", (_) => {
-    console.log("Let`s play track: " + track.metadata.title);
+  playBtn!.addEventListener("click", async (_) => {
+    await invoke("play_track", { track: track });
   });
 
   removeBtn!.addEventListener("click", async (_) => {

@@ -70,6 +70,7 @@ pub fn run() {
                     commands::pause_or_continue,
                     commands::next_track,
                     commands::previous_track,
+                    commands::play_track,
                     commands::on_pause
                 ])
                 .manage(player)

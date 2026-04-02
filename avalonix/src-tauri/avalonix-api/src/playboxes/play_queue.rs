@@ -15,6 +15,7 @@ pub enum PlayQueueAction {
     PauseOrContinue,
     Next,
     Previous,
+    Switch(Arc<Mutex<Track>>),
 }
 
 #[derive(ts_rs::TS)]
@@ -134,6 +135,9 @@ impl PlayQueue {
                             PlayQueueAction::Previous => {
                                 Self::previous_track(&self_clone, &media_player_clone);
                             }
+                            PlayQueueAction::Switch(track) => {
+                                Self::play_track(&self_clone, &media_player_clone, &track);
+                            }
                         },
                         _ => {}
                     }
@@ -149,7 +153,8 @@ impl PlayQueue {
         let queue = queue_arc.clone();
         let mut queue_guard = queue.lock().unwrap();
 
-        let file_path = track.lock().unwrap().file_path.clone();
+        let file_path = track.lock().unwrap().file_path.clone(); // It's easier than implementing PartialEq
+
         if queue_guard
             .tracks
             .iter()
@@ -195,6 +200,28 @@ impl PlayQueue {
                 media_player_guard.play(&track);
             }
             None => {}
+        }
+    }
+
+    fn play_track(
+        self_arc: &Arc<Mutex<Self>>,
+        media_player_arc: &Arc<Mutex<MediaPlayer>>,
+        track_arc: &Arc<Mutex<Track>>,
+    ) {
+        let self_clone = self_arc.clone();
+        let mp_clone = media_player_arc.clone();
+        let track_clone = track_arc.clone();
+        let mut self_guard = self_clone.lock().unwrap();
+        let mut media_player_guard = mp_clone.lock().unwrap();
+        let track_guard = track_clone.lock().unwrap();
+
+        if let Some(index) = self_guard
+            .tracks
+            .iter()
+            .position(|x| x.lock().unwrap().file_path == track_guard.file_path)
+        {
+            drop(track_guard);
+            Self::play_by_index(&mut self_guard, &mut media_player_guard, index);
         }
     }
 
