@@ -1,0 +1,171 @@
+.pick-media-btn.track {
+  padding-left: 10px;
+
+  display: flex;
+  background: none;
+  border: none;
+
+  width: auto;
+  justify-content: top;
+
+  transition: all 0.2s ease;
+}
+
+.pick-media-btn.track > h5 {
+  width: 200px;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pick-media-btn.track > h6 {
+  width: 150px;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  font-style: italic;
+  margin-left: auto;
+}
+
+.pick-media-btn.track:hover {
+  color: var(--pick-btn-hover-color);
+  padding-left: 25px;
+  background-color: rgba(116, 116, 116, 0.219);
+
+  border-radius: 10px;
+
+  border: none;
+}
+
+.add-btn {
+  white-space: nowrap;
+  overflow: hidden;
+  background: none;
+  border: none;
+  height: 5px;
+  padding-top: 60px;
+  scale: 0.5;
+
+  transition: all 0.1s ease;
+}
+
+.add-btn:hover {
+  background-color: var(--pick-btn-hover-color);
+  border-radius: 5px;
+  scale: 0.55;
+}
+
+.add-btn:active {
+  background-color: var(--pick-btn-hover-color);
+  border-radius: 10px;
+  scale: 0.7;
+}
+
+.add-btn > img {
+  transform: translate(0%, -105%);
+  width: 50px;
+  height: 50px;
+}
+
+.track-btn {
+  width: auto;
+  display: flex;
+  transition: all 0.15s ease;
+}
+
+.track-btn:hover {
+  padding-left: 10px;
+  color: var(--pick-btn-hover-color);
+  background-color: rgba(116, 116, 116, 0.219);
+}
+
+.track-btn:hover > h5 {
+  padding-left: 10px;
+}
+
+.track-btn > h5 {
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-btn > h6 {
+  width: 150px;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+
+  font-style: italic;
+  margin-left: auto;
+}
+
+.track-btn-play,
+.track-btn-remove {
+  white-space: nowrap;
+  overflow: hidden;
+  background: none;
+  border: none;
+  height: 5px;
+  padding-top: 60px;
+  scale: 0.5;
+
+  transition: all 0.1s ease;
+}
+
+.track-btn-play > img,
+.track-btn-remove > img {
+  transform: translate(0%, -105%);
+  width: 50px;
+  height: 50px;
+}
+
+.track-btn-play:hover,
+.track-btn-remove:hover {
+  background-color: var(--pick-btn-hover-color);
+  border-radius: 5px;
+  scale: 0.55;
+}
+
+.track-btn-play:active,
+.track-btn-remove:active {
+  background-color: var(--pick-btn-hover-color);
+  border-radius: 10px;
+  scale: 0.7;
+}
+
+.album-btn {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  color: azure;
+
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.album-btn-other > h5 {
+  width: 140px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.album-btn-cover {
+  margin-top: 10px;
+  width: 90%;
+  border-radius: 10px;
+  display: flex;
+
+  align-self: center;
+}
+
+.album-btn:hover {
+  background-color: rgba(116, 116, 116, 0.219);
+}
+
+.album-btn-other {
+  display: flex;
+  width: 100%;
+}

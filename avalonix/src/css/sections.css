@@ -40,15 +40,30 @@ body {
 }
 
 .section.track-info {
-  justify-items: center;
-
-  padding-top: 6%;
-  padding-bottom: 6%;
-  align-items: center;
-
   color: azure;
 
-  min-width: 400px;
+  width: 800px;
+
+  justify-items: center;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+.section.track-info > h1,
+.section.track-info > h2,
+.section.track-info > h3,
+.section.track-info > h4,
+.section.track-info > h5,
+.section.track-info > h6 {
+  width: 70%;
+
+  text-align: center;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .section.playback-controll {

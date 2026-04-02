@@ -84,16 +84,6 @@ async function createTrackBtn(
   var title = track.metadata.title || "Unknown Title";
   var artist = track.metadata.artist || "Unknown Artist";
 
-  if (title.length > 35) {
-    title = title.slice(0, 35);
-    title = title + "...";
-  }
-  title = index + ". " + title;
-  if (artist.length > 20) {
-    artist = artist.slice(0, 35);
-    artist = artist + "...";
-  }
-
   if (trackNameClone) trackNameClone.textContent = title;
   if (artistNameClone) artistNameClone.textContent = artist;
   return clone;

@@ -1,174 +1,66 @@
 :root {
-    --pick-btn-hover-color: rgb(96, 51, 117);
+  --pick-btn-hover-color: rgb(96, 51, 117);
 }
 
 button {
-    font: inherit;
+  font: inherit;
 }
 
 .tab-sellect-btn {
-    display: flex;
-    background: none;
-    border: none;
+  display: flex;
+  background: none;
+  border: none;
 
-    color: azure;
+  color: azure;
 
-    transition: all 0.2s ease;
+  transition: all 0.2s ease;
 
-    width: 100%;
+  padding-left: 20px;
+
+  width: 100%;
 }
 
 .tab-sellect-btn:hover {
-    color: var(--pick-btn-hover-color);
-    background-color: rgba(184, 184, 184, 0.041);
-    padding-left: 20px;
+  color: var(--pick-btn-hover-color);
+  background-color: rgba(184, 184, 184, 0.041);
+  padding-left: 50px;
 }
 
 .tab-sellect-btn:active {
-    background-color: rgba(184, 184, 184, 0.199);
-    border-radius: 10px;
-    padding-left: 30px;
+  background-color: rgba(184, 184, 184, 0.199);
+  border-radius: 10px;
+  padding-left: 30px;
 }
 
 .playback-player-contoll-btn {
-    margin-left: 35px;
-    margin-bottom: 20px;
-    border-radius: 100%;
+  margin-left: 35px;
+  margin-bottom: 20px;
+  border-radius: 100%;
 
-    border: none;
+  border: none;
 
-    background-color: transparent;
+  background-color: transparent;
 
-    width: 10px;
-    height: 10px;
+  width: 10px;
+  height: 10px;
 
-    transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .playback-player-contoll-btn img {
-    position: absolute;
-    transform: translate(-50%,-50%);
+  position: absolute;
+  transform: translate(-50%, -50%);
 
-    width: 50px;
-    height: 50px;
+  width: 50px;
+  height: 50px;
 
-    transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .playback-player-contoll-btn img:hover {
-    width: 60px;
-    height: 60px;
+  width: 60px;
+  height: 60px;
 
-    background-color: rgba(116, 116, 116, 0.219);
-    border-radius: 60%;
-}
-
-.pick-media-btn.track {
-    padding-left: 10px;
-
-    display: flex;
-    background: none;
-    border: none;
-    
-    width: auto;
-    height: 60px;
-    justify-content: top;
-
-    transition: all 0.2s ease;
-}
-
-.pick-media-btn.track > h6 {
-    font-style: italic;
-    margin-left: auto;
-}
-
-.pick-media-btn.track:hover {
-    color: var(--pick-btn-hover-color);
-    padding-left: 25px;
-    background-color: rgba(116, 116, 116, 0.219);
-
-    border-radius: 10px;
-
-    border: none;
-}
-
-.add-btn {
-    white-space: nowrap;
-    overflow: hidden;
-    background: none;
-    border: none;
-    height: 5px;
-    padding-top: 60px;
-    scale: 0.5;
-
-    transition: all 0.1s ease;
-}
-
-.add-btn:hover {
-    background-color: var(--pick-btn-hover-color);
-    border-radius: 5px;
-    scale: 0.55;
-}
-
-.add-btn:active {
-    background-color: var(--pick-btn-hover-color);
-    border-radius: 10px;
-    scale: 0.7;
-}
-
-.add-btn > img {
-    transform: translate(0%,-105%);
-    width: 50px;
-    height: 50px;
-}
-
-.track-btn {
-    width: auto;
-    display: flex;
-    transition: all 0.15s ease;
-}
-
-.track-btn:hover {
-    padding-left: 10px;
-    color: var(--pick-btn-hover-color);
-    background-color: rgba(116, 116, 116, 0.219);
-}
-
-.track-btn:hover > h5 {
-    padding-left: 10px;
-}
-
-.track-btn > h6 {
-    font-style: italic;
-    margin-left: auto;
-}
-
-.track-btn-play, .track-btn-remove {
-    white-space: nowrap;
-    overflow: hidden;
-    background: none;
-    border: none;
-    height: 5px;
-    padding-top: 60px;
-    scale: 0.5;
-
-    transition: all 0.1s ease;
-}
-
-.track-btn-play > img ,.track-btn-remove > img {
-    transform: translate(0%,-105%);
-    width: 50px;
-    height: 50px;
-}
-
-.track-btn-play:hover ,.track-btn-remove:hover {
-    background-color: var(--pick-btn-hover-color);
-    border-radius: 5px;
-    scale: 0.55;
-}
-
-.track-btn-play:active ,.track-btn-remove:active {
-    background-color: var(--pick-btn-hover-color);
-    border-radius: 10px;
-    scale: 0.7;
+  background-color: rgba(116, 116, 116, 0.219);
+  border-radius: 60%;
 }
