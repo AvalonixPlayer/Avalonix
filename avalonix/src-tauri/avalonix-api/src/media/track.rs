@@ -1,6 +1,4 @@
-use std::sync::{Arc, Mutex};
-
-use crate::{db::MusicDB, logger, media::track};
+use crate::db::MusicDB;
 
 use super::metadata::Metadata;
 use rkyv::{Archive, Deserialize, Serialize};

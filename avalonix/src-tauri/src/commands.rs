@@ -1,12 +1,10 @@
 use std::{
     collections::HashMap,
     sync::{mpsc::Sender, Arc, Mutex},
-    time::Instant,
 };
 
 use avalonix_api::{
     audio::media_player::MediaPlayer,
-    logger,
     media::track::Track,
     playboxes::{
         album::Album,

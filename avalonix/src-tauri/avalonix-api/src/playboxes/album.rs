@@ -1,18 +1,10 @@
-use core::fmt;
-use std::{
-    fs::{self, File},
-    io::Read,
-    sync::{Arc, Mutex},
-};
-
-use rkyv::{Archive, Deserialize, Serialize};
+use std::sync::{Arc, Mutex};
 use uuid::Uuid;
 
 use crate::{
     db::MusicDB,
     logger,
     media::{metadata::Metadata, track::Track},
-    playboxes::album,
 };
 
 #[derive(ts_rs::TS, serde::Serialize, serde::Deserialize, Clone)]

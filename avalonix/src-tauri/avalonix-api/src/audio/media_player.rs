@@ -1,7 +1,5 @@
 use std::{
     fs::File,
-    io::BufReader,
-    ops::DerefMut,
     sync::{Arc, Mutex, mpsc},
     thread,
     time::Duration,
@@ -14,8 +12,7 @@ use rodio::{
 };
 
 use crate::{
-    db::MusicDB,
-    disk_manager, logger,
+    logger,
     media::{metadata::Metadata, track::Track},
 };
 
@@ -169,7 +166,7 @@ impl MediaPlayer {
 
             let fp = track_guard.file_path.clone();
 
-            track_guard.metadata.add_cover_to_metadata(&fp);
+            _ = track_guard.metadata.add_cover_to_metadata(&fp);
             self.sender
                 .as_mut()
                 .unwrap()
@@ -248,6 +245,8 @@ impl MediaPlayer {
 
 #[test]
 fn test_play_media_player() {
+    use crate::{db::MusicDB, disk_manager};
+
     let mp = MediaPlayer::new();
     match mp {
         Ok(player) => {

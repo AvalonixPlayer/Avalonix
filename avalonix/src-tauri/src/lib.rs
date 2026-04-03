@@ -1,7 +1,6 @@
 pub mod commands;
 
 use std::{
-    clone,
     sync::{
         mpsc::{self, Receiver, Sender},
         Arc, Mutex,

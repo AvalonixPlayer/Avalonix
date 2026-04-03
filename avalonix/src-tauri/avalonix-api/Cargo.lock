@@ -66,6 +66,7 @@ dependencies = [
  "bytecheck",
  "colored",
  "dirs",
+ "flate2",
  "glob",
  "lofty",
  "rand",
