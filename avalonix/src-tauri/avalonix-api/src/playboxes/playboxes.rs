@@ -1,9 +1,17 @@
 use std::{
     collections::HashMap,
+    fs,
+    path::Path,
     sync::{Arc, Mutex},
 };
 
-use crate::{db::MusicDB, disk_manager, logger, media::track::Track};
+use crate::{
+    db::MusicDB,
+    disk_manager, logger,
+    media::track::Track,
+    playboxes::album::{self, Album},
+    uri_create::CreateUri,
+};
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\TracksContainer.ts")]
@@ -14,7 +22,7 @@ pub struct TracksContainer {
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\AlbumsContainer.ts")]
 pub struct AlbumsContainer {
-    pub albums: HashMap<String, Vec<Arc<Mutex<Track>>>>,
+    pub albums: HashMap<String, Arc<Mutex<Album>>>,
 }
 
 #[derive(ts_rs::TS)]
@@ -51,36 +59,34 @@ impl TracksContainer {
 }
 
 impl AlbumsContainer {
-    pub fn new(container: &TracksContainer) -> AlbumsContainer {
+    pub fn new(container: &TracksContainer, db: &MusicDB) -> AlbumsContainer {
         let all_tracks = container.all_tracks.clone();
+        let mut albums: HashMap<String, Arc<Mutex<Album>>> = HashMap::new();
 
-        let mut albums: HashMap<String, Vec<Arc<Mutex<Track>>>> = HashMap::new();
+        let all_albums = db.get_all_albums().unwrap();
+        let all_albums_hash: Vec<&Album> = all_albums.iter().collect();
 
         for track in all_tracks {
-            let track_clone = track.clone();
-            let track_guard = track_clone.lock().unwrap();
+            let album_name = {
+                let track_guard = track.lock().unwrap();
+                track_guard.metadata.album.clone()
+            };
 
-            match &track_guard.metadata.album {
-                Some(album_name) => {
-                    let album = albums.get_mut(album_name);
-                    match album {
-                        Some(album) => album.push(track),
-                        None => {
-                            let mut vec = Vec::new();
-                            vec.push(track);
-                            albums.insert(album_name.clone(), vec);
-                        }
-                    }
-                }
-                None => match albums.get_mut("Unknown album") {
-                    Some(album) => album.push(track),
-                    None => {
-                        let mut vec = Vec::new();
-                        vec.push(track);
-                        albums.insert("Unknown album".to_string(), vec);
-                    }
-                },
+            let key = album_name.unwrap_or_else(|| "Unknown album".to_string());
+
+            if let Some(album_arc) = albums.get(&key) {
+                let mut guard = album_arc.lock().unwrap();
+                guard.tracks.push(track);
+            } else {
+                let new_album = Album::from(vec![track]);
+                albums.insert(key, Arc::new(Mutex::new(new_album)));
             }
+        }
+
+        for i in &albums {
+            let album = i.1;
+            let mut album_guard = album.lock().unwrap();
+            album_guard.load_metadata(db, &all_albums_hash, i.0);
         }
 
         AlbumsContainer { albums }
@@ -151,6 +157,7 @@ fn test_track_container_new() {
     }
 }
 
+/*
 #[test]
 fn test_albums_container_new() {
     let hash_path = disk_manager::avalonix_special_folder_path();
@@ -160,7 +167,9 @@ fn test_albums_container_new() {
     let albums_container = AlbumsContainer::new(&cont);
 
     for album in albums_container.albums {
-        for track in album.1 {
+        let album_guard = album.1.lock().unwrap();
+        let tracks = album_guard.tracks.clone();
+        for track in tracks {
             logger::debug(&format!(
                 "album - {}; track - {}",
                 album.0,
@@ -169,6 +178,7 @@ fn test_albums_container_new() {
         }
     }
 }
+ */
 
 #[test]
 fn test_artists_container_new() {

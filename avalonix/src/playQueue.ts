@@ -35,9 +35,8 @@ export async function UpdateTrackQueueUI() {
     return title.includes(filter);
   });
 
-  let index = 1;
   for (const track of filteredTracks) {
-    const clone = await createTrackBtn(track, index++);
+    const clone = await createTrackBtn(track);
     fragment.appendChild(clone);
   }
 
@@ -57,10 +56,7 @@ async function ClearQueue() {
     });
 })();
 
-async function createTrackBtn(
-  track: Track,
-  index: number,
-): Promise<DocumentFragment> {
+async function createTrackBtn(track: Track): Promise<DocumentFragment> {
   const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
 
   const trackNameClone = clone.querySelector("h5");

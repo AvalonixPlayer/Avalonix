@@ -1,4 +1,7 @@
-use crate::media::track::Track;
+use crate::{
+    media::track::Track,
+    playboxes::album::{self, Album},
+};
 use rkyv::{self};
 use sled::{Error as SledError, Tree};
 
@@ -33,16 +36,9 @@ impl MusicDB {
     pub fn save_track(&self, track: &Track) -> sled::Result<()> {
         let key = track.id.as_bytes();
 
-        let bytes = rkyv::to_bytes::<rkyv::rancor::Error>(track).map_err(to_sled_error)?;
+        let bytes = bincode::serialize(track).map_err(to_sled_error)?;
 
-        self.tracks.insert(key, bytes.as_ref())?;
-
-        if let Some(artist) = &track.metadata.artist {
-            self.artists.insert(artist.as_bytes(), key)?;
-        }
-        if let Some(album) = &track.metadata.album {
-            self.albums.insert(album.as_bytes(), key)?;
-        }
+        self.tracks.insert(key, bytes)?;
 
         self.tracks.flush()?;
         Ok(())
@@ -51,8 +47,7 @@ impl MusicDB {
     pub fn get_track(&self, id: &str) -> sled::Result<Option<Track>> {
         match self.tracks.get(id.as_bytes())? {
             Some(value) => {
-                let track: Track = rkyv::from_bytes::<Track, rkyv::rancor::Error>(&value)
-                    .map_err(to_sled_error)?;
+                let track: Track = bincode::deserialize(&value).map_err(to_sled_error)?;
                 Ok(Some(track))
             }
             None => Ok(None),
@@ -63,8 +58,7 @@ impl MusicDB {
         let mut tracks = Vec::new();
         for item in self.tracks.iter() {
             let (_, value) = item?;
-            let track: Track =
-                rkyv::from_bytes::<Track, rkyv::rancor::Error>(&value).map_err(to_sled_error)?;
+            let track: Track = bincode::deserialize(&value).map_err(to_sled_error)?;
             tracks.push(track);
         }
         Ok(tracks)
@@ -73,6 +67,27 @@ impl MusicDB {
     pub fn delete_track(&self, id: &str) -> sled::Result<()> {
         self.tracks.remove(id.as_bytes())?;
         Ok(())
+    }
+
+    pub fn save_album(&self, album: &Album) -> sled::Result<()> {
+        let key = album.id.as_bytes();
+
+        let bytes = bincode::serialize(album).unwrap();
+
+        self.albums.insert(key, bytes)?;
+
+        self.albums.flush()?;
+        Ok(())
+    }
+
+    pub fn get_all_albums(&self) -> sled::Result<Vec<Album>> {
+        let mut albums = Vec::new();
+        for item in self.albums.iter() {
+            let (_, value) = item?;
+            let album: Album = bincode::deserialize(&value).map_err(to_sled_error)?;
+            albums.push(album);
+        }
+        Ok(albums)
     }
 
     pub fn get_size_on_disk(&self) -> u64 {

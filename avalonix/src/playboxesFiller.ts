@@ -24,6 +24,12 @@ const pickBtnTempl = document.querySelector(
   "#pick-track-btn-example",
 ) as HTMLTemplateElement;
 
+/*
+const pickAlbumTempl = document.querySelector(
+  "#album-btn-example",
+) as HTMLTemplateElement;
+*/
+
 async function appendTracksList() {
   let searcher = document.getElementById(
     "track-search-area",
@@ -39,7 +45,6 @@ async function appendTracksList() {
     if (!container || !pickBtnTempl) return;
 
     container.innerHTML = "";
-    let index = 0;
     allTracks.forEach((track) => {
       if (
         searcher!.value != "" &&
@@ -48,19 +53,17 @@ async function appendTracksList() {
           .toLowerCase()
           .includes(searcher!.value.toLowerCase())
       ) {
-        index++;
-        const clone = createTrackBtn(track, index);
+        const clone = createTrackBtn(track);
         container.appendChild(clone);
       } else if (searcher!.value == "") {
-        index++;
-        const clone = createTrackBtn(track, index);
+        const clone = createTrackBtn(track);
         container.appendChild(clone);
       }
     });
   }
 }
 
-function createTrackBtn(track: Track, index: number): DocumentFragment {
+function createTrackBtn(track: Track): DocumentFragment {
   const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
 
   const trackNameClone = clone.querySelector("h5");
@@ -78,3 +81,16 @@ function createTrackBtn(track: Track, index: number): DocumentFragment {
   if (artistNameClone) artistNameClone.textContent = artist;
   return clone;
 }
+
+/*
+function createAlbumBtn() {
+  const clone = pickAlbumTempl.content.cloneNode(true) as DocumentFragment;
+
+  const albumCoverClone = clone.querySelector(
+    ".album-btn-cover",
+  ) as HTMLImageElement;
+  const albumNameClone = clone.querySelector("h5");
+
+  albumCoverClone.src = "";
+}
+*/

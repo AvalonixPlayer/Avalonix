@@ -12,8 +12,8 @@ colored = "3.1.1"
 dirs = "6.0.0"
 rkyv = "0.8.15"
 rodio = "0.22.2"
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = {version="1.0.99"}
+serde = { version = "1.0.228", features = ["derive", "rc"] }
+serde_json = {version="1.0.99" }
 sled = "0.34.7"
 uuid = { version = "1.22.0", features = ["v4"] }
 glob = "0.3.3"
@@ -21,3 +21,4 @@ ts-rs = "12.0"
 serde_bytes = "0.11"
 rustc-serialize = "0.3"
 regex = "1.12.3"
+bincode = "1.3"

@@ -9,6 +9,7 @@ use avalonix_api::{
     logger,
     media::track::Track,
     playboxes::{
+        album::Album,
         play_queue::{PlayQueue, PlayQueueAction},
         playboxes::PlayboxesManager,
     },
@@ -22,8 +23,9 @@ pub fn get_all_tracks(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Arc<
 #[tauri::command]
 pub fn get_all_albums(
     playboxes: tauri::State<'_, PlayboxesManager>,
-) -> HashMap<String, Vec<Arc<Mutex<Track>>>> {
-    playboxes.albums_container.albums.clone()
+) -> HashMap<String, Arc<Mutex<Album>>> {
+    let albums = playboxes.albums_container.albums.clone();
+    albums
 }
 
 #[tauri::command]

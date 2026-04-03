@@ -1,27 +1,16 @@
 #![allow(missing_docs)]
 
-extern crate regex;
-extern crate rustc_serialize;
-
 use lofty::config::ParseOptions;
+use lofty::prelude::*;
 use lofty::probe::Probe;
-use lofty::{prelude::*, read_from_path};
-use regex::Regex;
 use rkyv::{Archive, Deserialize, Serialize};
-use rodio::buffer;
-use rustc_serialize::base64::{MIME, ToBase64};
-use rustc_serialize::hex::ToHex;
-use std::env;
-use std::fs::File;
-use std::io::{Read, Write};
-use std::path::Path;
-use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
-use std::{fmt, fs};
+use std::f32::consts::E;
+use std::fmt;
 
 use crate::db::MusicDB;
+use crate::logger;
 use crate::media::track::Track;
-use crate::{disk_manager, logger};
+use crate::uri_create::CreateUri;
 
 #[derive(
     ts_rs::TS, serde::Serialize, serde::Deserialize, Archive, Deserialize, Serialize, Debug, Clone,
@@ -35,7 +24,6 @@ pub struct Metadata {
     pub year: Option<u16>,
     pub lyrics: Option<String>,
     pub bitrate: Option<u32>,
-    pub album_cover_hash_path: Option<String>,
     pub duration_secs: u64,
     pub track_cover_uri: Option<String>,
 }
@@ -52,7 +40,10 @@ impl Metadata {
         }
 
         match track_hash {
-            Some(hash) => Ok(hash.metadata),
+            Some(hash) => {
+                logger::debug(&format!("track metadata {} loaded from hash", track_path));
+                Ok(hash.metadata)
+            }
             None => {
                 let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
 
@@ -68,36 +59,6 @@ impl Metadata {
                     None => tagged_file.first_tag().ok_or("ERROR: No tags found!")?,
                 };
 
-                let album_name = tag.album().map(String::from);
-                let artist_name = tag.artist().map(String::from);
-
-                let album_cover_hash_path: Option<String>;
-
-                match (artist_name, album_name) {
-                    (Some(artist_name), Some(album_name)) => {
-                        let path = PathBuf::from(disk_manager::avalonix_special_folder_path())
-                            .join(format!("{}-{}.jpg", artist_name, album_name))
-                            .to_str()
-                            .unwrap()
-                            .to_string();
-
-                        if fs::exists(&path).unwrap() {
-                            album_cover_hash_path = Some(path);
-                        } else {
-                            let cover_opt = tag.pictures().first();
-
-                            match cover_opt {
-                                Some(v) => {
-                                    _ = fs::write(&path, v.data().to_owned());
-                                    album_cover_hash_path = Some(path);
-                                }
-                                None => album_cover_hash_path = None,
-                            }
-                        }
-                    }
-                    _ => album_cover_hash_path = None,
-                }
-
                 let result = Metadata {
                     title: tag.title().map(String::from),
                     artist: tag.artist().map(String::from),
@@ -106,38 +67,23 @@ impl Metadata {
                     year: tag.date().map(|d| d.year),
                     lyrics: tag.get_string(ItemKey::Lyrics).map(String::from),
                     bitrate: properties.overall_bitrate(),
-                    album_cover_hash_path,
                     duration_secs: properties.duration().as_secs(),
                     track_cover_uri: None,
                 };
 
                 let track = Track::from(track_path, &result);
                 db.save_track(&track).unwrap();
+                logger::debug(&format!(
+                    "track metadata {} loaded without hash",
+                    track_path
+                ));
                 drop(track);
-
                 Ok(result)
             }
         }
     }
 
-    pub fn get_album_cover_vec(&mut self) -> Option<Vec<u8>> {
-        match self.album_cover_hash_path.as_ref() {
-            Some(album_cover_hash_path) => match File::open(album_cover_hash_path) {
-                Ok(mut file) => {
-                    let mut buffer = Vec::new();
-                    _ = file.read_to_end(&mut buffer);
-                    Some(buffer)
-                }
-                Err(err) => {
-                    logger::error(&err.to_string());
-                    None
-                }
-            },
-            None => None,
-        }
-    }
-
-    pub fn add_cover_to_metadata(&mut self, track_path: &str) -> Result<(), String> {
+    pub fn get_cover(track_path: &str) -> Result<Option<String>, String> {
         let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
 
         let tagged_file = Probe::open(track_path)
@@ -158,14 +104,18 @@ impl Metadata {
 
         match pic {
             Some(pic) => {
-                let buf = pic.data().to_owned();
-                let b64 = buf.to_base64(MIME);
-
-                let uri = format!("data:image/{};base64,{}", "jpg", b64); // ty https://gist.github.com/nathamanath/a5bda4bdbd07e579188f
-                self.track_cover_uri = Some(uri);
+                return Ok(Some(pic.create_uri()));
             }
-            None => self.track_cover_uri = None,
+            None => return Ok(None),
         };
+    }
+
+    pub fn add_cover_to_metadata(&mut self, track_path: &str) -> Result<(), String> {
+        let cover = Self::get_cover(track_path);
+        match cover {
+            Ok(cover) => self.track_cover_uri = cover,
+            Err(_) => self.track_cover_uri = None,
+        }
         Ok(())
     }
 }
