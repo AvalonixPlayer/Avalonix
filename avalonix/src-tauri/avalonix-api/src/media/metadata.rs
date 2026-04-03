@@ -3,8 +3,9 @@
 extern crate regex;
 extern crate rustc_serialize;
 
-use lofty::prelude::*;
+use lofty::config::ParseOptions;
 use lofty::probe::Probe;
+use lofty::{prelude::*, read_from_path};
 use regex::Regex;
 use rkyv::{Archive, Deserialize, Serialize};
 use rodio::buffer;
@@ -41,8 +42,6 @@ pub struct Metadata {
 
 impl Metadata {
     pub fn from(track_path: &str, db: &MusicDB, tracks_hash: Vec<&Track>) -> Result<Self, String> {
-        let path = Path::new(&track_path);
-
         let mut track_hash = None;
 
         for track in tracks_hash {
@@ -55,16 +54,13 @@ impl Metadata {
         match track_hash {
             Some(hash) => Ok(hash.metadata),
             None => {
-                let tagged_file = Probe::open(path)
-                    .map_err(|e| format!("ERROR: Bad path: {}", e))?
+                let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
+
+                let tagged_file = Probe::open(track_path)
+                    .map_err(|err| format!("cant read file {} : {}", track_path, err))?
+                    .options(options)
                     .read()
-                    .map_err(|e| {
-                        format!(
-                            "ERROR: Failed to read file \"{}\": {}",
-                            path.to_str().unwrap(),
-                            e
-                        )
-                    })?;
+                    .map_err(|err| format!("error when read metadata {}", err))?;
 
                 let properties = tagged_file.properties();
                 let tag = match tagged_file.primary_tag() {
@@ -141,24 +137,15 @@ impl Metadata {
         }
     }
 
-    pub fn add_cover_to_metadata(&mut self, track_path: &str) {
-        if self.track_cover_uri != None {
-            return;
-        }
+    pub fn add_cover_to_metadata(&mut self, track_path: &str) -> Result<(), String> {
+        let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
 
-        let path = Path::new(track_path);
-        let tagged_file = Probe::open(path)
-            .map_err(|e| format!("ERROR: Bad path: {}", e))
-            .unwrap()
+        let tagged_file = Probe::open(track_path)
+            .map_err(|err| format!("cant read file {} : {}", track_path, err))?
+            .options(options)
             .read()
-            .map_err(|e| {
-                format!(
-                    "ERROR: Failed to read file \"{}\": {}",
-                    path.to_str().unwrap(),
-                    e
-                )
-            })
-            .unwrap();
+            .map_err(|err| format!("error when read metadata {}", err))?;
+
         let tag = match tagged_file.primary_tag() {
             Some(primary_tag) => primary_tag,
             None => tagged_file
@@ -179,6 +166,7 @@ impl Metadata {
             }
             None => self.track_cover_uri = None,
         };
+        Ok(())
     }
 }
 
@@ -206,9 +194,8 @@ fn test_metadata_from() {
 
     let hash_path = disk_manager::avalonix_special_folder_path();
 
-    let music_path =
-        "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac";
-
+    let music_path = "D:\\music\\Geoxor\\Geoxor - Hate.mp3";
+    //"D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac"
     let db = MusicDB::open(&hash_path);
 
     match db {
