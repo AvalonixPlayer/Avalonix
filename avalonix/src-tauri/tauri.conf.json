@@ -16,11 +16,6 @@
         "title": "Avalonix - Main Window",
         "width": 1100,
         "height": 600
-      },
-      {
-        "title": "Avalonix - Initial Setup",
-        "width": 800,
-        "width": 600
       }
     ],
     "security": {
