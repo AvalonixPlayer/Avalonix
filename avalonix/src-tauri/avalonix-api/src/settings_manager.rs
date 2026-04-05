@@ -7,7 +7,15 @@ use crate::disk_manager::avalonix_special_folder_path;
 pub struct Settings {
     pub volume: u8,
     pub library_paths: Vec<String>,
+    pub equalizer: Equalizer,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Equalizer {
+    pub master: u8,
+    pub eq_stats: Vec<u8>,
+}
+
 
 pub type SettingsResult<T> = Result<T, SettingsError>;
 
@@ -41,10 +49,15 @@ pub fn read_settings() -> SettingsResult<Settings> {
     Ok(settings)
 }
 
+pub fn default_equalizer() -> Equalizer {
+    Equalizer { master: 50, eq_stats: vec![50, 50, 50, 50, 50, 50, 50, 50] }
+}
+
 pub fn default_settings() -> Settings {
     Settings {
         volume: 50,
         library_paths: vec![],
+        equalizer: default_equalizer(),
     }
 }
 
