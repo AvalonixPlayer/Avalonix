@@ -1,4 +1,4 @@
-use crate::{media::track::Track, playboxes::album::Album};
+use crate::{media::track::Track, playboxes::album::Album, utils::get_argument_val};
 use sled::{Error as SledError, Tree};
 
 pub struct MusicDB {
@@ -98,8 +98,11 @@ fn test_db() {
 
     let hash_path = disk_manager::avalonix_special_folder_path();
 
-    let music_path =
-        "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac";
+    let music_path = get_argument_val(&"TRACK_PATH");
+
+    let Some(_) = music_path else {
+        return;
+    };
 
     let db = MusicDB::open(&hash_path);
     match db {
@@ -107,7 +110,7 @@ fn test_db() {
             let all_tracks = db.get_all_tracks().unwrap();
             let tracks_hash = all_tracks.iter().collect();
 
-            let track = Track::new(music_path, &db, tracks_hash).unwrap();
+            let track = Track::new(&music_path.unwrap(), &db, tracks_hash).unwrap();
 
             _ = db.save_track(&track);
 

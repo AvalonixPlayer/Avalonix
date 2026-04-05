@@ -15,3 +15,7 @@ pub fn current_os() -> OS {
         _ => OS::Unknown,
     }
 }
+
+pub fn get_argument_val(arg_name: &str) -> Option<String> {
+    env::var(arg_name).ok()
+}

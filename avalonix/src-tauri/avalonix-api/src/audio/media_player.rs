@@ -14,6 +14,7 @@ use rodio::{
 use crate::{
     logger,
     media::{metadata::Metadata, track::Track},
+    utils::get_argument_val,
 };
 
 struct Playback {
@@ -167,11 +168,12 @@ impl MediaPlayer {
             let fp = track_guard.file_path.clone();
 
             _ = track_guard.metadata.add_cover_to_metadata(&fp);
-            self.sender
-                .as_mut()
-                .unwrap()
-                .send(track_guard.metadata.clone())
-                .unwrap();
+
+            let sender = self.sender.as_mut();
+            match sender {
+                Some(sender) => sender.send(track_guard.metadata.clone()).unwrap(),
+                None => {}
+            }
         }
 
         playback.last_playing_track = Some(track_clone);
@@ -247,14 +249,17 @@ impl MediaPlayer {
 fn test_play_media_player() {
     use crate::{db::MusicDB, disk_manager};
 
+    let track_path = get_argument_val(&"TRACK_PATH");
+    let Some(_) = track_path else {
+        return;
+    };
+
     let mp = MediaPlayer::new();
     match mp {
         Ok(player) => {
             let player = Arc::new(Mutex::new(player));
 
-            let file_path =
-        "D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac"
-            .to_string();
+            let file_path = track_path.unwrap();
 
             MediaPlayer::update(&player);
 
@@ -266,18 +271,6 @@ fn test_play_media_player() {
             let track = Arc::new(Mutex::new(Track::new(&file_path, db, tracks_hash).unwrap()));
 
             player.clone().lock().as_mut().unwrap().play(&track);
-
-            logger::debug(&format!(
-                "len {}",
-                player
-                    .clone()
-                    .lock()
-                    .as_ref()
-                    .unwrap()
-                    .get_len()
-                    .clone()
-                    .as_secs()
-            ));
         }
         Err(_) => {}
     }

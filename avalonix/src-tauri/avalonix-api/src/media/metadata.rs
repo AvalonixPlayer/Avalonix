@@ -10,6 +10,7 @@ use crate::db::MusicDB;
 use crate::logger;
 use crate::media::track::Track;
 use crate::useful_traits::uri_create::CreateUri;
+use crate::utils::get_argument_val;
 
 #[derive(
     ts_rs::TS, serde::Serialize, serde::Deserialize, Archive, Deserialize, Serialize, Debug, Clone,
@@ -143,17 +144,20 @@ fn test_metadata_from() {
 
     let hash_path = disk_manager::avalonix_special_folder_path();
 
-    let music_path = "D:\\music\\Geoxor\\Geoxor - Hate.mp3";
-    //"D:\\music\\Three Days Grace [restored]\\2006 - One-X\\03. Animal I Have Become.flac"
+    let music_path = get_argument_val(&"TRACK_PATH");
+    let Some(_) = music_path else {
+        return;
+    };
+
     let db = MusicDB::open(&hash_path);
 
     match db {
         Ok(db) => {
             let all_tracks = db.get_all_tracks().unwrap();
             let tracks_hash = all_tracks.iter().collect();
-            let metadata = Metadata::from(music_path, &db, tracks_hash);
+            let metadata = Metadata::from(&music_path.unwrap(), &db, tracks_hash);
 
-            logger::debug(&format!("{}", metadata.as_ref().unwrap()));
+            logger::debug(&format!("{}", metadata.unwrap()));
         }
         Err(err) => logger::error(&err.to_string()),
     }
