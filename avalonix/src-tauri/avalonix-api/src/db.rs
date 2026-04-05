@@ -250,4 +250,3 @@ fn test_db_get_album_by_id() {
         Err(err) => logger::error(&err.to_string()),
     }
 }
-// fef71381-fd0b-4391-b3ab-2de4beb8b75a

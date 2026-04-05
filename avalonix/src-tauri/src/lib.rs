@@ -13,8 +13,11 @@ use avalonix_api::{
     db::MusicDB,
     disk_manager, logger,
     playboxes::{
+        albums_container::AlbumsContainer,
+        artists_container::AristsContainer,
         play_queue::{PlayQueue, PlayQueueAction},
-        playboxes::{AlbumsContainer, AristsContainer, PlayboxesManager, TracksContainer},
+        playboxes::PlayboxesManager,
+        tracks_container::TracksContainer,
     },
 };
 use tauri::{Emitter, Manager};
