@@ -12,6 +12,7 @@ pub struct AristsContainer {
 }
 
 impl AristsContainer {
+    /*
     pub fn new(container: &TracksContainer) -> AristsContainer {
         let all_tracks = container.all_tracks.clone();
 
@@ -46,4 +47,5 @@ impl AristsContainer {
 
         AristsContainer { artists }
     }
+     */
 }

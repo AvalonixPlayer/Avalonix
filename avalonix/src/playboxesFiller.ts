@@ -3,12 +3,12 @@ import { invoke } from "@tauri-apps/api/core";
 import { addTrackToQueue } from "./playQueue";
 import { Album } from "./bindings/Album";
 
-export let allTracks: Track[];
+export let allTracksId: Array<Array<number>>;
 export let allAlbums: { [key in string]: Array<Album> };
 export let allArtists: { [key in string]: Array<Track> };
 
-export async function getAllTracks() {
-  allTracks = await invoke<Track[]>("get_all_tracks");
+export async function getAllTracksId() {
+  allTracksId = await invoke<Array<Array<number>>>("get_all_tracks_id");
   await fillTracksList();
 }
 
@@ -41,21 +41,6 @@ async function fillTracksList() {
     if (!container || !pickBtnTempl) return;
 
     container.innerHTML = "";
-    allTracks.forEach((track) => {
-      if (
-        searcher!.value != "" &&
-        track.metadata.title != null &&
-        track.metadata.title
-          .toLowerCase()
-          .includes(searcher!.value.toLowerCase())
-      ) {
-        const clone = createTrackBtn(track);
-        container.appendChild(clone);
-      } else if (searcher!.value == "") {
-        const clone = createTrackBtn(track);
-        container.appendChild(clone);
-      }
-    });
   }
 }
 

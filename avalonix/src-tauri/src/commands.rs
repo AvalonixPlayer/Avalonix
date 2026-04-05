@@ -14,10 +14,11 @@ use avalonix_api::{
 };
 
 #[tauri::command]
-pub fn get_all_tracks(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Arc<Mutex<Track>>> {
-    playboxes.tracks_container.all_tracks.clone()
+pub fn get_all_tracks_id(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Vec<u8>> {
+    playboxes.tracks_container.all_tracks_id.clone()
 }
 
+/*
 #[tauri::command]
 pub fn get_all_albums(
     playboxes: tauri::State<'_, PlayboxesManager>,
@@ -32,6 +33,7 @@ pub fn get_all_artists(
 ) -> HashMap<String, Vec<Arc<Mutex<Track>>>> {
     playboxes.artists_container.artists.clone()
 }
+ */
 
 #[tauri::command]
 pub fn add_track_to_queue(

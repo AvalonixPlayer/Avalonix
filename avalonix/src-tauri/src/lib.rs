@@ -62,9 +62,11 @@ pub fn run() {
                     Ok(())
                 })
                 .invoke_handler(tauri::generate_handler![
-                    commands::get_all_tracks,
+                    commands::get_all_tracks_id,
+                    /*
                     commands::get_all_albums,
                     commands::get_all_artists,
+                     */
                     commands::add_track_to_queue,
                     commands::clear_queue,
                     commands::remove_track_from_queue,
@@ -128,11 +130,12 @@ fn init_api() -> Result<
                 PlayQueue::play(&play_queue);
 
                 let tracks_container = TracksContainer::new(&db);
-                let albums_container = AlbumsContainer::new(&tracks_container, &db);
-                let artists_container = AristsContainer::new(&tracks_container);
+                //let albums_container = AlbumsContainer::new(&tracks_container, &db);
+                //let artists_container = AristsContainer::new(&tracks_container);
 
-                let playboxes_manager =
-                    PlayboxesManager::new(tracks_container, albums_container, artists_container);
+                let playboxes_manager = PlayboxesManager::new(
+                    tracks_container, /*, albums_container, artists_container*/
+                );
 
                 Ok((
                     player,

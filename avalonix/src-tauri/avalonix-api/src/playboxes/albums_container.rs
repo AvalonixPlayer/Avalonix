@@ -15,6 +15,7 @@ pub struct AlbumsContainer {
 }
 
 impl AlbumsContainer {
+    /*
     pub fn new(container: &TracksContainer, db: &MusicDB) -> AlbumsContainer {
         let all_tracks = container.all_tracks.clone();
         let mut albums: HashMap<String, Arc<Mutex<Album>>> = HashMap::new();
@@ -46,4 +47,5 @@ impl AlbumsContainer {
         }
         AlbumsContainer { albums }
     }
+     */
 }

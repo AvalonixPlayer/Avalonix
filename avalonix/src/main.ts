@@ -1,14 +1,12 @@
 import { Metadata } from "./bindings/Metadata.js";
-import { getAllAlbums, getAllArtists, getAllTracks } from "./playboxesFiller";
+import { getAllTracksId } from "./playboxesFiller";
 import { UpdateTrackQueueUI } from "./playQueue.js";
 import "./tabSwitcher.js";
 import "./playbackBtns.ts";
 import { UpdateTrackUI } from "./metadataUpdate.ts";
 
 (async () => {
-  await getAllTracks();
-  await getAllAlbums();
-  await getAllArtists();
+  await getAllTracksId();
   await UpdateTrackQueueUI();
   await UpdateTrackUI(null);
   await bindPlayback();
