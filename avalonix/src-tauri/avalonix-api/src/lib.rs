@@ -6,3 +6,4 @@ pub mod media;
 pub mod playboxes;
 pub mod uri_create;
 pub mod utils;
+pub mod settings_manager;
