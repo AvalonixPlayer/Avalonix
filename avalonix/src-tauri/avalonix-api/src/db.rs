@@ -66,16 +66,16 @@ impl MusicDB {
         Ok(tracks)
     }
 
-    pub fn get_all_tracks_id(&self) -> sled::Result<Vec<IVec>> {
+    pub fn get_all_tracks_id(&self) -> sled::Result<Vec<Vec<u8>>> {
         let mut result = Vec::new();
         for i in self.tracks.iter().keys() {
-            let id = i?;
+            let id = i?.to_vec();
             result.push(id);
         }
         Ok(result)
     }
 
-    pub fn get_track_by_id(&self, id: &IVec) -> sled::Result<Option<Track>> {
+    pub fn get_track_by_id(&self, id: &Vec<u8>) -> sled::Result<Option<Track>> {
         let some_bytes = self.tracks.get(id)?;
 
         if let Some(bytes) = some_bytes {
@@ -111,17 +111,17 @@ impl MusicDB {
         Ok(albums)
     }
 
-    pub fn get_all_albums_id(&self) -> sled::Result<Vec<IVec>> {
+    pub fn get_all_albums_id(&self) -> sled::Result<Vec<Vec<u8>>> {
         let mut result = Vec::new();
 
         for i in self.albums.iter().keys() {
-            let id = i?;
+            let id = i?.to_vec();
             result.push(id);
         }
         Ok(result)
     }
 
-    pub fn get_album_by_id(&self, id: &IVec) -> sled::Result<Option<Album>> {
+    pub fn get_album_by_id(&self, id: &Vec<u8>) -> sled::Result<Option<Album>> {
         let some_bytes = self.albums.get(id).map_err(to_sled_error)?;
 
         if let Some(bytes) = some_bytes {
@@ -148,7 +148,7 @@ fn test_db_get_all_tracks_id() {
         Ok(db) => {
             let start = Instant::now();
             match db.get_all_tracks_id() {
-                Ok(ids) => {}
+                Ok(_) => {}
                 Err(_) => {}
             }
             logger::debug(&format!(
