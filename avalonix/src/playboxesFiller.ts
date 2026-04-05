@@ -1,36 +1,33 @@
 import type { Track } from "./bindings/Track";
 import { invoke } from "@tauri-apps/api/core";
 import { addTrackToQueue } from "./playQueue";
+import { Album } from "./bindings/Album";
 
 export let allTracks: Track[];
-export let allAlbums: { [key in string]: Array<Track> };
+export let allAlbums: { [key in string]: Array<Album> };
 export let allArtists: { [key in string]: Array<Track> };
 
 export async function getAllTracks() {
   allTracks = await invoke<Track[]>("get_all_tracks");
-  await appendTracksList();
+  await fillTracksList();
 }
 
 export async function getAllAlbums() {
-  allAlbums = await invoke<{ [key in string]: Array<Track> }>("get_all_albums");
+  allAlbums = await invoke<{ [key in string]: Array<Album> }>("get_all_albums");
 }
 
 export async function getAllArtists() {
-  allAlbums =
+  allArtists =
     await invoke<{ [key in string]: Array<Track> }>("get_all_artists");
 }
+
+const container = document.getElementById("tracks-list");
 
 const pickBtnTempl = document.querySelector(
   "#pick-track-btn-example",
 ) as HTMLTemplateElement;
 
-/*
-const pickAlbumTempl = document.querySelector(
-  "#album-btn-example",
-) as HTMLTemplateElement;
-*/
-
-async function appendTracksList() {
+async function fillTracksList() {
   let searcher = document.getElementById(
     "track-search-area",
   ) as HTMLInputElement;
@@ -41,7 +38,6 @@ async function appendTracksList() {
   await fill();
 
   async function fill() {
-    const container = document.getElementById("tracks-list");
     if (!container || !pickBtnTempl) return;
 
     container.innerHTML = "";
@@ -81,16 +77,3 @@ function createTrackBtn(track: Track): DocumentFragment {
   if (artistNameClone) artistNameClone.textContent = artist;
   return clone;
 }
-
-/*
-function createAlbumBtn() {
-  const clone = pickAlbumTempl.content.cloneNode(true) as DocumentFragment;
-
-  const albumCoverClone = clone.querySelector(
-    ".album-btn-cover",
-  ) as HTMLImageElement;
-  const albumNameClone = clone.querySelector("h5");
-
-  albumCoverClone.src = "";
-}
-*/

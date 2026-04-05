@@ -1,5 +1,11 @@
-use crate::{media::track::Track, playboxes::album::Album, utils::get_argument_val};
-use sled::{Error as SledError, Tree};
+use std::time::Instant;
+
+use crate::{
+    media::track::{self, Track},
+    playboxes::album::Album,
+    utils::get_argument_val,
+};
+use sled::{Error as SledError, IVec, Tree};
 
 pub struct MusicDB {
     pub db: sled::Db,
@@ -60,6 +66,25 @@ impl MusicDB {
         Ok(tracks)
     }
 
+    pub fn get_all_tracks_id(&self) -> sled::Result<Vec<IVec>> {
+        let mut result = Vec::new();
+        for i in self.tracks.iter().keys() {
+            let id = i?;
+            result.push(id);
+        }
+        Ok(result)
+    }
+
+    pub fn get_track_by_id(&self, id: &IVec) -> sled::Result<Option<Track>> {
+        let some_bytes = self.tracks.get(id)?;
+
+        if let Some(bytes) = some_bytes {
+            let track: Track = bincode::deserialize(&bytes).map_err(to_sled_error)?;
+            return Ok(Some(track));
+        }
+        Ok(None)
+    }
+
     pub fn delete_track(&self, id: &str) -> sled::Result<()> {
         self.tracks.remove(id.as_bytes())?;
         Ok(())
@@ -86,39 +111,143 @@ impl MusicDB {
         Ok(albums)
     }
 
+    pub fn get_all_albums_id(&self) -> sled::Result<Vec<IVec>> {
+        let mut result = Vec::new();
+
+        for i in self.albums.iter().keys() {
+            let id = i?;
+            result.push(id);
+        }
+        Ok(result)
+    }
+
+    pub fn get_album_by_id(&self, id: &IVec) -> sled::Result<Option<Album>> {
+        let some_bytes = self.albums.get(id).map_err(to_sled_error)?;
+
+        if let Some(bytes) = some_bytes {
+            let album: Album = bincode::deserialize(&bytes).map_err(to_sled_error)?;
+            return Ok(Some(album));
+        }
+        Ok(None)
+    }
+
     pub fn get_size_on_disk(&self) -> u64 {
         self.db.size_on_disk().unwrap_or(0)
     }
 }
 
 #[test]
-fn test_db() {
+fn test_db_get_all_tracks_id() {
     use crate::disk_manager;
     use crate::logger;
 
     let hash_path = disk_manager::avalonix_special_folder_path();
-
-    let music_path = get_argument_val(&"TRACK_PATH");
-
-    let Some(_) = music_path else {
-        return;
-    };
-
     let db = MusicDB::open(&hash_path);
+
     match db {
         Ok(db) => {
-            let all_tracks = db.get_all_tracks().unwrap();
-            let tracks_hash = all_tracks.iter().collect();
-
-            let track = Track::new(&music_path.unwrap(), &db, tracks_hash).unwrap();
-
-            _ = db.save_track(&track);
-
-            let tracks = db.get_all_tracks().unwrap();
-            for track in tracks {
-                logger::debug(&format!("{}", track.metadata));
+            let start = Instant::now();
+            match db.get_all_tracks_id() {
+                Ok(ids) => {}
+                Err(_) => {}
             }
+            logger::debug(&format!(
+                "all tracks ids get: {} ms",
+                start.elapsed().as_millis()
+            ));
         }
         Err(err) => logger::error(&err.to_string()),
     }
 }
+
+#[test]
+fn test_db_get_track_by_id() {
+    use crate::disk_manager;
+    use crate::logger;
+
+    let hash_path = disk_manager::avalonix_special_folder_path();
+    let db = MusicDB::open(&hash_path);
+
+    match db {
+        Ok(db) => {
+            let ids = db.get_all_tracks_id().unwrap();
+            let start = Instant::now();
+            match db.get_track_by_id(&ids[0]) {
+                Ok(track_opt) => {
+                    let track = track_opt.unwrap();
+                    logger::debug(&format!(
+                        "track get by id: {}",
+                        track.metadata.title.unwrap().clone()
+                    ));
+                }
+                Err(_) => {}
+            }
+            logger::debug(&format!(
+                "get track by id: {} ms",
+                start.elapsed().as_millis()
+            ));
+        }
+        Err(err) => logger::error(&err.to_string()),
+    }
+}
+
+#[test]
+fn test_db_get_all_albums_id() {
+    use crate::disk_manager;
+    use crate::logger;
+
+    let hash_path = disk_manager::avalonix_special_folder_path();
+    let db = MusicDB::open(&hash_path);
+
+    match db {
+        Ok(db) => {
+            let start = Instant::now();
+            match db.get_all_albums_id() {
+                Ok(ids) => {
+                    let len = ids.len();
+                    println!("{:?}", ids[len - 1]);
+                }
+                Err(err) => logger::error(&err.to_string()),
+            }
+            logger::debug(&format!(
+                "all albums ids get: {} ms",
+                start.elapsed().as_millis()
+            ));
+        }
+        Err(err) => logger::error(&err.to_string()),
+    }
+}
+
+#[test]
+fn test_db_get_album_by_id() {
+    use crate::disk_manager;
+    use crate::logger;
+
+    let hash_path = disk_manager::avalonix_special_folder_path();
+    let db = MusicDB::open(&hash_path);
+
+    match db {
+        Ok(db) => {
+            let ids = db.get_all_albums_id().unwrap();
+
+            let start = Instant::now();
+            match db.get_album_by_id(&ids[0]) {
+                Ok(album) => match album {
+                    Some(album) => {
+                        logger::debug(&format!("{}", album.metadata.unwrap().name));
+                    }
+                    None => {}
+                },
+                Err(err) => {
+                    logger::error(&err.to_string());
+                }
+            }
+            logger::debug(&format!(
+                "get album by id: {} ms",
+                start.elapsed().as_millis()
+            ));
+        }
+        Err(err) => logger::error(&err.to_string()),
+    }
+}
+// fef71381-fd0b-4391-b3ab-2de4beb8b75a
