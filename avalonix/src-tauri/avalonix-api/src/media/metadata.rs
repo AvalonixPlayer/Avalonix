@@ -4,13 +4,12 @@ use lofty::config::ParseOptions;
 use lofty::prelude::*;
 use lofty::probe::Probe;
 use rkyv::{Archive, Deserialize, Serialize};
-use std::f32::consts::E;
 use std::fmt;
 
 use crate::db::MusicDB;
 use crate::logger;
 use crate::media::track::Track;
-use crate::uri_create::CreateUri;
+use crate::useful_traits::uri_create::CreateUri;
 
 #[derive(
     ts_rs::TS, serde::Serialize, serde::Deserialize, Archive, Deserialize, Serialize, Debug, Clone,

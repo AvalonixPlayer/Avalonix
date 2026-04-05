@@ -1,8 +1,4 @@
-use crate::{
-    media::track::Track,
-    playboxes::album::{self, Album},
-};
-use rkyv::{self};
+use crate::{media::track::Track, playboxes::album::Album};
 use sled::{Error as SledError, Tree};
 
 pub struct MusicDB {
@@ -99,7 +95,6 @@ impl MusicDB {
 fn test_db() {
     use crate::disk_manager;
     use crate::logger;
-    use crate::media::metadata::Metadata;
 
     let hash_path = disk_manager::avalonix_special_folder_path();
 

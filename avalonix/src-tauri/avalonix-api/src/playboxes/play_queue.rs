@@ -1,7 +1,7 @@
 use std::{
     sync::{Arc, Mutex, MutexGuard, mpsc},
     thread,
-    time::{Duration, Instant},
+    time::Duration,
     usize,
 };
 

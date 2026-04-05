@@ -1,17 +1,10 @@
 use std::{
     collections::HashMap,
-    fs,
-    path::Path,
     sync::{Arc, Mutex},
+    time::Instant,
 };
 
-use crate::{
-    db::MusicDB,
-    disk_manager, logger,
-    media::track::Track,
-    playboxes::album::{self, Album},
-    uri_create::CreateUri,
-};
+use crate::{db::MusicDB, disk_manager, logger, media::track::Track, playboxes::album::Album};
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\TracksContainer.ts")]
@@ -60,6 +53,7 @@ impl TracksContainer {
 
 impl AlbumsContainer {
     pub fn new(container: &TracksContainer, db: &MusicDB) -> AlbumsContainer {
+        let start = Instant::now();
         let all_tracks = container.all_tracks.clone();
         let mut albums: HashMap<String, Arc<Mutex<Album>>> = HashMap::new();
 
@@ -89,6 +83,10 @@ impl AlbumsContainer {
             album_guard.load_metadata(db, &all_albums_hash, i.0);
         }
 
+        logger::debug(&format!(
+            "albums get: {} milis",
+            start.elapsed().as_millis()
+        ));
         AlbumsContainer { albums }
     }
 }
