@@ -39,7 +39,7 @@ async function fillTracksList() {
 
     element.dataset.trackId = JSON.stringify(id);
 
-    if (element) {
+    if (element && element.dataset.llCompleate == null) {
       const options = {
         root: container,
         threshold: 0.1,
@@ -48,9 +48,12 @@ async function fillTracksList() {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            invoke<Track>("get_track_by_id", { id: id }).then((track) =>
-              fillPickBtn(element, track),
-            );
+            console.log("loaded");
+            invoke<Track>("get_track_by_id", { id: id }).then((track) => {
+              fillPickBtn(element, track);
+              element.dataset.llCompleate = "true";
+              observer.disconnect();
+            });
           }
         });
       }, options);
