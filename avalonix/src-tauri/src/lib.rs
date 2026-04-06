@@ -134,7 +134,9 @@ fn init_api() -> Result<
 
                 PlayQueue::play(&play_queue);
 
-                let tracks_container = TracksContainer::new(&db);
+                let mut tracks_container = TracksContainer::new();
+                tracks_container.find_tracks(&db);
+                tracks_container.fill_ids(&db);
                 //let albums_container = AlbumsContainer::new(&tracks_container, &db);
                 //let artists_container = AristsContainer::new(&tracks_container);
 
