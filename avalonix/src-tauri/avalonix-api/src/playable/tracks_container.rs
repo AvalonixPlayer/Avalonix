@@ -1,7 +1,5 @@
 use std::sync::{Arc, Mutex};
 
-use sled::IVec;
-
 use crate::{db::MusicDB, logger, playable::track::Track};
 
 #[derive(ts_rs::TS)]

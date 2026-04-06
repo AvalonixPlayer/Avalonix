@@ -4,6 +4,7 @@ use avalonix_api::{
     audio::media_player::MediaPlayer,
     db::MusicDB,
     playable::{
+        filter_data::FilterData,
         play_queue::{PlayQueue, PlayQueueAction},
         playboxes::PlayboxesManager,
         track::Track,
@@ -22,6 +23,13 @@ pub async fn get_track_by_id(
     id: Vec<u8>,
 ) -> Result<Track, ()> {
     playboxes.tracks_container.get_track_by_id(&db, id)
+}
+
+#[tauri::command]
+pub async fn get_all_tracks_filter_data(
+    db: tauri::State<'_, MusicDB>,
+) -> Result<Vec<FilterData>, ()> {
+    db.get_all_tracks_filter_data().map_err(|_| ())
 }
 
 /*

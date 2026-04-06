@@ -1,6 +1,13 @@
 use std::time::Instant;
 
-use crate::{playable::album::Album, playable::track::Track, utils::get_argument_val};
+use crate::{
+    playable::{
+        album::Album,
+        filter_data::{FilterData, FilterDataTrait},
+        track::Track,
+    },
+    utils::get_argument_val,
+};
 use sled::{Error as SledError, IVec, Tree};
 
 pub struct MusicDB {
@@ -81,14 +88,15 @@ impl MusicDB {
         Ok(None)
     }
 
-    pub fn get_tracks_filter_data(&self, id: &Vec<u8>) -> sled::Result<Option<Track>> {
-        let some_bytes = self.tracks.get(id)?;
-
-        if let Some(bytes) = some_bytes {
+    pub fn get_all_tracks_filter_data(&self) -> sled::Result<Vec<FilterData>> {
+        let mut result = Vec::new();
+        for i in self.tracks.iter() {
+            let (id, bytes) = i?;
             let track: Track = bincode::deserialize(&bytes).map_err(to_sled_error)?;
-            return Ok(Some(track));
+            let id = id.to_vec();
+            result.push(track.new_dilter_data(id));
         }
-        Ok(None)
+        Ok(result)
     }
 
     pub fn delete_track(&self, id: &str) -> sled::Result<()> {
@@ -271,6 +279,28 @@ fn test_db_get_album_by_id() {
 }
 
 #[test]
+fn get_all_tracks_filter_data() {
+    use crate::disk_manager;
+    use crate::logger;
+
+    let hash_path = disk_manager::avalonix_special_folder_path();
+    let db = MusicDB::open(&hash_path);
+
+    let db = db.unwrap();
+    for i in db.get_all_tracks_filter_data().unwrap() {
+        logger::debug(&format!("id: {:?} title: {}", i.id, i.name));
+    }
+
+    let start = Instant::now();
+
+    db.get_all_tracks_filter_data().unwrap();
+    logger::debug(&format!(
+        "get tracks filters: {} ms",
+        start.elapsed().as_millis()
+    ));
+}
+
+#[test]
 fn get_all_albums_filter_data() {
     use crate::disk_manager;
     use crate::logger;
@@ -279,7 +309,15 @@ fn get_all_albums_filter_data() {
     let db = MusicDB::open(&hash_path);
 
     let db = db.unwrap();
+
+    let start = Instant::now();
+
     for i in db.get_all_album_filter_data().unwrap() {
         logger::debug(&format!("Album: {} Artist: {}", i.0, i.1));
     }
+
+    logger::debug(&format!(
+        "get albums filters: {} ms",
+        start.elapsed().as_millis()
+    ));
 }

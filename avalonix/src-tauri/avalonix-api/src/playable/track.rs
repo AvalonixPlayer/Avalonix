@@ -1,4 +1,5 @@
-use crate::db::MusicDB;
+use crate::playable::filter_data::FilterData;
+use crate::{db::MusicDB, playable::filter_data::FilterDataTrait};
 
 use crate::media::metadata::Metadata;
 use rkyv::{Archive, Deserialize, Serialize};
@@ -32,6 +33,15 @@ impl Track {
             id: Uuid::new_v4().to_string(),
             metadata: metadata.clone(),
             file_path: file_path.to_string(),
+        }
+    }
+}
+
+impl FilterDataTrait for Track {
+    fn new_dilter_data(&self, id: Vec<u8>) -> FilterData {
+        FilterData {
+            id,
+            name: self.metadata.title.clone().unwrap(),
         }
     }
 }

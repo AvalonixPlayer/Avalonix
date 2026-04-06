@@ -69,6 +69,7 @@ pub fn run() {
                     commands::get_all_artists,
                      */
                     commands::get_track_by_id,
+                    commands::get_all_tracks_filter_data,
                     commands::add_track_to_queue,
                     commands::clear_queue,
                     commands::remove_track_from_queue,
