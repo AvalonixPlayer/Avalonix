@@ -2,7 +2,7 @@ use std::sync::{Arc, Mutex};
 
 use sled::IVec;
 
-use crate::{db::MusicDB, disk_manager, logger, media::track::Track};
+use crate::{db::MusicDB, logger, media::track::Track};
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\TracksContainer.ts")]
@@ -18,5 +18,13 @@ impl TracksContainer {
         });
 
         TracksContainer { all_tracks_id: ids }
+    }
+
+    pub fn get_track_by_id(&self, db: &MusicDB, id: Vec<u8>) -> Result<Track, ()> {
+        let track = db.get_track_by_id(&id).unwrap_or_default();
+        match track {
+            Some(track) => Ok(track),
+            None => Err(()),
+        }
     }
 }

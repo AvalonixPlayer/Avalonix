@@ -33,6 +33,7 @@ pub fn run() {
             let play_queue_action_sender = api.2;
             let play_queue_action_compleated_reciver = api.3;
             let play_queue = api.4;
+            let db = api.5;
 
             let player_clone = player.clone();
 
@@ -67,6 +68,7 @@ pub fn run() {
                     commands::get_all_albums,
                     commands::get_all_artists,
                      */
+                    commands::get_track_by_id,
                     commands::add_track_to_queue,
                     commands::clear_queue,
                     commands::remove_track_from_queue,
@@ -81,6 +83,7 @@ pub fn run() {
                 .manage(playboxes_manager)
                 .manage(play_queue_action_sender)
                 .manage(play_queue)
+                .manage(db)
                 .run(tauri::generate_context!())
                 .expect("error while running tauri application");
         }
@@ -95,6 +98,7 @@ fn init_api() -> Result<
         Arc<Mutex<Sender<PlayQueueAction>>>,
         Receiver<()>,
         Arc<Mutex<PlayQueue>>,
+        MusicDB,
     ),
     String,
 > {
@@ -143,6 +147,7 @@ fn init_api() -> Result<
                     playqueue_sender_arc,
                     playqueue_action_compleated_reciver,
                     play_queue,
+                    db,
                 ))
             }
             Err(err) => {

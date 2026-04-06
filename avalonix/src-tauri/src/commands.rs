@@ -1,13 +1,10 @@
-use std::{
-    collections::HashMap,
-    sync::{mpsc::Sender, Arc, Mutex},
-};
+use std::sync::{mpsc::Sender, Arc, Mutex};
 
 use avalonix_api::{
     audio::media_player::MediaPlayer,
+    db::MusicDB,
     media::track::Track,
     playboxes::{
-        album::Album,
         play_queue::{PlayQueue, PlayQueueAction},
         playboxes::PlayboxesManager,
     },
@@ -16,6 +13,15 @@ use avalonix_api::{
 #[tauri::command]
 pub fn get_all_tracks_id(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Vec<u8>> {
     playboxes.tracks_container.all_tracks_id.clone()
+}
+
+#[tauri::command]
+pub async fn get_track_by_id(
+    playboxes: tauri::State<'_, PlayboxesManager>,
+    db: tauri::State<'_, MusicDB>,
+    id: Vec<u8>,
+) -> Result<Track, ()> {
+    playboxes.tracks_container.get_track_by_id(&db, id)
 }
 
 /*

@@ -1,11 +1,11 @@
 import type { Track } from "./bindings/Track";
 import { invoke } from "@tauri-apps/api/core";
-import { addTrackToQueue } from "./playQueue";
 import { Album } from "./bindings/Album";
+import { addTrackToQueue } from "./playQueue";
 
-export let allTracksId: Array<Array<number>>;
-export let allAlbums: { [key in string]: Array<Album> };
-export let allArtists: { [key in string]: Array<Track> };
+let allTracksId: Array<Array<number>>;
+let allAlbums: { [key in string]: Array<Album> };
+let allArtists: { [key in string]: Array<Track> };
 
 export async function getAllTracksId() {
   allTracksId = await invoke<Array<Array<number>>>("get_all_tracks_id");
@@ -28,23 +28,54 @@ const pickBtnTempl = document.querySelector(
 ) as HTMLTemplateElement;
 
 async function fillTracksList() {
-  let searcher = document.getElementById(
-    "track-search-area",
-  ) as HTMLInputElement;
+  if (!container || !pickBtnTempl) return;
 
-  searcher.addEventListener("input", async (_) => {
-    await fill();
+  container.innerHTML = "";
+
+  allTracksId.forEach((id) => {
+    const fragment = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
+
+    const element = fragment.firstElementChild as HTMLElement;
+
+    if (element) {
+      const options = {
+        root: container,
+        threshold: 0.1,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            invoke<Track>("get_track_by_id", { id: id }).then((track) =>
+              fillPickBtn(element, track),
+            );
+          }
+          if (!entry.isIntersecting) {
+          }
+        });
+      }, options);
+
+      container.append(fragment);
+      observer.observe(element);
+    }
   });
-  await fill();
-
-  async function fill() {
-    if (!container || !pickBtnTempl) return;
-
-    container.innerHTML = "";
-  }
 }
 
-function createTrackBtn(track: Track): DocumentFragment {
+function fillPickBtn(element: HTMLElement, track: Track) {
+  const trackName = element.querySelector("h5");
+  const artistName = element.querySelector("h6");
+
+  const addBtn = element.querySelector(".add-btn");
+
+  addBtn!.addEventListener("click", (_) => {
+    addTrackToQueue(track);
+  });
+
+  trackName!.textContent = track.metadata.title;
+  artistName!.textContent = track.metadata.artist;
+}
+
+/*function createTrackBtn(track: Track): DocumentFragment {
   const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
 
   const trackNameClone = clone.querySelector("h5");
@@ -61,4 +92,4 @@ function createTrackBtn(track: Track): DocumentFragment {
   if (trackNameClone) trackNameClone.textContent = title;
   if (artistNameClone) artistNameClone.textContent = artist;
   return clone;
-}
+}*/
