@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use crate::{media::track::Track, playboxes::tracks_container::TracksContainer};
+use crate::{playable::track::Track, playable::tracks_container::TracksContainer};
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\AristsContainer.ts")]

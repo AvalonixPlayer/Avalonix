@@ -8,7 +8,7 @@ use std::fmt;
 
 use crate::db::MusicDB;
 use crate::logger;
-use crate::media::track::Track;
+use crate::playable::track::Track;
 use crate::useful_traits::uri_create::CreateUri;
 use crate::utils::get_argument_val;
 

@@ -5,7 +5,7 @@ use std::{
 
 use crate::{
     db::MusicDB,
-    playboxes::{album::Album, tracks_container::TracksContainer},
+    playable::{album::Album, tracks_container::TracksContainer},
 };
 
 #[derive(ts_rs::TS)]

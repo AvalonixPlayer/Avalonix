@@ -1,10 +1,6 @@
 use std::time::Instant;
 
-use crate::{
-    media::track::{self, Track},
-    playboxes::album::Album,
-    utils::get_argument_val,
-};
+use crate::{playable::album::Album, playable::track::Track, utils::get_argument_val};
 use sled::{Error as SledError, IVec, Tree};
 
 pub struct MusicDB {
@@ -85,6 +81,16 @@ impl MusicDB {
         Ok(None)
     }
 
+    pub fn get_tracks_filter_data(&self, id: &Vec<u8>) -> sled::Result<Option<Track>> {
+        let some_bytes = self.tracks.get(id)?;
+
+        if let Some(bytes) = some_bytes {
+            let track: Track = bincode::deserialize(&bytes).map_err(to_sled_error)?;
+            return Ok(Some(track));
+        }
+        Ok(None)
+    }
+
     pub fn delete_track(&self, id: &str) -> sled::Result<()> {
         self.tracks.remove(id.as_bytes())?;
         Ok(())
@@ -129,6 +135,19 @@ impl MusicDB {
             return Ok(Some(album));
         }
         Ok(None)
+    }
+
+    pub fn get_all_album_filter_data(&self) -> sled::Result<Vec<(String, String)>> {
+        let mut result = Vec::new();
+
+        for i in self.albums.iter() {
+            let (_, value) = i.unwrap();
+            let album: Album = bincode::deserialize(&value).map_err(to_sled_error)?;
+            let metadata = album.metadata.clone().unwrap();
+
+            result.push((metadata.name.clone(), metadata.artist.clone()));
+        }
+        Ok(result)
     }
 
     pub fn get_size_on_disk(&self) -> u64 {
@@ -248,5 +267,19 @@ fn test_db_get_album_by_id() {
             ));
         }
         Err(err) => logger::error(&err.to_string()),
+    }
+}
+
+#[test]
+fn get_all_albums_filter_data() {
+    use crate::disk_manager;
+    use crate::logger;
+
+    let hash_path = disk_manager::avalonix_special_folder_path();
+    let db = MusicDB::open(&hash_path);
+
+    let db = db.unwrap();
+    for i in db.get_all_album_filter_data().unwrap() {
+        logger::debug(&format!("Album: {} Artist: {}", i.0, i.1));
     }
 }

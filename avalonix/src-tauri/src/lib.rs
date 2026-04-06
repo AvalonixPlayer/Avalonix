@@ -12,7 +12,7 @@ use avalonix_api::{
     audio::media_player::MediaPlayer,
     db::MusicDB,
     disk_manager, logger,
-    playboxes::{
+    playable::{
         albums_container::AlbumsContainer,
         artists_container::AristsContainer,
         play_queue::{PlayQueue, PlayQueueAction},

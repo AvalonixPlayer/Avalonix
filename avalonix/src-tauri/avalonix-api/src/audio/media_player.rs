@@ -11,11 +11,7 @@ use rodio::{
     cpal::{DeviceDescription, Host, traits::HostTrait},
 };
 
-use crate::{
-    logger,
-    media::{metadata::Metadata, track::Track},
-    utils::get_argument_val,
-};
+use crate::{logger, media::metadata::Metadata, playable::track::Track, utils::get_argument_val};
 
 struct Playback {
     stream_handle: MixerDeviceSink,

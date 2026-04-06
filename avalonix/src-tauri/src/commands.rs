@@ -3,10 +3,10 @@ use std::sync::{mpsc::Sender, Arc, Mutex};
 use avalonix_api::{
     audio::media_player::MediaPlayer,
     db::MusicDB,
-    media::track::Track,
-    playboxes::{
+    playable::{
         play_queue::{PlayQueue, PlayQueueAction},
         playboxes::PlayboxesManager,
+        track::Track,
     },
 };
 

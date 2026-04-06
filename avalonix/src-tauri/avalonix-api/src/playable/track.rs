@@ -1,6 +1,6 @@
 use crate::db::MusicDB;
 
-use super::metadata::Metadata;
+use crate::media::metadata::Metadata;
 use rkyv::{Archive, Deserialize, Serialize};
 use uuid::Uuid;
 

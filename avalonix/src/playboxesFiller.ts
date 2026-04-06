@@ -37,6 +37,8 @@ async function fillTracksList() {
 
     const element = fragment.firstElementChild as HTMLElement;
 
+    element.dataset.trackId = JSON.stringify(id);
+
     if (element) {
       const options = {
         root: container,
@@ -49,8 +51,6 @@ async function fillTracksList() {
             invoke<Track>("get_track_by_id", { id: id }).then((track) =>
               fillPickBtn(element, track),
             );
-          }
-          if (!entry.isIntersecting) {
           }
         });
       }, options);

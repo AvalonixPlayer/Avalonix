@@ -1,11 +1,7 @@
 use std::sync::{Arc, Mutex};
 use uuid::Uuid;
 
-use crate::{
-    db::MusicDB,
-    logger,
-    media::{metadata::Metadata, track::Track},
-};
+use crate::{db::MusicDB, logger, media::metadata::Metadata, playable::track::Track};
 
 #[derive(ts_rs::TS, serde::Serialize, serde::Deserialize, Clone)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\Album.ts")]

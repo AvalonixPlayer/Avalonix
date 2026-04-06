@@ -5,7 +5,7 @@ use std::{
     usize,
 };
 
-use crate::{audio::media_player::MediaPlayer, logger, media::track::Track};
+use crate::{audio::media_player::MediaPlayer, logger, playable::track::Track};
 
 pub enum PlayQueueAction {
     Clear,

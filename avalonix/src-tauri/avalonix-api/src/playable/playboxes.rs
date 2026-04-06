@@ -1,4 +1,4 @@
-use crate::playboxes::{
+use crate::playable::{
     albums_container::AlbumsContainer, artists_container::AristsContainer,
     tracks_container::TracksContainer,
 };
