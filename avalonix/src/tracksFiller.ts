@@ -10,11 +10,11 @@ let observer: IntersectionObserver;
 export async function tracksFillerInit() {
   await getAllTracksId();
   await getAllTracksFilterData();
+  await fillTracksList();
 }
 
 async function getAllTracksId() {
   allTracksId = await invoke<Array<Array<number>>>("get_all_tracks_id");
-  await fillTracksList();
 }
 
 async function getAllTracksFilterData() {
@@ -56,14 +56,41 @@ async function fillTracksList() {
     },
   );
 
-  allTracksId.forEach((id) => {
-    const fragment = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
-    const element = fragment.firstElementChild as HTMLElement;
-    element.dataset.trackId = JSON.stringify(id);
+  let searchLine = document.getElementById(
+    "track-search-area",
+  ) as HTMLInputElement;
 
-    container.append(fragment);
-    observer.observe(element);
+  searchLine!.addEventListener("input", async (_) => {
+    fill(searchLine.value);
   });
+  fill("");
+
+  function fill(query: string) {
+    let filteredId = getFilteredIds(query);
+    container!.innerHTML = "";
+    filteredId.forEach((id) => {
+      const fragment = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
+      const element = fragment.firstElementChild as HTMLElement;
+      element.dataset.trackId = JSON.stringify(id);
+
+      container!.append(fragment);
+      observer.observe(element);
+    });
+  }
+}
+
+function getFilteredIds(searchQuery: string): Array<Array<number>> {
+  let result = new Array<Array<number>>();
+  for (let i = 0; i < allTracksFilterData.length; i++) {
+    if (
+      allTracksFilterData[i].name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    ) {
+      result.push(allTracksId[i]);
+    }
+  }
+  return result;
 }
 
 function fillPickBtn(element: HTMLElement, track: Track) {

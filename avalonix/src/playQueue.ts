@@ -10,32 +10,17 @@ const pickBtnTempl = document.querySelector(
   "#track-btn-example",
 ) as HTMLTemplateElement;
 
-const searcher = document.getElementById(
-  "track-in-queue-search-area",
-) as HTMLInputElement;
-searcher.addEventListener("input", async (_) => {
-  await UpdateTrackQueueUI();
-});
-
 export async function UpdateTrackQueueUI() {
   const container = document.getElementById("play-queue");
   if (!container || !pickBtnTempl) return;
 
   const tracks = await invoke<Array<Track>>("get_queue");
 
-  const filter = searcher.value.toLowerCase();
-
   const fragment = document.createDocumentFragment();
 
   container.innerHTML = "";
 
-  const filteredTracks = tracks.filter((track) => {
-    if (!filter) return true;
-    const title = track.metadata.title?.toLowerCase() || "";
-    return title.includes(filter);
-  });
-
-  for (const track of filteredTracks) {
+  for (const track of tracks) {
     const clone = await createTrackBtn(track);
     fragment.appendChild(clone);
   }
