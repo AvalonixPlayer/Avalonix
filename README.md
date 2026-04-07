@@ -1,17 +1,22 @@
 # Avalonix
+
 Simple, user-friendly, optimizated, cross-platform audio player
 
 # Technologies used
+
 - [tauri](https://v2.tauri.app/) for GUI
 - [lofty-rs](https://github.com/Serial-ATA/lofty-rs) for metadata processing
 - [rodio](https://github.com/RustAudio/rodio?tab=Apache-2.0-1-ov-file) for audio playing
 - [sled](https://github.com/spacejam/sled) for db working
 
 # Feutures
+
 - Audio playing
-- Metadata parsing and overwriting
+- Metadata parsing and overwriting (the re-recording hasn't been done yet, but it definitely will be)
+- Tray
 
 # Roadmap
+
 - [x] audio playing
 - [x] db
 - [x] metdata hashing
