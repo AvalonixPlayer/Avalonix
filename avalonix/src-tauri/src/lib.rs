@@ -20,7 +20,11 @@ use avalonix_api::{
         tracks_container::TracksContainer,
     },
 };
-use tauri::{Emitter, Manager};
+use tauri::{
+    menu::{Menu, MenuItem},
+    tray::{self, MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+    window, App, Emitter, Manager, WindowEvent,
+};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 
@@ -41,6 +45,14 @@ pub fn run() {
                 .plugin(tauri_plugin_opener::init())
                 .plugin(prevent_default())
                 .setup(move |app| {
+                    let tray = tray(app);
+                    match tray {
+                        Ok(_) => {}
+                        Err(err) => {
+                            logger::error(&err.to_string());
+                        }
+                    };
+
                     let (sender, reciver) = mpsc::channel();
 
                     let sender_clone = sender.clone();
@@ -64,10 +76,6 @@ pub fn run() {
                 })
                 .invoke_handler(tauri::generate_handler![
                     commands::get_all_tracks_id,
-                    /*
-                    commands::get_all_albums,
-                    commands::get_all_artists,
-                     */
                     commands::get_track_by_id,
                     commands::get_all_tracks_filter_data,
                     commands::add_track_to_queue,
@@ -85,11 +93,62 @@ pub fn run() {
                 .manage(play_queue_action_sender)
                 .manage(play_queue)
                 .manage(db)
+                .on_window_event(|window, event| {
+                    if let WindowEvent::CloseRequested { api, .. } = event {
+                        api.prevent_close();
+                        window.hide().unwrap();
+                    }
+                })
                 .run(tauri::generate_context!())
                 .expect("error while running tauri application");
         }
         Err(err) => logger::error(&err),
     }
+}
+
+fn tray(app: &mut App) -> anyhow::Result<()> {
+    let show_i = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
+    let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+
+    let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
+
+    TrayIconBuilder::new()
+        .menu(&menu)
+        .show_menu_on_left_click(false)
+        .on_menu_event(|app, event| match event.id().as_ref() {
+            "show" => {
+                logger::debug("show");
+                let every_windows = app.webview_windows();
+                if let Some(window) = every_windows.get("main") {
+                    let _ = window.unminimize();
+                    let _ = window.show();
+                    let _ = window.set_focus();
+                }
+            }
+            "quit" => {
+                logger::debug("quit");
+                app.exit(0);
+            }
+            _ => {}
+        })
+        .on_tray_icon_event(|tray, event| match event {
+            TrayIconEvent::DoubleClick {
+                button: MouseButton::Left,
+                ..
+            } => {
+                logger::debug("show");
+                let app = tray.app_handle();
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.unminimize();
+                    let _ = window.show();
+                    let _ = window.set_focus();
+                }
+            }
+            _ => {}
+        })
+        .icon(app.default_window_icon().unwrap().clone())
+        .build(app)?;
+    Ok(())
 }
 
 fn init_api() -> Result<
