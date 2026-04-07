@@ -3,11 +3,12 @@ use std::sync::{mpsc::Sender, Arc, Mutex};
 use avalonix_api::{
     audio::media_player::MediaPlayer,
     db::MusicDB,
+    logger,
     playable::{
         filter_data::FilterData,
         play_queue::{PlayQueue, PlayQueueAction},
         playboxes::PlayboxesManager,
-        track::Track,
+        track::{self, Track},
     },
 };
 
@@ -52,21 +53,29 @@ pub fn get_all_artists(
 #[tauri::command]
 pub fn add_track_to_queue(
     play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
-    track: Arc<Mutex<Track>>,
+    playboxes: tauri::State<'_, PlayboxesManager>,
+    db: tauri::State<'_, MusicDB>,
+    id: Vec<u8>,
 ) {
-    let sender = play_queue_action_sender.lock().unwrap();
-    sender.send(PlayQueueAction::AddTrack(track)).unwrap();
+    let track = playboxes.tracks_container.get_track_by_id(&db, id);
+    match track {
+        Ok(track) => {
+            let sender = play_queue_action_sender.lock().unwrap();
+            sender
+                .send(PlayQueueAction::AddTrack(Arc::new(Mutex::new(track))))
+                .unwrap();
+        }
+        Err(_) => {}
+    }
 }
 
 #[tauri::command]
 pub fn remove_track_from_queue(
     play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
-    trackPath: String,
+    id: Vec<u8>,
 ) {
     let sender = play_queue_action_sender.lock().unwrap();
-    sender
-        .send(PlayQueueAction::RemoveTrack(trackPath))
-        .unwrap();
+    sender.send(PlayQueueAction::RemoveTrack(id)).unwrap();
 }
 
 #[tauri::command]
@@ -78,10 +87,15 @@ pub fn clear_queue(
 }
 
 #[tauri::command]
-pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Arc<Mutex<Track>>> {
+pub fn get_queue(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Vec<Vec<u8>> {
     let queue = play_queue.lock().unwrap();
-    let clone = queue.tracks.clone();
-    clone
+    let mut result = Vec::new();
+    for i in &queue.tracks {
+        let guard = i.lock().unwrap();
+        result.push(guard.id.clone().into_bytes());
+        drop(guard);
+    }
+    result
 }
 
 #[tauri::command]
@@ -117,10 +131,20 @@ pub fn previous_track(
 #[tauri::command]
 pub fn play_track(
     play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
-    track: Arc<Mutex<Track>>,
+    playboxes: tauri::State<'_, PlayboxesManager>,
+    db: tauri::State<'_, MusicDB>,
+    id: Vec<u8>,
 ) {
-    let sender = play_queue_action_sender.lock().unwrap();
-    sender.send(PlayQueueAction::Switch(track)).unwrap();
+    let track = playboxes.tracks_container.get_track_by_id(&db, id);
+    match track {
+        Ok(track) => {
+            let sender = play_queue_action_sender.lock().unwrap();
+            sender
+                .send(PlayQueueAction::Switch(Arc::new(Mutex::new(track))))
+                .unwrap();
+        }
+        Err(_) => {}
+    }
 }
 
 #[tauri::command]

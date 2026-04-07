@@ -1,8 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
+import { allTracksFilterData } from "./playboxes";
+import { FilterData } from "./bindings/FilterData";
 import { Track } from "./bindings/Track";
 
-export async function addTrackToQueue(track: Track) {
-  await invoke("add_track_to_queue", { track: track });
+export async function addTrackToQueue(id: Array<number>) {
+  await invoke("add_track_to_queue", { id: id });
   await UpdateTrackQueueUI();
 }
 
@@ -10,19 +12,43 @@ const pickBtnTempl = document.querySelector(
   "#track-btn-example",
 ) as HTMLTemplateElement;
 
+let observer: IntersectionObserver;
+const container = document.getElementById("play-queue");
+
 export async function UpdateTrackQueueUI() {
-  const container = document.getElementById("play-queue");
   if (!container || !pickBtnTempl) return;
 
-  const tracks = await invoke<Array<Track>>("get_queue");
+  const tracksIds = await invoke<Array<Array<number>>>("get_queue");
 
   const fragment = document.createDocumentFragment();
 
   container.innerHTML = "";
 
-  for (const track of tracks) {
-    const clone = await createTrackBtn(track);
-    fragment.appendChild(clone);
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const element = entry.target as HTMLElement;
+          const trackId = JSON.parse(element.dataset.trackId!);
+
+          observer.unobserve(element);
+
+          invoke<Track>("get_track_by_id", { id: trackId }).then((track) => {
+            fillTrackBtn(element, track, trackId);
+            element.dataset.llCompleate = "true";
+          });
+        }
+      });
+    },
+    {
+      root: container,
+      threshold: 0.1,
+    },
+  );
+
+  for (const id of tracksIds) {
+    const clone = await createTrackBtn(id);
+    if (clone != null) fragment.appendChild(clone);
   }
 
   container.appendChild(fragment);
@@ -41,31 +67,45 @@ async function ClearQueue() {
     });
 })();
 
-async function createTrackBtn(track: Track): Promise<DocumentFragment> {
-  const clone = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
+async function createTrackBtn(
+  id: Array<number>,
+): Promise<DocumentFragment | null> {
+  let trackFilterData = allTracksFilterData.find((x) => {
+    return JSON.stringify(x.id) == JSON.stringify(id);
+  }) as FilterData;
 
-  const trackNameClone = clone.querySelector("h5");
-  const artistNameClone = clone.querySelector("h6");
-  const playBtn = clone.querySelector(".track-btn-play");
-  const removeBtn = clone.querySelector(".track-btn-remove");
+  if (trackFilterData == null) return null;
+
+  const fragment = pickBtnTempl.content.cloneNode(true) as DocumentFragment;
+  const element = fragment.firstElementChild as HTMLElement;
+
+  element.dataset.trackId = JSON.stringify(id);
+
+  observer.observe(element);
+  return fragment;
+}
+
+async function fillTrackBtn(
+  element: HTMLElement,
+  track: Track,
+  id: Array<number>,
+) {
+  const trackName = element.querySelector("h5");
+  const artistName = element.querySelector("h6");
+  const playBtn = element.querySelector(".track-btn-play");
+  const removeBtn = element.querySelector(".track-btn-remove");
 
   playBtn!.addEventListener("click", async (_) => {
-    await invoke("play_track", { track: track });
+    await invoke("play_track", { id: id });
   });
 
   removeBtn!.addEventListener("click", async (_) => {
-    console.log(track.file_path);
-
     await invoke("remove_track_from_queue", {
-      trackPath: track.file_path,
+      id: id,
     });
     await UpdateTrackQueueUI();
   });
 
-  var title = track.metadata.title || "Unknown Title";
-  var artist = track.metadata.artist || "Unknown Artist";
-
-  if (trackNameClone) trackNameClone.textContent = title;
-  if (artistNameClone) artistNameClone.textContent = artist;
-  return clone;
+  if (trackName) trackName.textContent = track.metadata.title;
+  if (artistName) artistName.textContent = track.metadata.artist;
 }

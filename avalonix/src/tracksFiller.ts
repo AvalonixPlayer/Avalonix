@@ -1,27 +1,12 @@
 import type { Track } from "./bindings/Track";
 import { invoke } from "@tauri-apps/api/core";
 import { addTrackToQueue } from "./playQueue";
-import { FilterData } from "./bindings/FilterData";
+import { allTracksFilterData, allTracksId } from "./playboxes";
 
-let allTracksId: Array<Array<number>>;
-let allTracksFilterData: Array<FilterData>;
 let observer: IntersectionObserver;
 
 export async function tracksFillerInit() {
-  await getAllTracksId();
-  await getAllTracksFilterData();
   await fillTracksList();
-}
-
-async function getAllTracksId() {
-  allTracksId = await invoke<Array<Array<number>>>("get_all_tracks_id");
-}
-
-async function getAllTracksFilterData() {
-  allTracksFilterData = await invoke<Array<FilterData>>(
-    "get_all_tracks_filter_data",
-  );
-  console.log(allTracksFilterData);
 }
 
 const container = document.getElementById("tracks-list");
@@ -44,7 +29,7 @@ async function fillTracksList() {
           observer.unobserve(element);
 
           invoke<Track>("get_track_by_id", { id: trackId }).then((track) => {
-            fillPickBtn(element, track);
+            fillPickBtn(element, track, trackId);
             element.dataset.llCompleate = "true";
           });
         }
@@ -93,13 +78,13 @@ function getFilteredIds(searchQuery: string): Array<Array<number>> {
   return result;
 }
 
-function fillPickBtn(element: HTMLElement, track: Track) {
+function fillPickBtn(element: HTMLElement, track: Track, id: Array<number>) {
   const trackName = element.querySelector("h5");
   const artistName = element.querySelector("h6");
   const addBtn = element.querySelector(".add-btn");
 
   addBtn!.addEventListener("click", (_) => {
-    addTrackToQueue(track);
+    addTrackToQueue(id);
   });
 
   trackName!.textContent = track.metadata.title;

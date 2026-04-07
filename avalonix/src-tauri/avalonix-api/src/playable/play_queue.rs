@@ -11,7 +11,7 @@ pub enum PlayQueueAction {
     Clear,
     AddTrack(Arc<Mutex<Track>>),
     AddTracks(Vec<Arc<Mutex<Track>>>),
-    RemoveTrack(String),
+    RemoveTrack(Vec<u8>),
     PauseOrContinue,
     Next,
     Previous,
@@ -112,8 +112,8 @@ impl PlayQueue {
                                 }
                                 action_compleated_sender_guard.send(()).unwrap();
                             }
-                            PlayQueueAction::RemoveTrack(track_path) => {
-                                Self::remove_track(&track_path, &self_clone);
+                            PlayQueueAction::RemoveTrack(id) => {
+                                Self::remove_track(id, &self_clone);
                                 action_compleated_sender_guard.send(()).unwrap();
                             }
                             PlayQueueAction::PauseOrContinue => {
@@ -173,14 +173,14 @@ impl PlayQueue {
         queue_guard.tracks.push(track);
     }
 
-    fn remove_track(track_path: &String, self_arc: &Arc<Mutex<Self>>) {
+    fn remove_track(track_id: Vec<u8>, self_arc: &Arc<Mutex<Self>>) {
         let self_clone = self_arc.clone();
         let mut self_guard = self_clone.lock().unwrap();
 
         if let Some(index) = self_guard
             .tracks
             .iter()
-            .position(|f| f.lock().unwrap().file_path == *track_path)
+            .position(|f| f.lock().unwrap().id.clone().into_bytes() == track_id)
         {
             self_guard.tracks.remove(index);
             if (index as i32) <= self_guard.current_track_index {

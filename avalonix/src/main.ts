@@ -3,8 +3,10 @@ import { UpdateTrackQueueUI } from "./playQueue.js";
 import "./tabSwitcher.js";
 import "./playbackBtns.ts";
 import { UpdateTrackUI } from "./metadataUpdate.ts";
+import { initLib } from "./playboxes.ts";
 
 (async () => {
+  await initLib();
   await tracksFillerInit();
   await UpdateTrackQueueUI();
   await UpdateTrackUI(null);
