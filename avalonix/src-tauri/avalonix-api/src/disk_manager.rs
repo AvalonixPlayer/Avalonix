@@ -18,6 +18,14 @@ pub fn avalonix_special_folder_path() -> String {
     path.to_str().unwrap().to_string()
 }
 
+pub fn avalonix_settings_path() -> String {
+    PathBuf::from(avalonix_special_folder_path())
+        .join("settings.json")
+        .to_str()
+        .unwrap()
+        .to_string()
+}
+
 pub fn get_all_tracks_paths() -> Vec<String> {
     let mut dirs_paths: Vec<String> = Vec::new();
 

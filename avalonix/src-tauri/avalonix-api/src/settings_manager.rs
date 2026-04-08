@@ -1,4 +1,5 @@
-use crate::disk_manager::avalonix_special_folder_path;
+use crate::disk_manager::avalonix_settings_path;
+use crate::logger;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io;
@@ -16,75 +17,67 @@ pub struct Equalizer {
     pub eq_stats: Vec<u8>,
 }
 
-pub type SettingsResult<T> = Result<T, SettingsError>;
-
-#[derive(Debug)]
-pub enum SettingsError {
-    IoError(io::Error),
-    JsonError(serde_json::Error),
-}
-
-impl From<io::Error> for SettingsError {
-    fn from(err: io::Error) -> Self {
-        SettingsError::IoError(err)
+impl Settings {
+    pub fn new() -> anyhow::Result<Self> {
+        Self::read_or_create_settings()
     }
-}
 
-impl From<serde_json::Error> for SettingsError {
-    fn from(err: serde_json::Error) -> Self {
-        SettingsError::JsonError(err)
+    pub fn save_settings(&self) -> anyhow::Result<()> {
+        let json = serde_json::to_string_pretty(self)?;
+        fs::write(avalonix_settings_path(), json)?;
+        Ok(())
     }
-}
 
-pub fn save_settings(st: &Settings) -> SettingsResult<()> {
-    let json = serde_json::to_string_pretty(st)?;
-    fs::write(avalonix_special_folder_path() + "settings.json", json)?;
-    Ok(())
-}
-
-pub fn read_settings() -> SettingsResult<Settings> {
-    let content = fs::read_to_string(avalonix_special_folder_path() + "settings.json")?;
-    let settings: Settings = serde_json::from_str(&content)?;
-    Ok(settings)
-}
-
-pub fn default_equalizer() -> Equalizer {
-    Equalizer {
-        master: 50,
-        eq_stats: vec![50, 50, 50, 50, 50, 50, 50, 50],
+    fn read_settings() -> anyhow::Result<Self> {
+        let content = fs::read_to_string(avalonix_settings_path())?;
+        let settings: Settings = serde_json::from_str(&content)?;
+        Ok(settings)
     }
-}
 
-pub fn default_settings() -> Settings {
-    Settings {
-        volume: 50,
-        library_paths: vec![],
-        equalizer: default_equalizer(),
+    fn default_equalizer() -> Equalizer {
+        Equalizer {
+            master: 50,
+            eq_stats: vec![50, 50, 50, 50, 50, 50, 50, 50],
+        }
     }
-}
 
-pub fn read_or_create_settings() -> SettingsResult<Settings> {
-    match read_settings() {
-        Ok(settings) => Ok(settings),
-        Err(_) => {
-            let default = default_settings();
-            save_settings(&default)?;
-            Ok(default)
+    fn default_settings() -> Settings {
+        Settings {
+            volume: 50,
+            library_paths: vec![],
+            equalizer: Self::default_equalizer(),
+        }
+    }
+
+    fn read_or_create_settings() -> anyhow::Result<Self> {
+        match Self::read_settings() {
+            Ok(settings) => Ok(settings),
+            Err(_) => {
+                let default = Self::default_settings();
+                Self::save_settings(&default)?;
+                Ok(default)
+            }
         }
     }
 }
 
 #[test]
 fn test_save_and_read_settings() {
-    /*
-    let settings = Settings {
-        volume: 75,
-        library_paths: vec![String::from("/mnt/music")],
-    };
+    use crate::logger;
+    use crate::utils::get_argument_val;
 
-    save_settings(&settings).expect("Failed to save");
-    let loaded = read_settings().expect("Failed to read");
+    if let Some(lib_path) = get_argument_val("LIB_PATH") {
+        let settings = Settings::new();
 
-    assert_eq!(settings.volume, loaded.volume);
-    assert_eq!(settings.library_paths, loaded.library_paths); */ // not have equalizer now
+        match settings {
+            Ok(mut settings) => {
+                settings.library_paths = vec![lib_path];
+
+                settings.save_settings().expect("Failed to save");
+            }
+            Err(err) => {
+                logger::error(&err.to_string());
+            }
+        }
+    }
 }
