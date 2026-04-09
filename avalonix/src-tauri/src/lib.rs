@@ -206,8 +206,7 @@ fn init_api() -> Result<
 
                         PlayQueue::play(&play_queue);
 
-                        let mut tracks_container = TracksContainer::new();
-                        tracks_container.fill_ids(&db);
+                        let tracks_container = TracksContainer::new();
 
                         //let albums_container = AlbumsContainer::new(&tracks_container, &db);
                         //let artists_container = AristsContainer::new(&tracks_container);
@@ -215,7 +214,6 @@ fn init_api() -> Result<
                         let mut playboxes_manager = PlayboxesManager::new(
                             tracks_container, /*, albums_container, artists_container*/
                         );
-
                         playboxes_manager.update_lib(&db, &settings);
 
                         let playboxes_arc = Arc::new(Mutex::new(playboxes_manager));

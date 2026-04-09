@@ -1,4 +1,7 @@
-use std::sync::{Arc, Mutex};
+use std::{
+    path::{Path, PathBuf},
+    sync::{Arc, Mutex},
+};
 
 use crate::{
     db::MusicDB,
@@ -44,12 +47,18 @@ impl UpdateLib for TracksContainer {
         let tracks_hash = db.get_all_tracks();
         match tracks_hash {
             Ok(tracks_hash) => {
-                for path in paths {
-                    if !tracks_hash.iter().any(|x| x.file_path == path) {
-                        let tracks_hash = tracks_hash.iter().collect();
-                        let _ = Track::new(&path, db, tracks_hash);
-                    } else {
-                        logger::debug(&format!("track with path also in db: {}", path));
+                for file_path in paths {
+                    let tracks_hash: Vec<&Track> = tracks_hash.iter().collect();
+
+                    if !tracks_hash.iter().any(|x| x.file_path == file_path) {
+                        let _ = Track::new(&file_path, db, tracks_hash);
+                    }
+                }
+
+                for track in tracks_hash {
+                    let p = Path::new(&track.file_path);
+                    if !p.exists() || !p.is_file() {
+                        _ = db.delete_track(&track.id);
                     }
                 }
             }

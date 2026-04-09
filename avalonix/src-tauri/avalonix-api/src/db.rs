@@ -1,6 +1,7 @@
 use std::time::Instant;
 
 use crate::{
+    logger,
     playable::{
         album::Album,
         filter_data::{FilterData, FilterDataTrait},
@@ -101,6 +102,8 @@ impl MusicDB {
 
     pub fn delete_track(&self, id: &str) -> sled::Result<()> {
         self.tracks.remove(id.as_bytes())?;
+        self.tracks.flush()?;
+        logger::error(&format!("TRACK REMOVED WITH ID: {}", id));
         Ok(())
     }
 
