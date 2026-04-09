@@ -25,3 +25,4 @@ serde_json = "1"
 avalonix-api = { path = "./avalonix-api/"}
 tauri-plugin-prevent-default = "4"
 anyhow = "1.0.102"
+tauri-plugin-dialog = "2"

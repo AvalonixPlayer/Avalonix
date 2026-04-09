@@ -79,29 +79,33 @@ impl Playback {
             None => {}
         }
         let track_clone = track_arc.clone();
+        let track_guard = track_clone.lock().unwrap();
 
-        let file = File::open(&track_clone.lock().unwrap().file_path).unwrap();
-        let len = file.len().unwrap();
+        if let Ok(file) = File::open(track_guard.file_path.clone()) {
+            let len = file.len().unwrap();
 
-        let source = Decoder::builder()
-            .with_data(file)
-            .with_byte_len(len)
-            .build()
-            .unwrap();
+            let source = Decoder::builder()
+                .with_data(file)
+                .with_byte_len(len)
+                .build()
+                .unwrap();
 
-        match source.total_duration() {
-            Some(total_duration) => {
-                self.total_time = total_duration;
+            match source.total_duration() {
+                Some(total_duration) => {
+                    self.total_time = total_duration;
 
-                self.player.stop();
-                self.player.append(source);
+                    self.player.stop();
+                    self.player.append(source);
+                }
+                None => {
+                    logger::error(&format!(
+                        "track with file path {} has incorrect durration",
+                        track_clone.lock().unwrap().file_path
+                    ));
+                }
             }
-            None => {
-                logger::error(&format!(
-                    "track with file path {} has incorrect durration",
-                    track_clone.lock().unwrap().file_path
-                ));
-            }
+        } else {
+            logger::error(&format!("can`t read file: {}", track_guard.file_path));
         }
     }
 

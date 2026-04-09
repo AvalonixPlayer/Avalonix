@@ -1,6 +1,8 @@
 use std::sync::{Arc, Mutex};
 
-use crate::{db::MusicDB, disk_manager, logger, playable::track::Track};
+use crate::{
+    db::MusicDB, disk_manager, logger, playable::track::Track, settings_manager::Settings,
+};
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\TracksContainer.ts")]
@@ -32,8 +34,8 @@ impl TracksContainer {
         }
     }
 
-    pub fn find_tracks(&self, db: &MusicDB) {
-        let paths = disk_manager::get_all_tracks_paths();
+    pub fn find_tracks(&self, db: &MusicDB, settings: &Settings) {
+        let paths = disk_manager::get_all_tracks_paths(settings);
         let tracks_hash = db.get_all_tracks();
         match tracks_hash {
             Ok(tracks_hash) => {

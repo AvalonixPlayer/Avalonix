@@ -19,6 +19,7 @@ use avalonix_api::{
         playboxes::PlayboxesManager,
         tracks_container::TracksContainer,
     },
+    settings_manager::Settings,
 };
 use tauri::{
     menu::{Menu, MenuItem},
@@ -38,10 +39,12 @@ pub fn run() {
             let play_queue_action_compleated_reciver = api.3;
             let play_queue = api.4;
             let db = api.5;
+            let settings = api.6;
 
             let player_clone = player.clone();
 
             tauri::Builder::default()
+                .plugin(tauri_plugin_dialog::init())
                 .plugin(tauri_plugin_opener::init())
                 .plugin(prevent_default())
                 .setup(move |app| {
@@ -86,13 +89,16 @@ pub fn run() {
                     commands::next_track,
                     commands::previous_track,
                     commands::play_track,
-                    commands::on_pause
+                    commands::on_pause,
+                    commands::add_music_folder,
+                    commands::save_settings
                 ])
                 .manage(player)
                 .manage(playboxes_manager)
                 .manage(play_queue_action_sender)
                 .manage(play_queue)
                 .manage(db)
+                .manage(settings)
                 .on_window_event(|window, event| {
                     if let WindowEvent::CloseRequested { api, .. } = event {
                         api.prevent_close();
@@ -159,6 +165,7 @@ fn init_api() -> Result<
         Receiver<()>,
         Arc<Mutex<PlayQueue>>,
         MusicDB,
+        Arc<Mutex<Settings>>,
     ),
     String,
 > {
@@ -167,58 +174,67 @@ fn init_api() -> Result<
 
     let media_player = MediaPlayer::new();
 
+    let settings = Settings::new();
+
     match media_player {
         Ok(media_player) => match db {
             Ok(db) => {
-                let player = Arc::new(Mutex::new(media_player));
+                match settings {
+                    Ok(settings) => {
+                        let player = Arc::new(Mutex::new(media_player));
 
-                MediaPlayer::update(&player);
+                        MediaPlayer::update(&player);
 
-                let (playqueue_sender, playqueue_reciver) = mpsc::channel();
+                        let (playqueue_sender, playqueue_reciver) = mpsc::channel();
 
-                let playqueue_sender_arc = Arc::new(Mutex::new(playqueue_sender));
-                let playqueue_reciver_arc = Arc::new(Mutex::new(playqueue_reciver));
+                        let playqueue_sender_arc = Arc::new(Mutex::new(playqueue_sender));
+                        let playqueue_reciver_arc = Arc::new(Mutex::new(playqueue_reciver));
 
-                let (playqueue_action_compleated_sender, playqueue_action_compleated_reciver) =
-                    mpsc::channel();
+                        let (
+                            playqueue_action_compleated_sender,
+                            playqueue_action_compleated_reciver,
+                        ) = mpsc::channel();
 
-                let playqueue_action_compleated_sender_arc =
-                    Arc::new(Mutex::new(playqueue_action_compleated_sender));
+                        let playqueue_action_compleated_sender_arc =
+                            Arc::new(Mutex::new(playqueue_action_compleated_sender));
 
-                let play_queue = Arc::new(Mutex::new(PlayQueue::new(
-                    &player,
-                    &playqueue_reciver_arc,
-                    &playqueue_action_compleated_sender_arc,
-                )));
+                        let play_queue = Arc::new(Mutex::new(PlayQueue::new(
+                            &player,
+                            &playqueue_reciver_arc,
+                            &playqueue_action_compleated_sender_arc,
+                        )));
 
-                PlayQueue::play(&play_queue);
+                        PlayQueue::play(&play_queue);
 
-                let mut tracks_container = TracksContainer::new();
-                tracks_container.find_tracks(&db);
-                tracks_container.fill_ids(&db);
-                //let albums_container = AlbumsContainer::new(&tracks_container, &db);
-                //let artists_container = AristsContainer::new(&tracks_container);
+                        let mut tracks_container = TracksContainer::new();
+                        tracks_container.fill_ids(&db);
 
-                let playboxes_manager = PlayboxesManager::new(
-                    tracks_container, /*, albums_container, artists_container*/
-                );
+                        let settings_arc = Arc::new(Mutex::new(settings));
+                        //let albums_container = AlbumsContainer::new(&tracks_container, &db);
+                        //let artists_container = AristsContainer::new(&tracks_container);
 
-                Ok((
-                    player,
-                    playboxes_manager,
-                    playqueue_sender_arc,
-                    playqueue_action_compleated_reciver,
-                    play_queue,
-                    db,
-                ))
+                        let playboxes_manager = PlayboxesManager::new(
+                            tracks_container, /*, albums_container, artists_container*/
+                        );
+
+                        Ok((
+                            player,
+                            playboxes_manager,
+                            playqueue_sender_arc,
+                            playqueue_action_compleated_reciver,
+                            play_queue,
+                            db,
+                            settings_arc,
+                        ))
+                    }
+                    Err(err) => return Err(err.to_string().clone()),
+                }
             }
             Err(err) => {
-                logger::error(&err.to_string());
                 return Err(err.to_string().clone());
             }
         },
         Err(err) => {
-            logger::error(&err.to_string());
             return Err(err.to_string().clone());
         }
     }

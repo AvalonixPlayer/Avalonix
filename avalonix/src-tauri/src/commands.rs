@@ -10,6 +10,7 @@ use avalonix_api::{
         playboxes::PlayboxesManager,
         track::{self, Track},
     },
+    settings_manager::Settings,
 };
 
 #[tauri::command]
@@ -151,4 +152,23 @@ pub fn play_track(
 pub fn on_pause(media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>) -> bool {
     let guard = media_player.lock().unwrap();
     guard.is_paused()
+}
+
+#[tauri::command]
+pub async fn add_music_folder(
+    settings: tauri::State<'_, Arc<Mutex<Settings>>>,
+    mut paths: Vec<String>,
+) -> Result<(), ()> {
+    let mut settings_guard = settings.lock().unwrap();
+    settings_guard.library_paths.append(&mut paths);
+    drop(settings_guard);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn save_settings(settings: tauri::State<'_, Arc<Mutex<Settings>>>) -> Result<(), ()> {
+    let settings_guard = settings.lock().unwrap();
+    _ = settings_guard.save_settings();
+    drop(settings_guard);
+    Ok(())
 }

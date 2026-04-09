@@ -7,6 +7,7 @@ import { initLib } from "./playboxes.ts";
 
 (async () => {
   await initLib();
+  await initSettings();
   await tracksFillerInit();
   await UpdateTrackQueueUI();
   await UpdateTrackUI(null);
@@ -20,6 +21,7 @@ setInterval(() => {
 import { listen } from "@tauri-apps/api/event";
 import { bindPlayback } from "./playbackBtns.ts";
 import { tracksFillerInit } from "./tracksFiller.ts";
+import { initSettings } from "./settings.ts";
 
 listen<Metadata>("playing-track-updated", async (event) => {
   await UpdateTrackUI(event.payload);

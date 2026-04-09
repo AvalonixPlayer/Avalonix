@@ -1,4 +1,6 @@
 use std::{
+    fs::File,
+    path::Path,
     sync::{Arc, Mutex, MutexGuard, mpsc},
     thread,
     time::Duration,
@@ -197,7 +199,15 @@ impl PlayQueue {
         self_guard.current_track_index = index as i32;
         match self_guard.tracks.get(index) {
             Some(track) => {
-                media_player_guard.play(&track);
+                let track_guard = track.lock().unwrap();
+                let fp = track_guard.file_path.clone();
+                let file_path = Path::new(&fp);
+                drop(track_guard);
+                if file_path.exists() && file_path.is_file() {
+                    media_player_guard.play(&track);
+                } else {
+                    self_guard.tracks.remove(index);
+                }
             }
             None => {}
         }

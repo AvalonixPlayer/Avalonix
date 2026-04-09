@@ -1,4 +1,7 @@
-use crate::utils::{OS, current_os};
+use crate::{
+    settings_manager::Settings,
+    utils::{OS, current_os},
+};
 use std::{collections::HashSet, env::var, path::PathBuf};
 
 use glob::glob;
@@ -26,10 +29,8 @@ pub fn avalonix_settings_path() -> String {
         .to_string()
 }
 
-pub fn get_all_tracks_paths() -> Vec<String> {
-    let mut dirs_paths: Vec<String> = Vec::new();
-
-    dirs_paths.push("D:\\music".to_string());
+pub fn get_all_tracks_paths(settings: &Settings) -> Vec<String> {
+    let dirs_paths: Vec<String> = settings.library_paths.to_vec();
 
     let mut hash_set: HashSet<String> = HashSet::new();
 
@@ -58,5 +59,6 @@ fn test_avalonix_folder_path() {
 
 #[test]
 fn test_get_all_tracks_paths() {
-    get_all_tracks_paths();
+    let settings = Settings::new().unwrap();
+    get_all_tracks_paths(&settings);
 }
