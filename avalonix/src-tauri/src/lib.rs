@@ -160,7 +160,7 @@ fn tray(app: &mut App) -> anyhow::Result<()> {
 fn init_api() -> Result<
     (
         Arc<Mutex<MediaPlayer>>,
-        PlayboxesManager,
+        Arc<Mutex<PlayboxesManager>>,
         Arc<Mutex<Sender<PlayQueueAction>>>,
         Receiver<()>,
         Arc<Mutex<PlayQueue>>,
@@ -209,17 +209,22 @@ fn init_api() -> Result<
                         let mut tracks_container = TracksContainer::new();
                         tracks_container.fill_ids(&db);
 
-                        let settings_arc = Arc::new(Mutex::new(settings));
                         //let albums_container = AlbumsContainer::new(&tracks_container, &db);
                         //let artists_container = AristsContainer::new(&tracks_container);
 
-                        let playboxes_manager = PlayboxesManager::new(
+                        let mut playboxes_manager = PlayboxesManager::new(
                             tracks_container, /*, albums_container, artists_container*/
                         );
 
+                        playboxes_manager.update_lib(&db, &settings);
+
+                        let playboxes_arc = Arc::new(Mutex::new(playboxes_manager));
+
+                        let settings_arc = Arc::new(Mutex::new(settings));
+
                         Ok((
                             player,
-                            playboxes_manager,
+                            playboxes_arc,
                             playqueue_sender_arc,
                             playqueue_action_compleated_reciver,
                             play_queue,

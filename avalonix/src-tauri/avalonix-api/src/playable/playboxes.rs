@@ -1,6 +1,10 @@
-use crate::playable::{
-    albums_container::AlbumsContainer, artists_container::AristsContainer,
-    tracks_container::TracksContainer,
+use crate::{
+    db::MusicDB,
+    playable::{
+        albums_container::AlbumsContainer, artists_container::AristsContainer,
+        tracks_container::TracksContainer,
+    },
+    settings_manager::Settings,
 };
 
 pub struct PlayboxesManager {
@@ -27,4 +31,13 @@ impl PlayboxesManager {
              */
         }
     }
+
+    pub fn update_lib(&mut self, db: &MusicDB, settings: &Settings) {
+        self.tracks_container.update_lib(db, settings);
+        self.tracks_container.fill_ids(db);
+    }
+}
+
+pub trait UpdateLib {
+    fn update_lib(&self, db: &MusicDB, settings: &Settings);
 }

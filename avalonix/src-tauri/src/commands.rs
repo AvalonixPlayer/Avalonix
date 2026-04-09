@@ -1,4 +1,7 @@
-use std::sync::{mpsc::Sender, Arc, Mutex};
+use std::{
+    ops::Deref,
+    sync::{mpsc::Sender, Arc, Mutex},
+};
 
 use avalonix_api::{
     audio::media_player::MediaPlayer,
@@ -9,22 +12,27 @@ use avalonix_api::{
         play_queue::{PlayQueue, PlayQueueAction},
         playboxes::PlayboxesManager,
         track::{self, Track},
+        tracks_container,
     },
     settings_manager::Settings,
 };
 
 #[tauri::command]
-pub fn get_all_tracks_id(playboxes: tauri::State<'_, PlayboxesManager>) -> Vec<Vec<u8>> {
-    playboxes.tracks_container.all_tracks_id.clone()
+pub fn get_all_tracks_id(
+    playboxes: tauri::State<'_, Arc<Mutex<PlayboxesManager>>>,
+) -> Vec<Vec<u8>> {
+    let playboxes_guard = playboxes.lock().unwrap();
+    playboxes_guard.tracks_container.all_tracks_id.clone()
 }
 
 #[tauri::command]
 pub async fn get_track_by_id(
-    playboxes: tauri::State<'_, PlayboxesManager>,
+    playboxes: tauri::State<'_, Arc<Mutex<PlayboxesManager>>>,
     db: tauri::State<'_, MusicDB>,
     id: Vec<u8>,
 ) -> Result<Track, ()> {
-    playboxes.tracks_container.get_track_by_id(&db, id)
+    let playboxes_guard = playboxes.lock().unwrap();
+    playboxes_guard.tracks_container.get_track_by_id(&db, id)
 }
 
 #[tauri::command]
@@ -54,11 +62,12 @@ pub fn get_all_artists(
 #[tauri::command]
 pub fn add_track_to_queue(
     play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
-    playboxes: tauri::State<'_, PlayboxesManager>,
+    playboxes: tauri::State<'_, Arc<Mutex<PlayboxesManager>>>,
     db: tauri::State<'_, MusicDB>,
     id: Vec<u8>,
 ) {
-    let track = playboxes.tracks_container.get_track_by_id(&db, id);
+    let playboxes_guard = playboxes.lock().unwrap();
+    let track = playboxes_guard.tracks_container.get_track_by_id(&db, id);
     match track {
         Ok(track) => {
             let sender = play_queue_action_sender.lock().unwrap();
@@ -170,5 +179,17 @@ pub async fn save_settings(settings: tauri::State<'_, Arc<Mutex<Settings>>>) -> 
     let settings_guard = settings.lock().unwrap();
     _ = settings_guard.save_settings();
     drop(settings_guard);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn index_library(
+    playboxes: tauri::State<'_, Arc<Mutex<PlayboxesManager>>>,
+    db: tauri::State<'_, MusicDB>,
+    settings: tauri::State<'_, Arc<Mutex<Settings>>>,
+) -> Result<(), ()> {
+    let mut playboxes_guard = playboxes.lock().unwrap();
+    let settings_guard = settings.lock().unwrap();
+    playboxes_guard.update_lib(&db, &settings_guard);
     Ok(())
 }
