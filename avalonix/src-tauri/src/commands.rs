@@ -141,11 +141,13 @@ pub fn previous_track(
 #[tauri::command]
 pub fn play_track(
     play_queue_action_sender: tauri::State<'_, Arc<Mutex<Sender<PlayQueueAction>>>>,
-    playboxes: tauri::State<'_, PlayboxesManager>,
+    playboxes: tauri::State<'_, Arc<Mutex<PlayboxesManager>>>,
     db: tauri::State<'_, MusicDB>,
     id: Vec<u8>,
 ) {
-    let track = playboxes.tracks_container.get_track_by_id(&db, id);
+    let playboxes_guard = playboxes.lock().unwrap();
+    let track = playboxes_guard.tracks_container.get_track_by_id(&db, id);
+    drop(playboxes_guard);
     match track {
         Ok(track) => {
             let sender = play_queue_action_sender.lock().unwrap();
