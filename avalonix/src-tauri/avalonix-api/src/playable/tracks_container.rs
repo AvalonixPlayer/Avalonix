@@ -1,3 +1,4 @@
+use anyhow::bail;
 use std::{
     path::{Path, PathBuf},
     sync::{Arc, Mutex},
@@ -6,7 +7,7 @@ use std::{
 use crate::{
     db::MusicDB,
     disk_manager, logger,
-    playable::{playboxes::UpdateLib, track::Track, tracks_container},
+    playable::{library_part::LibraryPart, playboxes::UpdateLib, track::Track, tracks_container},
     settings_manager::Settings,
 };
 
@@ -22,22 +23,25 @@ impl TracksContainer {
             all_tracks_id: Vec::new(),
         }
     }
+}
 
-    pub fn fill_ids(&mut self, db: &MusicDB) {
+impl LibraryPart for TracksContainer {
+    type Output = Track;
+    fn get_by_id(&self, db: &MusicDB, id: Vec<u8>) -> anyhow::Result<Self::Output> {
+        let track = db.get_track_by_id(&id).unwrap_or_default();
+        match track {
+            Some(track) => Ok(track),
+            None => bail!("Can`t get track by id"),
+        }
+    }
+
+    fn fill_ids(&mut self, db: &MusicDB) {
         let ids = db.get_all_tracks_id().unwrap_or_else(|err| {
             logger::error(&err.to_string());
             Vec::new()
         });
 
         self.all_tracks_id = ids;
-    }
-
-    pub fn get_track_by_id(&self, db: &MusicDB, id: Vec<u8>) -> Result<Track, ()> {
-        let track = db.get_track_by_id(&id).unwrap_or_default();
-        match track {
-            Some(track) => Ok(track),
-            None => Err(()),
-        }
     }
 }
 

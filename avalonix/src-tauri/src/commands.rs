@@ -9,6 +9,7 @@ use avalonix_api::{
     logger,
     playable::{
         filter_data::FilterData,
+        library_part::LibraryPart,
         play_queue::{PlayQueue, PlayQueueAction},
         playboxes::PlayboxesManager,
         track::{self, Track},
@@ -32,7 +33,10 @@ pub async fn get_track_by_id(
     id: Vec<u8>,
 ) -> Result<Track, ()> {
     let playboxes_guard = playboxes.lock().unwrap();
-    playboxes_guard.tracks_container.get_track_by_id(&db, id)
+    match playboxes_guard.tracks_container.get_by_id(&db, id) {
+        Ok(track) => Ok(track),
+        Err(_) => Err(()),
+    }
 }
 
 #[tauri::command]
@@ -67,7 +71,7 @@ pub fn add_track_to_queue(
     id: Vec<u8>,
 ) {
     let playboxes_guard = playboxes.lock().unwrap();
-    let track = playboxes_guard.tracks_container.get_track_by_id(&db, id);
+    let track = playboxes_guard.tracks_container.get_by_id(&db, id);
     match track {
         Ok(track) => {
             let sender = play_queue_action_sender.lock().unwrap();
@@ -146,7 +150,7 @@ pub fn play_track(
     id: Vec<u8>,
 ) {
     let playboxes_guard = playboxes.lock().unwrap();
-    let track = playboxes_guard.tracks_container.get_track_by_id(&db, id);
+    let track = playboxes_guard.tracks_container.get_by_id(&db, id);
     drop(playboxes_guard);
     match track {
         Ok(track) => {

@@ -2,7 +2,7 @@ use crate::{
     db::MusicDB,
     playable::{
         albums_container::AlbumsContainer, artists_container::AristsContainer,
-        tracks_container::TracksContainer,
+        library_part::LibraryPart, tracks_container::TracksContainer,
     },
     settings_manager::Settings,
 };
