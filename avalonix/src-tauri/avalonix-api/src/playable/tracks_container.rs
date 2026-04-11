@@ -27,13 +27,6 @@ impl TracksContainer {
 
 impl LibraryPart for TracksContainer {
     type Output = Track;
-    fn get_by_id(&self, db: &MusicDB, id: Vec<u8>) -> anyhow::Result<Self::Output> {
-        let track = db.get_track_by_id(&id).unwrap_or_default();
-        match track {
-            Some(track) => Ok(track),
-            None => bail!("Can`t get track by id"),
-        }
-    }
 
     fn fill_ids(&mut self, db: &MusicDB) {
         let ids = db.get_all_tracks_id().unwrap_or_else(|err| {
@@ -42,6 +35,11 @@ impl LibraryPart for TracksContainer {
         });
 
         self.all_tracks_id = ids;
+    }
+
+    fn get_by_id(&self, db: &MusicDB, id: Vec<u8>) -> anyhow::Result<Self::Output> {
+        let track = db.get_track_by_id(&id)?;
+        Ok(track)
     }
 }
 

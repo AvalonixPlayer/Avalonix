@@ -1,15 +1,21 @@
+use anyhow::bail;
 use std::sync::{Arc, Mutex};
 use uuid::Uuid;
 
-use crate::{db::MusicDB, logger, media::metadata::Metadata, playable::track::Track};
+use crate::{
+    db::MusicDB,
+    logger,
+    media::metadata::{self, Metadata},
+    playable::{library_part::LibraryPart, track::Track},
+};
 
 #[derive(ts_rs::TS, serde::Serialize, serde::Deserialize, Clone)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\Album.ts")]
 
 pub struct Album {
     pub id: String,
-    pub tracks: Vec<Arc<Mutex<Track>>>,
-    pub metadata: Option<AlbumMetadata>,
+    pub tracks_ids: Vec<Vec<u8>>,
+    pub metadata: AlbumMetadata,
 }
 
 #[derive(ts_rs::TS, serde::Serialize, serde::Deserialize, Clone)]
@@ -21,44 +27,24 @@ pub struct AlbumMetadata {
 }
 
 impl Album {
-    pub fn from(tracks: Vec<Arc<Mutex<Track>>>) -> Album {
-        Album {
-            id: Uuid::new_v4().to_string(),
-            tracks: tracks,
-            metadata: None,
-        }
-    }
+    pub fn new(db: &MusicDB, tracks_ids: &Vec<Vec<u8>>, albums_hash: &Vec<Album>) -> Album {
+        let first_trck = db.get_track_by_id(&tracks_ids[0]).unwrap();
 
-    pub fn load_metadata(&mut self, db: &MusicDB, albums_hash: &Vec<&Album>, name: &String) {
         if let Some(album) = albums_hash
             .iter()
-            .find(|x| x.metadata.as_ref().unwrap().name == *name)
+            .find(|x| x.metadata.name == *first_trck.metadata.album.as_ref().unwrap())
         {
-            logger::debug(&format!("album {} loaded from hash", name));
-            self.metadata = album.metadata.clone();
-        } else {
-            logger::debug(&format!("album {} loaded without hash", name));
-            self.metadata = Some(AlbumMetadata::from(&self.tracks));
-            db.save_album(self).unwrap();
+            return album.clone();
         }
-    }
-}
 
-impl AlbumMetadata {
-    fn from(tracks_arc: &Vec<Arc<Mutex<Track>>>) -> AlbumMetadata {
-        let tracks = tracks_arc.clone();
-        let first_track = tracks[0].clone();
-        let first_track_guard = first_track.lock().unwrap();
-
-        let album_cover = Metadata::get_cover(&first_track_guard.file_path)
-            .map_err(|err| logger::error(&err))
-            .unwrap_or(None);
-        let result = AlbumMetadata {
-            cover: album_cover,
-            name: first_track_guard.metadata.album.as_ref().unwrap().clone(),
-            artist: first_track_guard.metadata.artist.as_ref().unwrap().clone(),
-        };
-
-        result
+        Album {
+            id: Uuid::new_v4().to_string(),
+            tracks_ids: tracks_ids.to_vec(),
+            metadata: AlbumMetadata {
+                cover: None,
+                name: first_trck.metadata.album.as_ref().unwrap().to_string(),
+                artist: first_trck.metadata.artist.as_ref().unwrap().to_string(),
+            },
+        }
     }
 }

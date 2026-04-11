@@ -1,51 +1,98 @@
-use std::{
-    collections::HashMap,
-    sync::{Arc, Mutex},
-};
+use std::collections::HashMap;
 
 use crate::{
     db::MusicDB,
-    playable::{album::Album, tracks_container::TracksContainer},
+    disk_manager, logger,
+    playable::{
+        album::{self, Album, AlbumMetadata},
+        library_part::LibraryPart,
+        playboxes::UpdateLib,
+        tracks_container::TracksContainer,
+    },
+    settings_manager::Settings,
 };
 
 #[derive(ts_rs::TS)]
 #[ts(export, export_to = "..\\..\\..\\src\\bindings\\AlbumsContainer.ts")]
 pub struct AlbumsContainer {
-    pub albums: HashMap<String, Arc<Mutex<Album>>>,
+    pub all_albums_ids: Vec<Vec<u8>>,
+}
+
+impl LibraryPart for AlbumsContainer {
+    type Output = Album;
+
+    fn fill_ids(&mut self, db: &MusicDB) {
+        let ids = db.get_all_albums_id().unwrap_or_else(|err| {
+            logger::error(&err.to_string());
+            Vec::new()
+        });
+
+        self.all_albums_ids = ids;
+    }
+
+    fn get_by_id(&self, db: &MusicDB, id: Vec<u8>) -> anyhow::Result<Self::Output> {
+        let album = db.get_album_by_id(&id)?;
+        Ok(album)
+    }
 }
 
 impl AlbumsContainer {
-    /*
-    pub fn new(container: &TracksContainer, db: &MusicDB) -> AlbumsContainer {
-        let all_tracks = container.all_tracks.clone();
-        let mut albums: HashMap<String, Arc<Mutex<Album>>> = HashMap::new();
+    pub fn new() -> Self {
+        AlbumsContainer {
+            all_albums_ids: Vec::new(),
+        }
+    }
+}
 
-        let all_albums = db.get_all_albums().unwrap();
-        let all_albums_hash: Vec<&Album> = all_albums.iter().collect();
+impl UpdateLib for AlbumsContainer {
+    fn update_lib(&self, db: &MusicDB, _settings: &Settings) {
+        if let Ok(albums_hash) = db.get_all_albums() {
+            if let Ok(tracks) = db.get_all_tracks() {
+                let mut albums: HashMap<String, Album> = HashMap::new();
+                for track in tracks {
+                    if let Some(album) = albums.get_mut(track.metadata.album.as_ref().unwrap()) {
+                        let track_id = track.id.as_bytes().to_vec();
 
-        for track in all_tracks {
-            let album_name = {
-                let track_guard = track.lock().unwrap();
-                track_guard.metadata.album.clone()
-            };
+                        if !album.tracks_ids.contains(&track_id) {
+                            album.tracks_ids.push(track_id);
+                        }
+                    } else {
+                        let vec = vec![track.id.as_bytes().to_vec()];
 
-            let key = album_name.unwrap_or_else(|| "Unknown album".to_string());
+                        let album = Album::new(db, &vec, &albums_hash);
+                        let name = track.metadata.album.as_ref().unwrap();
+                        albums.insert(name.to_string(), album);
+                    }
+                }
 
-            if let Some(album_arc) = albums.get(&key) {
-                let mut guard = album_arc.lock().unwrap();
-                guard.tracks.push(track);
-            } else {
-                let new_album = Album::from(vec![track]);
-                albums.insert(key, Arc::new(Mutex::new(new_album)));
+                for album in albums {
+                    _ = db.save_album(&album.1);
+                }
             }
         }
-
-        for i in &albums {
-            let album = i.1;
-            let mut album_guard = album.lock().unwrap();
-            album_guard.load_metadata(db, &all_albums_hash, i.0);
-        }
-        AlbumsContainer { albums }
     }
-     */
+}
+
+#[test]
+fn test_albums_container() {
+    let settings = Settings::new().unwrap();
+    let db_path = &disk_manager::avalonix_special_folder_path();
+    let db = MusicDB::open(db_path).unwrap();
+
+    let container = AlbumsContainer::new();
+
+    container.update_lib(&db, &settings);
+
+    let albums_ids = db.get_all_albums_id().unwrap();
+
+    for id in albums_ids {
+        let album = container.get_by_id(&db, id);
+
+        match album {
+            Ok(album) => {
+                logger::debug(&format!("{}", album.metadata.name));
+            }
+            Err(_) => {}
+        }
+    }
 }

@@ -9,6 +9,7 @@ use crate::{
     },
     utils::get_argument_val,
 };
+use anyhow::bail;
 use sled::{Error as SledError, IVec, Tree};
 
 pub struct MusicDB {
@@ -70,7 +71,7 @@ impl MusicDB {
         Ok(tracks)
     }
 
-    pub fn get_all_tracks_id(&self) -> sled::Result<Vec<Vec<u8>>> {
+    pub fn get_all_tracks_id(&self) -> anyhow::Result<Vec<Vec<u8>>> {
         let mut result = Vec::new();
         for i in self.tracks.iter().keys() {
             let id = i?.to_vec();
@@ -79,14 +80,14 @@ impl MusicDB {
         Ok(result)
     }
 
-    pub fn get_track_by_id(&self, id: &Vec<u8>) -> sled::Result<Option<Track>> {
+    pub fn get_track_by_id(&self, id: &Vec<u8>) -> anyhow::Result<Track> {
         let some_bytes = self.tracks.get(id)?;
 
         if let Some(bytes) = some_bytes {
             let track: Track = bincode::deserialize(&bytes).map_err(to_sled_error)?;
-            return Ok(Some(track));
+            return Ok(track);
         }
-        Ok(None)
+        bail!("Can`t to get track by id");
     }
 
     pub fn get_all_tracks_filter_data(&self) -> sled::Result<Vec<FilterData>> {
@@ -128,7 +129,7 @@ impl MusicDB {
         Ok(albums)
     }
 
-    pub fn get_all_albums_id(&self) -> sled::Result<Vec<Vec<u8>>> {
+    pub fn get_all_albums_id(&self) -> anyhow::Result<Vec<Vec<u8>>> {
         let mut result = Vec::new();
 
         for i in self.albums.iter().keys() {
@@ -138,14 +139,14 @@ impl MusicDB {
         Ok(result)
     }
 
-    pub fn get_album_by_id(&self, id: &Vec<u8>) -> sled::Result<Option<Album>> {
+    pub fn get_album_by_id(&self, id: &Vec<u8>) -> anyhow::Result<Album> {
         let some_bytes = self.albums.get(id).map_err(to_sled_error)?;
 
         if let Some(bytes) = some_bytes {
             let album: Album = bincode::deserialize(&bytes).map_err(to_sled_error)?;
-            return Ok(Some(album));
+            return Ok(album);
         }
-        Ok(None)
+        bail!("can`t get album by id")
     }
 
     pub fn get_all_album_filter_data(&self) -> sled::Result<Vec<(String, String)>> {
@@ -154,7 +155,7 @@ impl MusicDB {
         for i in self.albums.iter() {
             let (_, value) = i.unwrap();
             let album: Album = bincode::deserialize(&value).map_err(to_sled_error)?;
-            let metadata = album.metadata.clone().unwrap();
+            let metadata = album.metadata.clone();
 
             result.push((metadata.name.clone(), metadata.artist.clone()));
         }
@@ -203,8 +204,7 @@ fn test_db_get_track_by_id() {
             let ids = db.get_all_tracks_id().unwrap();
             let start = Instant::now();
             match db.get_track_by_id(&ids[0]) {
-                Ok(track_opt) => {
-                    let track = track_opt.unwrap();
+                Ok(track) => {
                     logger::debug(&format!(
                         "track get by id: {}",
                         track.metadata.title.unwrap().clone()
@@ -262,15 +262,8 @@ fn test_db_get_album_by_id() {
 
             let start = Instant::now();
             match db.get_album_by_id(&ids[0]) {
-                Ok(album) => match album {
-                    Some(album) => {
-                        logger::debug(&format!("{}", album.metadata.unwrap().name));
-                    }
-                    None => {}
-                },
-                Err(err) => {
-                    logger::error(&err.to_string());
-                }
+                Ok(album) => logger::debug(&format!("{}", album.metadata.name)),
+                Err(err) => logger::error(&err.to_string()),
             }
             logger::debug(&format!(
                 "get album by id: {} ms",
