@@ -49,7 +49,7 @@ impl UpdateLib for AlbumsContainer {
         if let Ok(albums_hash) = db.get_all_albums() {
             if let Ok(tracks) = db.get_all_tracks() {
                 let mut albums: HashMap<String, Album> = HashMap::new();
-                for track in tracks {
+                for track in &tracks {
                     if let Some(album) = albums.get_mut(track.metadata.album.as_ref().unwrap()) {
                         let track_id = track.id.as_bytes().to_vec();
 
@@ -65,7 +65,7 @@ impl UpdateLib for AlbumsContainer {
                     }
                 }
 
-                for album in albums {
+                for mut album in albums {
                     _ = db.save_album(&album.1);
                 }
             }
@@ -90,7 +90,9 @@ fn test_albums_container() {
 
         match album {
             Ok(album) => {
-                logger::debug(&format!("{}", album.metadata.name));
+                if album.metadata.name == "Reload" {
+                    logger::debug(&format!("{}", album.tracks_ids.len()));
+                }
             }
             Err(_) => {}
         }

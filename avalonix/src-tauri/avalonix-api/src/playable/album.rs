@@ -34,7 +34,13 @@ impl Album {
             .iter()
             .find(|x| x.metadata.name == *first_trck.metadata.album.as_ref().unwrap())
         {
-            return album.clone();
+            let mut album = album.clone();
+            for (i, id) in album.tracks_ids.clone().iter().enumerate() {
+                if tracks_ids.contains(id) {
+                    album.tracks_ids.remove(i);
+                }
+            }
+            return album;
         }
 
         Album {
