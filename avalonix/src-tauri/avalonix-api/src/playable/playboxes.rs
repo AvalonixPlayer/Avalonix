@@ -9,8 +9,9 @@ use crate::{
 
 pub struct PlayboxesManager {
     pub tracks_container: TracksContainer,
-    /*
+
     pub albums_container: AlbumsContainer,
+    /*
     pub artists_container: AristsContainer,
      */
 }
@@ -18,15 +19,16 @@ pub struct PlayboxesManager {
 impl PlayboxesManager {
     pub fn new(
         tracks_container: TracksContainer,
-        /*
+
         albums_container: AlbumsContainer,
+        /*
         artists_container: AristsContainer,
          */
     ) -> PlayboxesManager {
         PlayboxesManager {
             tracks_container,
-            /*
             albums_container,
+            /*
             artists_container,
              */
         }
@@ -35,6 +37,9 @@ impl PlayboxesManager {
     pub fn update_lib(&mut self, db: &MusicDB, settings: &Settings) {
         self.tracks_container.update_lib(db, settings);
         self.tracks_container.fill_ids(db);
+
+        self.albums_container.update_lib(db, settings);
+        self.albums_container.fill_ids(db);
     }
 }
 
