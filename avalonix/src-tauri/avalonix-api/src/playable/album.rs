@@ -43,7 +43,7 @@ impl Album {
             id: Uuid::new_v4().to_string(),
             tracks_ids: tracks_ids.to_vec(),
             metadata: AlbumMetadata {
-                cover: None,
+                cover: Metadata::get_cover(&first_trck.file_path).unwrap_or_default(),
                 name: first_trck.metadata.album.as_ref().unwrap().to_string(),
                 artist: first_trck.metadata.artist.as_ref().unwrap().to_string(),
             },
