@@ -65,7 +65,7 @@ impl UpdateLib for AlbumsContainer {
                     }
                 }
 
-                for mut album in albums {
+                for album in albums {
                     _ = db.save_album(&album.1);
                 }
             }
@@ -90,9 +90,11 @@ fn test_albums_container() {
 
         match album {
             Ok(album) => {
-                if album.metadata.name == "Reload" {
-                    logger::debug(&format!("{}", album.tracks_ids.len()));
-                }
+                logger::debug(&format!(
+                    "{} {}",
+                    album.metadata.name.clone(),
+                    album.tracks_ids.len()
+                ));
             }
             Err(_) => {}
         }

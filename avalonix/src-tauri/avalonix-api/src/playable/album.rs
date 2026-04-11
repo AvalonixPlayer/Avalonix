@@ -6,7 +6,7 @@ use crate::{
     db::MusicDB,
     logger,
     media::metadata::{self, Metadata},
-    playable::{library_part::LibraryPart, track::Track},
+    playable::{album, library_part::LibraryPart, track::Track},
 };
 
 #[derive(ts_rs::TS, serde::Serialize, serde::Deserialize, Clone)]
@@ -35,12 +35,8 @@ impl Album {
             .find(|x| x.metadata.name == *first_trck.metadata.album.as_ref().unwrap())
         {
             let mut album = album.clone();
-            for (i, id) in album.tracks_ids.clone().iter().enumerate() {
-                if tracks_ids.contains(id) {
-                    album.tracks_ids.remove(i);
-                }
-            }
-            return album;
+            album.tracks_ids = tracks_ids.clone();
+            return album.clone();
         }
 
         Album {
