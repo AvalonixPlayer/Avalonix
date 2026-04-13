@@ -12,6 +12,7 @@ pub fn run() {
     let api = init_api();
     if let Err(err) = api {
         logger::fatal(&err);
+        panic!("{}", err);
     }
 
     tauri::Builder::default()
