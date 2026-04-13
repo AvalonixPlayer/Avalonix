@@ -2,138 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="src/styles.css" />
+    <link rel="stylesheet" href="/src/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="src/main.ts" defer></script>
     <title>Tauri App</title>
+    <script type="module" src="/src/main.ts" defer></script>
   </head>
+
   <body>
-    <section class="sections-container">
-      <section class="section tabs">
-        <button onclick="changeTab(0)" class="tab-sellect-btn">
-          <h3>Main</h3>
-        </button>
-        <button onclick="changeTab(1)" class="tab-sellect-btn">
-          <h3>Tracks</h3>
-        </button>
-        <button onclick="changeTab(2)" class="tab-sellect-btn">
-          <h3>Albums</h3>
-        </button>
-        <button onclick="changeTab(3)" class="tab-sellect-btn">
-          <h3>Artists</h3>
-        </button>
-        <button onclick="changeTab(4)" class="tab-sellect-btn">
-          <h3>Metadata</h3>
-        </button>
-        <button onclick="changeTab(5)" class="tab-sellect-btn">
-          <h3>Settings</h3>
-        </button>
-      </section>
+    <main class="container">
+      <h1>Welcome to Tauri</h1>
 
-      <section class="section main">
-        <div class="main-container tracks-queue">
-          <h2 class="main-presentable-text">Play queue</h2>
-          <button class="track-btn-remove" id="clear-queue">
-            <img src="src/assets/trash.png" />
-          </button>
-          <div class="playqueue-container" id="play-queue"></div>
-        </div>
-
-        <div class="main-container">
-          <h2 class="main-presentable-text">Tracks list</h2>
-          <input
-            type="text"
-            class="playable-search-text-area"
-            id="track-search-area"
-            placeholder="Track name"
-            autocomplete="off"
+      <div class="row">
+        <a href="https://vitejs.dev" target="_blank">
+          <img src="/src/assets/vite.svg" class="logo vite" alt="Vite logo" />
+        </a>
+        <a href="https://tauri.app" target="_blank">
+          <img
+            src="/src/assets/tauri.svg"
+            class="logo tauri"
+            alt="Tauri logo"
           />
-          <div class="media-list-container" id="tracks-list"></div>
-        </div>
-
-        <div class="main-container">
-          <h2 class="main-presentable-text">Albums list</h2>
-          <div class="media-list-container" id="albums-list"></div>
-        </div>
-
-        <div class="main-container">
-          <h2 class="main-presentable-text">Artists list</h2>
-        </div>
-
-        <div class="main-container">
-          <h2 class="main-presentable-text">Metadata</h2>
-        </div>
-
-        <div class="main-container">
-          <h2 class="main-presentable-text">Settings</h2>
-          <button class="settings-pick-button" id="save-settings">
-            <h4>Save</h4>
-          </button>
-          <button class="settings-pick-button" id="add-path-to-music-btn">
-            <h4>Add paths to music</h4>
-          </button>
-        </div>
-      </section>
-
-      <section class="section track-info">
-        <h2 class="track-name" id="track-name">Track name</h2>
-        <img class="track-cover" id="track-cover" />
-        <h3 class="album-name" id="album-name">Album name</h3>
-      </section>
-      <section class="section playback-controll">
-        <div style="align-content: end">
-          <button class="playback-player-contoll-btn" id="previous">
-            <img src="src/assets/back.png" />
-          </button>
-          <button class="playback-player-contoll-btn" id="pause">
-            <img src="src/assets/pause.png" id="pause-img" />
-            <img
-              src="src/assets/play.png"
-              id="play-img"
-              style="display: none"
-            />
-          </button>
-          <button class="playback-player-contoll-btn" id="next">
-            <img src="src/assets/next.png" />
-          </button>
-        </div>
-        <input type="range" id="playtime-slider" />
-      </section>
-    </section>
-  </body>
-
-  <template id="pick-track-btn-example">
-    <div class="pick-media-btn track">
-      <button class="add-btn"><img src="src/assets/add.png" /></button>
-      <h5>Track name</h5>
-      <h6>Artist</h6>
-    </div>
-  </template>
-
-  <template id="track-btn-example">
-    <div class="track-btn">
-      <button class="track-btn-play">
-        <img src="src/assets/sellect-track-to-play.png" />
-      </button>
-      <button class="track-btn-remove">
-        <img src="src/assets/trash.png" />
-      </button>
-      <h5>Track name</h5>
-      <h6>Artist</h6>
-    </div>
-  </template>
-  <template id="album-btn-example">
-    <div class="album-btn">
-      <img
-        class="album-btn-cover"
-        src="https://upload.wikimedia.org/wikipedia/ru/d/d7/And_Justice_For_All.jpg"
-      />
-      <div class="album-btn-other">
-        <button class="add-btn">
-          <img src="src/assets/add.png" />
-        </button>
-        <h5>Album name</h5>
+        </a>
+        <a href="https://www.typescriptlang.org/docs" target="_blank">
+          <img
+            src="/src/assets/typescript.svg"
+            class="logo typescript"
+            alt="typescript logo"
+          />
+        </a>
       </div>
-    </div>
-  </template>
+      <p>Click on the Tauri logo to learn more about the framework</p>
+
+      <form class="row" id="greet-form">
+        <input id="greet-input" placeholder="Enter a name..." />
+        <button type="submit">Greet</button>
+      </form>
+      <p id="greet-msg"></p>
+    </main>
+  </body>
 </html>

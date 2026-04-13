@@ -1,8 +1,0 @@
-:root {
-    --scrollbar-color: #4c0f64;
-}
-
-body {
-    scrollbar-color: var(--scrollbar-color) #29292900;
-    scrollbar-gutter: revert;
-}

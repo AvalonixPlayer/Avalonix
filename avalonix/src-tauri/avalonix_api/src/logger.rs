@@ -1,27 +1,23 @@
 use colored::Colorize;
+use std::fmt::Display;
 
-pub fn info(msg: &str) {
+pub fn info<T: Display>(msg: T) {
     println!("{} {}", "INFO".green(), msg);
 }
 
-pub fn error(msg: &str) {
+pub fn error<T: Display>(msg: T) {
     println!("{} {}", "ERROR".red(), msg);
 }
 
-pub fn acceptable_error(msg: &str) {
-    // This means that this error will be handled and it is quite probable, for example, it is needed in mutex.try_lock()
-    println!("{} {}", "ACCEPTABLE ERROR".purple(), msg);
-}
-
-pub fn debug(msg: &str) {
+pub fn debug<T: Display>(msg: T) {
     println!("{} {}", "DEBUG".blue(), msg);
 }
 
-pub fn fatal(msg: &str) {
+pub fn fatal<T: Display>(msg: T) {
     println!("{} {}", "FATAL".red().bold(), msg);
 }
 
-pub fn warn(msg: &str) {
+pub fn warn<T: Display>(msg: T) {
     println!("{} {}", "WARN".yellow(), msg);
 }
 
