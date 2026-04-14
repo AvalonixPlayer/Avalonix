@@ -49,8 +49,12 @@ impl MediaPlayer {
 
     pub fn start_audio(&mut self, track: &Track) -> anyhow::Result<()> {
         let data = track.get_data()?;
+        let len = data.get_ref().len() as u64;
 
-        let source = Decoder::builder().with_data(data).build()?;
+        let source = Decoder::builder()
+            .with_data(data)
+            .with_byte_len(len)
+            .build()?;
 
         self.total_duration = source.total_duration().unwrap();
 
