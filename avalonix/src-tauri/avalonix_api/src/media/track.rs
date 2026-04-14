@@ -1,4 +1,4 @@
-use std::{fs::File, io::Cursor};
+use std::io::Cursor;
 
 pub struct Track {
     pub audio_data: Vec<u8>,

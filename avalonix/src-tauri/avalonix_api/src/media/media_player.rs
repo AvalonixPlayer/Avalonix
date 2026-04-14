@@ -1,6 +1,4 @@
 use std::{
-    fs,
-    io::{BufRead, Read},
     num::NonZero,
     sync::{Arc, Mutex},
     thread::{self, sleep},
@@ -11,7 +9,6 @@ use anyhow::Ok;
 use rodio::{
     Decoder, DeviceTrait, MixerDeviceSink, Player, Source,
     cpal::{BufferSize, DeviceDescription, default_host, traits::HostTrait},
-    play,
 };
 
 use crate::{logger, media::track::Track, mutex_work::CreateArcMutex};
@@ -37,14 +34,17 @@ impl MediaPlayer {
             .description()?;
 
         let player = Player::connect_new(stream_handle.mixer());
-        let s = Self {
+        let self_arc = Self {
             _sink: stream_handle,
             total_duration: Duration::new(0, 0),
             player,
             last_device_description: device_description,
-        };
+        }
+        .create_arc_mutex();
 
-        Ok(s.create_arc_mutex())
+        MediaPlayer::CheckStatus(&self_arc);
+
+        Ok(self_arc)
     }
 
     pub fn start_audio(&mut self, track: &Track) -> anyhow::Result<()> {
@@ -131,14 +131,13 @@ impl MediaPlayer {
 #[test]
 fn test_media_player() -> anyhow::Result<()> {
     use crate::utils::get_argument_val;
+    use std::fs;
     let media_player = MediaPlayer::new()?;
     let track_path = get_argument_val("TRACK_PATH").unwrap();
 
     let data = fs::read(track_path).unwrap();
 
     let track = Track { audio_data: data };
-
-    MediaPlayer::CheckStatus(&media_player);
 
     let sleep = || thread::sleep(Duration::from_secs(1));
     {

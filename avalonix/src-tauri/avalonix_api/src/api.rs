@@ -1,10 +1,18 @@
+use std::sync::{Arc, Mutex};
+
 use anyhow::Ok;
 
-pub struct Api {}
+use crate::media::media_player::MediaPlayer;
+
+pub struct Api {
+    pub media_player: Arc<Mutex<MediaPlayer>>,
+}
 
 impl Api {
     pub fn new() -> anyhow::Result<Self> {
-        Ok(Self {})
+        let media_player = MediaPlayer::new()?;
+
+        Ok(Self { media_player })
     }
 }
 
