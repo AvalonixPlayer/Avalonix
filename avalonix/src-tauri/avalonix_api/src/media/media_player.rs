@@ -1,5 +1,6 @@
 use std::{
     num::NonZero,
+    ops::Deref,
     sync::{Arc, Mutex},
     thread::{self, sleep},
     time::Duration,
@@ -42,7 +43,7 @@ impl MediaPlayer {
         }
         .create_arc_mutex();
 
-        MediaPlayer::CheckStatus(&self_arc);
+        MediaPlayer::check_status(&self_arc);
 
         Ok(self_arc)
     }
@@ -112,7 +113,7 @@ impl MediaPlayer {
 }
 
 impl MediaPlayer {
-    fn CheckStatus(self_arc: &Arc<Mutex<Self>>) {
+    fn check_status(self_arc: &Arc<Mutex<Self>>) {
         let self_clone = self_arc.clone();
 
         let dur = Duration::from_secs(1);
