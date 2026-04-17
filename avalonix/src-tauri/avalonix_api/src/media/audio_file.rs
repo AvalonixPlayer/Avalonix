@@ -1,5 +1,12 @@
+use std::{path::PathBuf, time::Duration};
+
 use anyhow::bail;
-use lofty::{config::ParseOptions, file::TaggedFileExt, probe::Probe, tag::Accessor};
+use lofty::{
+    config::ParseOptions,
+    file::{AudioFile as LoftyAudioFile, TaggedFileExt},
+    probe::Probe,
+    tag::Accessor,
+};
 use rcue::parser::parse_from_file;
 
 use crate::metadata::track_metadata::TrackMetadata;
@@ -8,9 +15,9 @@ pub trait AudioFile {
     fn read_metadatas(file_path: &str) -> anyhow::Result<Vec<TrackMetadata>>;
 }
 
-pub struct SingleFile {}
+pub struct SingleFile;
 
-pub struct CUEFile {}
+pub struct CUEFile;
 
 impl AudioFile for SingleFile {
     fn read_metadatas(file_path: &str) -> anyhow::Result<Vec<TrackMetadata>> {
@@ -44,8 +51,13 @@ impl AudioFile for SingleFile {
             .map_or("Unknown genre", |v| v)
             .to_string();
 
+        let properties = tagged_file.properties();
+        let dur = properties.duration();
+
         Ok(vec![TrackMetadata {
             file_path: file_path.to_string(),
+            start_pos: Duration::new(0, 0),
+            end_pos: dur,
             title,
             album,
             artist,
@@ -68,14 +80,33 @@ impl AudioFile for CUEFile {
                 let cue_files = cue.files;
 
                 for file in cue_files {
-                    for track in file.tracks {
-                        let fp = &file.file;
+                    for (i, track) in file.tracks.iter().enumerate() {
+                        let fp = PathBuf::from(file_path).parent().unwrap().join(&file.file);
 
                         let title = track.title.as_ref().map_or("Unknown title", |f| f);
                         let artist = &cue_performer;
                         let album = &cue_title;
 
-                        let tm = TrackMetadata::new(&fp, title, album, artist, "Unknown genre");
+                        let start_pos = track.indices.get(0).map_or(Duration::new(0, 0), |f| f.1);
+                        let end_pos = file.tracks.get(i + 1).map_or(
+                            {
+                                let options = ParseOptions::new()
+                                    .parsing_mode(lofty::config::ParsingMode::Relaxed);
+                                let tagged_file = Probe::open(&fp)?.options(options).read()?;
+                                tagged_file.properties().duration()
+                            },
+                            |f| f.indices.get(0).unwrap().1,
+                        );
+
+                        let tm = TrackMetadata::new(
+                            &fp.to_str().unwrap().to_string(),
+                            start_pos,
+                            end_pos,
+                            title,
+                            album,
+                            artist,
+                            "Unknown genre",
+                        );
                         result_vec.push(tm);
                     }
                 }
