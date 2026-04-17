@@ -12,6 +12,18 @@ pub struct TrackMetadata {
     pub genre: String,
 }
 
+impl TrackMetadata {
+    pub fn new(file_path: &str, title: &str, album: &str, artist: &str, genre: &str) -> Self {
+        Self {
+            file_path: file_path.to_string(),
+            title: title.to_string(),
+            album: album.to_string(),
+            artist: artist.to_string(),
+            genre: genre.to_string(),
+        }
+    }
+}
+
 impl Display for TrackMetadata {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -35,7 +47,27 @@ pub fn test_parse_metadata_from_file() -> anyhow::Result<()> {
 
     let file_path = file_path.unwrap();
 
-    if let Ok(audio_file) = audio_file::SingleFile::read_metadatas(file_path) {
+    if let Ok(audio_file) = audio_file::SingleFile::read_metadatas(&file_path) {
+        logger::debug(audio_file[0].to_string());
+    }
+
+    Ok(())
+}
+
+#[test]
+pub fn test_parse_metadata_from_cue() -> anyhow::Result<()> {
+    use crate::logger;
+
+    use crate::utils::get_argument_val;
+
+    let file_path = get_argument_val("TRACK_PATH");
+    if file_path == None {
+        return Ok(());
+    }
+
+    let file_path = file_path.unwrap();
+
+    if let Ok(audio_file) = audio_file::CUEFile::read_metadatas(&file_path) {
         logger::debug(audio_file[0].to_string());
     }
 
