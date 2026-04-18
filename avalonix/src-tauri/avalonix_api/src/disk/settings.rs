@@ -75,7 +75,7 @@ fn test_settings() -> anyhow::Result<()> {
 
     settings.add_lib_path(&PathBuf::from(lib_path));
 
-    settings.save();
+    settings.save()?;
 
     logger::debug(format!("Saved settings: {:#?}", settings));
 
