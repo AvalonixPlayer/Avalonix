@@ -263,6 +263,8 @@ dependencies = [
  "lofty",
  "rcue",
  "rodio",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

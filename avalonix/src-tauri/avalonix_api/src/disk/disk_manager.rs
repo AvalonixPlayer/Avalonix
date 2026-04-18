@@ -15,6 +15,12 @@ pub fn lib_db_path() -> PathBuf {
     res
 }
 
+pub fn settings_path() -> PathBuf {
+    let res = avalonix_folder_path().join("settings.json");
+    check_file(&res);
+    res
+}
+
 fn check_dir(dir: &PathBuf) {
     if !dir.exists() {
         _ = fs::create_dir(&dir);
