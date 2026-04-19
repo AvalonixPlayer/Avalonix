@@ -1,14 +1,14 @@
 use std::{
     collections::HashSet,
-    fs::{File, OpenOptions},
+    fs::File,
     io::{Read, Write},
-    path::{Path, PathBuf},
+    path::PathBuf,
 };
 
 use anyhow::Ok;
 use serde::{Deserialize, Serialize};
 
-use crate::{disk::disk_manager, utils::get_argument_val};
+use crate::disk::disk_manager;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Settings {
@@ -60,7 +60,7 @@ impl Settings {
 
 #[test]
 fn test_settings() -> anyhow::Result<()> {
-    use crate::logger;
+    use crate::{logger, utils::get_argument_val};
     let mut settings = Settings::open()?;
 
     let lib_path = get_argument_val("LIB_PATH");

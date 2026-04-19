@@ -1,9 +1,5 @@
 use std::{fmt::Display, time::Duration};
 
-use lofty::{config::ParseOptions, file::TaggedFileExt, probe::Probe, tag::Accessor};
-
-use crate::media::audio_file::{self, AudioFile};
-
 pub struct TrackMetadata {
     pub file_path: String,
     pub start_pos: Duration,
@@ -54,7 +50,10 @@ impl Display for TrackMetadata {
 
 #[test]
 pub fn test_parse_metadata_from_file() -> anyhow::Result<()> {
-    use crate::logger;
+    use crate::{
+        logger,
+        media::audio_file::{self, AudioFile},
+    };
 
     use crate::utils::get_argument_val;
 
@@ -72,7 +71,10 @@ pub fn test_parse_metadata_from_file() -> anyhow::Result<()> {
 
 #[test]
 pub fn test_parse_metadata_from_cue() -> anyhow::Result<()> {
-    use crate::logger;
+    use crate::{
+        logger,
+        media::audio_file::{self, AudioFile},
+    };
 
     use crate::utils::get_argument_val;
 

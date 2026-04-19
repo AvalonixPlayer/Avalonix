@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex, MutexGuard};
+use std::sync::{Arc, Mutex};
 
 pub trait CreateArcMutex<T> {
     fn create_arc_mutex(self) -> Arc<Mutex<Self>>;

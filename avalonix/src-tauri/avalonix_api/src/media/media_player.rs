@@ -1,6 +1,6 @@
 use std::{
     num::NonZero,
-    ops::Deref,
+    path::PathBuf,
     sync::{Arc, Mutex},
     thread::{self, sleep},
     time::Duration,
@@ -136,9 +136,13 @@ fn test_media_player() -> anyhow::Result<()> {
     let media_player = MediaPlayer::new()?;
     let track_path = get_argument_val("TRACK_PATH").unwrap();
 
-    let data = fs::read(track_path).unwrap();
+    let data = fs::read(&track_path).unwrap();
 
-    let track = Track { audio_data: data };
+    let path = PathBuf::from(&track_path);
+
+    let binding = Track::create_tracks_list_from_file(&path)?;
+
+    let track = binding.get(0).clone().unwrap();
 
     let sleep = || thread::sleep(Duration::from_secs(1));
     {

@@ -1,4 +1,7 @@
-use std::{path::PathBuf, time::Duration};
+use std::{
+    path::{Path, PathBuf},
+    time::Duration,
+};
 
 use anyhow::bail;
 use lofty::{
@@ -12,7 +15,7 @@ use rcue::parser::parse_from_file;
 use crate::metadata::track_metadata::TrackMetadata;
 
 pub trait AudioFile {
-    fn read_metadatas(file_path: &str) -> anyhow::Result<Vec<TrackMetadata>>;
+    fn read_metadatas<P: AsRef<Path>>(file_path: P) -> anyhow::Result<Vec<TrackMetadata>>;
 }
 
 pub struct SingleFile;
@@ -20,10 +23,10 @@ pub struct SingleFile;
 pub struct CUEFile;
 
 impl AudioFile for SingleFile {
-    fn read_metadatas(file_path: &str) -> anyhow::Result<Vec<TrackMetadata>> {
+    fn read_metadatas<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<TrackMetadata>> {
         let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
 
-        let tagged_file = Probe::open(file_path)?.options(options).read()?;
+        let tagged_file = Probe::open(&path)?.options(options).read()?;
 
         let tag = match tagged_file.primary_tag() {
             Some(primary_tag) => primary_tag,
@@ -55,7 +58,7 @@ impl AudioFile for SingleFile {
         let dur = properties.duration();
 
         Ok(vec![TrackMetadata {
-            file_path: file_path.to_string(),
+            file_path: path.as_ref().to_str().unwrap().to_string(),
             start_pos: Duration::new(0, 0),
             end_pos: dur,
             title,
@@ -67,10 +70,10 @@ impl AudioFile for SingleFile {
 }
 
 impl AudioFile for CUEFile {
-    fn read_metadatas(file_path: &str) -> anyhow::Result<Vec<TrackMetadata>> {
+    fn read_metadatas<P: AsRef<Path>>(file_path: P) -> anyhow::Result<Vec<TrackMetadata>> {
         let mut result_vec = vec![];
 
-        let cue = parse_from_file(file_path, true)?;
+        let cue = parse_from_file(&file_path.as_ref().to_str().unwrap().to_string(), true)?;
 
         let cue_title = cue.title;
         let cue_performer = cue.performer;
@@ -81,7 +84,7 @@ impl AudioFile for CUEFile {
 
                 for file in cue_files {
                     for (i, track) in file.tracks.iter().enumerate() {
-                        let fp = PathBuf::from(file_path).parent().unwrap().join(&file.file);
+                        let fp = file_path.as_ref().parent().unwrap().join(&file.file);
 
                         let title = track.title.as_ref().map_or("Unknown title", |f| f);
                         let artist = &cue_performer;
@@ -112,7 +115,10 @@ impl AudioFile for CUEFile {
                 }
             }
             _ => {
-                bail!(format!("can`t to read cue: {}", file_path))
+                bail!(format!(
+                    "can`t to read cue: {}",
+                    file_path.as_ref().to_str().unwrap()
+                ))
             }
         }
 

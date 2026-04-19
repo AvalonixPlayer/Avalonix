@@ -21,6 +21,12 @@ pub fn settings_path() -> PathBuf {
     res
 }
 
+pub fn db_path() -> PathBuf {
+    let res = avalonix_folder_path().join("db");
+    check_dir(&res);
+    res
+}
+
 fn check_dir(dir: &PathBuf) {
     if !dir.exists() {
         _ = fs::create_dir(&dir);
