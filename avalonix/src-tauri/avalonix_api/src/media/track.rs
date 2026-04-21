@@ -1,51 +1,58 @@
-use std::{fmt::Display, io::Cursor, path::Path};
+use std::{
+    fmt::{Display, format},
+    io::Cursor,
+    path::Path,
+};
 
 use anyhow::{Ok, bail};
 use infer::MatcherType;
+use rkyv::{Archive, Deserialize, Serialize};
+use uuid::Uuid;
 
 use crate::{
-    media::audio_file::{AudioFile, CUEFile, SingleFile},
+    media::audio_file::{AudioFile, CUEFile, LibFile, LibFileTrait, SingleFile},
     metadata::track_metadata::TrackMetadata,
 };
 
+#[derive(Archive, Debug, Deserialize, Serialize, Clone)]
 pub struct Track {
+    pub id: Vec<u8>,
     pub metadata: TrackMetadata,
 }
 
 impl Track {
+    pub fn create_new(metadata: TrackMetadata) -> Self {
+        let id = Uuid::new_v4().to_bytes_le().to_vec();
+        Self { id, metadata }
+    }
+
     pub fn create_tracks_list_from_file<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<Track>> {
-        match infer::get_from_path(&path) {
-            std::result::Result::Ok(kind) => match kind {
-                Some(kind) => match kind.matcher_type() {
-                    MatcherType::Audio => {
-                        let tracks_metadatas = SingleFile::read_metadatas(path)?;
+        let push_all = |tp: LibFile| {
+            let mut result = vec![];
 
-                        let mut result = vec![]; // I decided to play it safe and still make it a cycle, paranoia
-                        for tm in tracks_metadatas {
-                            result.push(Self { metadata: tm });
-                        }
-                        return Ok(result);
+            match tp {
+                LibFile::Audio => {
+                    let metadatas = SingleFile::read_metadatas(&path)?;
+                    for tm in metadatas {
+                        result.push(Self::create_new(tm));
                     }
-                    MatcherType::Text => {
-                        let tracks_metadatas = CUEFile::read_metadatas(path)?;
-
-                        let mut result = vec![];
-                        for tm in tracks_metadatas {
-                            result.push(Self { metadata: tm });
-                        }
-                        return Ok(result);
-                    }
-                    _ => {
-                        bail!("file not cue and not audio")
-                    }
-                },
-                None => {
-                    bail!("Can`t to read file type")
                 }
-            },
-            Err(_) => {
-                bail!("Can`t to read file type")
+                LibFile::Cue => {
+                    let metadatas = CUEFile::read_metadatas(&path)?;
+                    for tm in metadatas {
+                        result.push(Self::create_new(tm));
+                    }
+                }
+                _ => bail!("Can`t to read file"),
             }
+
+            Ok(result)
+        };
+
+        match path.file_type() {
+            super::audio_file::LibFile::Audio => Ok(push_all(LibFile::Audio)?),
+            super::audio_file::LibFile::Cue => Ok(push_all(LibFile::Cue)?),
+            super::audio_file::LibFile::NotForLib => bail!("file not for lib"),
         }
     }
 
@@ -57,11 +64,7 @@ impl Track {
 
 impl Display for Track {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "\ttrack_path: {}\n\ttitle: {}",
-            self.metadata.file_path, self.metadata.title
-        )
+        write!(f, "\ttrack_id: {:?}\t\t{}", self.id, self.metadata)
     }
 }
 
@@ -79,8 +82,6 @@ fn test_create_tracks() -> anyhow::Result<()> {
 
             if dir_entry.file_type().is_file() {
                 let path = dir_entry.path();
-
-                println!("{}", path.to_str().unwrap());
 
                 match Track::create_tracks_list_from_file(path) {
                     std::result::Result::Ok(tracks) => {

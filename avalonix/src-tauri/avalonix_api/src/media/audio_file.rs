@@ -12,7 +12,7 @@ use lofty::{
 };
 use rcue::parser::parse_from_file;
 
-use crate::metadata::track_metadata::TrackMetadata;
+use crate::{logger, metadata::track_metadata::TrackMetadata};
 
 pub trait AudioFile {
     fn read_metadatas<P: AsRef<Path>>(file_path: P) -> anyhow::Result<Vec<TrackMetadata>>;
@@ -69,11 +69,52 @@ impl AudioFile for SingleFile {
     }
 }
 
+pub enum LibFile {
+    Audio,
+    Cue,
+    NotForLib,
+}
+
+pub trait LibFileTrait {
+    fn file_type(&self) -> LibFile;
+}
+
+impl<P: AsRef<Path>> LibFileTrait for P {
+    fn file_type(&self) -> LibFile {
+        match infer::get_from_path(&self) {
+            Ok(t) => match t {
+                Some(t) => match t.matcher_type() {
+                    infer::MatcherType::Audio => LibFile::Audio,
+                    infer::MatcherType::Text => LibFile::Cue,
+                    _ => LibFile::NotForLib,
+                },
+                None => match CUEFile::check_cue(&self) {
+                    Ok(_) => LibFile::Cue,
+                    Err(_) => {
+                        logger::info(format!(
+                            "file is not for lib: {}",
+                            self.as_ref().to_str().unwrap()
+                        ));
+                        LibFile::NotForLib
+                    }
+                },
+            },
+            Err(_) => {
+                logger::error(format!(
+                    "file can`t be read: {}",
+                    self.as_ref().to_str().unwrap()
+                ));
+                LibFile::NotForLib
+            }
+        }
+    }
+}
+
 impl AudioFile for CUEFile {
     fn read_metadatas<P: AsRef<Path>>(file_path: P) -> anyhow::Result<Vec<TrackMetadata>> {
         let mut result_vec = vec![];
 
-        let cue = parse_from_file(&file_path.as_ref().to_str().unwrap().to_string(), true)?;
+        let cue = parse_from_file(&file_path.as_ref().to_str().unwrap().to_string(), false)?;
 
         let cue_title = cue.title;
         let cue_performer = cue.performer;
@@ -123,5 +164,12 @@ impl AudioFile for CUEFile {
         }
 
         Ok(result_vec)
+    }
+}
+
+impl CUEFile {
+    pub fn check_cue<P: AsRef<Path>>(file_path: P) -> anyhow::Result<()> {
+        let _ = parse_from_file(&file_path.as_ref().to_str().unwrap().to_string(), false)?;
+        Ok(())
     }
 }

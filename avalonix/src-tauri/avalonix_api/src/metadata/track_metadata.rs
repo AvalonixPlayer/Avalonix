@@ -1,5 +1,8 @@
 use std::{fmt::Display, time::Duration};
 
+use rkyv::{Archive, Deserialize, Serialize};
+
+#[derive(Debug, Archive, Serialize, Deserialize, Clone)]
 pub struct TrackMetadata {
     pub file_path: String,
     pub start_pos: Duration,
