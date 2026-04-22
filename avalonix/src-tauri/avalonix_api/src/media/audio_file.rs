@@ -94,47 +94,6 @@ impl AudioFile for SingleFile {
     }
 }
 
-pub enum LibFile {
-    Audio,
-    Cue,
-    NotForLib,
-}
-
-pub trait LibFileTrait {
-    fn file_type(&self) -> LibFile;
-}
-
-impl<P: AsRef<Path>> LibFileTrait for P {
-    fn file_type(&self) -> LibFile {
-        match infer::get_from_path(&self) {
-            Ok(t) => match t {
-                Some(t) => match t.matcher_type() {
-                    infer::MatcherType::Audio => LibFile::Audio,
-                    infer::MatcherType::Text => LibFile::Cue,
-                    _ => LibFile::NotForLib,
-                },
-                None => match CUEFile::check_cue(&self) {
-                    Ok(_) => LibFile::Cue,
-                    Err(_) => {
-                        logger::info(format!(
-                            "file is not for lib: {}",
-                            self.as_ref().to_str().unwrap()
-                        ));
-                        LibFile::NotForLib
-                    }
-                },
-            },
-            Err(_) => {
-                logger::error(format!(
-                    "file can`t be read: {}",
-                    self.as_ref().to_str().unwrap()
-                ));
-                LibFile::NotForLib
-            }
-        }
-    }
-}
-
 impl AudioFile for CUEFile {
     fn read_metadatas<P: AsRef<Path>>(file_path: P, db: &DB) -> anyhow::Result<Vec<TrackMetadata>> {
         let mut result_vec = vec![];
@@ -151,6 +110,16 @@ impl AudioFile for CUEFile {
                 for file in cue_files {
                     for (i, track) in file.tracks.iter().enumerate() {
                         let fp = file_path.as_ref().parent().unwrap().join(&file.file);
+
+                        if let Some(track) = db
+                            .db_hash
+                            .tracks_hash
+                            .iter()
+                            .find(|track| track.metadata.file_path == fp)
+                        {
+                            result_vec.push(track.metadata.clone());
+                            continue;
+                        }
 
                         let title = track.title.as_ref().map_or("Unknown title", |f| f);
                         let artist = &cue_performer;
@@ -199,5 +168,46 @@ impl CUEFile {
     pub fn check_cue<P: AsRef<Path>>(file_path: P) -> anyhow::Result<()> {
         let _ = parse_from_file(&file_path.as_ref().to_str().unwrap().to_string(), false)?;
         Ok(())
+    }
+}
+
+pub enum LibFile {
+    Audio,
+    Cue,
+    NotForLib,
+}
+
+pub trait LibFileTrait {
+    fn file_type(&self) -> LibFile;
+}
+
+impl<P: AsRef<Path>> LibFileTrait for P {
+    fn file_type(&self) -> LibFile {
+        match infer::get_from_path(&self) {
+            Ok(t) => match t {
+                Some(t) => match t.matcher_type() {
+                    infer::MatcherType::Audio => LibFile::Audio,
+                    infer::MatcherType::Text => LibFile::Cue,
+                    _ => LibFile::NotForLib,
+                },
+                None => match CUEFile::check_cue(&self) {
+                    Ok(_) => LibFile::Cue,
+                    Err(_) => {
+                        logger::info(format!(
+                            "file is not for lib: {}",
+                            self.as_ref().to_str().unwrap()
+                        ));
+                        LibFile::NotForLib
+                    }
+                },
+            },
+            Err(_) => {
+                logger::error(format!(
+                    "file can`t be read: {}",
+                    self.as_ref().to_str().unwrap()
+                ));
+                LibFile::NotForLib
+            }
+        }
     }
 }
