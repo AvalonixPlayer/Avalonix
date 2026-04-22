@@ -1,4 +1,5 @@
 use std::{
+    fmt::format,
     path::{Path, PathBuf},
     time::Duration,
 };
@@ -11,11 +12,16 @@ use lofty::{
     tag::Accessor,
 };
 use rcue::parser::parse_from_file;
+use uuid::Uuid;
 
-use crate::{logger, metadata::track_metadata::TrackMetadata};
+use crate::{
+    disk::{db::DB, loaded_from::LoadedFrom},
+    logger,
+    metadata::track_metadata::TrackMetadata,
+};
 
 pub trait AudioFile {
-    fn read_metadatas<P: AsRef<Path>>(file_path: P) -> anyhow::Result<Vec<TrackMetadata>>;
+    fn read_metadatas<P: AsRef<Path>>(file_path: P, db: &DB) -> anyhow::Result<Vec<TrackMetadata>>;
 }
 
 pub struct SingleFile;
@@ -23,10 +29,23 @@ pub struct SingleFile;
 pub struct CUEFile;
 
 impl AudioFile for SingleFile {
-    fn read_metadatas<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<TrackMetadata>> {
+    fn read_metadatas<P: AsRef<Path>>(path: P, db: &DB) -> anyhow::Result<Vec<TrackMetadata>> {
         let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
 
         let tagged_file = Probe::open(&path)?.options(options).read()?;
+
+        if let Some(track) = db
+            .db_hash
+            .tracks_hash
+            .iter()
+            .find(|track| track.metadata.file_path == path.as_ref().to_str().unwrap())
+        {
+            logger::info(format!(
+                "Single file track loaded from hash: {}",
+                path.as_ref().to_str().unwrap()
+            ));
+            return Ok(vec![track.metadata.clone()]);
+        }
 
         let tag = match tagged_file.primary_tag() {
             Some(primary_tag) => primary_tag,
@@ -57,7 +76,13 @@ impl AudioFile for SingleFile {
         let properties = tagged_file.properties();
         let dur = properties.duration();
 
+        logger::info(format!(
+            "Single file track loaded without hash: {}",
+            path.as_ref().to_str().unwrap()
+        ));
+
         Ok(vec![TrackMetadata {
+            id: Uuid::new_v4().to_bytes_le().to_vec(),
             file_path: path.as_ref().to_str().unwrap().to_string(),
             start_pos: Duration::new(0, 0),
             end_pos: dur,
@@ -111,7 +136,7 @@ impl<P: AsRef<Path>> LibFileTrait for P {
 }
 
 impl AudioFile for CUEFile {
-    fn read_metadatas<P: AsRef<Path>>(file_path: P) -> anyhow::Result<Vec<TrackMetadata>> {
+    fn read_metadatas<P: AsRef<Path>>(file_path: P, db: &DB) -> anyhow::Result<Vec<TrackMetadata>> {
         let mut result_vec = vec![];
 
         let cue = parse_from_file(&file_path.as_ref().to_str().unwrap().to_string(), false)?;
@@ -142,7 +167,10 @@ impl AudioFile for CUEFile {
                             |f| f.indices.get(0).unwrap().1,
                         );
 
+                        let id = Uuid::new_v4().to_bytes_le().to_vec();
+
                         let tm = TrackMetadata::new(
+                            &id,
                             &fp.to_str().unwrap().to_string(),
                             start_pos,
                             end_pos,

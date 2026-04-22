@@ -12,7 +12,12 @@ use rodio::{
     cpal::{BufferSize, DeviceDescription, default_host, traits::HostTrait},
 };
 
-use crate::{logger, media::track::Track, mutex_work::CreateArcMutex};
+use crate::{
+    disk::db::{self, DB},
+    logger,
+    media::track::Track,
+    mutex_work::CreateArcMutex,
+};
 
 pub struct MediaPlayer {
     _sink: MixerDeviceSink,
@@ -136,11 +141,13 @@ fn test_media_player() -> anyhow::Result<()> {
     let media_player = MediaPlayer::new()?;
     let track_path = get_argument_val("TRACK_PATH").unwrap();
 
+    let db: DB = DB::open()?;
+
     let data = fs::read(&track_path).unwrap();
 
     let path = PathBuf::from(&track_path);
 
-    let binding = Track::create_tracks_list_from_file(&path)?;
+    let binding = Track::create_tracks_list_from_file(&path, &db)?;
 
     let track = binding.get(0).clone().unwrap();
 

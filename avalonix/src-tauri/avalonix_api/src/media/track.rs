@@ -1,44 +1,41 @@
-use std::{
-    fmt::{Display, format},
-    io::Cursor,
-    path::Path,
-};
+use std::{fmt::Display, io::Cursor, path::Path};
 
 use anyhow::{Ok, bail};
-use infer::MatcherType;
 use rkyv::{Archive, Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{
+    disk::db::{self, DB},
     media::audio_file::{AudioFile, CUEFile, LibFile, LibFileTrait, SingleFile},
     metadata::track_metadata::TrackMetadata,
 };
 
 #[derive(Archive, Debug, Deserialize, Serialize, Clone)]
 pub struct Track {
-    pub id: Vec<u8>,
     pub metadata: TrackMetadata,
 }
 
 impl Track {
     pub fn create_new(metadata: TrackMetadata) -> Self {
-        let id = Uuid::new_v4().to_bytes_le().to_vec();
-        Self { id, metadata }
+        Self { metadata }
     }
 
-    pub fn create_tracks_list_from_file<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<Track>> {
+    pub fn create_tracks_list_from_file<P: AsRef<Path>>(
+        path: P,
+        db: &DB,
+    ) -> anyhow::Result<Vec<Track>> {
         let push_all = |tp: LibFile| {
             let mut result = vec![];
 
             match tp {
                 LibFile::Audio => {
-                    let metadatas = SingleFile::read_metadatas(&path)?;
+                    let metadatas = SingleFile::read_metadatas(&path, db)?;
                     for tm in metadatas {
                         result.push(Self::create_new(tm));
                     }
                 }
                 LibFile::Cue => {
-                    let metadatas = CUEFile::read_metadatas(&path)?;
+                    let metadatas = CUEFile::read_metadatas(&path, db)?;
                     for tm in metadatas {
                         result.push(Self::create_new(tm));
                     }
@@ -64,7 +61,7 @@ impl Track {
 
 impl Display for Track {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "\ttrack_id: {:?}\t\t{}", self.id, self.metadata)
+        write!(f, "\t\t{}", self.metadata)
     }
 }
 
@@ -76,6 +73,8 @@ fn test_create_tracks() -> anyhow::Result<()> {
 
     let settings = Settings::open()?;
 
+    let db = &DB::open()?;
+
     for lib_path in settings.lib_paths {
         for dir_entry in WalkDir::new(lib_path) {
             let dir_entry = dir_entry?;
@@ -83,7 +82,7 @@ fn test_create_tracks() -> anyhow::Result<()> {
             if dir_entry.file_type().is_file() {
                 let path = dir_entry.path();
 
-                match Track::create_tracks_list_from_file(path) {
+                match Track::create_tracks_list_from_file(path, db) {
                     std::result::Result::Ok(tracks) => {
                         for track in tracks {
                             logger::debug(format!("track readed: {}", track));

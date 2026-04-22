@@ -2,8 +2,11 @@ use std::{fmt::Display, time::Duration};
 
 use rkyv::{Archive, Deserialize, Serialize};
 
+use crate::disk::db::{self, DB};
+
 #[derive(Debug, Archive, Serialize, Deserialize, Clone)]
 pub struct TrackMetadata {
+    pub id: Vec<u8>,
     pub file_path: String,
     pub start_pos: Duration,
     pub end_pos: Duration,
@@ -15,6 +18,7 @@ pub struct TrackMetadata {
 
 impl TrackMetadata {
     pub fn new(
+        id: &Vec<u8>,
         file_path: &str,
         start_pos: Duration,
         end_pos: Duration,
@@ -24,6 +28,7 @@ impl TrackMetadata {
         genre: &str,
     ) -> Self {
         Self {
+            id: id.clone(),
             file_path: file_path.to_string(),
             start_pos,
             end_pos,
@@ -39,7 +44,8 @@ impl Display for TrackMetadata {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "\n\ttrack-metadata: \"{}\" \n\ttitle: {}\n\talbum: {}\n\tartist: {}\n\tgenre: {}\n\tstart: {}\n\tend: {}",
+            "\n\t{:?}\n\tfile_path: \"{}\" \n\ttitle: {}\n\talbum: {}\n\tartist: {}\n\tgenre: {}\n\tstart: {}\n\tend: {}",
+            self.id,
             self.file_path,
             self.title,
             self.album,
@@ -67,7 +73,9 @@ pub fn test_parse_metadata_from_file() -> anyhow::Result<()> {
 
     let file_path = file_path.unwrap();
 
-    logger::debug(audio_file::SingleFile::read_metadatas(&file_path)?[0].to_string());
+    let db = DB::open()?;
+
+    logger::debug(audio_file::SingleFile::read_metadatas(&file_path, &db)?[0].to_string());
 
     Ok(())
 }
@@ -88,7 +96,9 @@ pub fn test_parse_metadata_from_cue() -> anyhow::Result<()> {
 
     let file_path = file_path.unwrap();
 
-    for track in audio_file::CUEFile::read_metadatas(&file_path)? {
+    let db = DB::open()?;
+
+    for track in audio_file::CUEFile::read_metadatas(&file_path, &db)? {
         logger::debug(track.to_string());
     }
 
