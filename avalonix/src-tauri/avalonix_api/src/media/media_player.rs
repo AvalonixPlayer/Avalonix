@@ -1,6 +1,5 @@
 use std::{
     num::NonZero,
-    path::PathBuf,
     sync::{Arc, Mutex},
     thread::{self, sleep},
     time::Duration,
@@ -12,12 +11,7 @@ use rodio::{
     cpal::{BufferSize, DeviceDescription, default_host, traits::HostTrait},
 };
 
-use crate::{
-    disk::db::{self, DB},
-    logger,
-    media::track::Track,
-    mutex_work::CreateArcMutex,
-};
+use crate::{logger, media::track::Track, mutex_work::CreateArcMutex};
 
 pub struct MediaPlayer {
     _sink: MixerDeviceSink,
@@ -136,14 +130,12 @@ impl MediaPlayer {
 
 #[test]
 fn test_media_player() -> anyhow::Result<()> {
-    use crate::utils::get_argument_val;
-    use std::fs;
+    use crate::{disk::db::DB, utils::get_argument_val};
+    use std::path::PathBuf;
     let media_player = MediaPlayer::new()?;
     let track_path = get_argument_val("TRACK_PATH").unwrap();
 
     let db: DB = DB::open()?;
-
-    let data = fs::read(&track_path).unwrap();
 
     let path = PathBuf::from(&track_path);
 

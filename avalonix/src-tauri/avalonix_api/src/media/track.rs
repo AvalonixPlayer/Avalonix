@@ -2,10 +2,9 @@ use std::{fmt::Display, io::Cursor, path::Path};
 
 use anyhow::{Ok, bail};
 use rkyv::{Archive, Deserialize, Serialize};
-use uuid::Uuid;
 
 use crate::{
-    disk::db::{self, DB},
+    disk::db::DB,
     media::audio_file::{AudioFile, CUEFile, LibFile, LibFileTrait, SingleFile},
     metadata::track_metadata::TrackMetadata,
 };

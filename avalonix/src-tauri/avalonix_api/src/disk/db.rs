@@ -1,4 +1,4 @@
-use anyhow::{Ok, bail};
+use anyhow::Ok;
 use rkyv::rancor::Error;
 
 use crate::{disk::disk_manager, logger, media::track::Track};
@@ -79,6 +79,7 @@ impl DB {
 #[test]
 fn test_db() -> anyhow::Result<()> {
     use crate::utils::get_argument_val;
+    use anyhow::bail;
     use std::path::PathBuf;
 
     let mut db = DB::open()?;

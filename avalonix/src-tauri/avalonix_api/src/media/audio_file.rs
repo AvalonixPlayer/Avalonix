@@ -1,8 +1,4 @@
-use std::{
-    fmt::format,
-    path::{Path, PathBuf},
-    time::Duration,
-};
+use std::{path::Path, time::Duration};
 
 use anyhow::bail;
 use lofty::{
@@ -14,11 +10,7 @@ use lofty::{
 use rcue::parser::parse_from_file;
 use uuid::Uuid;
 
-use crate::{
-    disk::{db::DB, loaded_from::LoadedFrom},
-    logger,
-    metadata::track_metadata::TrackMetadata,
-};
+use crate::{disk::db::DB, logger, metadata::track_metadata::TrackMetadata};
 
 pub trait AudioFile {
     fn read_metadatas<P: AsRef<Path>>(file_path: P, db: &DB) -> anyhow::Result<Vec<TrackMetadata>>;

@@ -2,8 +2,6 @@ use std::{fmt::Display, time::Duration};
 
 use rkyv::{Archive, Deserialize, Serialize};
 
-use crate::disk::db::{self, DB};
-
 #[derive(Debug, Archive, Serialize, Deserialize, Clone)]
 pub struct TrackMetadata {
     pub id: Vec<u8>,
@@ -60,6 +58,7 @@ impl Display for TrackMetadata {
 #[test]
 pub fn test_parse_metadata_from_file() -> anyhow::Result<()> {
     use crate::{
+        disk::db::DB,
         logger,
         media::audio_file::{self, AudioFile},
     };
@@ -83,6 +82,7 @@ pub fn test_parse_metadata_from_file() -> anyhow::Result<()> {
 #[test]
 pub fn test_parse_metadata_from_cue() -> anyhow::Result<()> {
     use crate::{
+        disk::db::DB,
         logger,
         media::audio_file::{self, AudioFile},
     };
