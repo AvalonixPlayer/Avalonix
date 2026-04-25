@@ -12,6 +12,7 @@ pub struct TrackMetadata {
     pub album: String,
     pub artist: String,
     pub genre: String,
+    pub bitrate: u32,
 }
 
 impl TrackMetadata {
@@ -24,6 +25,7 @@ impl TrackMetadata {
         album: &str,
         artist: &str,
         genre: &str,
+        bitrate: u32,
     ) -> Self {
         Self {
             id: id.clone(),
@@ -34,6 +36,7 @@ impl TrackMetadata {
             album: album.to_string(),
             artist: artist.to_string(),
             genre: genre.to_string(),
+            bitrate,
         }
     }
 }

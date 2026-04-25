@@ -9,6 +9,7 @@ use anyhow::Ok;
 use rodio::{
     Decoder, DeviceTrait, MixerDeviceSink, Player, Source,
     cpal::{BufferSize, DeviceDescription, default_host, traits::HostTrait},
+    source,
 };
 
 use crate::{logger, media::track::Track, mutex_work::CreateArcMutex};
@@ -51,10 +52,13 @@ impl MediaPlayer {
         let data = track.get_data()?;
         let len = data.get_ref().len() as u64;
 
-        let source = Decoder::builder()
+        let mut source = Decoder::builder()
             .with_data(data)
             .with_byte_len(len)
             .build()?;
+
+        let _ = source.try_seek(track.metadata.start_pos)?;
+        let source = source.take_duration(track.metadata.end_pos);
 
         self.total_duration = source.total_duration().unwrap();
 
@@ -141,7 +145,7 @@ fn test_media_player() -> anyhow::Result<()> {
 
     let binding = Track::create_tracks_list_from_file(&path, &db)?;
 
-    let track = binding.get(0).clone().unwrap();
+    let track = binding.last().clone().unwrap();
 
     let sleep = || thread::sleep(Duration::from_secs(1));
     {

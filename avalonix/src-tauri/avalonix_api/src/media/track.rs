@@ -1,10 +1,11 @@
-use std::{fmt::Display, io::Cursor, path::Path};
+use std::{fmt::Display, fs, io::Cursor, path::Path};
 
 use anyhow::{Ok, bail};
 use rkyv::{Archive, Deserialize, Serialize};
 
 use crate::{
     disk::db::DB,
+    logger,
     media::audio_file::{AudioFile, CUEFile, LibFile, LibFileTrait, SingleFile},
     metadata::track_metadata::TrackMetadata,
 };
@@ -53,7 +54,7 @@ impl Track {
     }
 
     pub fn get_data(&self) -> anyhow::Result<Cursor<Vec<u8>>> {
-        let cursor = Cursor::new(vec![]);
+        let cursor = Cursor::new(fs::read(&self.metadata.file_path)?);
         Ok(cursor)
     }
 }

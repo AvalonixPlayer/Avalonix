@@ -5,6 +5,7 @@ use lofty::{
     config::ParseOptions,
     file::{AudioFile as LoftyAudioFile, TaggedFileExt},
     probe::Probe,
+    properties,
     tag::Accessor,
 };
 use rcue::parser::parse_from_file;
@@ -66,7 +67,9 @@ impl AudioFile for SingleFile {
             .to_string();
 
         let properties = tagged_file.properties();
+
         let dur = properties.duration();
+        let bitrate = properties.overall_bitrate().map_or(0, |f| f);
 
         logger::info(format!(
             "Single file track loaded without hash: {}",
@@ -82,6 +85,7 @@ impl AudioFile for SingleFile {
             album,
             artist,
             genre,
+            bitrate,
         }])
     }
 }
@@ -113,22 +117,25 @@ impl AudioFile for CUEFile {
                             continue;
                         }
 
+                        let options =
+                            ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
+                        let tagged_file = Probe::open(&fp)?.options(options).read()?;
+
                         let title = track.title.as_ref().map_or("Unknown title", |f| f);
                         let artist = &cue_performer;
                         let album = &cue_title;
 
                         let start_pos = track.indices.get(0).map_or(Duration::new(0, 0), |f| f.1);
-                        let end_pos = file.tracks.get(i + 1).map_or(
-                            {
-                                let options = ParseOptions::new()
-                                    .parsing_mode(lofty::config::ParsingMode::Relaxed);
-                                let tagged_file = Probe::open(&fp)?.options(options).read()?;
-                                tagged_file.properties().duration()
-                            },
-                            |f| f.indices.get(0).unwrap().1,
-                        );
+                        let end_pos = file
+                            .tracks
+                            .get(i + 1)
+                            .map_or(tagged_file.properties().duration(), |f| {
+                                f.indices.get(0).unwrap().1
+                            });
 
                         let id = Uuid::new_v4().to_bytes_le().to_vec();
+
+                        let bitrate = tagged_file.properties().overall_bitrate().map_or(0, |f| f);
 
                         let tm = TrackMetadata::new(
                             &id,
@@ -139,6 +146,7 @@ impl AudioFile for CUEFile {
                             album,
                             artist,
                             "Unknown genre",
+                            bitrate,
                         );
                         result_vec.push(tm);
                     }
