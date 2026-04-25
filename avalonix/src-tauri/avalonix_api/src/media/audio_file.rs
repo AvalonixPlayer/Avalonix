@@ -9,12 +9,15 @@ use lofty::{
     tag::Accessor,
 };
 use rcue::parser::parse_from_file;
+use rustc_serialize::base64::{MIME, ToBase64};
 use uuid::Uuid;
 
 use crate::{disk::db::DB, logger, metadata::track_metadata::TrackMetadata};
 
 pub trait AudioFile {
     fn read_metadatas<P: AsRef<Path>>(file_path: P, db: &DB) -> anyhow::Result<Vec<TrackMetadata>>;
+
+    fn get_cover_as_uri<P: AsRef<Path>>(path: P) -> anyhow::Result<String>;
 }
 
 pub struct SingleFile;
@@ -87,6 +90,24 @@ impl AudioFile for SingleFile {
             genre,
             bitrate,
         }])
+    }
+
+    fn get_cover_as_uri<P: AsRef<Path>>(path: P) -> anyhow::Result<String> {
+        let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
+
+        let tagged_file = Probe::open(&path)?.options(options).read()?;
+
+        if let Some(tag) = tagged_file.primary_tag().or(tagged_file.first_tag()) {
+            if let Some(picture) = tag.pictures().first() {
+                let data = picture.data();
+
+                let bs64 = data.to_base64(MIME);
+                let string = format!("data:image/jpg;base64,{}", bs64);
+                println!("{}", string);
+                return Ok(string);
+            }
+        }
+        Ok("".to_string())
     }
 }
 
@@ -161,6 +182,11 @@ impl AudioFile for CUEFile {
         }
 
         Ok(result_vec)
+    }
+
+    fn get_cover_as_uri<P: AsRef<Path>>(path: P) -> anyhow::Result<String> {
+        // not realizated now
+        Ok("".to_string())
     }
 }
 

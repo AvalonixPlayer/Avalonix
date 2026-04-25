@@ -12,12 +12,16 @@ use crate::{
 
 #[derive(Archive, Debug, Deserialize, Serialize, Clone)]
 pub struct Track {
+    pub start_file_path: String,
     pub metadata: TrackMetadata,
 }
 
 impl Track {
-    pub fn create_new(metadata: TrackMetadata) -> Self {
-        Self { metadata }
+    pub fn create_new(start_file_path: String, metadata: TrackMetadata) -> Self {
+        Self {
+            start_file_path,
+            metadata,
+        }
     }
 
     pub fn create_tracks_list_from_file<P: AsRef<Path>>(
@@ -31,13 +35,19 @@ impl Track {
                 LibFile::Audio => {
                     let metadatas = SingleFile::read_metadatas(&path, db)?;
                     for tm in metadatas {
-                        result.push(Self::create_new(tm));
+                        result.push(Self::create_new(
+                            path.as_ref().as_os_str().to_str().unwrap().to_string(),
+                            tm,
+                        ));
                     }
                 }
                 LibFile::Cue => {
                     let metadatas = CUEFile::read_metadatas(&path, db)?;
                     for tm in metadatas {
-                        result.push(Self::create_new(tm));
+                        result.push(Self::create_new(
+                            path.as_ref().as_os_str().to_str().unwrap().to_string(),
+                            tm,
+                        ));
                     }
                 }
                 _ => bail!("Can`t to read file"),
@@ -57,11 +67,28 @@ impl Track {
         let cursor = Cursor::new(fs::read(&self.metadata.file_path)?);
         Ok(cursor)
     }
+
+    pub fn get_cover_as_uri(&self) -> anyhow::Result<String> {
+        match self.start_file_path.file_type() {
+            LibFile::Audio => SingleFile::get_cover_as_uri(&self.start_file_path),
+            LibFile::Cue => CUEFile::get_cover_as_uri(&self.start_file_path),
+            LibFile::NotForLib => {
+                _ = logger::debug("it`s imposible");
+                bail!("it`s imposible")
+            }
+        }
+    }
+
+    //pub fn get_cover_as_uri(&self) -> anyhow::Result<String> {}
 }
 
 impl Display for Track {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "\t\t{}", self.metadata)
+        write!(
+            f,
+            "\n\t\tstart path: {}\n\t\t{}",
+            self.start_file_path, self.metadata
+        )
     }
 }
 

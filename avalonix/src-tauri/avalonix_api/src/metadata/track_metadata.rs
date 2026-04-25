@@ -1,5 +1,6 @@
 use std::{fmt::Display, time::Duration};
 
+use anyhow::Ok;
 use rkyv::{Archive, Deserialize, Serialize};
 
 #[derive(Debug, Archive, Serialize, Deserialize, Clone)]

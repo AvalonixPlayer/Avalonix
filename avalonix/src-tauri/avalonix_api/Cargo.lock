@@ -53,6 +53,7 @@ name = "avalonix_api"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "base64",
  "colored",
  "dirs",
  "infer",
@@ -60,12 +61,19 @@ dependencies = [
  "rcue",
  "rkyv",
  "rodio",
+ "rustc-serialize",
  "serde",
  "serde_json",
  "sled",
  "uuid",
  "walkdir",
 ]
+
+[[package]]
+name = "base64"
+version = "0.22.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "bitflags"
@@ -1103,6 +1111,12 @@ name = "rtrb"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7204ed6420f698836b76d4d5c2ec5dec7585fd5c3a788fd1cde855d1de598239"
+
+[[package]]
+name = "rustc-serialize"
+version = "0.3.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe834bc780604f4674073badbad26d7219cadfb4a2275802db12cbae17498401"
 
 [[package]]
 name = "rustversion"
