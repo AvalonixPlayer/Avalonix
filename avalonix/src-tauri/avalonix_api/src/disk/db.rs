@@ -1,21 +1,32 @@
 use anyhow::Ok;
 use rkyv::rancor::Error;
 
-use crate::{disk::disk_manager, logger, media::track::Track};
+use crate::{
+    disk::disk_manager,
+    logger,
+    media::{
+        album::{self, Album},
+        track::Track,
+        tracks_group::TracksGroup,
+    },
+};
 
 pub struct DB {
     pub db_hash: DBHash,
     tracks: sled::Tree,
+    albums: sled::Tree,
 }
 
 pub struct DBHash {
     pub tracks_hash: Vec<Track>,
+    pub albums_hash: Vec<Album>,
 }
 
 impl DBHash {
     pub fn new() -> Self {
         Self {
             tracks_hash: vec![],
+            albums_hash: vec![],
         }
     }
 }
@@ -26,10 +37,12 @@ impl DB {
         let db = sled::open(db_path)?;
 
         let tracks_tree = db.open_tree(b"tracks")?;
+        let albums_tree = db.open_tree(b"albums")?;
 
         let db = Self {
-            tracks: tracks_tree,
             db_hash: DBHash::new(),
+            tracks: tracks_tree,
+            albums: albums_tree,
         };
 
         Ok(db)
@@ -76,8 +89,49 @@ impl DB {
     }
 }
 
+impl DB {
+    pub fn save_album(&self, album: Album) -> anyhow::Result<()> {
+        let key = &album.album_metadata.id;
+
+        let value_bytes = rkyv::to_bytes::<Error>(&album)?.to_vec();
+
+        self.albums.insert(key, value_bytes)?;
+        self.albums.flush()?;
+
+        logger::info(format!("album saved to db: {}", album));
+
+        Ok(())
+    }
+
+    pub fn get_albums_ids(&mut self) -> anyhow::Result<Vec<Vec<u8>>> {
+        let mut result = vec![];
+        for album in &self.albums {
+            let (id, _) = album?;
+            result.push(id.to_vec());
+        }
+        Ok(result)
+    }
+
+    pub fn load_albums_hash(&mut self) -> anyhow::Result<()> {
+        let mut result = vec![];
+        for album in &self.albums {
+            let (_, album) = album?;
+            let album = rkyv::from_bytes::<Album, Error>(&album)?;
+            result.push(album);
+        }
+        self.db_hash.albums_hash = result;
+        Ok(())
+    }
+
+    pub fn clear_albums(&self) -> anyhow::Result<()> {
+        self.albums.clear()?;
+        self.albums.flush()?;
+        Ok(())
+    }
+}
+
 #[test]
-fn test_db() -> anyhow::Result<()> {
+fn test_db_tracks() -> anyhow::Result<()> {
     use crate::utils::get_argument_val;
     use anyhow::bail;
     use std::path::PathBuf;
@@ -115,8 +169,35 @@ fn test_db() -> anyhow::Result<()> {
 }
 
 #[test]
+fn test_db_albums() -> anyhow::Result<()> {
+    let mut db = DB::open()?;
+
+    db.load_tracks_hash()?;
+    db.load_albums_hash()?;
+
+    let tracks_hash = &db.db_hash.tracks_hash;
+    let albums_hash = &db.db_hash.albums_hash;
+
+    for i in tracks_hash {
+        logger::debug(i);
+    }
+
+    let load_albums = Album::group_tracks(albums_hash, tracks_hash)?;
+
+    for album in load_albums {
+        db.save_album(album)?;
+    }
+
+    for album in albums_hash {
+        logger::debug(format!("from hash: {}", album));
+    }
+
+    Ok(())
+}
+#[test]
 fn test_clear_db() -> anyhow::Result<()> {
     let db = DB::open()?;
     db.clear_tracks()?;
+    db.clear_albums()?;
     Ok(())
 }

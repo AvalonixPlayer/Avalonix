@@ -150,7 +150,7 @@ fn test_media_player() -> anyhow::Result<()> {
     let sleep = || thread::sleep(Duration::from_secs(1));
     {
         let mut guard = media_player.lock().unwrap();
-        guard.start_audio(&track)?;
+        guard.start_audio(&track)?; // for cue need fix
     }
     sleep();
     {
