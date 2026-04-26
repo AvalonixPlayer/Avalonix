@@ -1,0 +1,24 @@
+#windows {
+  height: 100%;
+  overflow: auto;
+}
+
+#tabs-sellector {
+  width: 170px;
+  height: 100%;
+
+  overflow-y: auto;
+
+  border-right: 5px solid var(--separators-color);
+}
+
+#playable-controll {
+  flex-shrink: 0;
+  height: 100px;
+  min-height: 100px !important;
+
+  border-top: 5px solid var(--separators-color);
+
+  display: flex;
+  justify-self: end;
+}
