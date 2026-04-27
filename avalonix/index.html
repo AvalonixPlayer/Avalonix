@@ -2,37 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/styles/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tauri App</title>
-    <script type="module" src="./src/main.ts" defer></script>
+    <script type="module" src="./src/ts/main.ts" defer></script>
   </head>
 
   <body>
     <section class="section" id="windows">
       <section class="section" id="tabs-sellector">
-        <button class="tab-sellect-button">
+        <button class="tab-sellect-button" id="main-tab-sellector">
           <h2>Main</h2>
         </button>
-        <button class="tab-sellect-button">
+        <button class="tab-sellect-button" id="tracks-tab-sellector">
           <h2>Tracks</h2>
         </button>
-        <button class="tab-sellect-button">
+        <button class="tab-sellect-button" id="albums-tab-sellector">
           <h2>Albums</h2>
         </button>
-        <button class="tab-sellect-button">
+        <button class="tab-sellect-button" id="performers-tab-sellector">
           <h2>Performers</h2>
         </button>
-        <button class="tab-sellect-button">
+        <button class="tab-sellect-button" id="settings-tab-sellector">
           <h2>Settings</h2>
         </button>
-        <button class="tab-sellect-button">
+        <button class="tab-sellect-button" id="metadata-tab-sellector">
           <h2>Metadata</h2>
         </button>
       </section>
 
       <section class="section" id="main-section">
-        <section class="section" id="track-preview">
+        <section class="section main-section-child" id="track-preview">
           <img
             id="preview-album-cover"
             src="https://upload.wikimedia.org/wikipedia/ru/b/bf/Meteora.jpg"
@@ -42,6 +42,12 @@
             <h2>Performer</h2>
             <h3>Album</h3>
           </div>
+        </section>
+
+        <section class="section main-section-child" id="tracks-list">
+          <h1>Track</h1>
+          <h1>Track</h1>
+          <h1>Track</h1>
         </section>
       </section>
 
