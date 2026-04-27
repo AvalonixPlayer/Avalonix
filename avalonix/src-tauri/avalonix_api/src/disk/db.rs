@@ -4,7 +4,10 @@ use anyhow::Ok;
 use rkyv::rancor::Error;
 
 use crate::{
-    disk::disk_manager,
+    disk::{
+        disk_manager,
+        settings::{self, Settings},
+    },
     logger,
     media::{
         album::{self, Album},
@@ -49,6 +52,14 @@ impl DB {
 
         Ok(db)
     }
+
+    pub fn update_library(&mut self, settings: &Settings) -> anyhow::Result<()> {
+        self.update_tracks_library(settings)?;
+
+        self.load_tracks_hash()?;
+        self.load_albums_hash()?;
+        Ok(())
+    }
 }
 
 impl DB {
@@ -89,6 +100,20 @@ impl DB {
         self.tracks.flush()?;
         Ok(())
     }
+
+    pub fn update_tracks_library(&self, settings: &Settings) -> anyhow::Result<()> {
+        let mut tracks = vec![];
+        let tracks_files_paths = disk_manager::get_tracks_files_paths(settings);
+        for track_file_path in tracks_files_paths {
+            let mut tracks_b = Track::create_tracks_list_from_file(track_file_path, &self)?;
+            tracks.append(&mut tracks_b);
+        }
+
+        for track in tracks {
+            self.save_track(track)?;
+        }
+        Ok(())
+    }
 }
 
 impl DB {
@@ -105,7 +130,7 @@ impl DB {
         Ok(())
     }
 
-    pub fn get_albums_ids(&mut self) -> anyhow::Result<Vec<Vec<u8>>> {
+    pub fn get_albums_ids(&self) -> anyhow::Result<Vec<Vec<u8>>> {
         let mut result = vec![];
         for album in &self.albums {
             let (id, _) = album?;

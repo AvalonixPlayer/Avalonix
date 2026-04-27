@@ -1,6 +1,15 @@
 use std::{
+    collections::HashSet,
     fs::{self, File},
     path::PathBuf,
+};
+
+use glob::glob;
+use walkdir::WalkDir;
+
+use crate::{
+    disk::settings::{self, Settings},
+    logger,
 };
 
 pub fn avalonix_folder_path() -> PathBuf {
@@ -25,6 +34,23 @@ pub fn db_path() -> PathBuf {
     let res = avalonix_folder_path().join("db");
     check_dir(&res);
     res
+}
+
+pub fn get_tracks_files_paths(settings: &Settings) -> Vec<PathBuf> {
+    let mut result: HashSet<PathBuf> = HashSet::new();
+
+    for folder in &settings.lib_paths {
+        for entry in glob(&format!("{}/**/*", folder.to_str().unwrap().to_string()))
+            .expect("Can`t to read glob")
+        {
+            match entry {
+                Ok(path) => _ = result.insert(path),
+                Err(err) => _ = logger::error(err),
+            }
+        }
+    }
+
+    result.into_iter().collect()
 }
 
 fn check_dir(dir: &PathBuf) {
