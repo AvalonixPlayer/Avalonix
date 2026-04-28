@@ -3,6 +3,10 @@ use std::{fmt::Display, time::Duration};
 use anyhow::Ok;
 use rkyv::{Archive, Deserialize, Serialize};
 
+use crate::metadata::{
+    filter_metadata::FilterMetadata, track_filter_metadata::TrackFilterMetadata,
+};
+
 #[derive(Debug, Archive, Serialize, Deserialize, Clone)]
 pub struct TrackMetadata {
     pub id: Vec<u8>,
@@ -56,6 +60,21 @@ impl Display for TrackMetadata {
             self.start_pos.as_secs(),
             self.end_pos.as_secs()
         )
+    }
+}
+
+impl FilterMetadata for TrackMetadata {
+    type Output = TrackFilterMetadata;
+    fn get_filter_metadata(&self) -> anyhow::Result<Self::Output> {
+        let result = TrackFilterMetadata {
+            id: self.id.clone(),
+            title: self.title.clone(),
+            album: self.album.clone(),
+            artist: self.artist.clone(),
+            genre: self.genre.clone(),
+            bitrate: self.bitrate,
+        };
+        Ok(result)
     }
 }
 

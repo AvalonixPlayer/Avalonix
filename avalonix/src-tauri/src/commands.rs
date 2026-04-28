@@ -6,14 +6,18 @@ use avalonix_api::{
         settings::{self, Settings},
     },
     logger,
+    metadata::track_filter_metadata::TrackFilterMetadata,
 };
 
 #[tauri::command]
-pub async fn get_tracks_ids(db: tauri::State<'_, Mutex<DB>>) -> Result<Vec<Vec<u8>>, String> {
-    logger::debug("get_tracks_ids");
+pub async fn get_tracks_filter_datas(
+    db: tauri::State<'_, Mutex<DB>>,
+) -> Result<Vec<TrackFilterMetadata>, String> {
+    logger::debug("get_track_filter_datas");
 
     let db = db.lock().unwrap();
-    db.get_tracks_ids().map_err(|err| err.to_string())
+    db.get_tracks_filter_metadatas()
+        .map_err(|err| err.to_string())
 }
 
 #[tauri::command]

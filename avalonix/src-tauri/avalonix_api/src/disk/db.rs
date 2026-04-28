@@ -14,6 +14,7 @@ use crate::{
         track::Track,
         tracks_group::TracksGroup,
     },
+    metadata::{filter_metadata::FilterMetadata, track_filter_metadata::TrackFilterMetadata},
 };
 
 pub struct DB {
@@ -75,11 +76,12 @@ impl DB {
         Ok(())
     }
 
-    pub fn get_tracks_ids(&self) -> anyhow::Result<Vec<Vec<u8>>> {
+    pub fn get_tracks_filter_metadatas(&self) -> anyhow::Result<Vec<TrackFilterMetadata>> {
         let mut result = vec![];
         for track in &self.tracks {
-            let (id, _) = track?;
-            result.push(id.to_vec());
+            let (_, track) = track?;
+            let track = rkyv::from_bytes::<Track, Error>(&track)?;
+            result.push(track.metadata.get_filter_metadata()?);
         }
         Ok(result)
     }

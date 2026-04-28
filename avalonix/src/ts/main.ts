@@ -1,9 +1,9 @@
-import { loadTracksIds } from "./mainFiller";
+import { loadTracksFilerDatas } from "./mainFiller";
 import { tabsBtnsConnectToFunctions } from "./tabsBtnsConnectToFunctions";
 
 await init();
 
 async function init() {
   tabsBtnsConnectToFunctions();
-  await loadTracksIds();
+  await loadTracksFilerDatas();
 }

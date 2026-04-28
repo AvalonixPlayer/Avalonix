@@ -12,7 +12,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            commands::get_tracks_ids,
+            commands::get_tracks_filter_datas,
             commands::get_albums_ids,
         ])
         .manage(api.media_player)
