@@ -1,0 +1,69 @@
+#windows {
+  height: 100%;
+
+  display: flex;
+
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+#tabs-sellector {
+  width: 170px;
+  min-width: 170px;
+  height: 100%;
+
+  overflow-y: auto;
+
+  border-right: 5px solid var(--separators-color);
+}
+
+#playable-controll {
+  flex-shrink: 0;
+  height: 100px;
+  min-height: 100px !important;
+
+  border-top: 5px solid var(--separators-color);
+
+  display: flex;
+  justify-self: end;
+}
+
+#main-section {
+  width: 100%;
+  height: 100%;
+}
+
+#track-preview {
+  width: 100%;
+  height: 100%;
+
+  min-width: 400px;
+
+  align-items: center;
+  justify-content: center;
+  justify-content: center;
+
+  display: flex;
+
+  border-right: 5px solid var(--separators-color);
+}
+
+#preview-album-cover {
+  width: 250px;
+  height: 250px;
+
+  min-width: 200px;
+  min-height: 200px;
+
+  margin-left: 20px;
+  margin-right: 20px;
+
+  border-radius: 10px;
+
+  object-fit: contain;
+}
+
+#queue-section {
+  width: 250px;
+  min-width: 250px;
+}

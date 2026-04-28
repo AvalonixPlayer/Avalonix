@@ -1,0 +1,9 @@
+h1,
+h2,
+h3 {
+  color: var(--text-color);
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
