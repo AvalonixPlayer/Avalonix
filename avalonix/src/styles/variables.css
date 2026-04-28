@@ -2,4 +2,7 @@
   --background-color: #1f1f1f;
   --separators-color: #5a267277;
   --text-color: #f1f1f1;
+
+  --button-hover-color: rgba(88, 88, 88, 0.301);
+  --button-sellect-color: rgba(88, 88, 88, 0.432);
 }

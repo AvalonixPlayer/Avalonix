@@ -6,4 +6,6 @@ h3 {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }

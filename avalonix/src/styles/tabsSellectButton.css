@@ -16,7 +16,7 @@
 }
 
 .tab-sellect-button:hover {
-  background-color: rgba(88, 88, 88, 0.301);
+  background-color: var(--button-hover-color);
 }
 
 .tab-sellect-button:hover h2 {
@@ -24,7 +24,7 @@
 }
 
 .tab-sellect-button:active {
-  background-color: rgba(88, 88, 88, 0.432);
+  background-color: var(--button-sellect-color);
 }
 
 .tab-sellect-button:active h2 {
