@@ -123,7 +123,7 @@ impl MediaPlayer {
     fn check_status(self_arc: &Arc<Mutex<Self>>) {
         let self_clone = self_arc.clone();
 
-        let dur = Duration::from_secs(1);
+        let dur = Duration::from_millis(1);
         thread::spawn(move || {
             loop {
                 sleep(dur);

@@ -19,18 +19,24 @@ export async function loadTracksFilerDatas() {
 export async function fillTracksList() {
   let list = document.querySelector("#tracks-list");
   list!.innerHTML = "";
-  tracksFilerDatas.forEach((data) => {
+  tracksFilerDatas.forEach(async (data, index) => {
     console.log(data);
-    let btn = createButton(data);
+    let btn = await createButton(data, index);
     list?.append(btn);
   });
 }
 
-function createButton(data: TrackFilterMetadata) {
+async function createButton(data: TrackFilterMetadata, index: number) {
   console.log(trackSellectButtonTempl);
   let button = trackSellectButtonTempl.content.cloneNode(
     true,
   ) as DocumentFragment;
+
+  let add_btn = button.getElementById("add-track-to-list-button");
+  add_btn?.addEventListener("click", () => {
+    invoke("start_track", { index: index });
+    console.log(index);
+  });
 
   let title = button.querySelector("h2");
   let performer = button.querySelector("h3");

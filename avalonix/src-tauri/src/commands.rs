@@ -48,6 +48,7 @@ pub async fn start_track(
     media_player: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     index: usize,
 ) -> Result<(), String> {
+    logger::debug("start_track");
     let mut media_player_guard = media_player.lock().unwrap();
     _ = media_player_guard
         .add_track(index)

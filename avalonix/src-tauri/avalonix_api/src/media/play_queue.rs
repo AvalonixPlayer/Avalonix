@@ -7,7 +7,10 @@ use std::{
 use anyhow::Ok;
 
 use crate::{
-    disk::db::DBHash, logger, media::media_player::MediaPlayer, mutex_work::CreateArcMutex,
+    disk::db::{DB, DBHash},
+    logger,
+    media::media_player::MediaPlayer,
+    mutex_work::CreateArcMutex,
 };
 
 pub struct PlayQueue {
@@ -84,4 +87,22 @@ impl PlayQueue {
         player_guard.start_audio(track)?;
         Ok(())
     }
+}
+
+#[test]
+fn test_play_queue() -> anyhow::Result<()> {
+    let mut db = DB::open()?;
+    db.load_tracks_hash()?;
+
+    let player = MediaPlayer::new()?;
+
+    let queue = PlayQueue::new(&player, &db.db_hash)?;
+
+    PlayQueue::update(&queue);
+    let mut queue_guard = queue.lock().unwrap();
+    queue_guard.add_track(0)?;
+
+    drop(queue_guard);
+
+    loop {}
 }
