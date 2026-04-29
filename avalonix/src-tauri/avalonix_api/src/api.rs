@@ -27,6 +27,7 @@ impl Api {
             db.load_albums_hash()?;
 
             play_queue = PlayQueue::new(&media_player, &db.db_hash)?;
+            PlayQueue::update(&play_queue);
         }
 
         Ok(Self {

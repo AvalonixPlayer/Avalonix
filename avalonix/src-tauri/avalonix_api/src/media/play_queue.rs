@@ -55,6 +55,9 @@ impl PlayQueue {
                         let mut play_queue_guard = play_queue.lock().unwrap();
                         if play_queue_guard.playing_strted {
                             _ = play_queue_guard.next().map_err(|err| logger::error(err));
+                            _ = play_queue_guard
+                                .start_track()
+                                .map_err(|err| logger::error(err));
                         } else {
                             _ = play_queue_guard
                                 .start_track()
@@ -88,8 +91,11 @@ impl PlayQueue {
     pub fn start_track(&self) -> anyhow::Result<()> {
         let mut player_guard = self.player.lock().unwrap();
 
-        let track = &self.library.tracks_hash[self.cur_track_index];
-        player_guard.start_audio(track)?;
+        if let Some(index) = self.tracks_indexes.get(self.cur_track_index) {
+            let track = &self.library.tracks_hash[*index];
+            player_guard.start_audio(track)?;
+            let len = player_guard.get_len();
+        }
 
         Ok(())
     }

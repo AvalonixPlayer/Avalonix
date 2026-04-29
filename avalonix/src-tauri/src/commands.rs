@@ -49,7 +49,6 @@ pub async fn start_track(
     index: usize,
 ) -> Result<(), String> {
     logger::debug("start_track");
-    logger::debug(format!("{}", index));
     let mut play_queue_guard = play_queue.lock().unwrap();
     _ = play_queue_guard
         .add_track(index)
