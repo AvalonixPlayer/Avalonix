@@ -4,11 +4,12 @@ use anyhow::Ok;
 
 use crate::{
     disk::{db::DB, settings::Settings},
-    media::{media_player::MediaPlayer, track::Track},
+    media::{media_player::MediaPlayer, play_queue::PlayQueue, track::Track},
 };
 
 pub struct Api {
     pub media_player: Arc<Mutex<MediaPlayer>>,
+    pub play_queue: Arc<Mutex<PlayQueue>>,
     pub db: Mutex<DB>,
     pub settings: Mutex<Settings>,
 }
@@ -16,6 +17,7 @@ pub struct Api {
 impl Api {
     pub fn new() -> anyhow::Result<Self> {
         let media_player = MediaPlayer::new()?;
+        let play_queue;
         let db = Mutex::new(DB::open()?);
         let settings = Mutex::new(Settings::open()?);
 
@@ -23,10 +25,13 @@ impl Api {
             let mut db = db.lock().unwrap();
             db.load_tracks_hash()?;
             db.load_albums_hash()?;
+
+            play_queue = PlayQueue::new(&media_player, &db.db_hash)?;
         }
 
         Ok(Self {
             media_player,
+            play_queue,
             db,
             settings,
         })
