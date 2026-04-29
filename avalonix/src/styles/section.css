@@ -47,13 +47,11 @@
   padding-left: 50px;
 
   display: flex;
-
-  border-right: 5px solid var(--separators-color);
 }
 
 #preview-album-cover {
-  width: 250px;
-  height: 250px;
+  width: 350px;
+  height: 350px;
 
   min-width: 200px;
   min-height: 200px;
@@ -69,6 +67,8 @@
 #queue-section {
   width: 250px;
   min-width: 250px;
+
+  border-left: 5px solid var(--separators-color);
 }
 
 #tracks-list-section {
