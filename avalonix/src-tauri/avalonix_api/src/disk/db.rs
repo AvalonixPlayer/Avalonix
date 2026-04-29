@@ -23,6 +23,7 @@ pub struct DB {
     albums: sled::Tree,
 }
 
+#[derive(Clone)]
 pub struct DBHash {
     pub tracks_hash: Vec<Track>,
     pub albums_hash: Vec<Album>,

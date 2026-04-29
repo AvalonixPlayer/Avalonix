@@ -48,6 +48,10 @@ impl MediaPlayer {
         Ok(self_arc)
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.player.empty()
+    }
+
     pub fn start_audio(&mut self, track: &Track) -> anyhow::Result<()> {
         let data = track.get_data()?;
         let len = data.get_ref().len() as u64;

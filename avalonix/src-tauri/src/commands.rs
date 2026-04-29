@@ -1,4 +1,4 @@
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 use avalonix_api::{
     disk::{
@@ -6,6 +6,7 @@ use avalonix_api::{
         settings::{self, Settings},
     },
     logger,
+    media::{media_player, play_queue::PlayQueue},
     metadata::track_filter_metadata::TrackFilterMetadata,
 };
 
@@ -40,4 +41,19 @@ pub async fn update_library(
         Ok(_) => Ok(()),
         Err(err) => Err(err.to_string()),
     }
+}
+
+#[tauri::command]
+pub async fn start_track(
+    media_player: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    index: usize,
+) -> Result<(), String> {
+    let mut media_player_guard = media_player.lock().unwrap();
+    _ = media_player_guard
+        .add_track(index)
+        .map_err(|err| err.to_string());
+
+    media_player_guard
+        .start_track()
+        .map_err(|err| err.to_string())
 }

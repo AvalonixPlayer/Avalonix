@@ -14,10 +14,12 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::get_tracks_filter_datas,
             commands::get_albums_ids,
+            commands::start_track
         ])
         .manage(api.media_player)
         .manage(api.db)
         .manage(api.settings)
+        .manage(api.play_queue)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
