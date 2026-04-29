@@ -45,16 +45,28 @@ pub async fn update_library(
 
 #[tauri::command]
 pub async fn start_track(
-    media_player: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     index: usize,
 ) -> Result<(), String> {
     logger::debug("start_track");
-    let mut media_player_guard = media_player.lock().unwrap();
-    _ = media_player_guard
+    logger::debug(format!("{}", index));
+    let mut play_queue_guard = play_queue.lock().unwrap();
+    _ = play_queue_guard
         .add_track(index)
         .map_err(|err| err.to_string());
 
-    media_player_guard
+    play_queue_guard.cur_track_index = index;
+    play_queue_guard
         .start_track()
         .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_tracks_is_queue_indexes(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<Vec<usize>, String> {
+    let guard = play_queue.lock().unwrap();
+
+    let indexes = guard.tracks_indexes.clone();
+    Ok(indexes)
 }

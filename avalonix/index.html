@@ -49,7 +49,9 @@
         </section>
       </section>
 
-      <section class="section" id="queue-section"></section>
+      <section class="section" id="queue-section">
+        <div class="playables-list" id="queue-list"></div>
+      </section>
     </section>
 
     <section class="section" id="playable-controll">
@@ -64,6 +66,15 @@
       </button>
       <h2>Track name</h2>
       <h3>Performer</h3>
+    </div>
+  </template>
+
+  <template id="track-sellect-in-queue-button-template">
+    <div class="playable-button" id="track-sellect-from-queue-button">
+      <button id="start-track-from-queue-button">
+        <img src="./src/assets/sellect_btn.png" />
+      </button>
+      <h3>Track name</h3>
     </div>
   </template>
 </html>

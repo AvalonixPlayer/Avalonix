@@ -14,7 +14,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::get_tracks_filter_datas,
             commands::get_albums_ids,
-            commands::start_track
+            commands::start_track,
+            commands::get_tracks_is_queue_indexes
         ])
         .manage(api.media_player)
         .manage(api.db)

@@ -1,0 +1,56 @@
+#track-sellect-from-queue-button {
+  background: none;
+  border: none;
+
+  display: flex;
+
+  width: auto;
+  height: auto;
+
+  overflow: hidden;
+
+  align-items: center;
+}
+
+#start-track-from-queue-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  width: 30px;
+  height: 30px;
+  border: none;
+
+  transition: all 0.1s ease-in;
+
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#start-track-from-queue-button > img {
+  transition: all 0.1s ease-in;
+
+  width: 30px;
+  height: 30px;
+
+  scale: 0.9;
+}
+
+#start-track-from-queue-button:hover {
+  border-radius: 5px;
+  background-color: var(--button-hover-color);
+}
+
+#start-track-from-queue-button:hover > img {
+  scale: 1;
+}
+
+#start-track-from-queue-button:active {
+  border-radius: 10px;
+  scale: 1.1;
+  background-color: var(--button-hover-color);
+}
+
+#start-track-from-queue-button:active > img {
+  scale: 1;
+}

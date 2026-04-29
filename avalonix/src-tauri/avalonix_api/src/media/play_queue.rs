@@ -1,4 +1,5 @@
 use std::{
+    collections::{HashMap, HashSet},
     sync::{Arc, Mutex},
     thread,
     time::Duration,
@@ -66,25 +67,30 @@ impl PlayQueue {
         });
     }
 
-    pub fn add_track(&mut self, index: usize) -> anyhow::Result<()> {
-        self.tracks_indexes.push(index);
+    pub fn add_track(&mut self, index_in_library: usize) -> anyhow::Result<()> {
+        if !self.tracks_indexes.contains(&index_in_library) {
+            self.tracks_indexes.push(index_in_library);
+        }
+
         Ok(())
     }
 
     pub fn next(&mut self) -> anyhow::Result<()> {
-        if self.cur_track_index + 1 < self.tracks_indexes.len() {
+        let len = self.tracks_indexes.len();
+        if self.cur_track_index + 1 < len {
             self.cur_track_index += 1;
         } else {
             self.cur_track_index = 0;
         }
-        self.start_track()?;
         Ok(())
     }
 
     pub fn start_track(&self) -> anyhow::Result<()> {
         let mut player_guard = self.player.lock().unwrap();
-        let track = &self.library.tracks_hash[self.tracks_indexes[self.cur_track_index]];
+
+        let track = &self.library.tracks_hash[self.cur_track_index];
         player_guard.start_audio(track)?;
+
         Ok(())
     }
 }
