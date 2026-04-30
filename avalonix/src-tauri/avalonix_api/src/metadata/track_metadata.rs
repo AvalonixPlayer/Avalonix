@@ -7,11 +7,14 @@ use crate::metadata::{
     filter_metadata::FilterMetadata, track_filter_metadata::TrackFilterMetadata,
 };
 
-#[derive(Debug, Archive, Serialize, Deserialize, Clone)]
+#[derive(Debug, Archive, Serialize, serde::Serialize, Deserialize, Clone, ts_rs::TS)]
+#[ts(export)]
 pub struct TrackMetadata {
     pub id: Vec<u8>,
     pub file_path: String,
+    #[ts(skip)]
     pub start_pos: Duration,
+    #[ts(skip)]
     pub end_pos: Duration,
     pub title: String,
     pub album: String,

@@ -7,7 +7,7 @@ use avalonix_api::{
     },
     logger,
     media::{media_player, play_queue::PlayQueue},
-    metadata::track_filter_metadata::TrackFilterMetadata,
+    metadata::{track_filter_metadata::TrackFilterMetadata, track_metadata::TrackMetadata},
 };
 
 #[tauri::command]
@@ -61,11 +61,25 @@ pub async fn start_track(
 }
 
 #[tauri::command]
-pub async fn get_tracks_is_queue_indexes(
+pub async fn get_tracks_in_queue_indexes(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
 ) -> Result<Vec<usize>, String> {
     let guard = play_queue.lock().unwrap();
 
-    let indexes = guard.tracks_indexes.clone();
+    let indexes = guard.tracks_in_queue_indexes.clone();
     Ok(indexes)
+}
+
+#[tauri::command]
+pub async fn get_cur_track_metadata(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<TrackMetadata, String> {
+    let guard = play_queue.lock().unwrap();
+    if guard.tracks_in_queue_indexes.is_empty() {
+        return Err("Queue is empty".to_string());
+    }
+    let metadata = guard.library.tracks_hash[guard.cur_track_index]
+        .metadata
+        .clone();
+    Ok(metadata)
 }

@@ -17,7 +17,7 @@ use crate::{
 pub struct PlayQueue {
     pub player: Arc<Mutex<MediaPlayer>>,
     pub library: DBHash,
-    pub tracks_indexes: Vec<usize>,
+    pub tracks_in_queue_indexes: Vec<usize>,
     pub cur_track_index: usize,
     playing_strted: bool,
 }
@@ -30,7 +30,7 @@ impl PlayQueue {
         let queue = Self {
             player: player.clone(),
             library: library.clone(),
-            tracks_indexes: vec![],
+            tracks_in_queue_indexes: vec![],
             cur_track_index: 0,
             playing_strted: false,
         }
@@ -71,30 +71,47 @@ impl PlayQueue {
     }
 
     pub fn add_track(&mut self, index_in_library: usize) -> anyhow::Result<()> {
-        if !self.tracks_indexes.contains(&index_in_library) {
-            self.tracks_indexes.push(index_in_library);
+        if !self.tracks_in_queue_indexes.contains(&index_in_library) {
+            self.tracks_in_queue_indexes.push(index_in_library);
         }
 
         Ok(())
     }
 
     pub fn next(&mut self) -> anyhow::Result<()> {
-        let len = self.tracks_indexes.len();
-        if self.cur_track_index + 1 < len {
-            self.cur_track_index += 1;
-        } else {
-            self.cur_track_index = 0;
+        let len = self.tracks_in_queue_indexes.len();
+        if let Some(index_in_queue) = self
+            .tracks_in_queue_indexes
+            .iter()
+            .position(|x| *x == self.cur_track_index)
+        {
+            if index_in_queue + 1 < len {
+                self.cur_track_index = self.tracks_in_queue_indexes[index_in_queue + 1];
+            } else {
+                if !self.tracks_in_queue_indexes.is_empty() {
+                    self.cur_track_index = self.tracks_in_queue_indexes[0];
+                } else {
+                    let mut player_guard = self.player.lock().unwrap();
+                    player_guard.stop_audio();
+                }
+            }
         }
+
         Ok(())
     }
 
     pub fn start_track(&self) -> anyhow::Result<()> {
         let mut player_guard = self.player.lock().unwrap();
 
-        if let Some(index) = self.tracks_indexes.get(self.cur_track_index) {
-            let track = &self.library.tracks_hash[*index];
+        if let Some(_) = self
+            .tracks_in_queue_indexes
+            .iter()
+            .find(|x| **x == self.cur_track_index)
+        {
+            let track = &self.library.tracks_hash[self.cur_track_index];
             player_guard.start_audio(track)?;
-            let len = player_guard.get_len();
+        } else {
+            player_guard.stop_audio();
         }
 
         Ok(())

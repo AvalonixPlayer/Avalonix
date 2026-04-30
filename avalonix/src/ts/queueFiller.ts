@@ -7,7 +7,7 @@ const buttonTemplate = document.getElementById(
 ) as HTMLTemplateElement;
 
 export async function updateQueue() {
-  let indexes = await invoke<Array<number>>("get_tracks_is_queue_indexes");
+  let indexes = await invoke<Array<number>>("get_tracks_in_queue_indexes");
 
   queueList.innerHTML = "";
   indexes.forEach((index) => {
