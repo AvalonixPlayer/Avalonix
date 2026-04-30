@@ -1,6 +1,6 @@
 use std::{
     collections::{HashMap, HashSet},
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc},
     thread,
     time::Duration,
 };
@@ -106,7 +106,9 @@ fn test_play_queue() -> anyhow::Result<()> {
     let mut db = DB::open()?;
     db.load_tracks_hash()?;
 
-    let player = MediaPlayer::new()?;
+    let (event_sender, event_reciver) = mpsc::channel();
+
+    let player = MediaPlayer::new(&event_sender)?;
 
     let queue = PlayQueue::new(&player, &db.db_hash)?;
 

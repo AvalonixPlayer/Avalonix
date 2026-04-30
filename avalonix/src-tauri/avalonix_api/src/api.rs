@@ -1,10 +1,15 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{
+    Arc, Mutex,
+    mpsc::{self, Receiver},
+};
 
 use anyhow::Ok;
 
 use crate::{
     disk::{db::DB, settings::Settings},
+    events::Event,
     media::{media_player::MediaPlayer, play_queue::PlayQueue, track::Track},
+    mutex_work::CreateArcMutex,
 };
 
 pub struct Api {
@@ -12,11 +17,14 @@ pub struct Api {
     pub play_queue: Arc<Mutex<PlayQueue>>,
     pub db: Mutex<DB>,
     pub settings: Mutex<Settings>,
+    pub event_reciver: Receiver<Event>,
 }
 
 impl Api {
     pub fn new() -> anyhow::Result<Self> {
-        let media_player = MediaPlayer::new()?;
+        let (event_sender, event_reciver) = mpsc::channel();
+
+        let media_player = MediaPlayer::new(&event_sender)?;
         let play_queue;
         let db = Mutex::new(DB::open()?);
         let settings = Mutex::new(Settings::open()?);
@@ -35,6 +43,7 @@ impl Api {
             play_queue,
             db,
             settings,
+            event_reciver,
         })
     }
 }

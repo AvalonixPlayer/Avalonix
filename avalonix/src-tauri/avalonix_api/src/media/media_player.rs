@@ -1,6 +1,9 @@
 use std::{
     num::NonZero,
-    sync::{Arc, Mutex},
+    sync::{
+        Arc, Mutex,
+        mpsc::{self, Sender},
+    },
     thread::{self, sleep},
     time::Duration,
 };
@@ -12,17 +15,18 @@ use rodio::{
     source,
 };
 
-use crate::{logger, media::track::Track, mutex_work::CreateArcMutex};
+use crate::{events::Event, logger, media::track::Track, mutex_work::CreateArcMutex};
 
 pub struct MediaPlayer {
     _sink: MixerDeviceSink,
     total_duration: Duration,
     player: Player,
     last_device_description: DeviceDescription,
+    event_sender: Sender<Event>,
 }
 
 impl MediaPlayer {
-    pub fn new() -> anyhow::Result<Arc<Mutex<Self>>> {
+    pub fn new(event_sender: &Sender<Event>) -> anyhow::Result<Arc<Mutex<Self>>> {
         let stream_handle = rodio::DeviceSinkBuilder::from_default_device()?
             .with_buffer_size(BufferSize::Fixed(256))
             .with_sample_rate(NonZero::new(48_000).unwrap())
@@ -40,6 +44,7 @@ impl MediaPlayer {
             total_duration: Duration::new(0, 0),
             player,
             last_device_description: device_description,
+            event_sender: event_sender.clone(),
         }
         .create_arc_mutex();
 
@@ -71,6 +76,8 @@ impl MediaPlayer {
         self.player.play();
 
         logger::debug("audio started");
+
+        self.event_sender.send(Event::UpdatePlayingTrack).unwrap();
         Ok(())
     }
 
@@ -140,7 +147,10 @@ impl MediaPlayer {
 fn test_media_player() -> anyhow::Result<()> {
     use crate::{disk::db::DB, utils::get_argument_val};
     use std::path::PathBuf;
-    let media_player = MediaPlayer::new()?;
+
+    let (event_sender, event_reciver) = mpsc::channel();
+
+    let media_player = MediaPlayer::new(&event_sender)?;
     let track_path = get_argument_val("TRACK_PATH").unwrap();
 
     let db: DB = DB::open()?;
