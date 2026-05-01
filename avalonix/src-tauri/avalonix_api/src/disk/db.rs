@@ -1,4 +1,8 @@
-use std::fs;
+use std::{
+    fs,
+    sync::{Arc, Mutex},
+    time::UNIX_EPOCH,
+};
 
 use anyhow::Ok;
 use rkyv::rancor::Error;
@@ -15,6 +19,7 @@ use crate::{
         tracks_group::TracksGroup,
     },
     metadata::{filter_metadata::FilterMetadata, track_filter_metadata::TrackFilterMetadata},
+    mutex_work::CreateArcMutex,
 };
 
 pub struct DB {
@@ -39,7 +44,7 @@ impl DBHash {
 }
 
 impl DB {
-    pub fn open() -> anyhow::Result<Self> {
+    pub fn open() -> anyhow::Result<Arc<Mutex<Self>>> {
         let db_path = disk_manager::db_path();
         let db = sled::open(db_path)?;
 
@@ -52,7 +57,7 @@ impl DB {
             albums: albums_tree,
         };
 
-        Ok(db)
+        Ok(db.create_arc_mutex())
     }
 
     pub fn update_library(&mut self, settings: &Settings) -> anyhow::Result<()> {
@@ -107,9 +112,37 @@ impl DB {
     pub fn update_tracks_library(&self, settings: &Settings) -> anyhow::Result<()> {
         let mut tracks = vec![];
         let tracks_files_paths = disk_manager::get_tracks_files_paths(settings);
+
         for track_file_path in tracks_files_paths {
-            let mut tracks_b = Track::create_tracks_list_from_file(track_file_path, &self)?;
-            tracks.append(&mut tracks_b);
+            if let Some(track_in_lib) = self
+                .db_hash
+                .tracks_hash
+                .iter()
+                .find(|x| *x.start_file_path == track_file_path.to_str().unwrap().to_string())
+            {
+                let mod_time = fs::metadata(&track_file_path)?
+                    .modified()?
+                    .duration_since(UNIX_EPOCH)?
+                    .as_secs();
+                if mod_time != track_in_lib.mod_date {
+                    logger::debug("track metadata must to reload");
+                    let tracks_b = Track::create_tracks_list_from_file(track_file_path, &self);
+                    match tracks_b {
+                        Result::Ok(mut tracks_b) => {
+                            tracks.append(&mut tracks_b);
+                        }
+                        Err(err) => logger::warn(err),
+                    }
+                }
+            } else {
+                let tracks_b = Track::create_tracks_list_from_file(track_file_path, &self);
+                match tracks_b {
+                    Result::Ok(mut tracks_b) => {
+                        tracks.append(&mut tracks_b);
+                    }
+                    Err(err) => logger::warn(err),
+                }
+            }
         }
 
         for track in tracks {
@@ -166,20 +199,22 @@ fn test_db_tracks() -> anyhow::Result<()> {
     use anyhow::bail;
     use std::path::PathBuf;
 
-    let mut db = DB::open()?;
+    let db = DB::open()?;
 
     let path_to_file = get_argument_val("FILE_PATH").unwrap();
 
     let path_to_file = PathBuf::from(path_to_file);
 
-    if let Err(err) = db.load_tracks_hash() {
+    let mut db_guard = db.lock().unwrap();
+
+    if let Err(err) = db_guard.load_tracks_hash() {
         bail!(err)
     }
 
-    match Track::create_tracks_list_from_file(path_to_file, &db) {
+    match Track::create_tracks_list_from_file(path_to_file, &db_guard) {
         std::result::Result::Ok(tracks) => {
             for track in tracks {
-                db.save_track(track)?;
+                db_guard.save_track(track)?;
             }
         }
         Err(err) => {
@@ -187,11 +222,11 @@ fn test_db_tracks() -> anyhow::Result<()> {
         }
     }
 
-    if let Err(err) = db.load_tracks_hash() {
+    if let Err(err) = db_guard.load_tracks_hash() {
         bail!(err)
     }
 
-    for track in db.db_hash.tracks_hash {
+    for track in &db_guard.db_hash.tracks_hash {
         logger::debug(format!("{}", track));
     }
 
@@ -202,11 +237,13 @@ fn test_db_tracks() -> anyhow::Result<()> {
 fn test_db_albums() -> anyhow::Result<()> {
     let mut db = DB::open()?;
 
-    db.load_tracks_hash()?;
-    db.load_albums_hash()?;
+    let mut db_guard = db.lock().unwrap();
 
-    let tracks_hash = &db.db_hash.tracks_hash;
-    let albums_hash = &db.db_hash.albums_hash;
+    db_guard.load_tracks_hash()?;
+    db_guard.load_albums_hash()?;
+
+    let tracks_hash = &db_guard.db_hash.tracks_hash;
+    let albums_hash = &db_guard.db_hash.albums_hash;
 
     for i in tracks_hash {
         logger::debug(i);
@@ -215,7 +252,7 @@ fn test_db_albums() -> anyhow::Result<()> {
     let load_albums = Album::group_tracks(albums_hash, tracks_hash)?;
 
     for album in load_albums {
-        db.save_album(album)?;
+        db_guard.save_album(album)?;
     }
 
     for album in albums_hash {
@@ -224,10 +261,27 @@ fn test_db_albums() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn test_db_update() -> anyhow::Result<()> {
+    let db = DB::open()?;
+
+    let mut db_guard = db.lock().unwrap();
+    db_guard.load_tracks_hash()?;
+    db_guard.load_albums_hash()?;
+
+    let settings = &Settings::open()?;
+    db_guard.update_library(settings)?;
+
+    Ok(())
+}
+
 #[test]
 fn test_clear_db() -> anyhow::Result<()> {
     let db = DB::open()?;
-    db.clear_tracks()?;
-    db.clear_albums()?;
+
+    let db_guard = db.lock().unwrap();
+    db_guard.clear_tracks()?;
+    db_guard.clear_albums()?;
     Ok(())
 }

@@ -100,7 +100,9 @@ pub fn test_parse_metadata_from_file() -> anyhow::Result<()> {
 
     let db = DB::open()?;
 
-    logger::debug(audio_file::SingleFile::read_metadatas(&file_path, &db)?[0].to_string());
+    let db_guard = db.lock().unwrap();
+
+    logger::debug(audio_file::SingleFile::read_metadatas(&file_path, &db_guard)?[0].to_string());
 
     Ok(())
 }
@@ -123,8 +125,9 @@ pub fn test_parse_metadata_from_cue() -> anyhow::Result<()> {
     let file_path = file_path.unwrap();
 
     let db = DB::open()?;
+    let db_guard = db.lock().unwrap();
 
-    for track in audio_file::CUEFile::read_metadatas(&file_path, &db)? {
+    for track in audio_file::CUEFile::read_metadatas(&file_path, &db_guard)? {
         logger::debug(track.to_string());
     }
 

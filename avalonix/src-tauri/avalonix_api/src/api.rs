@@ -15,7 +15,7 @@ use crate::{
 pub struct Api {
     pub media_player: Arc<Mutex<MediaPlayer>>,
     pub play_queue: Arc<Mutex<PlayQueue>>,
-    pub db: Mutex<DB>,
+    pub db: Arc<Mutex<DB>>,
     pub settings: Mutex<Settings>,
     pub event_reciver: Receiver<Event>,
 }
@@ -26,15 +26,16 @@ impl Api {
 
         let media_player = MediaPlayer::new(&event_sender)?;
         let play_queue;
-        let db = Mutex::new(DB::open()?);
+        let db = DB::open()?;
         let settings = Mutex::new(Settings::open()?);
 
         {
-            let mut db = db.lock().unwrap();
-            db.load_tracks_hash()?;
-            db.load_albums_hash()?;
+            let mut db_guard = db.lock().unwrap();
+            db_guard.load_tracks_hash()?;
+            db_guard.load_albums_hash()?;
+            drop(db_guard);
 
-            play_queue = PlayQueue::new(&media_player, &db.db_hash)?;
+            play_queue = PlayQueue::new(&media_player, &db)?;
             PlayQueue::update(&play_queue);
         }
 

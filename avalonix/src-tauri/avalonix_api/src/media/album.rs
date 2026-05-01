@@ -80,12 +80,14 @@ impl TracksGroup for Album {
 
 #[test]
 fn test_albums_grouping() -> anyhow::Result<()> {
-    let mut db = DB::open()?;
-    db.load_tracks_hash()?;
-    db.load_albums_hash()?;
+    let db = DB::open()?;
 
-    let tracks_hash = &db.db_hash.tracks_hash;
-    let albums_hash = &db.db_hash.albums_hash;
+    let mut db_guard = db.lock().unwrap();
+    db_guard.load_tracks_hash()?;
+    db_guard.load_albums_hash()?;
+
+    let tracks_hash = &db_guard.db_hash.tracks_hash;
+    let albums_hash = &db_guard.db_hash.albums_hash;
 
     let albums = Album::group_tracks(albums_hash, tracks_hash)?;
     for album in albums {

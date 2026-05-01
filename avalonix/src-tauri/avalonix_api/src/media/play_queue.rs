@@ -16,7 +16,7 @@ use crate::{
 
 pub struct PlayQueue {
     pub player: Arc<Mutex<MediaPlayer>>,
-    pub library: DBHash,
+    pub db: Arc<Mutex<DB>>,
     pub tracks_in_queue_indexes: Vec<usize>,
     pub cur_track_index: usize,
     playing_strted: bool,
@@ -25,11 +25,11 @@ pub struct PlayQueue {
 impl PlayQueue {
     pub fn new(
         player: &Arc<Mutex<MediaPlayer>>,
-        library: &DBHash,
+        db: &Arc<Mutex<DB>>,
     ) -> anyhow::Result<Arc<Mutex<Self>>> {
         let queue = Self {
             player: player.clone(),
-            library: library.clone(),
+            db: db.clone(),
             tracks_in_queue_indexes: vec![],
             cur_track_index: 0,
             playing_strted: false,
@@ -108,8 +108,16 @@ impl PlayQueue {
             .iter()
             .find(|x| **x == self.cur_track_index)
         {
-            let track = &self.library.tracks_hash[self.cur_track_index];
-            player_guard.start_audio(track)?;
+            let hash = &self.db.lock().unwrap().db_hash.tracks_hash;
+            let track = hash.get(self.cur_track_index);
+            match track {
+                Some(track) => {
+                    player_guard.start_audio(track)?;
+                }
+                None => {
+                    logger::error("index don`t in hash");
+                }
+            }
         } else {
             player_guard.stop_audio();
         }
@@ -120,14 +128,16 @@ impl PlayQueue {
 
 #[test]
 fn test_play_queue() -> anyhow::Result<()> {
-    let mut db = DB::open()?;
-    db.load_tracks_hash()?;
+    let db = DB::open()?;
+    let mut db_guard = db.lock().unwrap();
+    db_guard.load_tracks_hash()?;
+    drop(db_guard);
 
-    let (event_sender, event_reciver) = mpsc::channel();
+    let (event_sender, _) = mpsc::channel();
 
     let player = MediaPlayer::new(&event_sender)?;
 
-    let queue = PlayQueue::new(&player, &db.db_hash)?;
+    let queue = PlayQueue::new(&player, &db)?;
 
     PlayQueue::update(&queue);
     let mut queue_guard = queue.lock().unwrap();

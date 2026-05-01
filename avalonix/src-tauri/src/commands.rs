@@ -12,7 +12,7 @@ use avalonix_api::{
 
 #[tauri::command]
 pub async fn get_tracks_filter_datas(
-    db: tauri::State<'_, Mutex<DB>>,
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
 ) -> Result<Vec<TrackFilterMetadata>, String> {
     logger::debug("get_track_filter_datas");
 
@@ -22,7 +22,7 @@ pub async fn get_tracks_filter_datas(
 }
 
 #[tauri::command]
-pub async fn get_albums_ids(db: tauri::State<'_, Mutex<DB>>) -> Result<Vec<Vec<u8>>, String> {
+pub async fn get_albums_ids(db: tauri::State<'_, Arc<Mutex<DB>>>) -> Result<Vec<Vec<u8>>, String> {
     logger::debug("get_albums_ids");
 
     let db = db.lock().unwrap();
@@ -31,7 +31,7 @@ pub async fn get_albums_ids(db: tauri::State<'_, Mutex<DB>>) -> Result<Vec<Vec<u
 
 #[tauri::command]
 pub async fn update_library(
-    db: tauri::State<'_, Mutex<DB>>,
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
     settings: tauri::State<'_, Mutex<Settings>>,
 ) -> Result<(), String> {
     logger::debug("update_library");
@@ -78,10 +78,13 @@ pub async fn get_cur_track_metadata(
     if guard.tracks_in_queue_indexes.is_empty() {
         return Err("Queue is empty".to_string());
     }
-    let metadata = guard.library.tracks_hash[guard.cur_track_index]
-        .metadata
-        .clone();
-    Ok(metadata)
+    let library_guard = guard.db.lock().unwrap();
+    match library_guard.db_hash.tracks_hash.get(guard.cur_track_index) {
+        Some(hash) => {
+            return Ok(hash.metadata.clone());
+        }
+        None => return Err("Inedx out of array tracks_hash".to_string()),
+    }
 }
 
 #[tauri::command]
@@ -93,7 +96,28 @@ pub async fn get_track_cover(
         return Err("Queue is empty".to_string());
     }
 
-    guard.library.tracks_hash[guard.cur_track_index]
-        .get_cover_as_uri()
-        .map_err(|err| err.to_string())
+    let library_guard = guard.db.lock().unwrap();
+    match library_guard.db_hash.tracks_hash.get(guard.cur_track_index) {
+        Some(hash) => {
+            return hash.get_cover_as_uri().map_err(|err| err.to_string());
+        }
+        None => {
+            return Err("Index out of array tracks_hash".to_string());
+        }
+    }
+}
+
+#[tauri::command]
+pub async fn update_tracks_library(
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    settings: tauri::State<'_, Mutex<Settings>>,
+) -> Result<(), String> {
+    let mut guard = db.lock().unwrap();
+    let settings = settings.lock().unwrap();
+
+    let res = guard
+        .update_library(&settings)
+        .map_err(|err| err.to_string());
+    logger::debug("Update library");
+    res
 }

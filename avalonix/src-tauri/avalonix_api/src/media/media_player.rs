@@ -153,11 +153,12 @@ fn test_media_player() -> anyhow::Result<()> {
     let media_player = MediaPlayer::new(&event_sender)?;
     let track_path = get_argument_val("TRACK_PATH").unwrap();
 
-    let db: DB = DB::open()?;
+    let db = DB::open()?;
+    let db_guard = db.lock().unwrap();
 
     let path = PathBuf::from(&track_path);
 
-    let binding = Track::create_tracks_list_from_file(&path, &db)?;
+    let binding = Track::create_tracks_list_from_file(&path, &db_guard)?;
 
     let track = binding.last().clone().unwrap();
 

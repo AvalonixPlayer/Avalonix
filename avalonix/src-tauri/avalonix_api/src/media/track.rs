@@ -1,4 +1,10 @@
-use std::{fmt::Display, fs, io::Cursor, path::Path};
+use std::{
+    fmt::Display,
+    fs,
+    io::Cursor,
+    path::Path,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use anyhow::{Ok, bail};
 use rkyv::{Archive, Deserialize, Serialize};
@@ -14,14 +20,26 @@ use crate::{
 pub struct Track {
     pub start_file_path: String,
     pub metadata: TrackMetadata,
+    pub mod_date: u64,
 }
 
 impl Track {
-    pub fn create_new(start_file_path: String, metadata: TrackMetadata) -> Self {
-        Self {
+    pub fn create_new(start_file_path: String, metadata: TrackMetadata) -> anyhow::Result<Self> {
+        let f = fs::metadata(&start_file_path)?;
+        let mod_date;
+        match f.modified() {
+            Result::Ok(md) => {
+                mod_date = md.duration_since(UNIX_EPOCH).unwrap().as_secs();
+            }
+            Err(_) => {
+                mod_date = UNIX_EPOCH.duration_since(UNIX_EPOCH).unwrap().as_secs();
+            }
+        };
+        Ok(Self {
             start_file_path,
             metadata,
-        }
+            mod_date,
+        })
     }
 
     pub fn create_tracks_list_from_file<P: AsRef<Path>>(
@@ -38,7 +56,7 @@ impl Track {
                         result.push(Self::create_new(
                             path.as_ref().as_os_str().to_str().unwrap().to_string(),
                             tm,
-                        ));
+                        )?);
                     }
                 }
                 LibFile::Cue => {
@@ -47,7 +65,7 @@ impl Track {
                         result.push(Self::create_new(
                             path.as_ref().as_os_str().to_str().unwrap().to_string(),
                             tm,
-                        ));
+                        )?);
                     }
                 }
                 _ => bail!("Can`t to read file"),
@@ -102,6 +120,8 @@ fn test_create_tracks() -> anyhow::Result<()> {
 
     let db = &DB::open()?;
 
+    let db_guard = db.lock().unwrap();
+
     for lib_path in settings.lib_paths {
         for dir_entry in WalkDir::new(lib_path) {
             let dir_entry = dir_entry?;
@@ -109,7 +129,7 @@ fn test_create_tracks() -> anyhow::Result<()> {
             if dir_entry.file_type().is_file() {
                 let path = dir_entry.path();
 
-                match Track::create_tracks_list_from_file(path, db) {
+                match Track::create_tracks_list_from_file(path, &db_guard) {
                     std::result::Result::Ok(tracks) => {
                         for track in tracks {
                             logger::debug(format!("track readed: {}", track));
