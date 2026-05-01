@@ -1,12 +1,9 @@
 use std::sync::{Arc, Mutex};
 
 use avalonix_api::{
-    disk::{
-        db::DB,
-        settings::{self, Settings},
-    },
+    disk::{db::DB, settings::Settings},
     logger,
-    media::{media_player, play_queue::PlayQueue},
+    media::{media_player::MediaPlayer, play_queue::PlayQueue},
     metadata::{track_filter_metadata::TrackFilterMetadata, track_metadata::TrackMetadata},
 };
 
@@ -58,6 +55,29 @@ pub async fn start_track(
     play_queue_guard
         .start_track()
         .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn next_track(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Result<(), String> {
+    let mut guard = play_queue.lock().unwrap();
+    guard.next().map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn previous_track(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<(), String> {
+    let mut guard = play_queue.lock().unwrap();
+    guard.back().map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn pause_or_continue_track(
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) -> Result<bool, String> {
+    let mut guard = media_player.lock().unwrap();
+
+    Ok(guard.pause_or_continue())
 }
 
 #[tauri::command]

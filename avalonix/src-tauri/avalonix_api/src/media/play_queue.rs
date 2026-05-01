@@ -100,6 +100,27 @@ impl PlayQueue {
         Ok(())
     }
 
+    pub fn back(&mut self) -> anyhow::Result<()> {
+        if let Some(index_in_queue) = self
+            .tracks_in_queue_indexes
+            .iter()
+            .position(|x| *x == self.cur_track_index)
+        {
+            if index_in_queue as i32 - 1 >= 0 {
+                self.cur_track_index = self.tracks_in_queue_indexes[index_in_queue - 1];
+            } else {
+                if !self.tracks_in_queue_indexes.is_empty() {
+                    self.cur_track_index = self.tracks_in_queue_indexes[0];
+                } else {
+                    let mut player_guard = self.player.lock().unwrap();
+                    player_guard.stop_audio();
+                }
+            }
+        }
+
+        Ok(())
+    }
+
     pub fn start_track(&self) -> anyhow::Result<()> {
         let mut player_guard = self.player.lock().unwrap();
 

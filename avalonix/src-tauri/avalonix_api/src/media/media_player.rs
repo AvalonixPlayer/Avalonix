@@ -81,14 +81,27 @@ impl MediaPlayer {
         Ok(())
     }
 
-    pub fn pause(&mut self) {
+    fn pause(&mut self) {
         self.player.pause();
         logger::debug("audio paused");
     }
 
-    pub fn play(&mut self) {
+    fn play(&mut self) {
         self.player.play();
         logger::debug("audio played");
+    }
+
+    pub fn pause_or_continue(&mut self) -> bool {
+        match self.player.is_paused() {
+            true => {
+                self.play();
+                true
+            }
+            false => {
+                self.pause();
+                false
+            }
+        }
     }
 
     pub fn stop_audio(&mut self) {
