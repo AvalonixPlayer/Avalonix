@@ -35,7 +35,11 @@ pub fn run() {
             commands::get_tracks_in_queue_indexes,
             commands::get_cur_track_metadata,
             commands::get_track_cover,
-            commands::update_tracks_library
+            commands::update_tracks_library,
+            commands::next_track,
+            commands::previous_track,
+            commands::pause_or_continue_track,
+            commands::is_paused
         ])
         .manage(api.media_player)
         .manage(api.db)

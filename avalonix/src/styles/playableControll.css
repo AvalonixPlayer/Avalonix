@@ -1,0 +1,57 @@
+.playable-controll-button.previous-or-next-track-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+
+  border: none;
+  border-radius: 10px;
+
+  transition: all 0.1s ease-in;
+}
+
+.playable-controll-button.previous-or-next-track-button:hover {
+  background-color: var(--button-hover-color);
+
+  scale: 1.1;
+}
+
+.playable-controll-button.previous-or-next-track-button:active {
+  background-color: var(--button-sellect-color);
+
+  scale: 1.2;
+}
+
+.playable-controll-button.previous-or-next-track-button > img {
+  width: 50px;
+  height: 50px;
+}
+
+#pause-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+
+  border: none;
+  border-radius: 10px;
+
+  transition: all 0.1s ease-in;
+}
+
+#pause-button:hover {
+  background-color: var(--button-hover-color);
+
+  scale: 1.1;
+}
+
+#pause-button:active {
+  background-color: var(--button-sellect-color);
+
+  scale: 1.2;
+}
+
+#pause-button > img {
+  width: 70px;
+  height: 70px;
+}

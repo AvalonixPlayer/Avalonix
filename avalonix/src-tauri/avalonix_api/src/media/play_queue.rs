@@ -96,6 +96,7 @@ impl PlayQueue {
                 }
             }
         }
+        self.start_track()?;
 
         Ok(())
     }
@@ -117,6 +118,8 @@ impl PlayQueue {
                 }
             }
         }
+
+        self.start_track()?;
 
         Ok(())
     }

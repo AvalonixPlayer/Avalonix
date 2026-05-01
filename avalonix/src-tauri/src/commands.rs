@@ -59,6 +59,7 @@ pub async fn start_track(
 
 #[tauri::command]
 pub async fn next_track(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Result<(), String> {
+    logger::debug("next_track");
     let mut guard = play_queue.lock().unwrap();
     guard.next().map_err(|err| err.to_string())
 }
@@ -67,6 +68,7 @@ pub async fn next_track(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> 
 pub async fn previous_track(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
 ) -> Result<(), String> {
+    logger::debug("previous_track");
     let mut guard = play_queue.lock().unwrap();
     guard.back().map_err(|err| err.to_string())
 }
@@ -75,9 +77,19 @@ pub async fn previous_track(
 pub async fn pause_or_continue_track(
     media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
 ) -> Result<bool, String> {
+    logger::debug("pause_track");
+
     let mut guard = media_player.lock().unwrap();
 
     Ok(guard.pause_or_continue())
+}
+
+#[tauri::command]
+pub async fn is_paused(
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) -> Result<bool, String> {
+    let guard = media_player.lock().unwrap();
+    Ok(guard.is_paused())
 }
 
 #[tauri::command]

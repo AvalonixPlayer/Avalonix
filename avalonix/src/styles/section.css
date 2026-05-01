@@ -87,3 +87,19 @@
   height: 100%;
   width: 100%;
 }
+
+#playable-controll {
+  height: 100px;
+  display: block;
+  align-items: center;
+}
+
+#play-queue-controll-section {
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+}

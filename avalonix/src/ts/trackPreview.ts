@@ -20,10 +20,10 @@ export async function updateTrackPreview(
     trackPreview.querySelector("h1")!.textContent = metadata.title;
     trackPreview.querySelector("h2")!.textContent = metadata.album;
     trackPreview.querySelector("h3")!.textContent = metadata.artist;
-    if (cover == null) {
-      cover = "";
+    if (cover == "".toString()) {
+      cover = "./src/assets/black.jpg";
     }
-    trackPreview.querySelector("img")!.src = cover;
+    trackPreview.querySelector("img")!.src = cover!;
   } else {
     console.log("metadata null");
     let metadata;
