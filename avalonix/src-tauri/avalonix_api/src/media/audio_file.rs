@@ -103,7 +103,6 @@ impl AudioFile for SingleFile {
 
                 let bs64 = data.to_base64(MIME);
                 let string = format!("data:image/jpg;base64,{}", bs64);
-                println!("{}", string);
                 return Ok(string);
             }
         }

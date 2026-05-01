@@ -28,7 +28,6 @@ export async function fillTracksList() {
 }
 
 async function createButton(data: TrackFilterMetadata) {
-  console.log(trackSellectButtonTempl);
   let button = trackSellectButtonTempl.content.cloneNode(
     true,
   ) as DocumentFragment;

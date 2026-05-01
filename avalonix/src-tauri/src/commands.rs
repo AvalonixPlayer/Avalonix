@@ -83,3 +83,17 @@ pub async fn get_cur_track_metadata(
         .clone();
     Ok(metadata)
 }
+
+#[tauri::command]
+pub async fn get_track_cover(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<String, String> {
+    let guard = play_queue.lock().unwrap();
+    if guard.tracks_in_queue_indexes.is_empty() {
+        return Err("Queue is empty".to_string());
+    }
+
+    guard.library.tracks_hash[guard.cur_track_index]
+        .get_cover_as_uri()
+        .map_err(|err| err.to_string())
+}

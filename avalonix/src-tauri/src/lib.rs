@@ -33,7 +33,8 @@ pub fn run() {
             commands::get_albums_ids,
             commands::start_track,
             commands::get_tracks_in_queue_indexes,
-            commands::get_cur_track_metadata
+            commands::get_cur_track_metadata,
+            commands::get_track_cover
         ])
         .manage(api.media_player)
         .manage(api.db)

@@ -8,7 +8,7 @@ async function init() {
   tabsBtnsConnectToFunctions();
   await initTrackPreview();
 
-  await updateTrackPreview(null);
+  await updateTrackPreview(null, null);
 
   await loadTracksFilerDatas();
 }
