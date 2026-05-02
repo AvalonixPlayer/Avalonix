@@ -18,7 +18,10 @@ use crate::{
         track::Track,
         tracks_group::TracksGroup,
     },
-    metadata::{filter_metadata::FilterMetadata, track_filter_metadata::TrackFilterMetadata},
+    metadata::{
+        album_filter_metadata::AlbumFilterMetadata, filter_metadata::FilterMetadata,
+        track_filter_metadata::TrackFilterMetadata,
+    },
     mutex_work::CreateArcMutex,
 };
 
@@ -213,6 +216,16 @@ impl DB {
         }
 
         Ok(())
+    }
+
+    pub fn get_albums_filter_datas(&mut self) -> anyhow::Result<Vec<AlbumFilterMetadata>> {
+        let mut result = vec![];
+        for track in &self.tracks {
+            let (_, album) = track?;
+            let album = rkyv::from_bytes::<Album, Error>(&album)?;
+            result.push(album.album_metadata.get_filter_metadata()?);
+        }
+        Ok(result)
     }
 }
 

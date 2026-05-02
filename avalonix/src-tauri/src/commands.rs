@@ -183,3 +183,14 @@ pub async fn get_track_position(
     let mut guard = media_player.lock().unwrap();
     Ok(guard.get_pos().as_secs())
 }
+
+#[tauri::command]
+pub async fn get_albums_filter_datas(
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
+) -> Result<Vec<TrackFilterMetadata>, String> {
+    let guard = db.lock().unwrap();
+
+    guard
+        .get_tracks_filter_metadatas()
+        .map_err(|err| err.to_string())
+}
