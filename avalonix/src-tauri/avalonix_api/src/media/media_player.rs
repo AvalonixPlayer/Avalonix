@@ -73,7 +73,8 @@ impl MediaPlayer {
 
         self.player.clear();
         self.player.append(source);
-        self.player.play();
+
+        self.play();
 
         logger::debug("audio started");
 
@@ -122,6 +123,10 @@ impl MediaPlayer {
 
     pub fn get_len(&mut self) -> Duration {
         self.total_duration
+    }
+
+    pub fn get_pos(&mut self) -> Duration {
+        self.player.get_pos()
     }
 
     fn device_changed_check(&mut self) -> anyhow::Result<()> {

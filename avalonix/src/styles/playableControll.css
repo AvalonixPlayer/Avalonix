@@ -23,8 +23,8 @@
 }
 
 .playable-controll-button.previous-or-next-track-button > img {
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
 }
 
 #pause-button {
@@ -52,6 +52,19 @@
 }
 
 #pause-button > img {
-  width: 70px;
-  height: 70px;
+  width: 40px;
+  height: 40px;
+}
+
+#play-queue-time-controll-range {
+  margin-left: 20px;
+  margin-right: 20px;
+
+  accent-color: var(--sliders-color);
+  width: 100%;
+}
+
+.track-time {
+  text-align: center;
+  width: 8%;
 }

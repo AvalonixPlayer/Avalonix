@@ -25,9 +25,7 @@ export async function updateTrackPreview(
     }
     trackPreview.querySelector("img")!.src = cover!;
   } else {
-    console.log("metadata null");
     let metadata;
-    console.log(1);
     await invoke<TrackMetadata>("get_cur_track_metadata")
       .then(async (x) => {
         console.log(2);

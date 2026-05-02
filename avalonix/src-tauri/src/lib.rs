@@ -39,7 +39,10 @@ pub fn run() {
             commands::next_track,
             commands::previous_track,
             commands::pause_or_continue_track,
-            commands::is_paused
+            commands::is_paused,
+            commands::seek,
+            commands::get_track_durration,
+            commands::get_track_position
         ])
         .manage(api.media_player)
         .manage(api.db)

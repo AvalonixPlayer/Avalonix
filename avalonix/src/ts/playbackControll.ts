@@ -1,4 +1,6 @@
+import { event } from "@tauri-apps/api";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 
 export async function initPlaybackControll() {
   let previousTrackButton = document.querySelector("#previous-track-button");
@@ -13,10 +15,13 @@ export async function initPlaybackControll() {
 
   let pauseOrContinueTrackButton = document.querySelector("#pause-button");
 
-  {
-    let pause = await invoke("is_paused");
+  await check();
+  listen("track-updated", async () => {
+    await check();
+  });
 
-    console.log(pause);
+  async function check() {
+    let pause = await invoke("is_paused");
 
     if (pause == true) {
       pauseOrContinueTrackButton!.querySelector("img")!.src =
@@ -38,4 +43,54 @@ export async function initPlaybackControll() {
         "src/assets/continue.png";
     }
   });
+
+  const trackPositionSlider = document.getElementById(
+    "play-queue-time-controll-range",
+  ) as HTMLInputElement;
+
+  let userSeek = false;
+
+  setInterval(async () => {
+    if (userSeek) return;
+    let trackPos = (await invoke("get_track_position")) as number;
+    let trackLen = (await invoke("get_track_durration")) as number;
+    updateTimeTexts(trackPos, trackLen - trackPos);
+
+    trackPositionSlider.value = ((trackPos / trackLen) * 100).toString();
+  }, 100);
+
+  let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+  trackPositionSlider.addEventListener("input", async () => {
+    userSeek = true;
+    let trackPos = (await invoke("get_track_position")) as number;
+    let trackLen = (await invoke("get_track_durration")) as number;
+
+    updateTimeTexts(trackPos, trackLen - trackPos);
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(async () => {
+      let float_secs = (trackLen / 100) * parseInt(trackPositionSlider.value);
+
+      let second = Math.floor(float_secs);
+
+      await invoke("seek", {
+        seekSecond: second,
+      });
+      userSeek = false;
+    }, 100);
+  });
+
+  function updateTimeTexts(curTime: number, leftTime: number) {
+    let cur = document.getElementById("cur-track-time");
+    let left = document.getElementById("left-track-time");
+    cur!.textContent = new Date(curTime * 1000)
+      .toISOString()
+      .substring(11, 19)
+      .toString();
+    left!.textContent = new Date(leftTime * 1000)
+      .toISOString()
+      .substring(11, 19)
+      .toString();
+  }
 }

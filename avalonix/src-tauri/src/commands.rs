@@ -1,4 +1,7 @@
-use std::sync::{Arc, Mutex};
+use std::{
+    sync::{Arc, Mutex},
+    time::Duration,
+};
 
 use avalonix_api::{
     disk::{db::DB, settings::Settings},
@@ -152,4 +155,31 @@ pub async fn update_tracks_library(
         .map_err(|err| err.to_string());
     logger::debug("Update library");
     res
+}
+
+#[tauri::command]
+pub async fn seek(
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+    seek_second: u64,
+) -> Result<(), String> {
+    let mut guard = media_player.lock().unwrap();
+    guard
+        .seek(Duration::from_secs(seek_second))
+        .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_track_durration(
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) -> Result<u64, String> {
+    let mut guard = media_player.lock().unwrap();
+    Ok(guard.get_len().as_secs())
+}
+
+#[tauri::command]
+pub async fn get_track_position(
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) -> Result<u64, String> {
+    let mut guard = media_player.lock().unwrap();
+    Ok(guard.get_pos().as_secs())
 }
