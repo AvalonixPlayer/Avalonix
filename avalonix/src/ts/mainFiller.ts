@@ -10,9 +10,9 @@ const trackSellectButtonTempl = document.getElementById(
 
 export async function loadTracksFilerDatas() {
   await invoke<Array<TrackFilterMetadata>>("get_tracks_filter_datas")
-    .then((data) => {
+    .then(async (data) => {
       tracksFilerDatas = data;
-      fillTracksList();
+      await fillTracksList();
       updateQueue();
     })
     .catch((e) => console.error(e));

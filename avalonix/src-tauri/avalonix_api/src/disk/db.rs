@@ -119,6 +119,7 @@ impl DB {
     pub fn update_tracks_library(&self, settings: &Settings) -> anyhow::Result<()> {
         let mut tracks = vec![];
         let tracks_files_paths = disk_manager::get_tracks_files_paths(settings);
+        logger::debug("Update tracks lib");
 
         for track_file_path in tracks_files_paths {
             if let Some(track_in_lib) = self
@@ -200,6 +201,8 @@ impl DB {
     }
 
     pub fn update_albums_library(&mut self) -> anyhow::Result<()> {
+        logger::debug("Update albums lib");
+
         let tracks = &self.db_hash.tracks_hash;
         let albums = &self.db_hash.albums_hash;
         let new_albums = Album::group_tracks(albums, tracks)?;
@@ -220,8 +223,8 @@ impl DB {
 
     pub fn get_albums_filter_datas(&mut self) -> anyhow::Result<Vec<AlbumFilterMetadata>> {
         let mut result = vec![];
-        for track in &self.tracks {
-            let (_, album) = track?;
+        for album in &self.albums {
+            let (_, album) = album?;
             let album = rkyv::from_bytes::<Album, Error>(&album)?;
             result.push(album.album_metadata.get_filter_metadata()?);
         }

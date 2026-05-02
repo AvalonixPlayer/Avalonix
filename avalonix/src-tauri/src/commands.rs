@@ -7,7 +7,10 @@ use avalonix_api::{
     disk::{db::DB, settings::Settings},
     logger,
     media::{media_player::MediaPlayer, play_queue::PlayQueue},
-    metadata::{track_filter_metadata::TrackFilterMetadata, track_metadata::TrackMetadata},
+    metadata::{
+        album_filter_metadata::AlbumFilterMetadata, track_filter_metadata::TrackFilterMetadata,
+        track_metadata::TrackMetadata,
+    },
 };
 
 #[tauri::command]
@@ -187,10 +190,10 @@ pub async fn get_track_position(
 #[tauri::command]
 pub async fn get_albums_filter_datas(
     db: tauri::State<'_, Arc<Mutex<DB>>>,
-) -> Result<Vec<TrackFilterMetadata>, String> {
-    let guard = db.lock().unwrap();
+) -> Result<Vec<AlbumFilterMetadata>, String> {
+    let mut guard = db.lock().unwrap();
 
     guard
-        .get_tracks_filter_metadatas()
+        .get_albums_filter_datas()
         .map_err(|err| err.to_string())
 }

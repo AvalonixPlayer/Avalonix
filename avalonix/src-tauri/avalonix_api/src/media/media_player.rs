@@ -112,7 +112,6 @@ impl MediaPlayer {
     pub fn stop_audio(&mut self) {
         self.player.stop();
         self.player.clear();
-        logger::debug("audio stoped");
     }
 
     pub fn seek(&mut self, pos: Duration) -> anyhow::Result<()> {
