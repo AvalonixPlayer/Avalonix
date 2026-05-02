@@ -1,6 +1,12 @@
 use std::fmt::Display;
 
-use crate::media::{album::Album, track::Track};
+use crate::{
+    media::{album::Album, track::Track},
+    metadata::{
+        album_filter_metadata::AlbumFilterMetadata, album_metadata, filter_metadata::FilterMetadata,
+    },
+};
+use anyhow::Ok;
 use rkyv::{Archive, Deserialize, Serialize};
 
 #[derive(Debug, Archive, Serialize, Deserialize, Clone)]
@@ -9,6 +15,18 @@ pub struct AlbumMetadata {
     pub album_title: String,
     pub album_performer: String,
     pub album_cover: String,
+}
+
+impl FilterMetadata for AlbumMetadata {
+    type Output = AlbumFilterMetadata;
+    fn get_filter_metadata(&self) -> anyhow::Result<Self::Output> {
+        let result = AlbumFilterMetadata {
+            id: self.id.clone(),
+            title: self.album_title.clone(),
+            artist: self.album_performer.clone(),
+        };
+        Ok(result)
+    }
 }
 
 impl AlbumMetadata {
