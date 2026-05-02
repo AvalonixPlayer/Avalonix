@@ -8,6 +8,7 @@ pub struct AlbumMetadata {
     pub id: Vec<u8>,
     pub album_title: String,
     pub album_performer: String,
+    pub album_cover: String,
 }
 
 impl AlbumMetadata {
@@ -22,16 +23,18 @@ impl AlbumMetadata {
             id: id.clone(),
             album_title: track.metadata.album.clone(),
             album_performer: track.metadata.artist.clone(),
+            album_cover: track.get_cover_as_uri().unwrap_or_default(),
         }
     }
 }
 
 impl Display for AlbumMetadata {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let cover_start: String = self.album_cover.chars().take(50).collect();
         write!(
             f,
-            "\n\t\tid: {:?}\n\t\ttitle: {}\n\t\tperformer: {}",
-            self.id, self.album_title, self.album_performer
+            "\n\t\tid: {:?}\n\t\ttitle: {}\n\t\tperformer: {}\n\t\tcover_start: {}",
+            self.id, self.album_title, self.album_performer, cover_start
         )
     }
 }
