@@ -61,7 +61,11 @@ impl DB {
     }
 
     pub fn update_library(&mut self, settings: &Settings) -> anyhow::Result<()> {
+        self.load_tracks_hash()?;
+        self.load_albums_hash()?;
+
         self.update_tracks_library(settings)?;
+        self.update_albums_library()?;
 
         self.load_tracks_hash()?;
         self.load_albums_hash()?;
@@ -191,6 +195,25 @@ impl DB {
         self.albums.flush()?;
         Ok(())
     }
+
+    pub fn update_albums_library(&mut self) -> anyhow::Result<()> {
+        let tracks = &self.db_hash.tracks_hash;
+        let albums = &self.db_hash.albums_hash;
+        let new_albums = Album::group_tracks(albums, tracks)?;
+
+        for album in new_albums {
+            if let Some(exists_album) = albums.iter().find(|a| a.tracks_ids == album.tracks_ids) {
+                logger::debug(format!(
+                    "Album with name: {} dont needs to save",
+                    exists_album.album_metadata.album_title
+                ));
+                continue;
+            }
+            self.save_album(album)?;
+        }
+
+        Ok(())
+    }
 }
 
 #[test]
@@ -235,28 +258,21 @@ fn test_db_tracks() -> anyhow::Result<()> {
 
 #[test]
 fn test_db_albums() -> anyhow::Result<()> {
-    let mut db = DB::open()?;
+    let db = DB::open()?;
+
+    let settings = &Settings::open()?;
 
     let mut db_guard = db.lock().unwrap();
 
-    db_guard.load_tracks_hash()?;
-    db_guard.load_albums_hash()?;
+    db_guard.update_library(settings)?;
 
-    let tracks_hash = &db_guard.db_hash.tracks_hash;
     let albums_hash = &db_guard.db_hash.albums_hash;
-
-    for i in tracks_hash {
-        logger::debug(i);
-    }
-
-    let load_albums = Album::group_tracks(albums_hash, tracks_hash)?;
-
-    for album in load_albums {
-        db_guard.save_album(album)?;
-    }
 
     for album in albums_hash {
         logger::debug(format!("from hash: {}", album));
+        for track_id in &album.tracks_ids {
+            logger::debug(format!("\ttrack id: {:?}", track_id));
+        }
     }
 
     Ok(())
