@@ -58,3 +58,63 @@
   right: 0;
   width: 30%;
 }
+
+/* album */
+
+#album-sellect-from-list-button {
+  width: 200px;
+  height: auto;
+  padding: 10px;
+  border-radius: 10px;
+
+  transition: all 0.1s ease-in;
+}
+
+#album-sellect-from-list-button > img {
+  width: 200px;
+  height: 200px;
+
+  display: block;
+
+  border-radius: 10px;
+}
+
+#album-sellect-from-list-button:hover {
+  background: var(--button-hover-color);
+}
+
+#add-album-to-list-button {
+  margin-top: 10px;
+  background: none;
+  border: none;
+
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 50px;
+  height: 50px;
+
+  transition: all 0.1s ease-in;
+}
+
+#add-album-to-list-button > img {
+  width: 50px;
+  height: 50px;
+
+  scale: 0.9;
+}
+
+#add-album-to-list-button:hover {
+  background: var(--button-hover-color);
+
+  scale: 1.1;
+}
+
+#add-album-button-footer {
+  display: flex;
+
+  justify-content: space-between;
+}

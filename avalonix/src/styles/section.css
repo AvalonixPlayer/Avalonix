@@ -32,6 +32,7 @@
   height: 100%;
 
   overflow: hidden;
+  overflow-y: auto;
 
   display: flex;
 }
@@ -81,13 +82,6 @@
   width: 100%;
 }
 
-.playables-list {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  width: 100%;
-}
-
 #playable-controll {
   height: 100px;
   display: block;
@@ -111,4 +105,12 @@
   align-items: center;
 
   display: flex;
+}
+
+#albums-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  align-items: flex-start;
 }

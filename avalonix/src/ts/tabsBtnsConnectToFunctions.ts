@@ -15,7 +15,7 @@ export function tabsBtnsConnectToFunctions() {
   });
 
   disable_all();
-  activateTab(0);
+  activateTab(2);
 }
 
 function activateTab(index: number) {
