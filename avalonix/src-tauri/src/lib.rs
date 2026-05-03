@@ -53,7 +53,10 @@ pub fn run() {
             commands::get_albums_filter_datas,
             commands::get_albums_ids,
             commands::get_album_cover_by_id,
-            commands::add_album_by_id
+            commands::add_album_by_id,
+            commands::get_performers_filter_datas,
+            commands::get_performers_ids,
+            commands::add_performer_by_id,
         ])
         .manage(api.media_player)
         .manage(api.db)

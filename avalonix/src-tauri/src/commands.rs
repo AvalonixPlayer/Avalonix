@@ -8,8 +8,9 @@ use avalonix_api::{
     logger,
     media::{media_player::MediaPlayer, play_queue::PlayQueue},
     metadata::{
-        album_filter_metadata::AlbumFilterMetadata, track_filter_metadata::TrackFilterMetadata,
-        track_metadata::TrackMetadata,
+        album_filter_metadata::AlbumFilterMetadata,
+        performer_filter_metadata::PerformerFilterMetadata,
+        track_filter_metadata::TrackFilterMetadata, track_metadata::TrackMetadata,
     },
 };
 
@@ -222,4 +223,32 @@ pub async fn add_album_by_id(
 ) -> Result<(), String> {
     let mut guard = play_queue.lock().unwrap();
     guard.add_album(id).map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_performers_filter_datas(
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
+) -> Result<Vec<PerformerFilterMetadata>, String> {
+    let mut guard = db.lock().unwrap();
+
+    guard
+        .get_performers_filter_datas()
+        .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_performers_ids(
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
+) -> Result<Vec<Vec<u8>>, String> {
+    let guard = db.lock().unwrap();
+    guard.get_performers_ids().map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn add_performer_by_id(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    id: Vec<u8>,
+) -> Result<(), String> {
+    let mut guard = play_queue.lock().unwrap();
+    guard.add_performer(id).map_err(|err| err.to_string())
 }
