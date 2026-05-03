@@ -10,11 +10,12 @@ init().then(() => {
 });
 
 async function init() {
-  await invoke("update_tracks_library");
-  tabsBtnsConnectToFunctions();
-  await initPlaybackControll();
-  await initTrackPreview();
-  await updateTrackPreview(null, null);
-  await loadTracksFilerDatas();
-  await loadAlbumsFilerDatas();
+  await invoke("update_tracks_library").then(async () => {
+    tabsBtnsConnectToFunctions();
+    await initPlaybackControll();
+    await initTrackPreview();
+    await updateTrackPreview(null, null);
+    await loadTracksFilerDatas();
+    await loadAlbumsFilerDatas();
+  });
 }

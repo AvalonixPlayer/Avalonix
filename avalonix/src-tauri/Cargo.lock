@@ -9,7 +9,6 @@ dependencies = [
  "anyhow",
  "avalonix_api",
  "serde",
- "serde_json",
  "tauri",
  "tauri-build",
  "tauri-plugin-opener",

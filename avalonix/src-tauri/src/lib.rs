@@ -5,7 +5,10 @@ use std::thread;
 use avalonix_api::{api::init_api, events::Event, logger};
 use tauri::{Emitter, Manager};
 
+use crate::tray::init_tray;
+
 pub mod commands;
+pub mod tray;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -16,6 +19,10 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let app_handle = app.app_handle().clone();
+
+            if let Err(err) = init_tray(app) {
+                logger::error(err);
+            }
 
             thread::spawn(move || loop {
                 let ev = api.event_reciver.recv().unwrap();
@@ -52,6 +59,13 @@ pub fn run() {
         .manage(api.db)
         .manage(api.settings)
         .manage(api.play_queue)
+        .on_window_event(|window, event| match event {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                window.hide().unwrap();
+                api.prevent_close();
+            }
+            _ => {}
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
