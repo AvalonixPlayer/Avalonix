@@ -165,7 +165,7 @@ fn test_media_player() -> anyhow::Result<()> {
     use crate::{disk::db::DB, utils::get_argument_val};
     use std::path::PathBuf;
 
-    let (event_sender, event_reciver) = mpsc::channel();
+    let (event_sender, event_reciver) = std::sync::mpsc::channel();
 
     let media_player = MediaPlayer::new(&event_sender)?;
     let track_path = get_argument_val("TRACK_PATH").unwrap();

@@ -75,6 +75,7 @@ impl TracksGroup for Performer {
 
 #[test]
 fn test_performer_grouping() -> anyhow::Result<()> {
+    use crate::{disk::db::DB, logger};
     let db = DB::open()?;
 
     let mut db_guard = db.lock().unwrap();
@@ -83,11 +84,11 @@ fn test_performer_grouping() -> anyhow::Result<()> {
 
     let tracks_hash = &db_guard.db_hash.tracks_hash;
     let albums_hash = &db_guard.db_hash.albums_hash;
-    let performers = &db_guard.db_hash.albums_hash;
+    let performers = &db_guard.db_hash.performers_hash;
 
-    let performers = Album::group_tracks(performers, tracks_hash)?;
+    let performers = Performer::group_tracks(performers, tracks_hash)?;
     for performer in performers {
-        logger::debug(performer.album_metadata.album_title);
+        logger::debug(performer.performer_metadata.performer_title);
     }
     Ok(())
 }

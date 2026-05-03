@@ -75,6 +75,7 @@ impl TracksGroup for Album {
 
 #[test]
 fn test_albums_grouping() -> anyhow::Result<()> {
+    use crate::{disk::db::DB, logger};
     let db = DB::open()?;
 
     let mut db_guard = db.lock().unwrap();

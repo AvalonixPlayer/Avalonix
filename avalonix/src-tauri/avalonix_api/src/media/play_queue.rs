@@ -209,7 +209,7 @@ fn test_play_queue() -> anyhow::Result<()> {
     db_guard.load_tracks_hash()?;
     drop(db_guard);
 
-    let (event_sender, _) = mpsc::channel();
+    let (event_sender, _) = std::sync::mpsc::channel();
 
     let player = MediaPlayer::new(&event_sender)?;
 
