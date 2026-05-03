@@ -1,10 +1,4 @@
-use std::{
-    fmt::Display,
-    fs,
-    io::Cursor,
-    path::Path,
-    time::UNIX_EPOCH,
-};
+use std::{fmt::Display, fs, io::Cursor, path::Path, time::UNIX_EPOCH};
 
 use anyhow::{Ok, bail};
 use rkyv::{Archive, Deserialize, Serialize};

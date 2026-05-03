@@ -1,9 +1,6 @@
 use std::{
     num::NonZero,
-    sync::{
-        Arc, Mutex,
-        mpsc::Sender,
-    },
+    sync::{Arc, Mutex, mpsc::Sender},
     thread::{self, sleep},
     time::Duration,
 };
