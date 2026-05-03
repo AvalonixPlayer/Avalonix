@@ -8,11 +8,15 @@ use anyhow::Ok;
 use rkyv::rancor::Error;
 
 use crate::{
-    disk::{disk_manager, settings::Settings},
+    disk::{
+        disk_manager,
+        settings::Settings,
+    },
     logger,
-    media::{album::Album, track::Track, tracks_group::TracksGroup},
+    media::{album::Album, performer::Performer, track::Track, tracks_group::TracksGroup},
     metadata::{
         album_filter_metadata::AlbumFilterMetadata, filter_metadata::FilterMetadata,
+        performer_filter_metadata::PerformerFilterMetadata,
         track_filter_metadata::TrackFilterMetadata,
     },
     mutex_work::CreateArcMutex,
@@ -22,12 +26,14 @@ pub struct DB {
     pub db_hash: DBHash,
     tracks: sled::Tree,
     albums: sled::Tree,
+    performers: sled::Tree,
 }
 
 #[derive(Clone)]
 pub struct DBHash {
     pub tracks_hash: Vec<Track>,
     pub albums_hash: Vec<Album>,
+    pub performers_hash: Vec<Performer>,
 }
 
 impl DBHash {
@@ -35,6 +41,7 @@ impl DBHash {
         Self {
             tracks_hash: vec![],
             albums_hash: vec![],
+            performers_hash: vec![],
         }
     }
 }
@@ -46,11 +53,13 @@ impl DB {
 
         let tracks_tree = db.open_tree(b"tracks")?;
         let albums_tree = db.open_tree(b"albums")?;
+        let performers_tree = db.open_tree(b"performers")?;
 
         let db = Self {
             db_hash: DBHash::new(),
             tracks: tracks_tree,
             albums: albums_tree,
+            performers: performers_tree,
         };
 
         Ok(db.create_arc_mutex())
@@ -59,12 +68,15 @@ impl DB {
     pub fn update_library(&mut self, settings: &Settings) -> anyhow::Result<()> {
         self.load_tracks_hash()?;
         self.load_albums_hash()?;
+        self.load_performers_hash()?;
 
         self.update_tracks_library(settings)?;
         self.update_albums_library()?;
+        self.update_performers_library()?;
 
         self.load_tracks_hash()?;
         self.load_albums_hash()?;
+        self.load_performers_hash()?;
         Ok(())
     }
 }
@@ -225,6 +237,81 @@ impl DB {
     }
 }
 
+impl DB {
+    pub fn save_performer(&self, performer: Performer) -> anyhow::Result<()> {
+        let key = &performer.performer_metadata.id;
+
+        let value_bytes = rkyv::to_bytes::<Error>(&performer)?.to_vec();
+
+        self.performers.insert(key, value_bytes)?;
+        self.performers.flush()?;
+
+        logger::info(format!("performer saved to db: {}", performer));
+
+        Ok(())
+    }
+
+    pub fn get_performers_ids(&self) -> anyhow::Result<Vec<Vec<u8>>> {
+        let mut result = vec![];
+        for performer in &self.performers {
+            let (id, _) = performer?;
+            result.push(id.to_vec());
+        }
+        Ok(result)
+    }
+
+    pub fn load_performers_hash(&mut self) -> anyhow::Result<()> {
+        let mut result = vec![];
+        for performer in &self.performers {
+            let (_, performer) = performer?;
+            let performer = rkyv::from_bytes::<Performer, Error>(&performer)?;
+            result.push(performer);
+        }
+        self.db_hash.performers_hash = result;
+        Ok(())
+    }
+
+    pub fn clear_performers(&self) -> anyhow::Result<()> {
+        self.performers.clear()?;
+        self.performers.flush()?;
+        Ok(())
+    }
+
+    pub fn update_performers_library(&mut self) -> anyhow::Result<()> {
+        logger::debug("Update albums lib");
+
+        let tracks = &self.db_hash.tracks_hash;
+        let performers = &self.db_hash.performers_hash;
+        let new_performers = Performer::group_tracks(performers, tracks)?;
+
+        for performer in new_performers {
+            if let Some(exists_performer) = performers
+                .iter()
+                .find(|a| a.tracks_ids == performer.tracks_ids)
+            {
+                logger::debug(format!(
+                    "Album with name: {} dont needs to save",
+                    exists_performer.performer_metadata.performer_title
+                ));
+                continue;
+            }
+            self.save_performer(performer)?;
+        }
+
+        Ok(())
+    }
+
+    pub fn get_performers_filter_datas(&mut self) -> anyhow::Result<Vec<PerformerFilterMetadata>> {
+        let mut result = vec![];
+        for album in &self.performers {
+            let (_, album) = album?;
+            let album = rkyv::from_bytes::<Performer, Error>(&album)?;
+            result.push(album.performer_metadata.get_filter_metadata()?);
+        }
+        Ok(result)
+    }
+}
+
 #[test]
 fn test_db_tracks() -> anyhow::Result<()> {
     use crate::utils::get_argument_val;
@@ -288,12 +375,32 @@ fn test_db_albums() -> anyhow::Result<()> {
 }
 
 #[test]
+fn test_db_performers() -> anyhow::Result<()> {
+    let db = DB::open()?;
+
+    let settings = &Settings::open()?;
+
+    let mut db_guard = db.lock().unwrap();
+
+    db_guard.update_library(settings)?;
+
+    let performers_hash = &db_guard.db_hash.performers_hash;
+
+    for performer in performers_hash {
+        logger::debug(format!("from hash: {}", performer));
+        for track_id in &performer.tracks_ids {
+            logger::debug(format!("\ttrack id: {:?}", track_id));
+        }
+    }
+
+    Ok(())
+}
+
+#[test]
 fn test_db_update() -> anyhow::Result<()> {
     let db = DB::open()?;
 
     let mut db_guard = db.lock().unwrap();
-    db_guard.load_tracks_hash()?;
-    db_guard.load_albums_hash()?;
 
     let settings = &Settings::open()?;
     db_guard.update_library(settings)?;

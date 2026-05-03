@@ -4,40 +4,40 @@ use uuid::Uuid;
 
 use crate::{
     media::{track::Track, tracks_group::TracksGroup},
-    metadata::album_metadata::AlbumMetadata,
+    metadata::performer_metadata::PerformerMetadata,
 };
 
 use rkyv::{Archive, Deserialize, Serialize};
 
 #[derive(Debug, Archive, Serialize, Deserialize, Clone)]
-pub struct Album {
+pub struct Performer {
     pub tracks_ids: Vec<Vec<u8>>,
-    pub album_metadata: AlbumMetadata,
+    pub performer_metadata: PerformerMetadata,
 }
 
-impl Album {
+impl Performer {
     pub fn from(
         tracks_ids: Vec<Vec<u8>>,
-        album_metadata: AlbumMetadata,
+        performer_metadata: PerformerMetadata,
         _albums_hash: &Vec<Self>,
     ) -> Self {
         Self {
             tracks_ids,
-            album_metadata,
+            performer_metadata,
         }
     }
 }
 
-impl Display for Album {
+impl Display for Performer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.album_metadata)
+        write!(f, "{}", self.performer_metadata)
     }
 }
 
-impl TracksGroup for Album {
+impl TracksGroup for Performer {
     type Output = Self;
     fn group_tracks(
-        albums_hash: &Vec<Self::Output>,
+        performers_hash: &Vec<Self::Output>,
         tracks_hash: &Vec<super::track::Track>,
     ) -> anyhow::Result<Vec<Self::Output>> {
         let mut result = vec![];
@@ -45,11 +45,11 @@ impl TracksGroup for Album {
         let mut groups: HashMap<String, Vec<&Track>> = HashMap::new();
 
         for track in tracks_hash {
-            let track_album_name = &track.metadata.album;
-            if let Some(album) = groups.get_mut(track_album_name) {
-                album.push(track);
+            let track_performer_name = &track.metadata.artist;
+            if let Some(performer) = groups.get_mut(track_performer_name) {
+                performer.push(track);
             } else {
-                groups.insert(track_album_name.clone(), vec![track]);
+                groups.insert(track_performer_name.clone(), vec![track]);
             }
         }
 
@@ -63,10 +63,10 @@ impl TracksGroup for Album {
             let id = Uuid::new_v4().to_bytes_le().to_vec();
 
             let track = i.1[0];
-            let album_metadata = AlbumMetadata::from(&id, track, albums_hash);
-            let album = Album::from(ids, album_metadata, albums_hash);
+            let performer_metadata = PerformerMetadata::from(&id, track, performers_hash);
+            let performer = Performer::from(ids, performer_metadata, performers_hash);
 
-            result.push(album);
+            result.push(performer);
         }
 
         Ok(result)
@@ -74,7 +74,7 @@ impl TracksGroup for Album {
 }
 
 #[test]
-fn test_albums_grouping() -> anyhow::Result<()> {
+fn test_performer_grouping() -> anyhow::Result<()> {
     let db = DB::open()?;
 
     let mut db_guard = db.lock().unwrap();
@@ -83,10 +83,11 @@ fn test_albums_grouping() -> anyhow::Result<()> {
 
     let tracks_hash = &db_guard.db_hash.tracks_hash;
     let albums_hash = &db_guard.db_hash.albums_hash;
+    let performers = &db_guard.db_hash.albums_hash;
 
-    let albums = Album::group_tracks(albums_hash, tracks_hash)?;
-    for album in albums {
-        logger::debug(album.album_metadata.album_title);
+    let performers = Album::group_tracks(performers, tracks_hash)?;
+    for performer in performers {
+        logger::debug(performer.album_metadata.album_title);
     }
     Ok(())
 }

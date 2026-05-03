@@ -6,12 +6,7 @@ use std::{
 
 use anyhow::Ok;
 
-use crate::{
-    disk::db::DB,
-    logger,
-    media::media_player::MediaPlayer,
-    mutex_work::CreateArcMutex,
-};
+use crate::{disk::db::DB, logger, media::media_player::MediaPlayer, mutex_work::CreateArcMutex};
 
 pub struct PlayQueue {
     pub player: Arc<Mutex<MediaPlayer>>,
