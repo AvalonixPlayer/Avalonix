@@ -5,7 +5,6 @@ use lofty::{
     config::ParseOptions,
     file::{AudioFile as LoftyAudioFile, TaggedFileExt},
     probe::Probe,
-    properties,
     tag::Accessor,
 };
 use rcue::parser::parse_from_file;
@@ -183,7 +182,7 @@ impl AudioFile for CUEFile {
         Ok(result_vec)
     }
 
-    fn get_cover_as_uri<P: AsRef<Path>>(path: P) -> anyhow::Result<String> {
+    fn get_cover_as_uri<P: AsRef<Path>>(_path: P) -> anyhow::Result<String> {
         // not realizated now
         Ok("".to_string())
     }

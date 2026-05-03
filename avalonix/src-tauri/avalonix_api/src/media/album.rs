@@ -1,15 +1,13 @@
 use std::{
-    collections::{HashMap, HashSet, hash_set},
+    collections::HashMap,
     fmt::Display,
 };
 
 use uuid::Uuid;
 
 use crate::{
-    disk::{db::DB, settings::Settings},
-    logger,
-    media::{album, track::Track, tracks_group::TracksGroup},
-    metadata::album_metadata::{self, AlbumMetadata},
+    media::{track::Track, tracks_group::TracksGroup},
+    metadata::album_metadata::AlbumMetadata,
 };
 
 use rkyv::{Archive, Deserialize, Serialize};
@@ -24,7 +22,7 @@ impl Album {
     pub fn from(
         tracks_ids: Vec<Vec<u8>>,
         album_metadata: AlbumMetadata,
-        albums_hash: &Vec<Self>,
+        _albums_hash: &Vec<Self>,
     ) -> Self {
         Self {
             tracks_ids,

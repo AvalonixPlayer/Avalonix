@@ -2,7 +2,7 @@ use std::{
     num::NonZero,
     sync::{
         Arc, Mutex,
-        mpsc::{self, Sender},
+        mpsc::Sender,
     },
     thread::{self, sleep},
     time::Duration,
@@ -12,7 +12,6 @@ use anyhow::Ok;
 use rodio::{
     Decoder, DeviceTrait, MixerDeviceSink, Player, Source,
     cpal::{BufferSize, DeviceDescription, default_host, traits::HostTrait},
-    source,
 };
 
 use crate::{events::Event, logger, media::track::Track, mutex_work::CreateArcMutex};

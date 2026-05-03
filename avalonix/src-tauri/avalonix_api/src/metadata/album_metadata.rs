@@ -3,7 +3,7 @@ use std::fmt::Display;
 use crate::{
     media::{album::Album, track::Track},
     metadata::{
-        album_filter_metadata::AlbumFilterMetadata, album_metadata, filter_metadata::FilterMetadata,
+        album_filter_metadata::AlbumFilterMetadata, filter_metadata::FilterMetadata,
     },
 };
 use anyhow::Ok;

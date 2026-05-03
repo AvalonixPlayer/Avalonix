@@ -8,16 +8,9 @@ use anyhow::Ok;
 use rkyv::rancor::Error;
 
 use crate::{
-    disk::{
-        disk_manager,
-        settings::{self, Settings},
-    },
+    disk::{disk_manager, settings::Settings},
     logger,
-    media::{
-        album::{self, Album},
-        track::Track,
-        tracks_group::TracksGroup,
-    },
+    media::{album::Album, track::Track, tracks_group::TracksGroup},
     metadata::{
         album_filter_metadata::AlbumFilterMetadata, filter_metadata::FilterMetadata,
         track_filter_metadata::TrackFilterMetadata,

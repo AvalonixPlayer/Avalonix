@@ -1,6 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet},
-    sync::{Arc, Mutex, mpsc},
+    sync::{Arc, Mutex},
     thread,
     time::Duration,
 };
@@ -8,7 +7,7 @@ use std::{
 use anyhow::Ok;
 
 use crate::{
-    disk::db::{DB, DBHash},
+    disk::db::DB,
     logger,
     media::media_player::MediaPlayer,
     mutex_work::CreateArcMutex,

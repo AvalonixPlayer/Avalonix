@@ -5,12 +5,8 @@ use std::{
 };
 
 use glob::glob;
-use walkdir::WalkDir;
 
-use crate::{
-    disk::settings::{self, Settings},
-    logger,
-};
+use crate::{disk::settings::Settings, logger};
 
 pub fn avalonix_folder_path() -> PathBuf {
     let res = dirs::home_dir().unwrap().join(".avalonix");

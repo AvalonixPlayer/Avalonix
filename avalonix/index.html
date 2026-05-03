@@ -1,122 +1,140 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="./src/styles/styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
-    <script type="module" src="./src/ts/main.ts" defer></script>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="./src/styles/styles.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tauri App</title>
+        <script type="module" src="./src/ts/main.ts" defer></script>
+    </head>
 
-  <body>
-    <section class="section" id="windows">
-      <section class="section" id="tabs-sellector">
-        <button class="tab-sellect-button" id="main-tab-sellector">
-          <h2>Main</h2>
-        </button>
-        <button class="tab-sellect-button" id="tracks-tab-sellector">
-          <h2>Tracks</h2>
-        </button>
-        <button class="tab-sellect-button" id="albums-tab-sellector">
-          <h2>Albums</h2>
-        </button>
-        <button class="tab-sellect-button" id="performers-tab-sellector">
-          <h2>Performers</h2>
-        </button>
-        <button class="tab-sellect-button" id="settings-tab-sellector">
-          <h2>Settings</h2>
-        </button>
-        <button class="tab-sellect-button" id="metadata-tab-sellector">
-          <h2>Metadata</h2>
-        </button>
-      </section>
+    <body>
+        <section class="section" id="windows">
+            <section class="section" id="tabs-sellector">
+                <button class="tab-sellect-button" id="main-tab-sellector">
+                    <h2>Main</h2>
+                </button>
+                <button class="tab-sellect-button" id="tracks-tab-sellector">
+                    <h2>Tracks</h2>
+                </button>
+                <button class="tab-sellect-button" id="albums-tab-sellector">
+                    <h2>Albums</h2>
+                </button>
+                <button
+                    class="tab-sellect-button"
+                    id="performers-tab-sellector"
+                >
+                    <h2>Performers</h2>
+                </button>
+                <button class="tab-sellect-button" id="settings-tab-sellector">
+                    <h2>Settings</h2>
+                </button>
+                <button class="tab-sellect-button" id="metadata-tab-sellector">
+                    <h2>Metadata</h2>
+                </button>
+            </section>
 
-      <section class="section" id="main-section">
-        <section class="section main-section-child" id="track-preview">
-          <img id="preview-album-cover" src="./src/assets/black.jpg" />
-          <div>
-            <h1>Track name</h1>
-            <h2>Performer</h2>
-            <h3>Album</h3>
-          </div>
+            <section class="section" id="main-section">
+                <section class="section main-section-child" id="track-preview">
+                    <img
+                        id="preview-album-cover"
+                        src="./src/assets/black.jpg"
+                    />
+                    <div>
+                        <h1>Track name</h1>
+                        <h2>Performer</h2>
+                        <h3>Album</h3>
+                    </div>
+                </section>
+
+                <section
+                    class="section main-section-child"
+                    id="tracks-list-section"
+                >
+                    <div class="playables-list" id="tracks-list"></div>
+                </section>
+
+                <section
+                    class="section main-section-child"
+                    id="tracks-list-section"
+                >
+                    <div class="playables-list" id="albums-list"></div>
+                </section>
+            </section>
+
+            <section class="section" id="queue-section">
+                <div class="playables-list" id="queue-list"></div>
+            </section>
         </section>
 
-        <section class="section main-section-child" id="tracks-list-section">
-          <div class="playables-list" id="tracks-list"></div>
+        <section class="section" id="playable-controll">
+            <div id="play-queue-track-time-controll-section">
+                <h3 class="track-time" id="cur-track-time">123</h3>
+                <input
+                    id="play-queue-time-controll-range"
+                    type="range"
+                    step="any"
+                    min="0"
+                    max="100"
+                />
+                <h3 class="track-time" id="left-track-time">123</h3>
+            </div>
+            <div id="play-queue-controll-section">
+                <div
+                    style="
+                        display: flex;
+                        align-items: center;
+                        padding-top: 10px;
+                    "
+                >
+                    <button
+                        class="playable-controll-button previous-or-next-track-button"
+                        id="previous-track-button"
+                    >
+                        <img src="src/assets/back.png" />
+                    </button>
+                    <button class="playable-controll-button" id="pause-button">
+                        <img src="src/assets/pause.png" />
+                    </button>
+                    <button
+                        class="playable-controll-button previous-or-next-track-button"
+                        id="next-track-button"
+                    >
+                        <img src="src/assets/next.png" />
+                    </button>
+                </div>
+            </div>
         </section>
+    </body>
 
-        <section class="section main-section-child" id="tracks-list-section">
-          <div class="playables-list" id="albums-list"></div>
-        </section>
-      </section>
-
-      <section class="section" id="queue-section">
-        <div class="playables-list" id="queue-list"></div>
-      </section>
-    </section>
-
-    <section class="section" id="playable-controll">
-      <div id="play-queue-track-time-controll-section">
-        <h3 class="track-time" id="cur-track-time">123</h3>
-        <input
-          id="play-queue-time-controll-range"
-          type="range"
-          step="any"
-          min="0"
-          max="100"
-        />
-        <h3 class="track-time" id="left-track-time">123</h3>
-      </div>
-      <div id="play-queue-controll-section">
-        <div style="display: flex; align-items: center; padding-top: 10px">
-          <button
-            class="playable-controll-button previous-or-next-track-button"
-            id="previous-track-button"
-          >
-            <img src="src/assets/back.png" />
-          </button>
-          <button class="playable-controll-button" id="pause-button">
-            <img src="src/assets/pause.png" />
-          </button>
-          <button
-            class="playable-controll-button previous-or-next-track-button"
-            id="next-track-button"
-          >
-            <img src="src/assets/next.png" />
-          </button>
+    <template id="track-sellect-from-list-button-template">
+        <div class="playable-button" id="track-sellect-from-list-button">
+            <button id="add-track-to-list-button">
+                <img src="./src/assets/add_btn.png" />
+            </button>
+            <h2>Track name</h2>
+            <h3>Performer</h3>
         </div>
-      </div>
-    </section>
-  </body>
+    </template>
 
-  <template id="track-sellect-from-list-button-template">
-    <div class="playable-button" id="track-sellect-from-list-button">
-      <button id="add-track-to-list-button">
-        <img src="./src/assets/add_btn.png" />
-      </button>
-      <h2>Track name</h2>
-      <h3>Performer</h3>
-    </div>
-  </template>
+    <template id="track-sellect-in-queue-button-template">
+        <div class="playable-button" id="track-sellect-from-queue-button">
+            <button id="start-track-from-queue-button">
+                <img src="./src/assets/sellect_btn.png" />
+            </button>
+            <h3>Track name</h3>
+        </div>
+    </template>
 
-  <template id="track-sellect-in-queue-button-template">
-    <div class="playable-button" id="track-sellect-from-queue-button">
-      <button id="start-track-from-queue-button">
-        <img src="./src/assets/sellect_btn.png" />
-      </button>
-      <h3>Track name</h3>
-    </div>
-  </template>
-
-  <template id="album-sellect-from-list-button-template">
-    <div class="playable-button" id="album-sellect-from-list-button">
-      <img src="src/assets/black.jpg" />
-      <div id="add-album-button-footer">
-        <button id="add-album-to-list-button">
-          <img src="src/assets/add_btn.png" />
-        </button>
-        <h3>Title</h3>
-      </div>
-    </div>
-  </template>
+    <template id="album-sellect-from-list-button-template">
+        <div class="playable-button" id="album-sellect-from-list-button">
+            <img src="src/assets/black.jpg" />
+            <div id="add-album-button-footer">
+                <button id="add-album-to-list-button">
+                    <img src="src/assets/add_btn.png" />
+                </button>
+                <h3>Title</h3>
+            </div>
+        </div>
+    </template>
 </html>

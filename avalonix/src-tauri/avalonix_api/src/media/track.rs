@@ -3,7 +3,7 @@ use std::{
     fs,
     io::Cursor,
     path::Path,
-    time::{SystemTime, UNIX_EPOCH},
+    time::UNIX_EPOCH,
 };
 
 use anyhow::{Ok, bail};

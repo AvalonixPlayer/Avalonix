@@ -8,8 +8,7 @@ use anyhow::Ok;
 use crate::{
     disk::{db::DB, settings::Settings},
     events::Event,
-    media::{media_player::MediaPlayer, play_queue::PlayQueue, track::Track},
-    mutex_work::CreateArcMutex,
+    media::{media_player::MediaPlayer, play_queue::PlayQueue},
 };
 
 pub struct Api {
