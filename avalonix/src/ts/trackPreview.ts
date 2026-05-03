@@ -1,4 +1,3 @@
-import { event } from "@tauri-apps/api";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { TrackMetadata } from "../bindings/TrackMetadata";
@@ -21,7 +20,7 @@ export async function updateTrackPreview(
     trackPreview.querySelector("h2")!.textContent = metadata.album;
     trackPreview.querySelector("h3")!.textContent = metadata.artist;
     if (cover == "".toString()) {
-      cover = "./src/assets/black.jpg";
+      cover = "./black.jpg";
     }
     trackPreview.querySelector("img")!.src = cover!;
   } else {
@@ -36,7 +35,7 @@ export async function updateTrackPreview(
         await updateTrackPreview(metadata, cover);
       })
       .catch((err) => {
-        let cover = "./src/assets/black.jpg";
+        let cover = "./black.jpg";
         let trackPreview = document.querySelector(
           "#track-preview",
         ) as HTMLElement;

@@ -33,14 +33,12 @@ async function createButton(data: AlbumFilterMetadata, albumId: Array<number>) {
   ) as DocumentFragment;
 
   let add_btn = button.getElementById("add-album-to-list-button");
-  add_btn?.addEventListener("click", async () => {
-    let index = albumsFilerDatas.findIndex((d) => d === data);
-  });
+  add_btn?.addEventListener("click", async () => {});
 
   let cover = await invoke<String>("get_album_cover_by_id", { id: albumId });
 
   if (cover == "") {
-    cover = "src/assets/black.jpg";
+    cover = "/black.jpg";
   }
 
   let coverElement = button.querySelector("img");

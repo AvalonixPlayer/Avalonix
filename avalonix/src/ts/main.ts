@@ -5,7 +5,9 @@ import { initTrackPreview, updateTrackPreview } from "./trackPreview";
 import { initPlaybackControll } from "./playbackControll";
 import { loadAlbumsFilerDatas } from "./loadAlbumsFilterDatas";
 
-await init();
+init().then(() => {
+  console.log("initilization end");
+});
 
 async function init() {
   await invoke("update_tracks_library");

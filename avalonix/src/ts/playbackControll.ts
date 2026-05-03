@@ -1,4 +1,3 @@
-import { event } from "@tauri-apps/api";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
@@ -24,11 +23,9 @@ export async function initPlaybackControll() {
     let pause = await invoke("is_paused");
 
     if (pause == true) {
-      pauseOrContinueTrackButton!.querySelector("img")!.src =
-        "src/assets/continue.png";
+      pauseOrContinueTrackButton!.querySelector("img")!.src = "/continue.png";
     } else {
-      pauseOrContinueTrackButton!.querySelector("img")!.src =
-        "src/assets/pause.png";
+      pauseOrContinueTrackButton!.querySelector("img")!.src = "/pause.png";
     }
   }
 
@@ -36,11 +33,9 @@ export async function initPlaybackControll() {
     let pause = await invoke("pause_or_continue_track");
 
     if (pause == true) {
-      pauseOrContinueTrackButton!.querySelector("img")!.src =
-        "src/assets/pause.png";
+      pauseOrContinueTrackButton!.querySelector("img")!.src = "/pause.png";
     } else {
-      pauseOrContinueTrackButton!.querySelector("img")!.src =
-        "src/assets/continue.png";
+      pauseOrContinueTrackButton!.querySelector("img")!.src = "/continue.png";
     }
   });
 
