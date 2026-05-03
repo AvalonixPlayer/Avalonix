@@ -214,3 +214,12 @@ pub async fn get_album_cover_by_id(
 
     Err(format!("album with id: {:?} not found", id))
 }
+
+#[tauri::command]
+pub async fn add_album_by_id(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    id: Vec<u8>,
+) -> Result<(), String> {
+    let mut guard = play_queue.lock().unwrap();
+    guard.add_album(id).map_err(|err| err.to_string())
+}

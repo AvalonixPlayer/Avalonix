@@ -78,6 +78,35 @@ impl PlayQueue {
         Ok(())
     }
 
+    pub fn add_album(&mut self, album_id: Vec<u8>) -> anyhow::Result<()> {
+        let db_guard = self.db.lock().unwrap();
+        let mut indexes = vec![];
+
+        if let Some(album) = db_guard
+            .db_hash
+            .albums_hash
+            .iter()
+            .find(|x| x.album_metadata.id == album_id)
+        {
+            for track_id in &album.tracks_ids {
+                if let Some(track_index_in_lib) = db_guard
+                    .db_hash
+                    .tracks_hash
+                    .iter()
+                    .position(|x| x.metadata.id == *track_id)
+                {
+                    indexes.push(track_index_in_lib);
+                }
+            }
+        }
+        drop(db_guard);
+
+        for index in indexes {
+            self.add_track(index)?;
+        }
+        Ok(())
+    }
+
     pub fn next(&mut self) -> anyhow::Result<()> {
         let len = self.tracks_in_queue_indexes.len();
         if let Some(index_in_queue) = self

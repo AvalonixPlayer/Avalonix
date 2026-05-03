@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { AlbumFilterMetadata } from "../bindings/AlbumFilterMetadata";
+import { updateQueue } from "./queueFiller";
 
 export let albumsFilerDatas: Array<AlbumFilterMetadata>;
 let albumsIds: Array<Array<number>>;
@@ -33,7 +34,10 @@ async function createButton(data: AlbumFilterMetadata, albumId: Array<number>) {
   ) as DocumentFragment;
 
   let add_btn = button.getElementById("add-album-to-list-button");
-  add_btn?.addEventListener("click", async () => {});
+  add_btn?.addEventListener("click", async () => {
+    await invoke("add_album_by_id", { id: albumId });
+    await updateQueue();
+  });
 
   let cover = await invoke<String>("get_album_cover_by_id", { id: albumId });
 
