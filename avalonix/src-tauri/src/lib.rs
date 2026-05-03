@@ -43,7 +43,9 @@ pub fn run() {
             commands::seek,
             commands::get_track_durration,
             commands::get_track_position,
-            commands::get_albums_filter_datas
+            commands::get_albums_filter_datas,
+            commands::get_albums_ids,
+            commands::get_album_cover_by_id
         ])
         .manage(api.media_player)
         .manage(api.db)

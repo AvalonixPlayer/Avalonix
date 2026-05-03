@@ -25,14 +25,6 @@ pub async fn get_tracks_filter_datas(
 }
 
 #[tauri::command]
-pub async fn get_albums_ids(db: tauri::State<'_, Arc<Mutex<DB>>>) -> Result<Vec<Vec<u8>>, String> {
-    logger::debug("get_albums_ids");
-
-    let db = db.lock().unwrap();
-    db.get_albums_ids().map_err(|err| err.to_string())
-}
-
-#[tauri::command]
 pub async fn update_library(
     db: tauri::State<'_, Arc<Mutex<DB>>>,
     settings: tauri::State<'_, Mutex<Settings>>,
@@ -196,4 +188,29 @@ pub async fn get_albums_filter_datas(
     guard
         .get_albums_filter_datas()
         .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_albums_ids(db: tauri::State<'_, Arc<Mutex<DB>>>) -> Result<Vec<Vec<u8>>, String> {
+    let guard = db.lock().unwrap();
+    guard.get_albums_ids().map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_album_cover_by_id(
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    id: Vec<u8>,
+) -> Result<String, String> {
+    let guard = db.lock().unwrap();
+
+    if let Some(album) = guard
+        .db_hash
+        .albums_hash
+        .iter()
+        .find(|x| x.album_metadata.id == id)
+    {
+        return Ok(album.album_metadata.album_cover.clone());
+    }
+
+    Err(format!("album with id: {:?} not found", id))
 }
