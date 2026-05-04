@@ -16,8 +16,33 @@ export async function loadPerformersFilerDatas() {
 
       performersIds = await invoke<Array<Array<number>>>("get_performers_ids");
       await fillPerformersList();
+      await filterPerformersList("");
     })
     .catch((e) => console.error(e));
+
+  let searchField = document.querySelector("#search-performer-field");
+  searchField?.addEventListener("input", async (event) => {
+    let value = (event.target as HTMLInputElement).value;
+    await filterPerformersList(value);
+  });
+}
+
+async function filterPerformersList(query: string) {
+  let list = Array.from(
+    document.querySelectorAll("#performer-sellect-from-list-button"),
+  );
+
+  list.forEach((element) => {
+    let isMatch = element
+      .querySelector("h1")!
+      .textContent.toLowerCase()
+      .includes(query);
+    if (isMatch) {
+      (element as HTMLEmbedElement).style.display = "";
+    } else {
+      (element as HTMLEmbedElement).style.display = "none";
+    }
+  });
 }
 
 export async function fillPerformersList() {

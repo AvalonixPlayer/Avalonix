@@ -15,8 +15,33 @@ export async function loadAlbumsFilerDatas() {
       albumsFilerDatas = data;
       albumsIds = await invoke<Array<Array<number>>>("get_albums_ids");
       await fillAlbumsList();
+      await filterAlbumsList("");
     })
     .catch((e) => console.error(e));
+
+  let searchField = document.querySelector("#search-album-field");
+  searchField?.addEventListener("input", async (event) => {
+    let value = (event.target as HTMLInputElement).value;
+    await filterAlbumsList(value);
+  });
+}
+
+async function filterAlbumsList(query: string) {
+  let list = Array.from(
+    document.querySelectorAll("#album-sellect-from-list-button"),
+  );
+
+  list.forEach((element) => {
+    let isMatch = element
+      .querySelector("h3")!
+      .textContent.toLowerCase()
+      .includes(query);
+    if (isMatch) {
+      (element as HTMLEmbedElement).style.display = "";
+    } else {
+      (element as HTMLEmbedElement).style.display = "none";
+    }
+  });
 }
 
 export async function fillAlbumsList() {

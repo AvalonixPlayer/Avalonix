@@ -1,118 +1,130 @@
 #windows {
-  height: 100%;
+    height: 100%;
 
-  display: flex;
+    display: flex;
 
-  overflow: auto;
+    overflow: auto;
 }
 
 #tabs-sellector {
-  width: 170px;
-  min-width: 170px;
-  height: 100%;
+    width: 170px;
+    min-width: 170px;
+    height: 100%;
 
-  overflow-y: auto;
+    overflow-y: auto;
 
-  border-right: 5px solid var(--separators-color);
+    border-right: 5px solid var(--separators-color);
 }
 
 #playable-controll {
-  flex-shrink: 0;
-  height: 100px;
-  min-height: 100px !important;
+    flex-shrink: 0;
+    height: 100px;
+    min-height: 100px !important;
 
-  border-top: 5px solid var(--separators-color);
+    border-top: 5px solid var(--separators-color);
 
-  display: flex;
-  justify-self: end;
+    display: flex;
+    justify-self: end;
 }
 
 #main-section {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 
-  overflow: hidden;
-  overflow-y: auto;
+    overflow: hidden;
+    overflow-y: auto;
 
-  display: flex;
+    display: flex;
 }
 
 #track-preview {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 
-  min-width: 400px;
+    min-width: 400px;
 
-  align-items: center;
-  justify-content: left;
-  padding-left: 50px;
+    align-items: center;
+    justify-content: left;
+    padding-left: 50px;
 
-  display: flex;
+    display: flex;
 }
 
 #preview-album-cover {
-  width: 350px;
-  height: 350px;
+    width: 350px;
+    height: 350px;
 
-  min-width: 200px;
-  min-height: 200px;
+    min-width: 200px;
+    min-height: 200px;
 
-  margin-left: 20px;
-  margin-right: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
 
-  border-radius: 10px;
+    border-radius: 10px;
 
-  object-fit: contain;
+    object-fit: contain;
 
-  transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
 }
 
 #preview-album-cover:hover {
-  scale: 1.1;
+    scale: 1.1;
 }
 
 #queue-section {
-  width: 250px;
-  min-width: 250px;
+    width: 250px;
+    min-width: 250px;
 
-  overflow-y: auto;
+    overflow-y: auto;
 
-  border-left: 5px solid var(--separators-color);
+    border-left: 5px solid var(--separators-color);
 }
 
-#tracks-list-section {
-  width: 100%;
+.playables-list-section {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
 }
 
 #playable-controll {
-  height: 100px;
-  display: block;
-  align-items: center;
+    height: 100px;
+    display: block;
+    align-items: center;
 }
 
 #play-queue-controll-section {
-  height: 100%;
+    height: 100%;
 
-  display: flex;
+    display: flex;
 
-  align-items: start;
-  justify-items: center;
-  justify-self: center;
+    align-items: start;
+    justify-items: center;
+    justify-self: center;
 }
 
 #play-queue-track-time-controll-section {
-  width: 100%;
-  height: 40px;
+    width: 100%;
+    height: 40px;
 
-  align-items: center;
+    align-items: center;
 
-  display: flex;
+    display: flex;
 }
 
 #albums-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 
-  align-items: flex-start;
+    align-items: flex-start;
+}
+
+.playables-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    bottom: 0;
 }

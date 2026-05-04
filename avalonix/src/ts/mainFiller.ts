@@ -13,9 +13,33 @@ export async function loadTracksFilerDatas() {
     .then(async (data) => {
       tracksFilerDatas = data;
       await fillTracksList();
-      updateQueue();
+      await updateQueue();
+      await filterTracksList("");
     })
     .catch((e) => console.error(e));
+
+  let searchField = document.querySelector("#search-track-field");
+  searchField?.addEventListener("input", async (event) => {
+    let value = (event.target as HTMLInputElement).value;
+    await filterTracksList(value);
+  });
+}
+
+async function filterTracksList(query: string) {
+  let list = Array.from(
+    document.querySelectorAll("#track-sellect-from-list-button"),
+  );
+  list.forEach((element) => {
+    let isMatch = element
+      .querySelector("h2")!
+      .textContent.toLowerCase()
+      .includes(query);
+    if (isMatch) {
+      (element as HTMLEmbedElement).style.display = "";
+    } else {
+      (element as HTMLEmbedElement).style.display = "none";
+    }
+  });
 }
 
 export async function fillTracksList() {

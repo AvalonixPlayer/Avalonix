@@ -1,0 +1,37 @@
+.search-playable-field-box {
+    width: 90%;
+    height: 120px;
+    background-color: var(--search-playback-color);
+
+    border-radius: 10px;
+
+    margin: 20px auto;
+
+    justify-self: center;
+
+    align-items: center;
+    justify-content: center;
+
+    display: flex;
+}
+
+.search-field {
+    height: 50px;
+    width: 90%;
+
+    background-color: var(--search-playback-color);
+
+    filter: brightness(1.4);
+
+    border-radius: 20px;
+    border: solid transparent;
+
+    outline: none;
+
+    transition: all 0.1s ease-in-out;
+}
+
+.search-field:focus {
+    filter: brightness(3);
+    border: solid transparent;
+}
