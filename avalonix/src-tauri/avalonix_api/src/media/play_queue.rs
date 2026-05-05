@@ -76,18 +76,13 @@ impl PlayQueue {
         let db_guard = self.db.lock().unwrap();
         let mut indexes = vec![];
 
-        if let Some(album) = db_guard
-            .db_hash
-            .albums_hash
-            .iter()
-            .find(|x| x.album_metadata.id == album_id)
-        {
+        let albums_hash = db_guard.get_albums_hash()?;
+        let tracks_hash = db_guard.get_tracks_hash()?;
+
+        if let Some(album) = albums_hash.iter().find(|x| x.album_metadata.id == album_id) {
             for track_id in &album.tracks_ids {
-                if let Some(track_index_in_lib) = db_guard
-                    .db_hash
-                    .tracks_hash
-                    .iter()
-                    .position(|x| x.metadata.id == *track_id)
+                if let Some(track_index_in_lib) =
+                    tracks_hash.iter().position(|x| x.metadata.id == *track_id)
                 {
                     indexes.push(track_index_in_lib);
                 }
@@ -105,18 +100,16 @@ impl PlayQueue {
         let db_guard = self.db.lock().unwrap();
         let mut indexes = vec![];
 
-        if let Some(performer) = db_guard
-            .db_hash
-            .performers_hash
+        let performers_hash = db_guard.get_performers_hash()?;
+        let tracks_hash = db_guard.get_tracks_hash()?;
+
+        if let Some(performer) = performers_hash
             .iter()
             .find(|x| x.performer_metadata.id == performer_id)
         {
             for track_id in &performer.tracks_ids {
-                if let Some(track_index_in_lib) = db_guard
-                    .db_hash
-                    .tracks_hash
-                    .iter()
-                    .position(|x| x.metadata.id == *track_id)
+                if let Some(track_index_in_lib) =
+                    tracks_hash.iter().position(|x| x.metadata.id == *track_id)
                 {
                     indexes.push(track_index_in_lib);
                 }
@@ -184,7 +177,7 @@ impl PlayQueue {
             .iter()
             .find(|x| **x == self.cur_track_index)
         {
-            let hash = &self.db.lock().unwrap().db_hash.tracks_hash;
+            let hash = &self.db.lock().unwrap().get_tracks_hash()?;
             let track = hash.get(self.cur_track_index);
             match track {
                 Some(track) => {

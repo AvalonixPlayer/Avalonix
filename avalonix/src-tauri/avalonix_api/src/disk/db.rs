@@ -20,27 +20,9 @@ use crate::{
 };
 
 pub struct DB {
-    pub db_hash: DBHash,
     tracks: sled::Tree,
     albums: sled::Tree,
     performers: sled::Tree,
-}
-
-#[derive(Clone)]
-pub struct DBHash {
-    pub tracks_hash: Vec<Track>,
-    pub albums_hash: Vec<Album>,
-    pub performers_hash: Vec<Performer>,
-}
-
-impl DBHash {
-    pub fn new() -> Self {
-        Self {
-            tracks_hash: vec![],
-            albums_hash: vec![],
-            performers_hash: vec![],
-        }
-    }
 }
 
 impl DB {
@@ -53,7 +35,6 @@ impl DB {
         let performers_tree = db.open_tree(b"performers")?;
 
         let db = Self {
-            db_hash: DBHash::new(),
             tracks: tracks_tree,
             albums: albums_tree,
             performers: performers_tree,
@@ -63,17 +44,10 @@ impl DB {
     }
 
     pub fn update_library(&mut self, settings: &Settings) -> anyhow::Result<()> {
-        self.load_tracks_hash()?;
-        self.load_albums_hash()?;
-        self.load_performers_hash()?;
-
         self.update_tracks_library(settings)?;
-        self.load_tracks_hash()?;
         self.update_albums_library()?;
         self.update_performers_library()?;
 
-        self.load_albums_hash()?;
-        self.load_performers_hash()?;
         Ok(())
     }
 
@@ -123,15 +97,14 @@ impl DB {
         Ok(result)
     }
 
-    pub fn load_tracks_hash(&mut self) -> anyhow::Result<()> {
+    pub fn get_tracks_hash(&self) -> anyhow::Result<Vec<Track>> {
         let mut result = vec![];
         for track in &self.tracks {
             let (_, track) = track?;
             let track = rkyv::from_bytes::<Track, Error>(&track)?;
             result.push(track);
         }
-        self.db_hash.tracks_hash = result;
-        Ok(())
+        Ok(result)
     }
 
     pub fn clear_tracks(&self) -> anyhow::Result<()> {
@@ -143,12 +116,11 @@ impl DB {
     pub fn update_tracks_library(&self, settings: &Settings) -> anyhow::Result<()> {
         let mut tracks = vec![];
         let tracks_files_paths = disk_manager::get_tracks_files_paths(settings);
+        let tracks_hash = self.get_tracks_hash()?;
         logger::debug("Update tracks lib");
 
         for track_file_path in tracks_files_paths {
-            if let Some(track_in_lib) = self
-                .db_hash
-                .tracks_hash
+            if let Some(track_in_lib) = tracks_hash
                 .iter()
                 .find(|x| *x.start_file_path == track_file_path.to_str().unwrap().to_string())
             {
@@ -207,15 +179,14 @@ impl DB {
         Ok(result)
     }
 
-    pub fn load_albums_hash(&mut self) -> anyhow::Result<()> {
+    pub fn get_albums_hash(&self) -> anyhow::Result<Vec<Album>> {
         let mut result = vec![];
         for album in &self.albums {
             let (_, album) = album?;
             let album = rkyv::from_bytes::<Album, Error>(&album)?;
             result.push(album);
         }
-        self.db_hash.albums_hash = result;
-        Ok(())
+        Ok(result)
     }
 
     pub fn clear_albums(&self) -> anyhow::Result<()> {
@@ -227,12 +198,15 @@ impl DB {
     pub fn update_albums_library(&mut self) -> anyhow::Result<()> {
         logger::debug("Update albums lib");
 
-        let tracks = &self.db_hash.tracks_hash;
-        let albums = &self.db_hash.albums_hash;
-        let new_albums = Album::group_tracks(albums, tracks)?;
+        let tracks_hash = &self.get_tracks_hash()?;
+        let albums_hash = &self.get_albums_hash()?;
+        let new_albums = Album::group_tracks(albums_hash, tracks_hash)?;
 
         for album in new_albums {
-            if let Some(exists_album) = albums.iter().find(|a| a.tracks_ids == album.tracks_ids) {
+            if let Some(exists_album) = albums_hash
+                .iter()
+                .find(|a| a.tracks_ids == album.tracks_ids)
+            {
                 logger::debug(format!(
                     "Album with name: {} dont needs to save",
                     exists_album.album_metadata.album_title
@@ -279,15 +253,14 @@ impl DB {
         Ok(result)
     }
 
-    pub fn load_performers_hash(&mut self) -> anyhow::Result<()> {
+    pub fn get_performers_hash(&self) -> anyhow::Result<Vec<Performer>> {
         let mut result = vec![];
         for performer in &self.performers {
             let (_, performer) = performer?;
             let performer = rkyv::from_bytes::<Performer, Error>(&performer)?;
             result.push(performer);
         }
-        self.db_hash.performers_hash = result;
-        Ok(())
+        Ok(result)
     }
 
     pub fn clear_performers(&self) -> anyhow::Result<()> {
@@ -299,12 +272,12 @@ impl DB {
     pub fn update_performers_library(&mut self) -> anyhow::Result<()> {
         logger::debug("Update albums lib");
 
-        let tracks = &self.db_hash.tracks_hash;
-        let performers = &self.db_hash.performers_hash;
-        let new_performers = Performer::group_tracks(performers, tracks)?;
+        let tracks_hash = &self.get_tracks_hash()?;
+        let performers_hash = &self.get_performers_hash()?;
+        let new_performers = Performer::group_tracks(performers_hash, tracks_hash)?;
 
         for performer in new_performers {
-            if let Some(exists_performer) = performers
+            if let Some(exists_performer) = performers_hash
                 .iter()
                 .find(|a| a.tracks_ids == performer.tracks_ids)
             {

@@ -32,10 +32,11 @@ async function filterAlbumsList(query: string) {
   );
 
   list.forEach((element) => {
-    let isMatch = element
-      .querySelector("h3")!
-      .textContent.toLowerCase()
-      .includes(query);
+    let isMatch =
+      element
+        ?.querySelector("h3")
+        ?.textContent?.toLowerCase()
+        .includes(query.toLowerCase()) ?? false;
     if (isMatch) {
       (element as HTMLEmbedElement).style.display = "";
     } else {

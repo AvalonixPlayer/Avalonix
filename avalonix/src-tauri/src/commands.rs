@@ -110,7 +110,11 @@ pub async fn get_cur_track_metadata(
         return Err("Queue is empty".to_string());
     }
     let library_guard = guard.db.lock().unwrap();
-    match library_guard.db_hash.tracks_hash.get(guard.cur_track_index) {
+    match library_guard
+        .get_tracks_hash()
+        .map_err(|err| err.to_string())?
+        .get(guard.cur_track_index)
+    {
         Some(hash) => {
             return Ok(hash.metadata.clone());
         }
@@ -128,7 +132,11 @@ pub async fn get_track_cover(
     }
 
     let library_guard = guard.db.lock().unwrap();
-    match library_guard.db_hash.tracks_hash.get(guard.cur_track_index) {
+    match library_guard
+        .get_tracks_hash()
+        .map_err(|err| err.to_string())?
+        .get(guard.cur_track_index)
+    {
         Some(hash) => {
             return hash.get_cover_as_uri().map_err(|err| err.to_string());
         }
@@ -190,8 +198,8 @@ pub async fn get_album_cover_by_id(
     let guard = db.lock().unwrap();
 
     if let Some(album) = guard
-        .db_hash
-        .albums_hash
+        .get_albums_hash()
+        .map_err(|err| err.to_string())?
         .iter()
         .find(|x| x.album_metadata.id == id)
     {

@@ -29,9 +29,9 @@ impl AudioFile for SingleFile {
 
         let tagged_file = Probe::open(&path)?.options(options).read()?;
 
-        if let Some(track) = db
-            .db_hash
-            .tracks_hash
+        let tracks_hash = db.get_tracks_hash()?;
+
+        if let Some(track) = tracks_hash
             .iter()
             .find(|track| track.metadata.file_path == path.as_ref().to_str().unwrap())
         {
@@ -118,6 +118,8 @@ impl AudioFile for CUEFile {
         let cue_title = cue.title;
         let cue_performer = cue.performer;
 
+        let tracks_hash = db.get_tracks_hash()?;
+
         match (cue_title, cue_performer) {
             (Some(cue_title), Some(cue_performer)) => {
                 let cue_files = cue.files;
@@ -126,9 +128,7 @@ impl AudioFile for CUEFile {
                     for (i, track) in file.tracks.iter().enumerate() {
                         let fp = file_path.as_ref().parent().unwrap().join(&file.file);
 
-                        if let Some(track) = db
-                            .db_hash
-                            .tracks_hash
+                        if let Some(track) = tracks_hash
                             .iter()
                             .find(|track| track.metadata.file_path == fp)
                         {

@@ -29,15 +29,8 @@ impl Api {
         let db = DB::open()?;
         let settings = Settings::open()?.create_arc_mutex();
 
-        {
-            let mut db_guard = db.lock().unwrap();
-            db_guard.load_tracks_hash()?;
-            db_guard.load_albums_hash()?;
-            drop(db_guard);
-
-            play_queue = PlayQueue::new(&media_player, &db)?;
-            PlayQueue::update(&play_queue);
-        }
+        play_queue = PlayQueue::new(&media_player, &db)?;
+        PlayQueue::update(&play_queue);
 
         Ok(Self {
             media_player,

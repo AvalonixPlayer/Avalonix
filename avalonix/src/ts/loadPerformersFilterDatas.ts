@@ -33,10 +33,11 @@ async function filterPerformersList(query: string) {
   );
 
   list.forEach((element) => {
-    let isMatch = element
-      .querySelector("h1")!
-      .textContent.toLowerCase()
-      .includes(query);
+    let isMatch =
+      element
+        ?.querySelector("h1")
+        ?.textContent?.toLowerCase()
+        .includes(query.toLowerCase()) ?? false;
     if (isMatch) {
       (element as HTMLEmbedElement).style.display = "";
     } else {

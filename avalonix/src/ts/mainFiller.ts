@@ -30,10 +30,11 @@ async function filterTracksList(query: string) {
     document.querySelectorAll("#track-sellect-from-list-button"),
   );
   list.forEach((element) => {
-    let isMatch = element
-      .querySelector("h2")!
-      .textContent.toLowerCase()
-      .includes(query);
+    let isMatch =
+      element
+        ?.querySelector("h2")
+        ?.textContent?.toLowerCase()
+        .includes(query.toLowerCase()) ?? false;
     if (isMatch) {
       (element as HTMLEmbedElement).style.display = "";
     } else {
