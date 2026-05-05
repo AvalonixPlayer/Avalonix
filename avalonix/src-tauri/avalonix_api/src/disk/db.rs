@@ -8,7 +8,7 @@ use anyhow::Ok;
 use rkyv::rancor::Error;
 
 use crate::{
-    disk::{disk_manager, settings::Settings},
+    disk::{db, disk_manager, settings::Settings},
     logger,
     media::{album::Album, performer::Performer, track::Track, tracks_group::TracksGroup},
     metadata::{
@@ -86,6 +86,16 @@ impl DB {
         settings.lib_paths.clear();
         settings.save()?;
         logger::debug("library cleared");
+        let db = sled::open(db_path)?;
+
+        let tracks_tree = db.open_tree(b"tracks")?;
+        let albums_tree = db.open_tree(b"albums")?;
+        let performers_tree = db.open_tree(b"performers")?;
+        drop(db);
+
+        self.tracks = tracks_tree;
+        self.albums = albums_tree;
+        self.performers = performers_tree;
         Ok(())
     }
 }
