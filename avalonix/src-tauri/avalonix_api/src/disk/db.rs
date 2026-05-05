@@ -68,12 +68,24 @@ impl DB {
         self.load_performers_hash()?;
 
         self.update_tracks_library(settings)?;
+        self.load_tracks_hash()?;
         self.update_albums_library()?;
         self.update_performers_library()?;
 
-        self.load_tracks_hash()?;
         self.load_albums_hash()?;
         self.load_performers_hash()?;
+        Ok(())
+    }
+
+    pub fn clear_library(&mut self, settings: &mut Settings) -> anyhow::Result<()> {
+        self.clear_tracks()?;
+        self.clear_albums()?;
+        self.clear_performers()?;
+        let db_path = disk_manager::db_path();
+        fs::remove_dir_all(&db_path)?;
+        settings.lib_paths.clear();
+        settings.save()?;
+        logger::debug("library cleared");
         Ok(())
     }
 }
@@ -412,5 +424,7 @@ fn test_clear_db() -> anyhow::Result<()> {
     let db_guard = db.lock().unwrap();
     db_guard.clear_tracks()?;
     db_guard.clear_albums()?;
+    db_guard.clear_performers()?;
+
     Ok(())
 }

@@ -9,13 +9,14 @@ use crate::{
     disk::{db::DB, settings::Settings},
     events::Event,
     media::{media_player::MediaPlayer, play_queue::PlayQueue},
+    mutex_work::CreateArcMutex,
 };
 
 pub struct Api {
     pub media_player: Arc<Mutex<MediaPlayer>>,
     pub play_queue: Arc<Mutex<PlayQueue>>,
     pub db: Arc<Mutex<DB>>,
-    pub settings: Mutex<Settings>,
+    pub settings: Arc<Mutex<Settings>>,
     pub event_reciver: Receiver<Event>,
 }
 
@@ -26,7 +27,7 @@ impl Api {
         let media_player = MediaPlayer::new(&event_sender)?;
         let play_queue;
         let db = DB::open()?;
-        let settings = Mutex::new(Settings::open()?);
+        let settings = Settings::open()?.create_arc_mutex();
 
         {
             let mut db_guard = db.lock().unwrap();

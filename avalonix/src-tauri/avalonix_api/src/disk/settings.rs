@@ -2,7 +2,6 @@ use std::{
     collections::HashSet,
     fs::File,
     io::{Read, Write},
-    path::PathBuf,
 };
 
 use anyhow::Ok;
@@ -12,7 +11,7 @@ use crate::disk::disk_manager;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Settings {
-    pub lib_paths: HashSet<PathBuf>,
+    pub lib_paths: HashSet<String>,
 }
 
 impl Settings {
@@ -53,8 +52,12 @@ impl Settings {
         Ok(())
     }
 
-    pub fn add_lib_path(&mut self, path: &PathBuf) {
-        self.lib_paths.insert(path.clone());
+    pub fn add_lib_path<T: AsRef<str>>(&mut self, path: T) {
+        self.lib_paths.insert(path.as_ref().to_string());
+    }
+
+    pub fn remove_path<T: AsRef<str>>(&mut self, path: T) {
+        self.lib_paths.remove(path.as_ref());
     }
 }
 

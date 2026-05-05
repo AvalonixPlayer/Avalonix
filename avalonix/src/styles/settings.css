@@ -1,0 +1,32 @@
+.settings-paragraph {
+    padding-left: 20px;
+}
+
+.settings-subparagraph {
+    height: auto;
+    background-color: var(--settings-subparagraph-background-color);
+    width: auto;
+
+    border-radius: 5px;
+
+    padding-left: 20px;
+    padding-right: 20px;
+
+    display: flex;
+    justify-content: space-between;
+
+    transition: all 0.1s ease-in-out;
+    margin-bottom: 10px;
+}
+
+.settings-subparagraph:hover {
+    background-color: var(--settings-subparagraph-hover-background-color);
+}
+
+.settings-subparagraph:active {
+    background-color: var(--settings-subparagraph-active-background-color);
+}
+
+.settings-add-img {
+    background: none;
+}

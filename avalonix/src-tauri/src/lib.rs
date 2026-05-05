@@ -17,6 +17,7 @@ pub fn run() {
         .expect("Error when create api");
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             let app_handle = app.app_handle().clone();
 
@@ -42,7 +43,7 @@ pub fn run() {
             commands::get_tracks_in_queue_indexes,
             commands::get_cur_track_metadata,
             commands::get_track_cover,
-            commands::update_tracks_library,
+            commands::update_library,
             commands::next_track,
             commands::previous_track,
             commands::pause_or_continue_track,
@@ -57,6 +58,10 @@ pub fn run() {
             commands::get_performers_filter_datas,
             commands::get_performers_ids,
             commands::add_performer_by_id,
+            commands::get_library_folders_from_settings,
+            commands::add_folder_path_to_library,
+            commands::clear_library,
+            commands::remove_folder_path_from_library
         ])
         .manage(api.media_player)
         .manage(api.db)

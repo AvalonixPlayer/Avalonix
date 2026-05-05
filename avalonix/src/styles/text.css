@@ -13,9 +13,29 @@ h3 {
     user-select: none;
 }
 
+summary {
+    margin-left: 40px;
+
+    color: var(--text-color);
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    font-family:
+        "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+
+    user-select: none;
+
+    font-size: 40px;
+
+    transition: all 0.1s ease-in-out;
+}
+
 input[type="text"] {
     color: var(--text-color);
     font-family:
         "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
     font-size: xx-large;
+    outline: none;
 }

@@ -5,19 +5,25 @@ import { initTrackPreview, updateTrackPreview } from "./trackPreview";
 import { initPlaybackControll } from "./playbackControll";
 import { loadAlbumsFilerDatas } from "./loadAlbumsFilterDatas";
 import { loadPerformersFilerDatas } from "./loadPerformersFilterDatas";
+import { initSettings } from "./settings";
 
 init().then(() => {
   console.log("initilization end");
 });
 
 async function init() {
-  await invoke("update_tracks_library").then(async () => {
-    tabsBtnsConnectToFunctions();
-    await initPlaybackControll();
-    await initTrackPreview();
-    await updateTrackPreview(null, null);
-    await loadTracksFilerDatas();
-    await loadAlbumsFilerDatas();
-    await loadPerformersFilerDatas();
-  });
+  tabsBtnsConnectToFunctions();
+  await initSettings();
+  await initPlaybackControll();
+  await initTrackPreview();
+  await getLibFromDB();
+  await updateTrackPreview(null, null);
+  await invoke("update_library");
+  await getLibFromDB();
+}
+
+export async function getLibFromDB() {
+  await loadTracksFilerDatas();
+  await loadAlbumsFilerDatas();
+  await loadPerformersFilerDatas();
 }

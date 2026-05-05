@@ -28,7 +28,7 @@ pub async fn get_tracks_filter_datas(
 #[tauri::command]
 pub async fn update_library(
     db: tauri::State<'_, Arc<Mutex<DB>>>,
-    settings: tauri::State<'_, Mutex<Settings>>,
+    settings: tauri::State<'_, Arc<Mutex<Settings>>>,
 ) -> Result<(), String> {
     logger::debug("update_library");
     let mut db = db.lock().unwrap();
@@ -139,21 +139,6 @@ pub async fn get_track_cover(
 }
 
 #[tauri::command]
-pub async fn update_tracks_library(
-    db: tauri::State<'_, Arc<Mutex<DB>>>,
-    settings: tauri::State<'_, Mutex<Settings>>,
-) -> Result<(), String> {
-    let mut guard = db.lock().unwrap();
-    let settings = settings.lock().unwrap();
-
-    let res = guard
-        .update_library(&settings)
-        .map_err(|err| err.to_string());
-    logger::debug("Update library");
-    res
-}
-
-#[tauri::command]
 pub async fn seek(
     media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
     seek_second: u64,
@@ -251,4 +236,51 @@ pub async fn add_performer_by_id(
 ) -> Result<(), String> {
     let mut guard = play_queue.lock().unwrap();
     guard.add_performer(id).map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_library_folders_from_settings(
+    settings: tauri::State<'_, Arc<Mutex<Settings>>>,
+) -> Result<Vec<String>, String> {
+    let guard = settings.lock().unwrap();
+    let mut res = vec![];
+
+    for i in &guard.lib_paths {
+        res.push(i.clone());
+    }
+
+    Ok(res)
+}
+
+#[tauri::command]
+pub async fn add_folder_path_to_library(
+    settings: tauri::State<'_, Arc<Mutex<Settings>>>,
+    path: String,
+) -> Result<(), String> {
+    let mut guard = settings.lock().unwrap();
+    guard.add_lib_path(path);
+    guard.save().map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn remove_folder_path_from_library(
+    settings: tauri::State<'_, Arc<Mutex<Settings>>>,
+    path: String,
+) -> Result<(), String> {
+    let mut settings_guard = settings.lock().unwrap();
+    settings_guard.remove_path(path);
+    settings_guard.save().map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn clear_library(
+    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    settings: tauri::State<'_, Arc<Mutex<Settings>>>,
+) -> Result<(), String> {
+    let mut db_guard = db.lock().unwrap();
+    let mut settings_guard = settings.lock().unwrap();
+
+    db_guard
+        .clear_library(&mut settings_guard)
+        .map_err(|err| err.to_string())
 }

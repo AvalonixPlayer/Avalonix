@@ -1,11 +1,7 @@
 .search-playable-field-box {
-    width: 90%;
+    width: 100%;
     height: 120px;
     background-color: var(--search-playback-color);
-
-    border-radius: 10px;
-
-    margin: 20px auto;
 
     justify-self: center;
 
@@ -16,10 +12,12 @@
 }
 
 .search-field {
-    height: 50px;
-    width: 90%;
+    height: 100%;
+    width: 100%;
 
-    background-color: var(--search-playback-color);
+    padding-left: 40px;
+
+    background: none;
 
     filter: brightness(1.4);
 

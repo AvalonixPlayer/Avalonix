@@ -57,6 +57,7 @@
                             class="search-field"
                             id="search-track-field"
                             placeholder="Track name"
+                            autocomplete="off"
                         />
                     </div>
                     <div class="playables-list" id="tracks-list"></div>
@@ -72,6 +73,7 @@
                             class="search-field"
                             id="search-album-field"
                             placeholder="Album name"
+                            autocomplete="off"
                         />
                     </div>
                     <div class="playables-list" id="albums-list"></div>
@@ -87,9 +89,46 @@
                             class="search-field"
                             id="search-performer-field"
                             placeholder="Performer name"
+                            autocomplete="off"
                         />
                     </div>
                     <div class="playables-list" id="performers-list"></div>
+                </section>
+
+                <section
+                    class="section main-section-child"
+                    id="settings-section"
+                >
+                    <h1 class="settings-paragraph">Library</h1>
+                    <div
+                        class="settings-subparagraph"
+                        id="add-folder-to-lib-drop"
+                    >
+                        <h2>Add library folder</h2>
+                        <button
+                            class="file-pick-button"
+                            id="add-path-to-lib-button"
+                            onclick="event.stopPropagation()"
+                        >
+                            <img src="./src/assets/add_btn.png" />
+                        </button>
+                    </div>
+
+                    <div id="settings-lib-paths-list"></div>
+
+                    <div
+                        class="settings-subparagraph"
+                        id="settings-update-library"
+                    >
+                        <h2>Update library</h2>
+                    </div>
+
+                    <div
+                        class="settings-subparagraph"
+                        id="settings-clear-library"
+                    >
+                        <h2>Clear library</h2>
+                    </div>
                 </section>
 
                 <section
@@ -180,6 +219,19 @@
                 <img src="./src/assets/add_btn.png" />
             </button>
             <h1>Performer</h1>
+        </div>
+    </template>
+
+    <template id="remove-path-from-lib-button-template">
+        <div class="settings-subparagraph library-folder-path">
+            <h2>Path</h2>
+            <button
+                class="file-pick-button"
+                id="remove-path-from-lib-button"
+                onclick="event.stopPropagation()"
+            >
+                <img src="./src/assets/remove_btn.png" />
+            </button>
         </div>
     </template>
 </html>

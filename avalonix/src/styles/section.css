@@ -128,3 +128,11 @@
     height: 100%;
     bottom: 0;
 }
+
+.section {
+    width: 100%;
+}
+
+#settings-section {
+    display: block;
+}

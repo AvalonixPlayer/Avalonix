@@ -9,4 +9,8 @@
     --sliders-color: #8c00ff;
 
     --search-playback-color: #111;
+
+    --settings-subparagraph-background-color: rgba(83, 83, 83, 0.37);
+    --settings-subparagraph-hover-background-color: rgba(10, 10, 10, 0.77);
+    --settings-subparagraph-active-background-color: rgba(3, 3, 3, 0.9);
 }
