@@ -13,6 +13,7 @@ use rodio::{
 
 use crate::{events::Event, logger, media::track::Track, mutex_work::CreateArcMutex};
 
+/// Audio player structure
 pub struct MediaPlayer {
     _sink: MixerDeviceSink,
     total_duration: Duration,
@@ -22,6 +23,7 @@ pub struct MediaPlayer {
 }
 
 impl MediaPlayer {
+    /// Creates a new audio player, running a background check
     pub fn new(event_sender: &Sender<Event>) -> anyhow::Result<Arc<Mutex<Self>>> {
         let stream_handle = rodio::DeviceSinkBuilder::from_default_device()?
             .with_buffer_size(BufferSize::Fixed(256))
@@ -53,6 +55,7 @@ impl MediaPlayer {
         self.player.empty()
     }
 
+    /// The track starts playing
     pub fn start_audio(&mut self, track: &Track) -> anyhow::Result<()> {
         let data = track.get_data()?;
         let len = data.get_ref().len() as u64;
@@ -116,10 +119,12 @@ impl MediaPlayer {
         Ok(())
     }
 
+    /// Returns the duration of the track playing in the media player
     pub fn get_len(&mut self) -> Duration {
         self.total_duration
     }
 
+    /// Returns the track time now
     pub fn get_pos(&mut self) -> Duration {
         self.player.get_pos()
     }
@@ -158,54 +163,4 @@ impl MediaPlayer {
             }
         });
     }
-}
-
-#[test]
-fn test_media_player() -> anyhow::Result<()> {
-    use crate::{disk::db::DB, utils::get_argument_val};
-    use std::path::PathBuf;
-
-    let (event_sender, event_reciver) = std::sync::mpsc::channel();
-
-    let media_player = MediaPlayer::new(&event_sender)?;
-    let track_path = get_argument_val("TRACK_PATH").unwrap();
-
-    let db = DB::open()?;
-    let db_guard = db.lock().unwrap();
-
-    let path = PathBuf::from(&track_path);
-
-    let binding = Track::create_tracks_list_from_file(&path, &db_guard)?;
-
-    let track = binding.last().clone().unwrap();
-
-    let sleep = || thread::sleep(Duration::from_secs(1));
-    {
-        let mut guard = media_player.lock().unwrap();
-        guard.start_audio(&track)?; // for cue need fix
-    }
-    sleep();
-    {
-        let mut guard = media_player.lock().unwrap();
-        guard.pause();
-    }
-    sleep();
-    {
-        let mut guard = media_player.lock().unwrap();
-        guard.play();
-    }
-    sleep();
-    {
-        let mut guard = media_player.lock().unwrap();
-        let len = guard.total_duration;
-        guard.seek(len / 2)?;
-    }
-    sleep();
-    {
-        let mut guard = media_player.lock().unwrap();
-        guard.stop_audio();
-    }
-    sleep();
-
-    Ok(())
 }

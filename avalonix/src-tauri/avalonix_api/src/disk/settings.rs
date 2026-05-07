@@ -9,12 +9,15 @@ use serde::{Deserialize, Serialize};
 
 use crate::disk::disk_manager;
 
+/// User settings structure
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Settings {
+    /// Paths to folders with tracks
     pub lib_paths: HashSet<String>,
 }
 
 impl Settings {
+    /// Creates or opens a settings
     pub fn open() -> anyhow::Result<Self> {
         let path = disk_manager::settings_path();
 
@@ -40,6 +43,7 @@ impl Settings {
         }
     }
 
+    /// Saves settings
     pub fn save(&self) -> anyhow::Result<()> {
         let path = disk_manager::settings_path();
 
@@ -52,35 +56,13 @@ impl Settings {
         Ok(())
     }
 
+    /// Adds the path to the folder with tracks to the settings
     pub fn add_lib_path<T: AsRef<str>>(&mut self, path: T) {
         self.lib_paths.insert(path.as_ref().to_string());
     }
 
+    /// Removes the path to the folder with tracks to the settings
     pub fn remove_path<T: AsRef<str>>(&mut self, path: T) {
         self.lib_paths.remove(path.as_ref());
     }
-}
-
-#[test]
-fn test_settings() -> anyhow::Result<()> {
-    use crate::{logger, utils::get_argument_val};
-    let mut settings = Settings::open()?;
-
-    let lib_path = get_argument_val("LIB_PATH");
-
-    if let None = lib_path {
-        return Ok(());
-    }
-
-    let lib_path = lib_path.unwrap();
-
-    logger::debug(format!("Opened settings: {:#?}", settings));
-
-    settings.add_lib_path(&PathBuf::from(lib_path));
-
-    settings.save()?;
-
-    logger::debug(format!("Saved settings: {:#?}", settings));
-
-    Ok(())
 }

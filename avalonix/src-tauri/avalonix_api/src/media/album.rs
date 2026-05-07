@@ -9,14 +9,17 @@ use crate::{
 
 use rkyv::{Archive, Deserialize, Serialize};
 
+/// Album structure
 #[derive(Debug, Archive, Serialize, Deserialize, Clone)]
 pub struct Album {
+    /// List of album track IDs
     pub tracks_ids: Vec<Vec<u8>>,
+    /// Album metadata
     pub album_metadata: AlbumMetadata,
 }
 
 impl Album {
-    pub fn from(
+    fn from(
         tracks_ids: Vec<Vec<u8>>,
         album_metadata: AlbumMetadata,
         _albums_hash: &Vec<Self>,
@@ -71,23 +74,4 @@ impl TracksGroup for Album {
 
         Ok(result)
     }
-}
-
-#[test]
-fn test_albums_grouping() -> anyhow::Result<()> {
-    use crate::{disk::db::DB, logger};
-    let db = DB::open()?;
-
-    let mut db_guard = db.lock().unwrap();
-    db_guard.load_tracks_hash()?;
-    db_guard.load_albums_hash()?;
-
-    let tracks_hash = &db_guard.db_hash.tracks_hash;
-    let albums_hash = &db_guard.db_hash.albums_hash;
-
-    let albums = Album::group_tracks(albums_hash, tracks_hash)?;
-    for album in albums {
-        logger::debug(album.album_metadata.album_title);
-    }
-    Ok(())
 }

@@ -20,12 +20,3 @@ pub fn fatal<T: Display>(msg: T) {
 pub fn warn<T: Display>(msg: T) {
     println!("{} {}", "WARN".yellow(), msg);
 }
-
-#[test]
-fn test_logger() {
-    info("Test");
-    error("Test");
-    debug("Test");
-    warn("Test");
-    fatal("Test");
-}

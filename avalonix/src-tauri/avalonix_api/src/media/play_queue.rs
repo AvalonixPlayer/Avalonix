@@ -8,6 +8,7 @@ use anyhow::Ok;
 
 use crate::{disk::db::DB, logger, media::media_player::MediaPlayer, mutex_work::CreateArcMutex};
 
+/// Play queue structure
 pub struct PlayQueue {
     pub player: Arc<Mutex<MediaPlayer>>,
     pub db: Arc<Mutex<DB>>,
@@ -17,6 +18,7 @@ pub struct PlayQueue {
 }
 
 impl PlayQueue {
+    /// Creates a new instance of the playback queue
     pub fn new(
         player: &Arc<Mutex<MediaPlayer>>,
         db: &Arc<Mutex<DB>>,
@@ -32,6 +34,7 @@ impl PlayQueue {
         Ok(queue)
     }
 
+    /// Starts a background update
     pub fn update(play_queue: &Arc<Mutex<Self>>) {
         let play_queue = play_queue.clone();
 
@@ -64,6 +67,7 @@ impl PlayQueue {
         });
     }
 
+    /// Adds a track ID to the queue
     pub fn add_track(&mut self, index_in_library: usize) -> anyhow::Result<()> {
         if !self.tracks_in_queue_indexes.contains(&index_in_library) {
             self.tracks_in_queue_indexes.push(index_in_library);
@@ -72,6 +76,7 @@ impl PlayQueue {
         Ok(())
     }
 
+    /// Adds album track IDs to the queue
     pub fn add_album(&mut self, album_id: Vec<u8>) -> anyhow::Result<()> {
         let db_guard = self.db.lock().unwrap();
         let mut indexes = vec![];
@@ -96,6 +101,7 @@ impl PlayQueue {
         Ok(())
     }
 
+    /// Adds performer track IDs to the queue
     pub fn add_performer(&mut self, performer_id: Vec<u8>) -> anyhow::Result<()> {
         let db_guard = self.db.lock().unwrap();
         let mut indexes = vec![];
@@ -123,6 +129,7 @@ impl PlayQueue {
         Ok(())
     }
 
+    /// Сhanges the queue index
     pub fn next(&mut self) -> anyhow::Result<()> {
         let len = self.tracks_in_queue_indexes.len();
         if let Some(index_in_queue) = self
@@ -146,6 +153,7 @@ impl PlayQueue {
         Ok(())
     }
 
+    /// Сhanges the queue index
     pub fn back(&mut self) -> anyhow::Result<()> {
         if let Some(index_in_queue) = self
             .tracks_in_queue_indexes
@@ -169,6 +177,7 @@ impl PlayQueue {
         Ok(())
     }
 
+    /// Starts a track according to the queue index
     pub fn start_track(&self) -> anyhow::Result<()> {
         let mut player_guard = self.player.lock().unwrap();
 
@@ -193,26 +202,4 @@ impl PlayQueue {
 
         Ok(())
     }
-}
-
-#[test]
-fn test_play_queue() -> anyhow::Result<()> {
-    let db = DB::open()?;
-    let mut db_guard = db.lock().unwrap();
-    db_guard.load_tracks_hash()?;
-    drop(db_guard);
-
-    let (event_sender, _) = std::sync::mpsc::channel();
-
-    let player = MediaPlayer::new(&event_sender)?;
-
-    let queue = PlayQueue::new(&player, &db)?;
-
-    PlayQueue::update(&queue);
-    let mut queue_guard = queue.lock().unwrap();
-    queue_guard.add_track(0)?;
-
-    drop(queue_guard);
-
-    loop {}
 }

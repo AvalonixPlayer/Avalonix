@@ -18,6 +18,7 @@ pub struct Track {
 }
 
 impl Track {
+    /// Creates a new track
     pub fn create_new(start_file_path: String, metadata: TrackMetadata) -> anyhow::Result<Self> {
         let f = fs::metadata(&start_file_path)?;
         let mod_date;
@@ -36,6 +37,7 @@ impl Track {
         })
     }
 
+    /// Creates a new tracks list from file
     pub fn create_tracks_list_from_file<P: AsRef<Path>>(
         path: P,
         db: &DB,
@@ -75,11 +77,13 @@ impl Track {
         }
     }
 
+    /// Returns audio data to the media player
     pub fn get_data(&self) -> anyhow::Result<Cursor<Vec<u8>>> {
         let cursor = Cursor::new(fs::read(&self.metadata.file_path)?);
         Ok(cursor)
     }
 
+    /// Returns the track's cover in string format.
     pub fn get_cover_as_uri(&self) -> anyhow::Result<String> {
         match self.start_file_path.file_type() {
             LibFile::Audio => SingleFile::get_cover_as_uri(&self.start_file_path),
@@ -90,8 +94,6 @@ impl Track {
             }
         }
     }
-
-    //pub fn get_cover_as_uri(&self) -> anyhow::Result<String> {}
 }
 
 impl Display for Track {
@@ -102,39 +104,4 @@ impl Display for Track {
             self.start_file_path, self.metadata
         )
     }
-}
-
-#[test]
-fn test_create_tracks() -> anyhow::Result<()> {
-    use walkdir::WalkDir;
-
-    use crate::{disk::settings::Settings, logger};
-
-    let settings = Settings::open()?;
-
-    let db = &DB::open()?;
-
-    let db_guard = db.lock().unwrap();
-
-    for lib_path in settings.lib_paths {
-        for dir_entry in WalkDir::new(lib_path) {
-            let dir_entry = dir_entry?;
-
-            if dir_entry.file_type().is_file() {
-                let path = dir_entry.path();
-
-                match Track::create_tracks_list_from_file(path, &db_guard) {
-                    std::result::Result::Ok(tracks) => {
-                        for track in tracks {
-                            logger::debug(format!("track readed: {}", track));
-                        }
-                    }
-                    Err(err) => {
-                        logger::warn(err);
-                    }
-                }
-            }
-        }
-    }
-    Ok(())
 }

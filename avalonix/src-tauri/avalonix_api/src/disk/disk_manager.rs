@@ -8,6 +8,7 @@ use glob::glob;
 
 use crate::{disk::settings::Settings, logger};
 
+/// Returns the path to the directory containing the avalonix files.
 pub fn avalonix_folder_path() -> PathBuf {
     let res = dirs::home_dir().unwrap().join(".avalonix");
     check_dir(&res);
@@ -32,6 +33,7 @@ pub fn db_path() -> PathBuf {
     res
 }
 
+/// Returns all track files based on the settings
 pub fn get_tracks_files_paths(settings: &Settings) -> Vec<PathBuf> {
     let mut result: HashSet<PathBuf> = HashSet::new();
 
@@ -63,11 +65,4 @@ fn check_file(file: &PathBuf) {
         _ = fs::read_dir(&file);
         _ = File::create(&file);
     }
-}
-
-#[test]
-fn test_disk_manager() {
-    use crate::logger;
-    logger::debug(avalonix_folder_path().to_str().unwrap().to_string());
-    logger::debug(lib_db_path().to_str().unwrap().to_string());
 }

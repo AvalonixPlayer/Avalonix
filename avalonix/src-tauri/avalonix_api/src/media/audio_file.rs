@@ -14,8 +14,10 @@ use uuid::Uuid;
 use crate::{disk::db::DB, logger, metadata::track_metadata::TrackMetadata};
 
 pub trait AudioFile {
+    /// Returns track metadata. If the track exists in the database, it retrieves the data from it; otherwise, it reads it from a file.
     fn read_metadatas<P: AsRef<Path>>(file_path: P, db: &DB) -> anyhow::Result<Vec<TrackMetadata>>;
 
+    /// Returns the track's cover in string format.
     fn get_cover_as_uri<P: AsRef<Path>>(path: P) -> anyhow::Result<String>;
 }
 

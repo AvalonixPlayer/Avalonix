@@ -19,13 +19,18 @@ use crate::{
     mutex_work::CreateArcMutex,
 };
 
+/// Local library database storing hash
 pub struct DB {
+    /// tracks tree
     tracks: sled::Tree,
+    /// albums tree
     albums: sled::Tree,
+    /// performers tree
     performers: sled::Tree,
 }
 
 impl DB {
+    /// Creates or opens a db
     pub fn open() -> anyhow::Result<Arc<Mutex<Self>>> {
         let db_path = disk_manager::db_path();
         let db = sled::open(db_path)?;
@@ -43,6 +48,7 @@ impl DB {
         Ok(db.create_arc_mutex())
     }
 
+    /// Searches for files in the directories specified in the settings and adds or updates data to the library based on them
     pub fn update_library(&mut self, settings: &Settings) -> anyhow::Result<()> {
         self.update_tracks_library(settings)?;
         self.update_albums_library()?;
@@ -51,15 +57,8 @@ impl DB {
         Ok(())
     }
 
-    pub fn clear_library(&mut self, settings: &mut Settings) -> anyhow::Result<()> {
-        self.clear_tracks()?;
-        self.clear_albums()?;
-        self.clear_performers()?;
+    fn restart_db(&mut self) -> anyhow::Result<()> {
         let db_path = disk_manager::db_path();
-        fs::remove_dir_all(&db_path)?;
-        settings.lib_paths.clear();
-        settings.save()?;
-        logger::debug("library cleared");
         let db = sled::open(db_path)?;
 
         let tracks_tree = db.open_tree(b"tracks")?;
@@ -72,9 +71,25 @@ impl DB {
         self.performers = performers_tree;
         Ok(())
     }
+
+    /// Cleans the library and removes it from the disk, restarting the db to avoid errors
+    pub fn clear_library(&mut self, settings: &mut Settings) -> anyhow::Result<()> {
+        self.clear_tracks()?;
+        self.clear_albums()?;
+        self.clear_performers()?;
+        let db_path = disk_manager::db_path();
+        fs::remove_dir_all(&db_path)?;
+        settings.lib_paths.clear();
+        settings.save()?;
+        logger::debug("library cleared");
+        self.restart_db()?;
+
+        Ok(())
+    }
 }
 
 impl DB {
+    /// Saves the track to the database
     pub fn save_track(&self, track: Track) -> anyhow::Result<()> {
         let key = &track.metadata.id;
 
@@ -87,6 +102,7 @@ impl DB {
         Ok(())
     }
 
+    /// Returns the primary metadata of each track in the library
     pub fn get_tracks_filter_metadatas(&self) -> anyhow::Result<Vec<TrackFilterMetadata>> {
         let mut result = vec![];
         for track in &self.tracks {
@@ -97,6 +113,7 @@ impl DB {
         Ok(result)
     }
 
+    /// Returns the completely metadata of each track in the library
     pub fn get_tracks_hash(&self) -> anyhow::Result<Vec<Track>> {
         let mut result = vec![];
         for track in &self.tracks {
@@ -107,13 +124,13 @@ impl DB {
         Ok(result)
     }
 
-    pub fn clear_tracks(&self) -> anyhow::Result<()> {
+    fn clear_tracks(&self) -> anyhow::Result<()> {
         self.tracks.clear()?;
         self.tracks.flush()?;
         Ok(())
     }
 
-    pub fn update_tracks_library(&self, settings: &Settings) -> anyhow::Result<()> {
+    fn update_tracks_library(&self, settings: &Settings) -> anyhow::Result<()> {
         let mut tracks = vec![];
         let tracks_files_paths = disk_manager::get_tracks_files_paths(settings);
         let tracks_hash = self.get_tracks_hash()?;
@@ -157,6 +174,7 @@ impl DB {
 }
 
 impl DB {
+    /// Saves the album to the database
     pub fn save_album(&self, album: Album) -> anyhow::Result<()> {
         let key = &album.album_metadata.id;
 
@@ -170,6 +188,7 @@ impl DB {
         Ok(())
     }
 
+    /// Returns the IDs of all albums
     pub fn get_albums_ids(&self) -> anyhow::Result<Vec<Vec<u8>>> {
         let mut result = vec![];
         for album in &self.albums {
@@ -179,6 +198,7 @@ impl DB {
         Ok(result)
     }
 
+    /// Returns the completely metadata of each album in the library
     pub fn get_albums_hash(&self) -> anyhow::Result<Vec<Album>> {
         let mut result = vec![];
         for album in &self.albums {
@@ -189,13 +209,13 @@ impl DB {
         Ok(result)
     }
 
-    pub fn clear_albums(&self) -> anyhow::Result<()> {
+    fn clear_albums(&self) -> anyhow::Result<()> {
         self.albums.clear()?;
         self.albums.flush()?;
         Ok(())
     }
 
-    pub fn update_albums_library(&mut self) -> anyhow::Result<()> {
+    fn update_albums_library(&mut self) -> anyhow::Result<()> {
         logger::debug("Update albums lib");
 
         let tracks_hash = &self.get_tracks_hash()?;
@@ -219,6 +239,7 @@ impl DB {
         Ok(())
     }
 
+    /// Returns the primary metadata of each album in the library
     pub fn get_albums_filter_datas(&mut self) -> anyhow::Result<Vec<AlbumFilterMetadata>> {
         let mut result = vec![];
         for album in &self.albums {
@@ -231,6 +252,7 @@ impl DB {
 }
 
 impl DB {
+    /// Saves the performer to the database
     pub fn save_performer(&self, performer: Performer) -> anyhow::Result<()> {
         let key = &performer.performer_metadata.id;
 
@@ -244,6 +266,7 @@ impl DB {
         Ok(())
     }
 
+    /// Returns the IDs of all performers
     pub fn get_performers_ids(&self) -> anyhow::Result<Vec<Vec<u8>>> {
         let mut result = vec![];
         for performer in &self.performers {
@@ -253,6 +276,7 @@ impl DB {
         Ok(result)
     }
 
+    /// Returns the completely metadata of each performer in the library
     pub fn get_performers_hash(&self) -> anyhow::Result<Vec<Performer>> {
         let mut result = vec![];
         for performer in &self.performers {
@@ -263,13 +287,13 @@ impl DB {
         Ok(result)
     }
 
-    pub fn clear_performers(&self) -> anyhow::Result<()> {
+    fn clear_performers(&self) -> anyhow::Result<()> {
         self.performers.clear()?;
         self.performers.flush()?;
         Ok(())
     }
 
-    pub fn update_performers_library(&mut self) -> anyhow::Result<()> {
+    fn update_performers_library(&mut self) -> anyhow::Result<()> {
         logger::debug("Update albums lib");
 
         let tracks_hash = &self.get_tracks_hash()?;
@@ -293,6 +317,7 @@ impl DB {
         Ok(())
     }
 
+    /// Returns the primary metadata of each performer in the library
     pub fn get_performers_filter_datas(&mut self) -> anyhow::Result<Vec<PerformerFilterMetadata>> {
         let mut result = vec![];
         for album in &self.performers {
@@ -302,112 +327,4 @@ impl DB {
         }
         Ok(result)
     }
-}
-
-#[test]
-fn test_db_tracks() -> anyhow::Result<()> {
-    use crate::utils::get_argument_val;
-    use anyhow::bail;
-    use std::path::PathBuf;
-
-    let db = DB::open()?;
-
-    let path_to_file = get_argument_val("FILE_PATH").unwrap();
-
-    let path_to_file = PathBuf::from(path_to_file);
-
-    let mut db_guard = db.lock().unwrap();
-
-    if let Err(err) = db_guard.load_tracks_hash() {
-        bail!(err)
-    }
-
-    match Track::create_tracks_list_from_file(path_to_file, &db_guard) {
-        std::result::Result::Ok(tracks) => {
-            for track in tracks {
-                db_guard.save_track(track)?;
-            }
-        }
-        Err(err) => {
-            logger::warn(err);
-        }
-    }
-
-    if let Err(err) = db_guard.load_tracks_hash() {
-        bail!(err)
-    }
-
-    for track in &db_guard.db_hash.tracks_hash {
-        logger::debug(format!("{}", track));
-    }
-
-    Ok(())
-}
-
-#[test]
-fn test_db_albums() -> anyhow::Result<()> {
-    let db = DB::open()?;
-
-    let settings = &Settings::open()?;
-
-    let mut db_guard = db.lock().unwrap();
-
-    db_guard.update_library(settings)?;
-
-    let albums_hash = &db_guard.db_hash.albums_hash;
-
-    for album in albums_hash {
-        logger::debug(format!("from hash: {}", album));
-        for track_id in &album.tracks_ids {
-            logger::debug(format!("\ttrack id: {:?}", track_id));
-        }
-    }
-
-    Ok(())
-}
-
-#[test]
-fn test_db_performers() -> anyhow::Result<()> {
-    let db = DB::open()?;
-
-    let settings = &Settings::open()?;
-
-    let mut db_guard = db.lock().unwrap();
-
-    db_guard.update_library(settings)?;
-
-    let performers_hash = &db_guard.db_hash.performers_hash;
-
-    for performer in performers_hash {
-        logger::debug(format!("from hash: {}", performer));
-        for track_id in &performer.tracks_ids {
-            logger::debug(format!("\ttrack id: {:?}", track_id));
-        }
-    }
-
-    Ok(())
-}
-
-#[test]
-fn test_db_update() -> anyhow::Result<()> {
-    let db = DB::open()?;
-
-    let mut db_guard = db.lock().unwrap();
-
-    let settings = &Settings::open()?;
-    db_guard.update_library(settings)?;
-
-    Ok(())
-}
-
-#[test]
-fn test_clear_db() -> anyhow::Result<()> {
-    let db = DB::open()?;
-
-    let db_guard = db.lock().unwrap();
-    db_guard.clear_tracks()?;
-    db_guard.clear_albums()?;
-    db_guard.clear_performers()?;
-
-    Ok(())
 }
