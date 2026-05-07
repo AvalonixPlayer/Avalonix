@@ -59,10 +59,10 @@ async function createButton(data: TrackFilterMetadata) {
 
   let add_btn = button.getElementById("add-track-to-list-button");
   add_btn?.addEventListener("click", async () => {
-    let index = tracksFilerDatas.findIndex((d) => d === data);
-    console.log(index);
+    let id = data.id;
+    console.log(id);
 
-    await invoke("start_track", { index: index });
+    await invoke("start_track", { id: id });
     await updateQueue();
   });
 

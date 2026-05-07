@@ -1,56 +1,84 @@
 #track-sellect-from-queue-button {
-  background: none;
-  border: none;
+    background: none;
+    border: none;
 
-  display: flex;
+    display: flex;
 
-  width: auto;
-  height: auto;
+    width: auto;
+    height: auto;
 
-  overflow: hidden;
+    overflow: hidden;
 
-  align-items: center;
+    align-items: center;
 }
 
 #start-track-from-queue-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  width: 30px;
-  height: 30px;
-  border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    width: 30px;
+    height: 30px;
+    border: none;
 
-  transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
 
-  margin-left: 10px;
-  margin-right: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #start-track-from-queue-button > img {
-  transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
 
-  width: 30px;
-  height: 30px;
+    width: 30px;
+    height: 30px;
 
-  scale: 0.9;
+    scale: 0.9;
 }
 
 #start-track-from-queue-button:hover {
-  border-radius: 5px;
-  background-color: var(--button-hover-color);
+    border-radius: 5px;
+    background-color: var(--button-hover-color);
 }
 
 #start-track-from-queue-button:hover > img {
-  scale: 1;
+    scale: 1;
 }
 
 #start-track-from-queue-button:active {
-  border-radius: 10px;
-  scale: 1.1;
-  background-color: var(--button-hover-color);
+    border-radius: 10px;
+    scale: 1.1;
+    background-color: var(--button-sellect-color);
 }
 
 #start-track-from-queue-button:active > img {
-  scale: 1;
+    scale: 1;
+}
+
+#remove-track-from-queue {
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    align-content: center;
+    display: flex;
+    background: none;
+    border: none;
+
+    transition: all 0.1s ease-in-out;
+}
+
+#remove-track-from-queue:hover {
+    scale: 1.1;
+
+    border-radius: 5px;
+
+    background-color: var(--button-hover-color);
+}
+
+#remove-track-from-queue:active {
+    scale: 1.1;
+
+    border-radius: 10px;
+
+    background-color: var(--button-sellect-color);
 }

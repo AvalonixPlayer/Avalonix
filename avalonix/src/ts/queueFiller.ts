@@ -7,22 +7,30 @@ const buttonTemplate = document.getElementById(
 ) as HTMLTemplateElement;
 
 export async function updateQueue() {
-  let indexes = await invoke<Array<number>>("get_tracks_in_queue_indexes");
+  let get_tracks_in_queue_ids = await invoke<Array<Array<number>>>(
+    "get_tracks_in_queue_ids",
+  );
 
   queueList.innerHTML = "";
-  indexes.forEach((index) => {
+  get_tracks_in_queue_ids.forEach((id) => {
     let button = buttonTemplate.content.cloneNode(true) as DocumentFragment;
 
     let sellect = button.getElementById("start-track-from-queue-button");
+    let remove = button.getElementById("remove-track-from-queue");
 
     sellect!.addEventListener("click", async () => {
-      await invoke("start_track", { index: index });
+      await invoke("start_track", { id: id });
+    });
+    remove!.addEventListener("click", async () => {
+      //await invoke("remove_track_from_queue", { index: index });
     });
 
-    let data = tracksFilerDatas[index];
+    let data = tracksFilerDatas.find(
+      (data) => JSON.stringify(id) == JSON.stringify(data.id),
+    );
 
     let title = button.querySelector("h3");
-    title!.textContent = data.title;
+    title!.textContent = data!.title;
 
     queueList.append(button);
   });

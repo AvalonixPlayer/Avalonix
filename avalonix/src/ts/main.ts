@@ -18,7 +18,7 @@ async function init() {
   await initTrackPreview();
   await getLibFromDB();
   await updateTrackPreview(null, null);
-  await invoke("update_library");
+  //await invoke("update_library");
   await getLibFromDB();
 }
 

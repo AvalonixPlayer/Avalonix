@@ -4,7 +4,7 @@ use std::{
     time::Duration,
 };
 
-use anyhow::Ok;
+use anyhow::{Ok, bail};
 
 use crate::{disk::db::DB, logger, media::media_player::MediaPlayer, mutex_work::CreateArcMutex};
 
@@ -12,8 +12,8 @@ use crate::{disk::db::DB, logger, media::media_player::MediaPlayer, mutex_work::
 pub struct PlayQueue {
     pub player: Arc<Mutex<MediaPlayer>>,
     pub db: Arc<Mutex<DB>>,
-    pub tracks_in_queue_indexes: Vec<usize>,
-    pub cur_track_index: usize,
+    pub tracks_in_queue_ids: Vec<Vec<u8>>,
+    pub cur_track_id: Vec<u8>,
     playing_strted: bool,
 }
 
@@ -26,8 +26,8 @@ impl PlayQueue {
         let queue = Self {
             player: player.clone(),
             db: db.clone(),
-            tracks_in_queue_indexes: vec![],
-            cur_track_index: 0,
+            tracks_in_queue_ids: vec![],
+            cur_track_id: vec![],
             playing_strted: false,
         }
         .create_arc_mutex();
@@ -68,9 +68,9 @@ impl PlayQueue {
     }
 
     /// Adds a track ID to the queue
-    pub fn add_track(&mut self, index_in_library: usize) -> anyhow::Result<()> {
-        if !self.tracks_in_queue_indexes.contains(&index_in_library) {
-            self.tracks_in_queue_indexes.push(index_in_library);
+    pub fn add_track(&mut self, track_id: Vec<u8>) -> anyhow::Result<()> {
+        if !self.tracks_in_queue_ids.contains(&track_id) {
+            self.tracks_in_queue_ids.push(track_id);
         }
 
         Ok(())
@@ -79,24 +79,19 @@ impl PlayQueue {
     /// Adds album track IDs to the queue
     pub fn add_album(&mut self, album_id: Vec<u8>) -> anyhow::Result<()> {
         let db_guard = self.db.lock().unwrap();
-        let mut indexes = vec![];
+        let mut tracks_ids = vec![];
 
         let albums_hash = db_guard.get_albums_hash()?;
-        let tracks_hash = db_guard.get_tracks_hash()?;
 
         if let Some(album) = albums_hash.iter().find(|x| x.album_metadata.id == album_id) {
             for track_id in &album.tracks_ids {
-                if let Some(track_index_in_lib) =
-                    tracks_hash.iter().position(|x| x.metadata.id == *track_id)
-                {
-                    indexes.push(track_index_in_lib);
-                }
+                tracks_ids.push(track_id.clone());
             }
         }
         drop(db_guard);
 
-        for index in indexes {
-            self.add_track(index)?;
+        for id in tracks_ids {
+            self.add_track(id)?;
         }
         Ok(())
     }
@@ -104,44 +99,39 @@ impl PlayQueue {
     /// Adds performer track IDs to the queue
     pub fn add_performer(&mut self, performer_id: Vec<u8>) -> anyhow::Result<()> {
         let db_guard = self.db.lock().unwrap();
-        let mut indexes = vec![];
+        let mut tracks_ids = vec![];
 
         let performers_hash = db_guard.get_performers_hash()?;
-        let tracks_hash = db_guard.get_tracks_hash()?;
 
         if let Some(performer) = performers_hash
             .iter()
             .find(|x| x.performer_metadata.id == performer_id)
         {
             for track_id in &performer.tracks_ids {
-                if let Some(track_index_in_lib) =
-                    tracks_hash.iter().position(|x| x.metadata.id == *track_id)
-                {
-                    indexes.push(track_index_in_lib);
-                }
+                tracks_ids.push(track_id.clone());
             }
         }
         drop(db_guard);
 
-        for index in indexes {
-            self.add_track(index)?;
+        for id in tracks_ids {
+            self.add_track(id)?;
         }
         Ok(())
     }
 
     /// Сhanges the queue index
     pub fn next(&mut self) -> anyhow::Result<()> {
-        let len = self.tracks_in_queue_indexes.len();
+        let len = self.tracks_in_queue_ids.len();
         if let Some(index_in_queue) = self
-            .tracks_in_queue_indexes
+            .tracks_in_queue_ids
             .iter()
-            .position(|x| *x == self.cur_track_index)
+            .position(|x| *x == self.cur_track_id)
         {
             if index_in_queue + 1 < len {
-                self.cur_track_index = self.tracks_in_queue_indexes[index_in_queue + 1];
+                self.cur_track_id = self.tracks_in_queue_ids[index_in_queue + 1].clone();
             } else {
-                if !self.tracks_in_queue_indexes.is_empty() {
-                    self.cur_track_index = self.tracks_in_queue_indexes[0];
+                if !self.tracks_in_queue_ids.is_empty() {
+                    self.cur_track_id = self.tracks_in_queue_ids[0].clone();
                 } else {
                     let mut player_guard = self.player.lock().unwrap();
                     player_guard.stop_audio();
@@ -156,15 +146,15 @@ impl PlayQueue {
     /// Сhanges the queue index
     pub fn back(&mut self) -> anyhow::Result<()> {
         if let Some(index_in_queue) = self
-            .tracks_in_queue_indexes
+            .tracks_in_queue_ids
             .iter()
-            .position(|x| *x == self.cur_track_index)
+            .position(|x| *x == self.cur_track_id)
         {
             if index_in_queue as i32 - 1 >= 0 {
-                self.cur_track_index = self.tracks_in_queue_indexes[index_in_queue - 1];
+                self.cur_track_id = self.tracks_in_queue_ids[index_in_queue - 1].clone();
             } else {
-                if !self.tracks_in_queue_indexes.is_empty() {
-                    self.cur_track_index = self.tracks_in_queue_indexes[0];
+                if !self.tracks_in_queue_ids.is_empty() {
+                    self.cur_track_id = self.tracks_in_queue_ids[0].clone();
                 } else {
                     let mut player_guard = self.player.lock().unwrap();
                     player_guard.stop_audio();
@@ -181,25 +171,15 @@ impl PlayQueue {
     pub fn start_track(&self) -> anyhow::Result<()> {
         let mut player_guard = self.player.lock().unwrap();
 
-        if let Some(_) = self
-            .tracks_in_queue_indexes
+        let hash = &self.db.lock().unwrap().get_tracks_hash()?;
+        if let Some(track) = hash
             .iter()
-            .find(|x| **x == self.cur_track_index)
+            .find(|track| track.metadata.id == self.cur_track_id)
         {
-            let hash = &self.db.lock().unwrap().get_tracks_hash()?;
-            let track = hash.get(self.cur_track_index);
-            match track {
-                Some(track) => {
-                    player_guard.start_audio(track)?;
-                }
-                None => {
-                    logger::error("index don`t in hash");
-                }
-            }
-        } else {
-            player_guard.stop_audio();
+            player_guard.start_audio(track)?;
+            return Ok(());
         }
-
-        Ok(())
+        player_guard.stop_audio();
+        bail!("index don`t in hash");
     }
 }

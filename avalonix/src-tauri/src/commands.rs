@@ -42,15 +42,14 @@ pub async fn update_library(
 #[tauri::command]
 pub async fn start_track(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
-    index: usize,
+    id: Vec<u8>,
 ) -> Result<(), String> {
     logger::debug("start_track");
     let mut play_queue_guard = play_queue.lock().unwrap();
     _ = play_queue_guard
-        .add_track(index)
+        .add_track(id.clone())
         .map_err(|err| err.to_string());
-
-    play_queue_guard.cur_track_index = index;
+    play_queue_guard.cur_track_id = id;
     play_queue_guard
         .start_track()
         .map_err(|err| err.to_string())
@@ -92,33 +91,36 @@ pub async fn is_paused(
 }
 
 #[tauri::command]
-pub async fn get_tracks_in_queue_indexes(
+pub async fn get_tracks_in_queue_ids(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
-) -> Result<Vec<usize>, String> {
+) -> Result<Vec<Vec<u8>>, String> {
     let guard = play_queue.lock().unwrap();
-
-    let indexes = guard.tracks_in_queue_indexes.clone();
-    Ok(indexes)
+    let ids = guard.tracks_in_queue_ids.clone();
+    Ok(ids)
 }
 
 #[tauri::command]
 pub async fn get_cur_track_metadata(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
 ) -> Result<TrackMetadata, String> {
-    let guard = play_queue.lock().unwrap();
-    if guard.tracks_in_queue_indexes.is_empty() {
-        return Err("Queue is empty".to_string());
-    }
-    let library_guard = guard.db.lock().unwrap();
-    match library_guard
+    let play_queue_guard = play_queue.lock().unwrap();
+    let library_guard = play_queue_guard.db.lock().unwrap();
+
+    let hash = library_guard
         .get_tracks_hash()
-        .map_err(|err| err.to_string())?
-        .get(guard.cur_track_index)
-    {
-        Some(hash) => {
-            return Ok(hash.metadata.clone());
+        .map_err(|err| err.to_string());
+
+    match hash {
+        Ok(hash) => {
+            if let Some(res) = hash
+                .iter()
+                .find(|x| x.metadata.id == play_queue_guard.cur_track_id)
+            {
+                return Ok(res.metadata.clone());
+            }
+            return Err("Inedx out of array tracks_hash".to_string());
         }
-        None => return Err("Inedx out of array tracks_hash".to_string()),
+        Err(_) => return Err("Inedx out of array tracks_hash".to_string()),
     }
 }
 
@@ -126,23 +128,24 @@ pub async fn get_cur_track_metadata(
 pub async fn get_track_cover(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
 ) -> Result<String, String> {
-    let guard = play_queue.lock().unwrap();
-    if guard.tracks_in_queue_indexes.is_empty() {
-        return Err("Queue is empty".to_string());
-    }
+    let play_queue_guard = play_queue.lock().unwrap();
+    let library_guard = play_queue_guard.db.lock().unwrap();
 
-    let library_guard = guard.db.lock().unwrap();
-    match library_guard
+    let hash = library_guard
         .get_tracks_hash()
-        .map_err(|err| err.to_string())?
-        .get(guard.cur_track_index)
-    {
-        Some(hash) => {
-            return hash.get_cover_as_uri().map_err(|err| err.to_string());
+        .map_err(|err| err.to_string());
+
+    match hash {
+        Ok(hash) => {
+            if let Some(res) = hash
+                .iter()
+                .find(|x| x.metadata.id == play_queue_guard.cur_track_id)
+            {
+                return res.get_cover_as_uri().map_err(|err| err.to_string());
+            }
+            return Err("Inedx out of array tracks_hash".to_string());
         }
-        None => {
-            return Err("Index out of array tracks_hash".to_string());
-        }
+        Err(_) => return Err("Inedx out of array tracks_hash".to_string()),
     }
 }
 
@@ -291,4 +294,13 @@ pub async fn clear_library(
     db_guard
         .clear_library(&mut settings_guard)
         .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn add_track_to_queue(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    id: Vec<u8>,
+) -> Result<(), String> {
+    let mut guard = play_queue.lock().unwrap();
+    guard.add_track(id).map_err(|err| err.to_string())
 }

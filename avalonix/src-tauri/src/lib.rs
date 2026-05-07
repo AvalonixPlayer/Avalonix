@@ -40,7 +40,7 @@ pub fn run() {
             commands::get_tracks_filter_datas,
             commands::get_albums_ids,
             commands::start_track,
-            commands::get_tracks_in_queue_indexes,
+            commands::get_tracks_in_queue_ids,
             commands::get_cur_track_metadata,
             commands::get_track_cover,
             commands::update_library,
@@ -61,7 +61,8 @@ pub fn run() {
             commands::get_library_folders_from_settings,
             commands::add_folder_path_to_library,
             commands::clear_library,
-            commands::remove_folder_path_from_library
+            commands::remove_folder_path_from_library,
+            commands::add_track_to_queue
         ])
         .manage(api.media_player)
         .manage(api.db)
