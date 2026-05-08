@@ -57,7 +57,7 @@ async function createButton(data: TrackFilterMetadata) {
     true,
   ) as DocumentFragment;
 
-  let add_btn = button.getElementById("add-track-to-list-button");
+  let add_btn = button.getElementById("add-playable-to-list");
   add_btn?.addEventListener("click", async () => {
     let id = data.id;
     console.log(id);

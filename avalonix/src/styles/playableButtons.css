@@ -1,180 +1,108 @@
-#track-sellect-from-list-button {
-    width: 100%;
-    height: 80px;
-
-    padding-left: 10px;
-
-    transition: all 0.1s ease-in;
-
+/* track */
+#track-playable-in-list-left-part {
+    padding-left: 15px;
     display: flex;
-
     align-items: center;
-    justify-content: space-between;
+    justify-content: left;
+    width: 50%;
 }
 
-#add-track-to-list-button {
+#track-playable-in-list {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    align-content: center;
+
+    transition: all 0.1s ease-in-out;
+}
+
+#track-sellect-from-list-button {
+    width: auto;
+    height: 100px;
+
     background: none;
-    width: 50px;
-    height: 50px;
+}
+
+#track-playable-in-list:hover {
+    background-color: var(--button-hover-color);
+}
+
+#add-playable-to-list {
+    margin-right: 15px;
+
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    background: none;
+
     border: none;
 
-    transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in-out;
 }
 
-#add-track-to-list-button > img {
-    width: 50px;
-    height: 50px;
-    scale: 0.9;
-    background: none;
-    transition: all 0.1s ease-in;
-}
-
-#add-track-to-list-button:hover {
-    border-radius: 10px;
-    background-color: var(--button-hover-color);
-}
-
-#add-track-to-list-button:hover > img {
-    scale: 1;
-}
-
-#add-track-to-list-button:active {
+#add-playable-to-list:hover {
     scale: 1.1;
-    border-radius: 15px;
-    background-color: var(--button-sellect-color);
-}
-
-#track-sellect-from-list-button:hover {
     background-color: var(--button-hover-color);
+    border-radius: 10px;
 }
 
-#track-sellect-from-list-button > h2 {
-    width: auto;
+#add-playable-to-list:active {
+    scale: 1.2;
+    background-color: var(--button-sellect-color);
+    border-radius: 10px;
 }
-#track-sellect-from-list-button > h3 {
-    right: 0;
-    width: 30%;
+
+#add-playable-to-list > img {
+    width: 30px;
+    height: 30px;
+}
+
+#track-playable-in-list:hover {
+    padding-left: 10px;
 }
 
 /* album */
 
 #album-sellect-from-list-button {
     width: 200px;
-    height: auto;
-    padding: 10px;
-    border-radius: 10px;
-
-    transition: all 0.1s ease-in;
-}
-
-#album-sellect-from-list-button > img {
-    width: 200px;
-    height: 200px;
-
-    display: block;
-
+    height: 230px;
+    padding: 15px;
     border-radius: 10px;
 }
 
 #album-sellect-from-list-button:hover {
-    background: var(--button-hover-color);
-}
-
-#add-album-to-list-button {
-    margin-top: 10px;
-    background: none;
-    border: none;
-
-    border-radius: 10px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 50px;
-    height: 50px;
-
-    transition: all 0.1s ease-in;
-}
-
-#add-album-to-list-button > img {
-    width: 50px;
-    height: 50px;
-
-    scale: 0.9;
-}
-
-#add-album-to-list-button:hover {
-    background: var(--button-hover-color);
-
-    scale: 1.1;
-}
-
-#add-album-button-footer {
-    display: flex;
-
-    justify-content: space-between;
-}
-
-/* Performer */
-
-#performer-sellect-from-list-button {
-    width: 100%;
-    height: 80px;
-
-    padding-left: 10px;
-
-    transition: all 0.1s ease-in;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: left;
-}
-
-#add-performer-to-list-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    width: 50px;
-    height: 50px;
-    border: none;
-
-    transition: all 0.1s ease-in;
-}
-
-#add-performer-to-list-button > img {
-    width: 50px;
-    height: 50px;
-    scale: 0.9;
-    background: none;
-    transition: all 0.1s ease-in;
-}
-
-#add-performer-to-list-button:hover {
-    border-radius: 10px;
     background-color: var(--button-hover-color);
 }
 
-#add-performer-to-list-button:hover > img {
-    scale: 1;
+#album-playable-sellect-top {
+    display: flex;
 }
 
-#add-performer-to-list-button:active {
-    scale: 1.1;
+#album-playable-sellect-top > #add-playable-to-list {
+    position: relative;
+    align-self: flex-end;
+    right: 190px;
+    bottom: 10px;
+}
+
+#album-sellect-playable-cover {
+    width: 200px;
+    height: 200px;
+
     border-radius: 15px;
-    background-color: var(--button-sellect-color);
+}
+
+/* performer */
+
+#performer-sellect-from-list-button {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    transition: all 0.1s ease-in-out;
 }
 
 #performer-sellect-from-list-button:hover {
+    padding-left: 20px;
     background-color: var(--button-hover-color);
-}
-
-#performer-sellect-from-list-button > h1 {
-    padding-left: 10px;
-    width: auto;
 }

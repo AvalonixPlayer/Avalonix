@@ -59,7 +59,7 @@ async function createButton(data: AlbumFilterMetadata, albumId: Array<number>) {
     true,
   ) as DocumentFragment;
 
-  let add_btn = button.getElementById("add-album-to-list-button");
+  let add_btn = button.getElementById("add-playable-to-list");
   add_btn?.addEventListener("click", async () => {
     await invoke("add_album_by_id", { id: albumId });
     await updateQueue();

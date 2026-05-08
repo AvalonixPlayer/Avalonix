@@ -63,7 +63,7 @@ async function createButton(
     true,
   ) as DocumentFragment;
 
-  let add_btn = button.getElementById("add-performer-to-list-button");
+  let add_btn = button.getElementById("add-playable-to-list");
   add_btn?.addEventListener("click", async () => {
     await invoke("add_performer_by_id", { id: performerId });
     await updateQueue();

@@ -183,11 +183,14 @@
     </body>
 
     <template id="track-sellect-from-list-button-template">
-        <div class="playable-button" id="track-sellect-from-list-button">
-            <button id="add-track-to-list-button">
-                <img src="./src/assets/add_btn.png" />
-            </button>
-            <h2>Track name</h2>
+        <div class="playable-button" id="track-playable-in-list">
+            <div id="track-playable-in-list-left-part">
+                <button id="add-playable-to-list">
+                    <img src="./src/assets/add_btn.png" />
+                </button>
+                <h2>Track name</h2>
+            </div>
+
             <h3>Performer</h3>
         </div>
     </template>
@@ -206,19 +209,22 @@
 
     <template id="album-sellect-from-list-button-template">
         <div class="playable-button" id="album-sellect-from-list-button">
-            <img src="src/assets/black.jpg" />
-            <div id="add-album-button-footer">
-                <button id="add-album-to-list-button">
-                    <img src="src/assets/add_btn.png" />
+            <div id="album-playable-sellect-top">
+                <img
+                    id="album-sellect-playable-cover"
+                    src="src/assets/black.jpg"
+                />
+                <button id="add-playable-to-list">
+                    <img src="./src/assets/add_btn.png" />
                 </button>
-                <h3>Title</h3>
             </div>
+            <h3>Title</h3>
         </div>
     </template>
 
     <template id="performer-sellect-from-list-button-template">
         <div class="playable-button" id="performer-sellect-from-list-button">
-            <button id="add-performer-to-list-button">
+            <button id="add-playable-to-list">
                 <img src="./src/assets/add_btn.png" />
             </button>
             <h1>Performer</h1>
