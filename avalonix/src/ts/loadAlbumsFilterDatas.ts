@@ -69,7 +69,7 @@ async function createButton(data: AlbumFilterMetadata, albumId: Array<number>) {
   });
 
   element.addEventListener("contextmenu", async (e) => {
-    await invokeAlbumPlayableContextMenu(e, albumId);
+    await invokeAlbumPlayableContextMenu(e as PointerEvent, albumId);
   });
 
   let cover = await invoke<String>("get_album_cover_by_id", { id: albumId });
