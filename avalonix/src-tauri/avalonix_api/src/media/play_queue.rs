@@ -4,7 +4,7 @@ use std::{
     time::Duration,
 };
 
-use anyhow::{Ok, bail};
+use anyhow::bail;
 
 use crate::{disk::db::DB, logger, media::media_player::MediaPlayer, mutex_work::CreateArcMutex};
 
@@ -181,6 +181,19 @@ impl PlayQueue {
         }
         player_guard.stop_audio();
         bail!("index don`t in hash");
+    }
+
+    /// Removes a track from queue
+    pub fn remove_track(&mut self, id: Vec<u8>) -> anyhow::Result<()> {
+        if let Some(position) = self
+            .tracks_in_queue_ids
+            .iter()
+            .position(|track_id| *track_id == id)
+        {
+            self.tracks_in_queue_ids.remove(position);
+            return Ok(());
+        }
+        bail!("track not in queue");
     }
 
     /// Clears a queue

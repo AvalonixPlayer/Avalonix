@@ -319,3 +319,12 @@ pub async fn play_album_by_id(
 
     Ok(())
 }
+
+#[tauri::command]
+pub async fn remove_track_from_queue(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    id: Vec<u8>,
+) -> Result<(), String> {
+    let mut queue_guard = play_queue.lock().unwrap();
+    queue_guard.remove_track(id).map_err(|err| err.to_string())
+}

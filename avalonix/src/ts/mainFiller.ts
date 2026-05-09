@@ -26,9 +26,8 @@ export async function loadTracksFilerDatas() {
 }
 
 async function filterTracksList(query: string) {
-  let list = Array.from(
-    document.querySelectorAll("#track-sellect-from-list-button"),
-  );
+  let list = Array.from(document.querySelectorAll("#track-playable-in-list"));
+
   list.forEach((element) => {
     let isMatch =
       element
@@ -59,10 +58,7 @@ async function createButton(data: TrackFilterMetadata) {
 
   let add_btn = button.getElementById("add-playable-to-list");
   add_btn?.addEventListener("click", async () => {
-    let id = data.id;
-    console.log(id);
-
-    await invoke("start_track", { id: id });
+    await invoke("start_track", { id: data.id });
     await updateQueue();
   });
 

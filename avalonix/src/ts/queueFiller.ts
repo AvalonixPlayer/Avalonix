@@ -22,7 +22,8 @@ export async function updateQueue() {
       await invoke("start_track", { id: id });
     });
     remove!.addEventListener("click", async () => {
-      //await invoke("remove_track_from_queue", { index: index });
+      await invoke("remove_track_from_queue", { id: id });
+      updateQueue();
     });
 
     let data = tracksFilerDatas.find(
