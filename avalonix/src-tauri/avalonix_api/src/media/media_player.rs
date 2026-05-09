@@ -16,7 +16,8 @@ use crate::{events::Event, logger, media::track::Track, mutex_work::CreateArcMut
 /// Audio player structure
 pub struct MediaPlayer {
     _sink: MixerDeviceSink,
-    total_duration: Duration,
+    start_position: Duration,
+    end_position: Duration,
     player: Player,
     last_device_description: DeviceDescription,
     event_sender: Sender<Event>,
@@ -39,7 +40,8 @@ impl MediaPlayer {
         let player = Player::connect_new(stream_handle.mixer());
         let self_arc = Self {
             _sink: stream_handle,
-            total_duration: Duration::new(0, 0),
+            start_position: Duration::new(0, 0),
+            end_position: Duration::new(0, 0),
             player,
             last_device_description: device_description,
             event_sender: event_sender.clone(),
@@ -60,18 +62,17 @@ impl MediaPlayer {
         let data = track.get_data()?;
         let len = data.get_ref().len() as u64;
 
-        let mut source = Decoder::builder()
+        let source = Decoder::builder()
             .with_data(data)
             .with_byte_len(len)
             .build()?;
 
-        let _ = source.try_seek(track.metadata.start_pos)?;
-        let source = source.take_duration(track.metadata.end_pos);
-
-        self.total_duration = source.total_duration().unwrap();
+        self.start_position = track.metadata.start_pos;
+        self.end_position = track.metadata.end_pos;
 
         self.player.clear();
         self.player.append(source);
+        self.seek(Duration::from_secs(0))?;
 
         self.play();
 
@@ -114,19 +115,20 @@ impl MediaPlayer {
     }
 
     pub fn seek(&mut self, pos: Duration) -> anyhow::Result<()> {
-        self.player.try_seek(pos)?;
+        self.player.try_seek(pos + self.start_position)?;
         logger::debug(format!("player seeked to: {}", pos.as_secs()));
         Ok(())
     }
 
     /// Returns the duration of the track playing in the media player
     pub fn get_len(&mut self) -> Duration {
-        self.total_duration
+        self.end_position - self.start_position
     }
 
     /// Returns the track time now
     pub fn get_pos(&mut self) -> Duration {
-        self.player.get_pos()
+        let current_pos = self.player.get_pos();
+        current_pos.saturating_sub(self.start_position)
     }
 
     fn device_changed_check(&mut self) -> anyhow::Result<()> {

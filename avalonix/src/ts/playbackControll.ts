@@ -61,6 +61,9 @@ export async function initPlaybackControll() {
     let trackPos = (await invoke("get_track_position")) as number;
     let trackLen = (await invoke("get_track_durration")) as number;
 
+    console.log(trackPos);
+    console.log(trackLen);
+
     updateTimeTexts(trackPos, trackLen - trackPos);
     clearTimeout(debounceTimer);
 
