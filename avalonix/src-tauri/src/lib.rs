@@ -62,7 +62,8 @@ pub fn run() {
             commands::add_folder_path_to_library,
             commands::clear_library,
             commands::remove_folder_path_from_library,
-            commands::add_track_to_queue
+            commands::add_track_to_queue,
+            commands::play_album_by_id
         ])
         .manage(api.media_player)
         .manage(api.db)

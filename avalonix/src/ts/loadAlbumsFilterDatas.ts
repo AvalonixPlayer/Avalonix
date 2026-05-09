@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { AlbumFilterMetadata } from "../bindings/AlbumFilterMetadata";
 import { updateQueue } from "./queueFiller";
+import { invokeAlbumPlayableContextMenu } from "./contextMenu";
 
 export let albumsFilerDatas: Array<AlbumFilterMetadata>;
 let albumsIds: Array<Array<number>>;
@@ -55,14 +56,20 @@ export async function fillAlbumsList() {
 }
 
 async function createButton(data: AlbumFilterMetadata, albumId: Array<number>) {
-  let button = albumSellectButtonTempl.content.cloneNode(
+  let fragment = albumSellectButtonTempl.content.cloneNode(
     true,
   ) as DocumentFragment;
 
-  let add_btn = button.getElementById("add-playable-to-list");
+  const element = fragment.firstElementChild as HTMLElement;
+
+  let add_btn = fragment.getElementById("add-playable-to-list");
   add_btn?.addEventListener("click", async () => {
     await invoke("add_album_by_id", { id: albumId });
     await updateQueue();
+  });
+
+  element.addEventListener("contextmenu", async (e) => {
+    await invokeAlbumPlayableContextMenu(e, albumId);
   });
 
   let cover = await invoke<String>("get_album_cover_by_id", { id: albumId });
@@ -71,10 +78,10 @@ async function createButton(data: AlbumFilterMetadata, albumId: Array<number>) {
     cover = "/black.jpg";
   }
 
-  let coverElement = button.querySelector("img");
-  let title = button.querySelector("h3");
+  let coverElement = fragment.querySelector("img");
+  let title = fragment.querySelector("h3");
   title!.textContent = data.title;
   coverElement!.src = cover.toString();
 
-  return button;
+  return fragment;
 }

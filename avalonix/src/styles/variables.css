@@ -8,9 +8,13 @@
 
     --sliders-color: #8c00ff;
 
-    --search-playback-color: #111;
+    --search-playback-color: #111f;
 
     --settings-subparagraph-background-color: rgba(83, 83, 83, 0.37);
     --settings-subparagraph-hover-background-color: rgba(10, 10, 10, 0.77);
     --settings-subparagraph-active-background-color: rgba(3, 3, 3, 0.9);
+
+    --context-menu-background-color: rgba(5, 5, 5, 0.8);
+    --context-menu-button-hover-color: rgba(33, 33, 33, 0.9);
+    --context-menu-button-active-color: rgba(33, 33, 33, 1);
 }

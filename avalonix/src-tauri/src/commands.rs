@@ -218,7 +218,8 @@ pub async fn add_album_by_id(
     id: Vec<u8>,
 ) -> Result<(), String> {
     let mut guard = play_queue.lock().unwrap();
-    guard.add_album(id).map_err(|err| err.to_string())
+    guard.add_album(id).map_err(|err| err.to_string())?;
+    Ok(())
 }
 
 #[tauri::command]
@@ -303,4 +304,18 @@ pub async fn add_track_to_queue(
 ) -> Result<(), String> {
     let mut guard = play_queue.lock().unwrap();
     guard.add_track(id).map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn play_album_by_id(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    id: Vec<u8>,
+) -> Result<(), String> {
+    let mut queue_guard = play_queue.lock().unwrap();
+    queue_guard.clear_queue().map_err(|err| err.to_string())?;
+    queue_guard.add_album(id).map_err(|err| err.to_string())?;
+    queue_guard.cur_track_id = queue_guard.tracks_in_queue_ids[0].clone();
+    queue_guard.start_track().map_err(|err| err.to_string())?;
+
+    Ok(())
 }

@@ -182,4 +182,12 @@ impl PlayQueue {
         player_guard.stop_audio();
         bail!("index don`t in hash");
     }
+
+    /// Clears a queue
+    pub fn clear_queue(&mut self) -> anyhow::Result<()> {
+        let mut player_guard = self.player.lock().unwrap();
+        player_guard.stop_audio();
+        self.tracks_in_queue_ids.clear();
+        Ok(())
+    }
 }

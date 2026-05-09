@@ -6,12 +6,14 @@ import { initPlaybackControll } from "./playbackControll";
 import { loadAlbumsFilerDatas } from "./loadAlbumsFilterDatas";
 import { loadPerformersFilerDatas } from "./loadPerformersFilterDatas";
 import { initSettings } from "./settings";
+import { initContextMenu } from "./contextMenu";
 
 init().then(() => {
   console.log("initilization end");
 });
 
 async function init() {
+  initContextMenu();
   tabsBtnsConnectToFunctions();
   await initSettings();
   await initPlaybackControll();
