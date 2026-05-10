@@ -49,8 +49,22 @@ async function filterAlbumsList(query: string) {
 export async function fillAlbumsList() {
   let list = document.querySelector("#albums-list");
   list!.innerHTML = "";
+
+  const coversObserver = new IntersectionObserver((e, observer) => {
+    e.forEach((entry) => {
+      if (entry.isIntersecting) {
+        loadAlbumCover(entry.target as HTMLElement);
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+
   albumsFilerDatas.forEach(async (data, index) => {
-    let btn = await createButton(data, albumsIds[index]);
+    let id = albumsIds[index];
+    let btn = await createButton(data, id);
+    let element = btn.firstElementChild as HTMLElement;
+    element.dataset.albumId = JSON.stringify(id);
+    coversObserver.observe(element);
     list?.append(btn);
   });
 }
@@ -72,16 +86,26 @@ async function createButton(data: AlbumFilterMetadata, albumId: Array<number>) {
     await invokeAlbumPlayableContextMenu(e as PointerEvent, albumId);
   });
 
-  let cover = await invoke<String>("get_album_cover_by_id", { id: albumId });
-
-  if (cover == "") {
-    cover = "/black.jpg";
-  }
-
   let coverElement = fragment.querySelector("img");
   let title = fragment.querySelector("h3");
   title!.textContent = data.title;
-  coverElement!.src = cover.toString();
+  coverElement!.src = "/black.jpg";
 
   return fragment;
+}
+
+async function loadAlbumCover(button: HTMLElement) {
+  let coverElement = button.querySelector("img");
+  let id = JSON.parse(button.dataset.albumId!);
+  console.log(id);
+  let cover = await invoke<String>("get_album_cover_by_id", { id: id });
+  if (cover == "") {
+    cover = "/black.jpg";
+  }
+  coverElement!.src = cover.toString();
+  coverElement!.animate([{ opacity: 0 }, { opacity: 1 }], {
+    duration: 300,
+    easing: "ease-out",
+    fill: "forwards",
+  });
 }
