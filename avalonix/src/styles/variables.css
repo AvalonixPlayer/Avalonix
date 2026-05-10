@@ -17,4 +17,7 @@
     --context-menu-background-color: rgba(5, 5, 5, 0.8);
     --context-menu-button-hover-color: rgba(33, 33, 33, 0.9);
     --context-menu-button-active-color: rgba(33, 33, 33, 1);
+
+    --scrollbar-color: var(--sliders-color);
+    --scrollbar-background: var(--separators-color);
 }
