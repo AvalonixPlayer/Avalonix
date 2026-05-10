@@ -1,6 +1,9 @@
 let displays: String[] = [];
+let queueTab = document.getElementById("queue-section");
 
-export function tabsBtnsConnectToFunctions() {
+let startQueueTabDisplay = queueTab!.style.display;
+
+export function initTabs() {
   let btns = document.querySelectorAll(".tab-sellect-button");
 
   btns.forEach((btn_el, index) => {
@@ -16,6 +19,19 @@ export function tabsBtnsConnectToFunctions() {
 
   disable_all();
   activateTab(0);
+  controllQueueTab(false);
+
+  window.addEventListener("resize", () => {
+    controllQueueTab(!(window.innerWidth <= 1000));
+  });
+}
+
+function controllQueueTab(activate: boolean) {
+  if (activate) {
+    queueTab!.style.display = startQueueTabDisplay;
+  } else {
+    queueTab!.style.display = "none";
+  }
 }
 
 function activateTab(index: number) {
