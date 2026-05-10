@@ -154,11 +154,18 @@ impl MediaPlayer {
     fn check_status(self_arc: &Arc<Mutex<Self>>) {
         let self_clone = self_arc.clone();
 
-        let dur = Duration::from_millis(1);
+        let dur = Duration::from_millis(100);
         thread::spawn(move || {
             loop {
                 sleep(dur);
                 let mut self_guard = self_clone.lock().unwrap();
+                if self_guard.get_pos()
+                    > self_guard
+                        .end_position
+                        .saturating_sub(self_guard.start_position)
+                {
+                    self_guard.stop_audio();
+                }
                 _ = self_guard
                     .device_changed_check()
                     .map_err(|err| logger::error(err));
