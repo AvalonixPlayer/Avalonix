@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { updateQueue } from "./queueFiller";
 
 export async function initPlaybackControll() {
   let previousTrackButton = document.querySelector("#previous-track-button");
@@ -14,7 +15,27 @@ export async function initPlaybackControll() {
 
   let pauseOrContinueTrackButton = document.querySelector("#pause-button");
 
+  let volumeSlider = document.querySelector(
+    "#volume-controll-range",
+  ) as HTMLInputElement;
+  let volume = (await invoke<number>("get_current_volume")) * 100;
+  volumeSlider.value = volume.toString();
+
+  volumeSlider!.addEventListener("input", async () => {
+    await invoke("set_current_volume", {
+      volume: parseFloat(volumeSlider.value) / 100,
+    });
+  });
+
+  let shuffleButton = document.querySelector("#shuffle-button");
   await check();
+
+  shuffleButton!.addEventListener("click", async () => {
+    await invoke<boolean>("shuffle_or_unshuffle");
+    await check();
+    await updateQueue();
+  });
+
   listen("track-updated", async () => {
     await check();
   });
@@ -26,6 +47,14 @@ export async function initPlaybackControll() {
       pauseOrContinueTrackButton!.querySelector("img")!.src = "/continue.png";
     } else {
       pauseOrContinueTrackButton!.querySelector("img")!.src = "/pause.png";
+    }
+
+    let shuffle = await invoke<boolean>("shuffle_state");
+
+    if (shuffle) {
+      shuffleButton!.querySelector("img")!.src = "./shuffle.png";
+    } else {
+      shuffleButton!.querySelector("img")!.src = "./unshuffle.png";
     }
   }
 

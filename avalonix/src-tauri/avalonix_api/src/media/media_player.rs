@@ -96,6 +96,7 @@ impl MediaPlayer {
         logger::debug("audio played");
     }
 
+    /// Changes the pause state
     pub fn pause_or_continue(&mut self) -> bool {
         match self.player.is_paused() {
             true => {
@@ -133,6 +134,18 @@ impl MediaPlayer {
     pub fn get_pos(&mut self) -> Duration {
         let current_pos = self.player.get_pos();
         current_pos.saturating_sub(self.start_position)
+    }
+
+    /// Changes player volume
+    ///
+    /// 1.0 is a base volume (100%)
+    pub fn set_volume(&self, volume: f32) {
+        self.player.set_volume(volume);
+    }
+
+    /// Returns current volume value
+    pub fn get_volume(&self) -> f32 {
+        self.player.volume()
     }
 
     fn device_changed_check(&mut self) -> anyhow::Result<()> {

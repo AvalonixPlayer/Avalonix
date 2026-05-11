@@ -5,6 +5,8 @@ use std::{
 };
 
 use anyhow::bail;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 use crate::{disk::db::DB, logger, media::media_player::MediaPlayer, mutex_work::CreateArcMutex};
 
@@ -14,6 +16,7 @@ pub struct PlayQueue {
     pub db: Arc<Mutex<DB>>,
     pub tracks_in_queue_ids: Vec<Vec<u8>>,
     pub cur_track_id: Vec<u8>,
+    pub shuffle: bool,
     playing_strted: bool,
 }
 
@@ -28,6 +31,7 @@ impl PlayQueue {
             db: db.clone(),
             tracks_in_queue_ids: vec![],
             cur_track_id: vec![],
+            shuffle: false,
             playing_strted: false,
         }
         .create_arc_mutex();
@@ -73,6 +77,9 @@ impl PlayQueue {
             self.tracks_in_queue_ids.push(track_id);
         }
 
+        if self.shuffle {
+            self.tracks_in_queue_ids.shuffle(&mut thread_rng());
+        }
         Ok(())
     }
 
@@ -190,6 +197,11 @@ impl PlayQueue {
             .iter()
             .position(|track_id| *track_id == id)
         {
+            if id == self.cur_track_id {
+                self.cur_track_id = vec![];
+                let mut player_guard = self.player.lock().unwrap();
+                player_guard.stop_audio();
+            }
             self.tracks_in_queue_ids.remove(position);
             return Ok(());
         }
@@ -202,5 +214,14 @@ impl PlayQueue {
         player_guard.stop_audio();
         self.tracks_in_queue_ids.clear();
         Ok(())
+    }
+
+    pub fn shuffle_or_unshuffle(&mut self) -> bool {
+        self.shuffle = !self.shuffle;
+        if self.shuffle {
+            self.tracks_in_queue_ids.shuffle(&mut thread_rng());
+        }
+
+        return self.shuffle;
     }
 }

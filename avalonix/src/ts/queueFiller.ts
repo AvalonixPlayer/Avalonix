@@ -10,6 +10,7 @@ export async function updateQueue() {
   let get_tracks_in_queue_ids = await invoke<Array<Array<number>>>(
     "get_tracks_in_queue_ids",
   );
+  console.log(get_tracks_in_queue_ids);
 
   queueList.innerHTML = "";
   get_tracks_in_queue_ids.forEach((id) => {
@@ -23,7 +24,7 @@ export async function updateQueue() {
     });
     remove!.addEventListener("click", async () => {
       await invoke("remove_track_from_queue", { id: id });
-      updateQueue();
+      await updateQueue();
     });
 
     let data = tracksFilerDatas.find(

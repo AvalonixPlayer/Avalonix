@@ -328,3 +328,36 @@ pub async fn remove_track_from_queue(
     let mut queue_guard = play_queue.lock().unwrap();
     queue_guard.remove_track(id).map_err(|err| err.to_string())
 }
+
+#[tauri::command]
+pub async fn get_current_volume(
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+) -> Result<f32, String> {
+    let media_player_guard = media_player.lock().unwrap();
+    Ok(media_player_guard.get_volume())
+}
+
+#[tauri::command]
+pub async fn set_current_volume(
+    media_player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+    volume: f32,
+) -> Result<(), String> {
+    let media_player_guard = media_player.lock().unwrap();
+    Ok(media_player_guard.set_volume(volume))
+}
+
+#[tauri::command]
+pub async fn shuffle_or_unshuffle(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<bool, ()> {
+    let mut play_queue_guard = play_queue.lock().unwrap();
+    Ok(play_queue_guard.shuffle_or_unshuffle())
+}
+
+#[tauri::command]
+pub async fn shuffle_state(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<bool, ()> {
+    let play_queue_guard = play_queue.lock().unwrap();
+    Ok(play_queue_guard.shuffle)
+}

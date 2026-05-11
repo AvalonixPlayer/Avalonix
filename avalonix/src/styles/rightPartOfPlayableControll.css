@@ -1,0 +1,50 @@
+#right-part-of-playable-controll {
+    display: flex;
+    position: fixed;
+    bottom: 10px;
+    right: 50px;
+}
+
+#volume-controll {
+    display: flex;
+    width: auto;
+}
+
+#volume-controll > img {
+    width: 50px;
+    height: 50px;
+}
+
+#volume-controll-range {
+    width: 100px;
+    accent-color: var(--sliders-color);
+}
+
+#shuffle-button {
+    width: 50px;
+    height: 50px;
+    background: none;
+    align-items: center;
+    border: none;
+    display: flex;
+    justify-content: center;
+
+    transition: all 0.1s ease-in-out;
+}
+
+#shuffle-button > img {
+    width: 50px;
+    height: 50px;
+}
+
+#shuffle-button:hover {
+    background-color: var(--button-hover-color);
+    border-radius: 10px;
+    scale: 1.1;
+}
+
+#shuffle-button:active {
+    background-color: var(--button-sellect-color);
+    border-radius: 10px;
+    scale: 1.2;
+}
