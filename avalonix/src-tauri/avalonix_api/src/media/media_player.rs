@@ -1,4 +1,6 @@
 use std::{
+    fs::File,
+    io::BufReader,
     num::NonZero,
     sync::{Arc, Mutex, mpsc::Sender},
     thread::{self, sleep},
@@ -59,8 +61,10 @@ impl MediaPlayer {
 
     /// The track starts playing
     pub fn start_audio(&mut self, track: &Track) -> anyhow::Result<()> {
-        let data = track.get_data()?;
-        let len = data.get_ref().len() as u64;
+        //let data = track.get_data()?;
+        let file = File::open(&track.metadata.file_path).unwrap();
+        let len = file.metadata().unwrap().len();
+        let data = BufReader::new(file);
 
         let source = Decoder::builder()
             .with_data(data)
