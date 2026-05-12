@@ -15,6 +15,7 @@ pub struct PlayQueue {
     pub player: Arc<Mutex<MediaPlayer>>,
     pub db: Arc<Mutex<DB>>,
     pub tracks_in_queue_ids: Vec<Vec<u8>>,
+    real_tracks_ids: Vec<Vec<u8>>,
     pub cur_track_id: Vec<u8>,
     pub shuffle: bool,
 }
@@ -29,6 +30,7 @@ impl PlayQueue {
             player: player.clone(),
             db: db.clone(),
             tracks_in_queue_ids: vec![],
+            real_tracks_ids: vec![],
             cur_track_id: vec![],
             shuffle: false,
         }
@@ -69,10 +71,12 @@ impl PlayQueue {
         if !self.tracks_in_queue_ids.contains(&track_id) {
             self.tracks_in_queue_ids.push(track_id);
         }
+        self.real_tracks_ids = self.tracks_in_queue_ids.clone();
 
         if self.shuffle {
-            self.tracks_in_queue_ids.shuffle(&mut thread_rng());
+            self.real_tracks_ids.shuffle(&mut thread_rng());
         }
+
         Ok(())
     }
 
@@ -122,19 +126,21 @@ impl PlayQueue {
     /// Сhanges the queue index
     pub fn next(&mut self) -> anyhow::Result<()> {
         let len = self.tracks_in_queue_ids.len();
-        if let Some(index_in_queue) = self
-            .tracks_in_queue_ids
+
+        if let Some(pos_in_queue) = self
+            .real_tracks_ids
             .iter()
             .position(|x| *x == self.cur_track_id)
         {
-            if index_in_queue + 1 < len {
-                self.cur_track_id = self.tracks_in_queue_ids[index_in_queue + 1].clone();
+            if pos_in_queue + 1 < len {
+                self.cur_track_id = self.real_tracks_ids[pos_in_queue + 1].clone();
             } else {
                 if !self.tracks_in_queue_ids.is_empty() {
-                    self.cur_track_id = self.tracks_in_queue_ids[0].clone();
+                    self.cur_track_id = self.real_tracks_ids[0].clone();
                 } else {
                     let mut player_guard = self.player.lock().unwrap();
                     player_guard.stop_audio();
+                    return Ok(());
                 }
             }
         }
@@ -145,23 +151,25 @@ impl PlayQueue {
 
     /// Сhanges the queue index
     pub fn back(&mut self) -> anyhow::Result<()> {
-        if let Some(index_in_queue) = self
-            .tracks_in_queue_ids
+        let len = self.tracks_in_queue_ids.len();
+
+        if let Some(pos_in_queue) = self
+            .real_tracks_ids
             .iter()
             .position(|x| *x == self.cur_track_id)
         {
-            if index_in_queue as i32 - 1 >= 0 {
-                self.cur_track_id = self.tracks_in_queue_ids[index_in_queue - 1].clone();
+            if pos_in_queue >= 1 {
+                self.cur_track_id = self.real_tracks_ids[pos_in_queue - 1].clone();
             } else {
                 if !self.tracks_in_queue_ids.is_empty() {
-                    self.cur_track_id = self.tracks_in_queue_ids[0].clone();
+                    self.cur_track_id = self.real_tracks_ids[0].clone();
                 } else {
                     let mut player_guard = self.player.lock().unwrap();
                     player_guard.stop_audio();
+                    return Ok(());
                 }
             }
         }
-
         self.start_track()?;
 
         Ok(())
@@ -186,7 +194,7 @@ impl PlayQueue {
     /// Removes a track from queue
     pub fn remove_track(&mut self, id: Vec<u8>) -> anyhow::Result<()> {
         if let Some(position) = self
-            .tracks_in_queue_ids
+            .real_tracks_ids
             .iter()
             .position(|track_id| *track_id == id)
         {
@@ -195,8 +203,11 @@ impl PlayQueue {
                 let mut player_guard = self.player.lock().unwrap();
                 player_guard.stop_audio();
             }
-            self.tracks_in_queue_ids.remove(position);
-            return Ok(());
+            if let Some(display_pos) = self.tracks_in_queue_ids.iter().position(|x| *x == id) {
+                self.real_tracks_ids.remove(position);
+                self.tracks_in_queue_ids.remove(display_pos);
+                return Ok(());
+            }
         }
         bail!("track not in queue");
     }
@@ -212,7 +223,9 @@ impl PlayQueue {
     pub fn shuffle_or_unshuffle(&mut self) -> bool {
         self.shuffle = !self.shuffle;
         if self.shuffle {
-            self.tracks_in_queue_ids.shuffle(&mut thread_rng());
+            self.real_tracks_ids.shuffle(&mut thread_rng());
+        } else {
+            self.real_tracks_ids = self.tracks_in_queue_ids.clone();
         }
 
         return self.shuffle;
