@@ -17,7 +17,6 @@ pub struct PlayQueue {
     pub tracks_in_queue_ids: Vec<Vec<u8>>,
     pub cur_track_id: Vec<u8>,
     pub shuffle: bool,
-    playing_strted: bool,
 }
 
 impl PlayQueue {
@@ -32,14 +31,16 @@ impl PlayQueue {
             tracks_in_queue_ids: vec![],
             cur_track_id: vec![],
             shuffle: false,
-            playing_strted: false,
         }
         .create_arc_mutex();
+
+        Self::update(&queue);
+
         Ok(queue)
     }
 
     /// Starts a background update
-    pub fn update(play_queue: &Arc<Mutex<Self>>) {
+    fn update(play_queue: &Arc<Mutex<Self>>) {
         let play_queue = play_queue.clone();
 
         thread::spawn(move || {
@@ -52,20 +53,12 @@ impl PlayQueue {
                 if media_player.is_empty() {
                     drop(media_player);
                     drop(play_queue_guard);
-                    {
-                        let mut play_queue_guard = play_queue.lock().unwrap();
-                        if play_queue_guard.playing_strted {
-                            _ = play_queue_guard.next().map_err(|err| logger::error(err));
-                            _ = play_queue_guard
-                                .start_track()
-                                .map_err(|err| logger::error(err));
-                        } else {
-                            _ = play_queue_guard
-                                .start_track()
-                                .map_err(|err| logger::error(err));
-                            play_queue_guard.playing_strted = true;
-                        }
-                    };
+
+                    let mut play_queue_guard = play_queue.lock().unwrap();
+                    _ = play_queue_guard.next().map_err(|err| logger::error(err));
+                    _ = play_queue_guard
+                        .start_track()
+                        .map_err(|err| logger::error(err));
                 }
             }
         });

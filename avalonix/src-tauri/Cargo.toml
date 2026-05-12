@@ -25,3 +25,4 @@ serde = { version = "1", features = ["derive"] }
 avalonix_api = {path = "avalonix_api"}
 anyhow = "1.0.102"
 tauri-plugin-dialog = "2"
+better-sms = "0.1.0"

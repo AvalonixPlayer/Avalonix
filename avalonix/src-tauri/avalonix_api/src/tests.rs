@@ -21,7 +21,6 @@ mod tests {
     }
 
     #[test]
-
     fn test_db() -> anyhow::Result<()> {
         let settings = &Settings::open()?;
         let db = DB::open()?;

@@ -9,7 +9,7 @@ use std::{
 
 use anyhow::Ok;
 use rodio::{
-    Decoder, DeviceTrait, MixerDeviceSink, Player, Source,
+    Decoder, DeviceTrait, MixerDeviceSink, Player,
     cpal::{BufferSize, DeviceDescription, default_host, traits::HostTrait},
 };
 
@@ -61,7 +61,6 @@ impl MediaPlayer {
 
     /// The track starts playing
     pub fn start_audio(&mut self, track: &Track) -> anyhow::Result<()> {
-        //let data = track.get_data()?;
         let file = File::open(&track.metadata.file_path).unwrap();
         let len = file.metadata().unwrap().len();
         let data = BufReader::new(file);
@@ -76,8 +75,8 @@ impl MediaPlayer {
 
         self.player.clear();
         self.player.append(source);
-        self.seek(Duration::from_secs(0))?;
 
+        self.seek(Duration::from_secs(0))?;
         self.play();
 
         logger::debug("audio started");

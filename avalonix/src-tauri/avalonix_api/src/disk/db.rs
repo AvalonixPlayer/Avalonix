@@ -8,7 +8,7 @@ use anyhow::Ok;
 use rkyv::rancor::Error;
 
 use crate::{
-    disk::{db, disk_manager, settings::Settings},
+    disk::{disk_manager, settings::Settings},
     logger,
     media::{album::Album, performer::Performer, track::Track, tracks_group::TracksGroup},
     metadata::{

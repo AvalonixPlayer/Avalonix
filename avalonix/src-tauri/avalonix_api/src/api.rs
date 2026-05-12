@@ -25,12 +25,9 @@ impl Api {
         let (event_sender, event_reciver) = mpsc::channel();
 
         let media_player = MediaPlayer::new(&event_sender)?;
-        let play_queue;
         let db = DB::open()?;
         let settings = Settings::open()?.create_arc_mutex();
-
-        play_queue = PlayQueue::new(&media_player, &db)?;
-        PlayQueue::update(&play_queue);
+        let play_queue = PlayQueue::new(&media_player, &db)?;
 
         Ok(Self {
             media_player,

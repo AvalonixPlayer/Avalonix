@@ -1,4 +1,4 @@
-use std::{fmt::Display, fs, io::Cursor, path::Path, time::UNIX_EPOCH};
+use std::{fmt::Display, fs, path::Path, time::UNIX_EPOCH};
 
 use anyhow::{Ok, bail};
 use rkyv::{Archive, Deserialize, Serialize};
@@ -75,12 +75,6 @@ impl Track {
             super::audio_file::LibFile::Cue => Ok(push_all(LibFile::Cue)?),
             super::audio_file::LibFile::NotForLib => bail!("file not for lib"),
         }
-    }
-
-    /// Returns audio data to the media player
-    pub fn get_data(&self) -> anyhow::Result<Cursor<Vec<u8>>> {
-        let cursor = Cursor::new(fs::read(&self.metadata.file_path)?);
-        Ok(cursor)
     }
 
     /// Returns the track's cover in string format.
