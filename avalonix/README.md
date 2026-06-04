@@ -1,7 +1,13 @@
-# Tauri + Vanilla
+<center><h1>Avalonix</h1></center>
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
+# About
 
-## Recommended IDE Setup
+Avalonix is ​​a completely free, open-source audio player. We make it so we'd want to use it ourselves.
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+# What we using
+
+We use rust+tauri, as well as other libraries.
+
+# Contribution
+
+You can contribute by starring the project, making a fork and/or pull request, reporting bugs, or suggesting additions.
