@@ -6,7 +6,9 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.102"
 colored = "3.1.1"
+cpal = "0.17.3"
 lofty = "0.24.0"
 rkyv = "0.8.16"
+rodio = {version="0.22.2", features = ["symphonia-all"] }
 sled = "0.34.7"
 uuid = {version="1.23.2", features=["v4"]}
