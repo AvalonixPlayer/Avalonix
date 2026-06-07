@@ -1,6 +1,11 @@
 #[cfg(test)]
 mod tests {
-    use std::{env, thread, time::Duration};
+    use std::{
+        env,
+        sync::{Arc, Mutex},
+        thread::{self, sleep},
+        time::Duration,
+    };
 
     use anyhow::Result;
 
@@ -12,6 +17,8 @@ mod tests {
             album::Album,
             media_trait::MediaType::{self},
             performer::Performer,
+            play_queue,
+            play_queue::PlayQueue,
             track::Track,
         },
     };
@@ -74,6 +81,28 @@ mod tests {
             settings.library_paths.push(media_path);
             settings.save()?;
         }
+        Ok(())
+    }
+
+    #[test]
+    fn test_play_queue() -> Result<()> {
+        let mut queue = PlayQueue::new();
+        let player = Arc::new(Mutex::new(MediaPlayer::new()?));
+
+        let db = Arc::new(Mutex::new(DB::open()?));
+        let every_tracks_in_db = &db.lock().unwrap().get_every_track()?;
+
+        queue.add_track(every_tracks_in_db[0].uuid.clone());
+
+        let queue_arc = Arc::new(Mutex::new(queue));
+        PlayQueue::play(&queue_arc, &player, &db);
+        loop {
+            sleep(Duration::new(5, 0));
+            queue_arc.lock().unwrap().next(&player);
+            sleep(Duration::new(5, 0));
+            queue_arc.lock().unwrap().back(&player);
+        }
+
         Ok(())
     }
 }

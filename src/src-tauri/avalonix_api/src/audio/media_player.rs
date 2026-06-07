@@ -37,6 +37,7 @@ impl MediaPlayer {
 
     pub fn stop(&self) {
         self.player.stop();
+        self.player.clear();
     }
 
     fn play(&self) {
@@ -57,5 +58,9 @@ impl MediaPlayer {
         } else {
             self.pause();
         }
+    }
+
+    pub fn empty(&self) -> bool {
+        self.player.empty()
     }
 }

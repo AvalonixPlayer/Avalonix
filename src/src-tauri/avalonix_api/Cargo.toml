@@ -8,6 +8,7 @@ anyhow = "1.0.102"
 colored = "3.1.1"
 cpal = "0.17.3"
 lofty = "0.24.0"
+rand = "0.10.1"
 rkyv = "0.8.16"
 rodio = {version="0.22.2", features = ["symphonia-all"] }
 serde = { version = "1.0.228", features = ["derive"] }

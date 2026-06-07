@@ -261,6 +261,7 @@ dependencies = [
  "colored",
  "cpal",
  "lofty",
+ "rand",
  "rkyv",
  "rodio",
  "serde",
