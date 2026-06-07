@@ -263,6 +263,8 @@ dependencies = [
  "lofty",
  "rkyv",
  "rodio",
+ "serde",
+ "serde_json",
  "sled",
  "uuid",
 ]

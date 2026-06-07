@@ -6,7 +6,7 @@ mod tests {
 
     use crate::{
         audio::media_player::MediaPlayer,
-        disk::db::DB,
+        disk::{db::DB, user::settings::UserSettings},
         logger::{debug, error},
         media::{
             album::Album,
@@ -64,6 +64,16 @@ mod tests {
             thread::sleep(Duration::new(1000, 0));
         }
 
+        Ok(())
+    }
+
+    #[test]
+    fn test_settings() -> Result<()> {
+        let mut settings = UserSettings::open()?;
+        if let Ok(media_path) = std::env::var("LIBRARY_PATH") {
+            settings.library_paths.push(media_path);
+            settings.save()?;
+        }
         Ok(())
     }
 }

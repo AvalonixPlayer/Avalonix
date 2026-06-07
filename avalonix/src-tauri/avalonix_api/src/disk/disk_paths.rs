@@ -1,4 +1,8 @@
-use std::{env, fs, path::PathBuf};
+use std::{
+    env,
+    fs::{self, File},
+    path::PathBuf,
+};
 
 use anyhow::Result;
 
@@ -27,4 +31,12 @@ pub(crate) fn avalonix_foled_path() -> Result<PathBuf> {
 
 pub(crate) fn avalonix_db() -> Result<PathBuf> {
     Ok(avalonix_foled_path()?.join("db/"))
+}
+
+pub(crate) fn settings_path() -> Result<PathBuf> {
+    let path = avalonix_foled_path()?.join("settings.json");
+    if !path.exists() {
+        File::create_new(&path)?;
+    }
+    Ok(path)
 }
