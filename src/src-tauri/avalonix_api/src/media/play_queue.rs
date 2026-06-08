@@ -38,14 +38,12 @@ impl PlayQueue {
         thread::spawn(move || -> anyhow::Result<()> {
             let mut rng = rng();
             loop {
-                // 1. Проверяем плеер в отдельной короткой блокировке
                 let is_empty = {
                     let player_lock = player.lock().unwrap();
                     player_lock.empty()
                 };
 
                 if is_empty {
-                    // 2. Блокируем очередь только для обновления индекса и получения UUID
                     let current_uuid = {
                         let mut queue = queue.lock().unwrap();
                         if queue.tracks_uuids_in_queue_real.is_empty() {
