@@ -1,0 +1,28 @@
+.section {
+    display: flex;
+    overflow: hidden;
+}
+
+.section.main-section {
+    display: flex;
+    height: calc(100vh - var(--playback-controll-section-height));
+}
+
+.section.footer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    height: var(--playback-controll-section-height);
+    width: 100%;
+    border-top: solid 1px;
+}
+
+#left-menu {
+    width: 50px;
+    border-right: solid 1px;
+    display: block;
+    justify-content: center;
+}

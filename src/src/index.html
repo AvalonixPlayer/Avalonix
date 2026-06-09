@@ -1,39 +1,72 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
-    <script type="module" src="/main.js" defer></script>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="styles/styles.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Avalonix</title>
+        <script type="module" src="/main.js" defer></script>
+    </head>
 
-  <body>
-    <main class="container">
-      <h1>Welcome to Tauri</h1>
-
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
-      </div>
-      <p>Click on the Tauri logo to learn more about the framework</p>
-
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
-      <p id="greet-msg"></p>
-    </main>
-  </body>
+    <body>
+        <section class="section main-section" id="main-section-base">
+            <section class="section" id="left-menu">
+                <button class="left-menu-button" id="tracks-tab-button">
+                    <img src="assets/track_icon.png" />
+                </button>
+                <button class="left-menu-button" id="albums-tab-button">
+                    <img src="assets/album_icon.png" />
+                </button>
+                <button class="left-menu-button" id="performers-tab-button">
+                    <img src="assets/performer_icon.png" />
+                </button>
+                <button class="left-menu-button" id="queue-tab-button">
+                    <img src="assets/queue.png" />
+                </button>
+            </section>
+            <section class="section main-tab-section" id="tracks-list-section">
+                Tracks-list
+            </section>
+            <section class="section main-tab-section" id="albums-list-section">
+                Albums-list
+            </section>
+            <section class="section main-tab-section" id="performer-list-section">
+                Performer-list
+            </section>
+            <section class="section main-tab-section" id="queue-section">
+                Queue
+            </section>
+            <section class="section main-tab-section" id="track-preview-section">
+                Track-preview
+            </section>
+        </section>
+        <section
+            class="section main-section"
+            id="main-section-track-preview"
+        ></section>
+        <section class="section footer-section">
+            <div id="track-time-controll">
+                <h3>start</h3>
+                <input type="range" id="play-time-controll-slider"></input>
+                <h3>end</h3>
+            </div>
+            <div id="queue-controll">
+                <button
+                    class="queue-controll-button track-index-controll"
+                    id="previous-track"
+                >
+                    <img src="assets/next_track.png" />
+                </button>
+                <button class="queue-controll-button" id="pause">
+                    <img src="assets/pause.png" />
+                </button>
+                <button
+                    class="queue-controll-button track-index-controll"
+                    id="next-track"
+                >
+                    <img src="assets/next_track.png" />
+                </button>
+            </div>
+        </section>
+    </body>
 </html>

@@ -1,0 +1,16 @@
+button {
+    transition: 100ms ease;
+
+    background: none;
+    border: none;
+}
+
+button:hover {
+    background: var(--button-hover-color);
+    border-radius: 10px;
+}
+
+button:active {
+    background: var(--button-active-color);
+    border-radius: 15px;
+}

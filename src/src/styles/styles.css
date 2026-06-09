@@ -1,0 +1,20 @@
+@import "sections.css";
+@import "leftMenuButtons.css";
+@import "playbackControll.css";
+@import "button.css";
+
+:root {
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+
+    --playback-controll-section-height: 80px;
+    --button-hover-color: #65547d;
+    --button-active-color: #7f68a2;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    background: #262335;
+}

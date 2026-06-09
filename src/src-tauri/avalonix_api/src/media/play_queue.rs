@@ -6,7 +6,6 @@ use std::{
 
 use anyhow::{Context, Result};
 use rand::{rng, seq::SliceRandom};
-use rodio::Player;
 
 use crate::{audio::media_player::MediaPlayer, disk::db::DB};
 
