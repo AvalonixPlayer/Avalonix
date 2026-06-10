@@ -62,7 +62,6 @@ mod tests {
         let player = MediaPlayer::new()?;
         if let Ok(media_path) = std::env::var("TRACK_FILE_PATH") {
             player.play_audio_file(media_path);
-            println!("{}", player.get_volume());
             player.set_volume(0.5);
             thread::sleep(Duration::new(1, 0));
             player.change_pause_state();
