@@ -10,7 +10,7 @@ use crate::{
     media::{media_trait::Media, track::Track},
 };
 
-#[derive(Archive, Deserialize, Serialize)]
+#[derive(Archive, Deserialize, Serialize, serde::Serialize)]
 pub struct Performer {
     pub uuid: String,
     pub tracks_ids: Vec<String>,

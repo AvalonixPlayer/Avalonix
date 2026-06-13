@@ -10,13 +10,12 @@ use crate::{
     media::{media_trait::Media, track::Track},
 };
 
-#[derive(Archive, Deserialize, Serialize)]
+#[derive(Archive, Deserialize, Serialize, serde::Serialize)]
 pub struct Album {
     pub uuid: String,
     pub tracks_ids: Vec<String>,
     pub title: String,
     pub performer: String,
-    pub uri_cover: String,
 }
 
 impl Album {
@@ -72,7 +71,6 @@ impl Album {
             tracks_ids,
             title: track.album.clone(),
             performer: track.performer.clone(),
-            uri_cover: "".to_string(),
         })
     }
 }

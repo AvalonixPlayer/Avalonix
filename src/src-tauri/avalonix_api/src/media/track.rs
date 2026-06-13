@@ -17,7 +17,7 @@ use crate::{
     media::media_trait::Media,
 };
 
-#[derive(Archive, Deserialize, Serialize, Clone)]
+#[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize)]
 pub struct Track {
     pub uuid: String,
     pub path: String,
