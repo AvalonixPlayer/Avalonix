@@ -1,0 +1,140 @@
+.playable-sellect-item.track {
+    height: 40px;
+    min-height: 40px;
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.2s ease-in-out;
+    align-items: center;
+    padding: 0 60px;
+}
+
+.playable-sellect-item.track:hover {
+    background: var(--button-hover-color);
+    border-radius: 15px;
+}
+
+.playable-sellect-item.track > h3 {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    width: 30%;
+    transition: all 0.1s ease-in-out;
+}
+
+.playable-sellect-item.track > h3:hover {
+    background: var(--button-hover-color);
+    border-radius: 15px;
+}
+
+.playable-sellect-item.track > h3:active {
+    background: var(--button-active-color);
+    border-radius: 15px;
+}
+
+.albums-set > div {
+    border-radius: 15px;
+    width: 90vw;
+    display: flex;
+    overflow-x: auto;
+    height: 210px;
+    overflow-y: hidden;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.playable-sellect-item.album {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: start;
+
+    transition: all 0.2s ease-in-out;
+}
+
+.playable-sellect-item.album:hover {
+    border-radius: 15px;
+    background: var(--button-hover-color);
+}
+
+.playable-sellect-item.album > h3 {
+    width: 170px;
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+
+    transition: all 0.2s ease-in-out;
+}
+
+.playable-sellect-item.album > h3:hover {
+    background: var(--button-hover-color);
+    border-radius: 15px;
+}
+
+.playable-sellect-item.album > h3:active {
+    background: var(--button-active-color);
+    border-radius: 15px;
+}
+
+.album-cover-back {
+    width: 170px;
+    height: 170px;
+    top: 0;
+    border-radius: 15px;
+    z-index: 0;
+
+    background: var(--albums-empty-color);
+}
+
+.album-cover {
+    display: flex;
+    padding: none;
+    width: 170px;
+    height: 170px;
+    border-radius: 15px;
+    z-index: 1;
+}
+
+.album-cover > img {
+    width: 170px;
+    height: 170px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.playable-sellect-item.performer {
+    height: 40px;
+    min-height: 40px;
+    width: auto;
+    display: flex;
+    justify-content: start;
+    transition: all 0.2s ease-in-out;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.playable-sellect-item.performer:hover {
+    background: var(--button-hover-color);
+    border-radius: 15px;
+}
+
+.playable-sellect-item.performer > h3 {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    width: 30%;
+    transition: all 0.1s ease-in-out;
+}
+
+.playable-sellect-item.performer > h3:hover {
+    background: var(--button-hover-color);
+    border-radius: 15px;
+}
+
+.playable-sellect-item.performer > h3:active {
+    background: var(--button-active-color);
+    border-radius: 15px;
+}

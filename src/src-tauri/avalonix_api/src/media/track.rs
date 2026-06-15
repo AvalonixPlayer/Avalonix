@@ -9,18 +9,17 @@ use anyhow::Result;
 use lofty::{config::ParseOptions, file::TaggedFileExt, probe::Probe, tag::Accessor};
 use rcue::{cue::Cue, parser::parse_from_file};
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
+use ts_rs::TS;
 use uuid::Uuid;
 
-use crate::{
-    disk::db::DB,
-    logger::{debug, error},
-    media::media_trait::Media,
-};
+use crate::{disk::db::DB, logger::debug, media::media_trait::Media};
 
-#[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize)]
+#[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize, TS)]
+#[ts(export)]
 pub struct Track {
     pub uuid: String,
     pub path: String,
+    #[ts(skip)]
     pub modified: Duration,
     pub source_path: String,
     // media metadata

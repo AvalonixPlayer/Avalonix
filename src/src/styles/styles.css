@@ -2,19 +2,30 @@
 @import "leftMenuButtons.css";
 @import "playbackControll.css";
 @import "button.css";
+@import "plablesSellects.css";
+@import "text.css";
+@import "scrollbar.css";
 
 :root {
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
 
     --playback-controll-section-height: 80px;
-    --button-hover-color: #65547d;
-    --button-active-color: #7f68a2;
+    --left-menu-section-width: 50px;
+    --button-hover-color: rgba(101, 84, 125, 0.8);
+    --button-active-color: rgba(127, 104, 162, 0.8);
+    --text-select-color: rgba(127, 104, 162, 0.8);
+    --albums-empty-color: rgba(10, 10, 10);
 }
 
 body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    user-select: none;
 
-    background: #262335;
+    background: rgb(25, 25, 25);
+}
+
+img {
+    pointer-events: none;
 }

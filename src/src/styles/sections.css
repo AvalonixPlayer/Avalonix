@@ -21,8 +21,30 @@
 }
 
 #left-menu {
-    width: 50px;
+    width: var(--left-menu-section-width);
     border-right: solid 1px;
     display: block;
     justify-content: center;
+}
+
+#tracks-list-section {
+    display: flex;
+    flex-direction: column;
+    width: calc(100vw - var(--left-menu-section-width));
+    overflow-y: auto;
+}
+
+#albums-list-section {
+    display: flex;
+    flex-direction: column;
+    width: calc(100vw - var(--left-menu-section-width));
+    overflow-y: auto;
+}
+
+#performers-list-section {
+    display: flex;
+    flex-direction: column;
+    width: calc(100vw - var(--left-menu-section-width));
+    overflow-y: auto;
+    overflow-x: hidden;
 }

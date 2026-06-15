@@ -5,7 +5,7 @@ const sections = Array.from(
 const tabBinding = {
   "tracks-tab-button": "tracks-list-section",
   "albums-tab-button": "albums-list-section",
-  "performers-tab-button": "performer-list-section",
+  "performers-tab-button": "performers-list-section",
   "queue-tab-button": "queue-section",
 };
 

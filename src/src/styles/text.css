@@ -1,0 +1,35 @@
+h1 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 40px;
+    font-weight: bold;
+    color: aliceblue;
+    text-align: center;
+    margin: 0;
+}
+
+h2 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 32px;
+    font-weight: bold;
+    color: aliceblue;
+    text-align: center;
+    margin: 0;
+}
+
+h3 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: aliceblue;
+    text-align: center;
+    margin: 0;
+}
+
+h4 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: aliceblue;
+    text-align: center;
+    margin: 0;
+}

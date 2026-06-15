@@ -3,6 +3,7 @@ use std::collections::{HashMap, HashSet};
 
 use anyhow::Result;
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
+use ts_rs::TS;
 use uuid::Uuid;
 
 use crate::{
@@ -10,12 +11,15 @@ use crate::{
     media::{media_trait::Media, track::Track},
 };
 
-#[derive(Archive, Deserialize, Serialize, serde::Serialize)]
+#[derive(Archive, Deserialize, Serialize, serde::Serialize, TS)]
+#[ts(export)]
 pub struct Album {
     pub uuid: String,
     pub tracks_ids: Vec<String>,
     pub title: String,
     pub performer: String,
+    #[ts(skip)]
+    pub cover_uri: String,
 }
 
 impl Album {
@@ -71,6 +75,7 @@ impl Album {
             tracks_ids,
             title: track.album.clone(),
             performer: track.performer.clone(),
+            cover_uri: String::new(),
         })
     }
 }

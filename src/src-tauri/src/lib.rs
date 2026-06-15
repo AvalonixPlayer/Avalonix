@@ -15,6 +15,10 @@ pub fn run() -> Result<()> {
             commands::get_albums_datas,
             commands::get_performers_datas
         ])
+        .manage(api.db)
+        .manage(api.media_player)
+        .manage(api.queue)
+        .manage(api.settings)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
     Ok(())
