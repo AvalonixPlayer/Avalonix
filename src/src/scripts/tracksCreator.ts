@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Track } from "../bindings/Track";
+import { PlayableResult } from "../bindings/PlayableResult";
 
 const trackTemplate = (uuid: string): string => `
   <div class="playable-sellect-item track" data-uuid=${uuid}>
@@ -9,9 +10,9 @@ const trackTemplate = (uuid: string): string => `
   </div>`;
 
 export async function fillTracksList() {
-  let tracks_ids = await invoke<string[]>("get_tracks_ids").catch(() =>
-    console.error("Error while getting tracks ids"),
-  );
+  let tracks_ids = await invoke<string[]>("get_playables_ids", {
+    playableType: "Track",
+  }).catch(() => console.error("Error while getting tracks ids"));
 
   if (tracks_ids == null) {
     return;
@@ -25,7 +26,12 @@ export async function fillTracksList() {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
           let uuid = element.getAttribute("data-uuid");
-          let track = await invoke<Track>("get_track_by_id", { id: uuid });
+          let track = (
+            await invoke<PlayableResult>("get_playable_by_id", {
+              playableType: "Track",
+              id: uuid,
+            })
+          ).data as Track;
           element.querySelector(".track-title-button")!.textContent =
             track.title;
           element.querySelector(".track-performer-button")!.textContent =

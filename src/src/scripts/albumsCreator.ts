@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Album } from "../bindings/Album";
+import { PlayableResult } from "../bindings/PlayableResult";
 
 const albumTemplate = (album_uuid: String): string =>
   `<div class="playable-sellect-item album" data-uuid="${album_uuid}">
@@ -21,9 +22,9 @@ const albumSetTemplate = (
   </div>`;
 
 export async function fillAlbumsList() {
-  let albums_ids = await invoke<string[]>("get_albums_ids").catch(() =>
-    console.error("Error while getting albums ids"),
-  );
+  let albums_ids = await invoke<string[]>("get_playables_ids", {
+    playableType: "Album",
+  }).catch(() => console.error("Error while getting albums ids"));
 
   if (albums_ids == null) {
     return;
@@ -37,7 +38,12 @@ export async function fillAlbumsList() {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
           let uuid = element.getAttribute("data-uuid");
-          let album = await invoke<Album>("get_album_by_id", { id: uuid });
+          let album = (
+            await invoke<PlayableResult>("get_playable_by_id", {
+              playableType: "Album",
+              id: uuid,
+            })
+          ).data as Album;
           element.querySelector(".album-title")!.textContent = album.title;
           observer.unobserve(element);
         }

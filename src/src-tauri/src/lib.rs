@@ -11,13 +11,9 @@ pub fn run() -> Result<()> {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            commands::get_tracks_ids,
-            commands::get_albums_ids,
-            commands::get_performers_ids,
-            commands::get_track_by_id,
-            commands::get_album_by_id,
-            commands::get_performer_by_id,
+            commands::get_playables_ids,
             commands::get_album_performer_name_by_id,
+            commands::get_playable_by_id,
         ])
         .manage(api.db)
         .manage(api.media_player)
