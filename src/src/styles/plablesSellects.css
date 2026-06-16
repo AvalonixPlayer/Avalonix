@@ -59,7 +59,7 @@
     background: var(--button-hover-color);
 }
 
-.playable-sellect-item.album > h3 {
+.playable-sellect-item.album > h4 {
     width: 170px;
     overflow: hidden;
     text-wrap: nowrap;
@@ -69,12 +69,12 @@
     transition: all 0.2s ease-in-out;
 }
 
-.playable-sellect-item.album > h3:hover {
+.playable-sellect-item.album > h4:hover {
     background: var(--button-hover-color);
     border-radius: 15px;
 }
 
-.playable-sellect-item.album > h3:active {
+.playable-sellect-item.album > h4:active {
     background: var(--button-active-color);
     border-radius: 15px;
 }

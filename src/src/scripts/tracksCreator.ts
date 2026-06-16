@@ -1,22 +1,55 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Track } from "../bindings/Track";
 
-const trackTemplate = (track: Track): string => `
-  <div class="playable-sellect-item track" >
-    <h3 class="track-title-button">${track.title}</h3>
-    <h3 class="track-performer-button">${track.performer}</h3>
-    <h3 class="track-album-title-button"> ${track.album} </h3>
+const trackTemplate = (uuid: string): string => `
+  <div class="playable-sellect-item track" data-uuid=${uuid}>
+    <h3 class="track-title-button"></h3>
+    <h3 class="track-performer-button"></h3>
+    <h3 class="track-album-title-button"></h3>
   </div>`;
 
 export async function fillTracksList() {
-  let tracks = await invoke<Track[]>("get_tracks_datas").catch(() =>
-    console.error("Error while getting tracks"),
+  let tracks_ids = await invoke<string[]>("get_tracks_ids").catch(() =>
+    console.error("Error while getting tracks ids"),
   );
-  if (tracks == null) {
+
+  if (tracks_ids == null) {
     return;
   }
+
   let tracksList = document.getElementById("tracks-list-section");
-  tracks.forEach((track) => {
-    tracksList!.insertAdjacentHTML("beforeend", trackTemplate(track));
+
+  const observer = new IntersectionObserver(
+    (enteries, observer) => {
+      enteries.forEach(async (entry) => {
+        if (entry.isIntersecting) {
+          const element = entry.target as HTMLElement;
+          let uuid = element.getAttribute("data-uuid");
+          let track = await invoke<Track>("get_track_by_id", { id: uuid });
+          element.querySelector(".track-title-button")!.textContent =
+            track.title;
+          element.querySelector(".track-performer-button")!.textContent =
+            track.performer;
+          element.querySelector(".track-album-title-button")!.textContent =
+            track.album;
+          observer.unobserve(element);
+        }
+      });
+    },
+    {
+      root: null,
+      threshold: 0.1,
+    },
+  );
+
+  tracks_ids.forEach((track_id) => {
+    let element = trackTemplate(track_id);
+    tracksList!.insertAdjacentHTML("beforeend", element);
+
+    const lastInsertedElement = tracksList!.lastElementChild as HTMLElement;
+
+    if (lastInsertedElement) {
+      observer.observe(lastInsertedElement);
+    }
   });
 }
