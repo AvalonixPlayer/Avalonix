@@ -44,6 +44,14 @@ export async function fillAlbumsList() {
               id: uuid,
             })
           ).data as Album;
+          if (album.cover_uri.length != 0) {
+            element.querySelector("img")!.src = album.cover_uri;
+            element.animate([{ opacity: 0 }, { opacity: 1 }], {
+              duration: 500,
+              fill: "forwards",
+            });
+          }
+
           element.querySelector(".album-title")!.textContent = album.title;
           observer.unobserve(element);
         }

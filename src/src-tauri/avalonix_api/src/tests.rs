@@ -14,12 +14,7 @@ mod tests {
         disk::{db::DB, user::settings::UserSettings},
         logger::{debug, error},
         media::{
-            album::Album,
-            media_trait::MediaType::{self},
-            performer::Performer,
-            play_queue,
-            play_queue::PlayQueue,
-            track::Track,
+            album::Album, performer::Performer, play_queue, play_queue::PlayQueue, track::Track,
         },
     };
 

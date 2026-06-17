@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
-    media::{media_trait::Media, playable_type::MediaType, track::Track},
+    media::{cover_get::CoverGet, media_trait::Media, playable_type::MediaType, track::Track},
 };
 
 #[derive(Archive, Deserialize, Serialize, serde::Serialize, TS)]
@@ -18,7 +18,6 @@ pub struct Album {
     pub tracks_ids: Vec<String>,
     pub title: String,
     pub performer: String,
-    #[ts(skip)]
     pub cover_uri: String,
 }
 
@@ -75,7 +74,7 @@ impl Album {
             tracks_ids,
             title: track.album.clone(),
             performer: track.performer.clone(),
-            cover_uri: String::new(),
+            cover_uri: track.get_cover_as_uri(),
         })
     }
 }

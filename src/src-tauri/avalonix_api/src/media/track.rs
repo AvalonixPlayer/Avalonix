@@ -9,13 +9,14 @@ use anyhow::Result;
 use lofty::{config::ParseOptions, file::TaggedFileExt, probe::Probe, tag::Accessor};
 use rcue::{cue::Cue, parser::parse_from_file};
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
+use rustc_serialize::base64::{MIME, ToBase64};
 use ts_rs::TS;
 use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
     logger::debug,
-    media::{media_trait::Media, playable_type::MediaType},
+    media::{cover_get::CoverGet, media_trait::Media, playable_type::MediaType},
 };
 
 #[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize, TS)]
@@ -188,5 +189,32 @@ impl Media for Track {
     fn convert_to_db(&self) -> anyhow::Result<(String, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();
         Ok((self.uuid.clone(), value))
+    }
+}
+
+impl CoverGet for Track {
+    fn get_cover_as_uri(&self) -> String {
+        let result: Result<String> = if self.source_path == self.path {
+            let f = || -> Result<String> {
+                let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
+                let tagged_file = Probe::open(&self.path)?.options(options).read()?;
+
+                if let Some(tag) = tagged_file.primary_tag().or(tagged_file.first_tag()) {
+                    if let Some(picture) = tag.pictures().first() {
+                        let data = picture.data();
+
+                        let bs64 = data.to_base64(MIME);
+                        let string = format!("data:image/jpg;base64,{}", bs64);
+                        return Ok(string);
+                    }
+                }
+
+                Ok(String::new())
+            };
+            f()
+        } else {
+            Ok(String::new())
+        };
+        result.unwrap_or_default()
     }
 }
