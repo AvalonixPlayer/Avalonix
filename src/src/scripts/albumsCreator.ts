@@ -23,7 +23,7 @@ const albumSetTemplate = (
 
 export async function fillAlbumsList() {
   let albums_ids = await invoke<string[]>("get_playables_ids", {
-    playableType: "Album",
+    mediaType: "Album",
   }).catch(() => console.error("Error while getting albums ids"));
 
   if (albums_ids == null) {
@@ -40,7 +40,7 @@ export async function fillAlbumsList() {
           let uuid = element.getAttribute("data-uuid");
           let album = (
             await invoke<PlayableResult>("get_playable_by_id", {
-              playableType: "Album",
+              mediaType: "Album",
               id: uuid,
             })
           ).data as Album;

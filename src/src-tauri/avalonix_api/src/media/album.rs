@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
-    media::{media_trait::Media, track::Track},
+    media::{media_trait::Media, playable_type::MediaType, track::Track},
 };
 
 #[derive(Archive, Deserialize, Serialize, serde::Serialize, TS)]
@@ -93,8 +93,8 @@ impl fmt::Display for Album {
 }
 
 impl Media for Album {
-    fn get_media_type(&self) -> super::media_trait::MediaType {
-        super::media_trait::MediaType::Album
+    fn get_media_type(&self) -> MediaType {
+        MediaType::Album
     }
     fn convert_to_db(&self) -> anyhow::Result<(String, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();

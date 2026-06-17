@@ -1,11 +1,6 @@
 use anyhow::Result;
 
-pub enum MediaType {
-    Track,
-    Album,
-    Performer,
-    Playlist,
-}
+use crate::media::playable_type::MediaType;
 
 pub trait Media {
     fn get_media_type(&self) -> MediaType;

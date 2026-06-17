@@ -2,34 +2,35 @@ use std::sync::{Arc, Mutex};
 
 use avalonix_api::{
     disk::db::DB,
-    media::playable_type::{PlayableResult, PlayableType},
+    media::playable_type::{MediaType, PlayableResult},
 };
 use better_sms::mutex::MutexWork;
 
 #[tauri::command]
 pub async fn get_playables_ids(
     db: tauri::State<'_, Arc<Mutex<DB>>>,
-    playable_type: PlayableType,
+    media_type: MediaType,
 ) -> Result<Vec<String>, String> {
     let guard = db.lock_unw();
 
     let mut ids = vec![];
-    match playable_type {
-        PlayableType::Track => {
+    match media_type {
+        MediaType::Track => {
             for track in guard.get_every_track().map_err(|err| err.to_string())? {
                 ids.push(track.uuid);
             }
         }
-        PlayableType::Album => {
+        MediaType::Album => {
             for album in guard.get_every_album().map_err(|err| err.to_string())? {
                 ids.push(album.uuid);
             }
         }
-        PlayableType::Performer => {
+        MediaType::Performer => {
             for performer in guard.get_every_performer().map_err(|err| err.to_string())? {
                 ids.push(performer.uuid);
             }
         }
+        _ => {}
     };
     Ok(ids)
 }
@@ -58,12 +59,12 @@ pub async fn get_album_performer_name_by_id(
 #[tauri::command]
 pub async fn get_playable_by_id(
     db: tauri::State<'_, Arc<Mutex<DB>>>,
-    playable_type: PlayableType,
+    media_type: MediaType,
     id: String,
 ) -> Result<PlayableResult, String> {
     let guard = db.lock_unw();
-    let res = match playable_type {
-        PlayableType::Track => {
+    let res = match media_type {
+        MediaType::Track => {
             let tracks = guard.get_every_track().map_err(|err| err.to_string())?;
 
             let track = tracks
@@ -72,7 +73,7 @@ pub async fn get_playable_by_id(
                 .ok_or_else(|| format!("Track with id {} not found", id))?;
             PlayableResult::Track(track)
         }
-        PlayableType::Album => {
+        MediaType::Album => {
             let albums = guard.get_every_album().map_err(|err| err.to_string())?;
 
             let album = albums
@@ -81,7 +82,17 @@ pub async fn get_playable_by_id(
                 .ok_or_else(|| format!("Album with id {} not found", id))?;
             PlayableResult::Album(album)
         }
-        PlayableType::Performer => {
+        MediaType::Performer => {
+            let performers = guard.get_every_performer().map_err(|err| err.to_string())?;
+
+            let performer = performers
+                .into_iter()
+                .find(|performer| performer.uuid == id)
+                .ok_or_else(|| format!("Performer with id {} not found", id))?;
+            PlayableResult::Performer(performer)
+        }
+        _ => {
+            // NOW LIKE THAT
             let performers = guard.get_every_performer().map_err(|err| err.to_string())?;
 
             let performer = performers

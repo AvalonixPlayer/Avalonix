@@ -9,7 +9,7 @@ let performerTemplate = (performer_uuid: string): string =>
 
 export async function fillPerformersList() {
   let performers_ids = await invoke<string[]>("get_playables_ids", {
-    playableType: "Performer",
+    mediaType: "Performer",
   }).catch(() => console.error("Error while getting performers ids"));
 
   if (performers_ids == null) {
@@ -26,7 +26,7 @@ export async function fillPerformersList() {
           let uuid = element.getAttribute("data-uuid");
           let performer = (
             await invoke<PlayableResult>("get_playable_by_id", {
-              playableType: "Performer",
+              mediaType: "Performer",
               id: uuid,
             })
           ).data as Performer;

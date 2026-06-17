@@ -12,7 +12,11 @@ use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
 use ts_rs::TS;
 use uuid::Uuid;
 
-use crate::{disk::db::DB, logger::debug, media::media_trait::Media};
+use crate::{
+    disk::db::DB,
+    logger::debug,
+    media::{media_trait::Media, playable_type::MediaType},
+};
 
 #[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize, TS)]
 #[ts(export)]
@@ -178,8 +182,8 @@ impl fmt::Display for Track {
 }
 
 impl Media for Track {
-    fn get_media_type(&self) -> super::media_trait::MediaType {
-        super::media_trait::MediaType::Track
+    fn get_media_type(&self) -> MediaType {
+        MediaType::Track
     }
     fn convert_to_db(&self) -> anyhow::Result<(String, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();

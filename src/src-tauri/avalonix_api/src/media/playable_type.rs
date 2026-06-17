@@ -5,10 +5,11 @@ use crate::media::{album::Album, performer::Performer, track::Track};
 
 #[derive(TS, Deserialize)]
 #[ts(export)]
-pub enum PlayableType {
+pub enum MediaType {
     Track,
     Album,
     Performer,
+    Playlist,
 }
 
 #[derive(TS, Serialize)]

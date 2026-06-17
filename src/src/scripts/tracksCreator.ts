@@ -11,7 +11,7 @@ const trackTemplate = (uuid: string): string => `
 
 export async function fillTracksList() {
   let tracks_ids = await invoke<string[]>("get_playables_ids", {
-    playableType: "Track",
+    mediaType: "Track",
   }).catch(() => console.error("Error while getting tracks ids"));
 
   if (tracks_ids == null) {
@@ -28,7 +28,7 @@ export async function fillTracksList() {
           let uuid = element.getAttribute("data-uuid");
           let track = (
             await invoke<PlayableResult>("get_playable_by_id", {
-              playableType: "Track",
+              mediaType: "Track",
               id: uuid,
             })
           ).data as Track;

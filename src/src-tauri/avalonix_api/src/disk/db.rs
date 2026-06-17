@@ -7,14 +7,8 @@ use crate::{
     disk::disk_paths::avalonix_db,
     logger::debug,
     media::{
-        album::Album,
-        media_trait::{
-            Media,
-            MediaType::{self},
-        },
-        performer::Performer,
-        playlist::Playlist,
-        track::Track,
+        album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
+        playlist::Playlist, track::Track,
     },
 };
 
