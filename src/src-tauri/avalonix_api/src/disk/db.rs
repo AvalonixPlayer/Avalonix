@@ -6,7 +6,7 @@ use rkyv::rancor::Error;
 
 use crate::{
     disk::{disk_paths::avalonix_db, user::settings::UserSettings},
-    logger::{debug, error, fatal},
+    logger::{debug, error},
     media::{
         album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
         track::Track,

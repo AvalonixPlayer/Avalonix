@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, RwLock};
 
 use avalonix_api::{
     disk::db::DB,
@@ -13,7 +13,6 @@ use better_sms::mutex::{MutexGuardWork, MutexWork};
 
 #[tauri::command]
 pub async fn clear_queue(
-    db: tauri::State<'_, Arc<Mutex<DB>>>,
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
 ) -> Result<(), String> {
     play_queue.lock_unw().use_guard(|guard| guard.clear());
@@ -22,7 +21,7 @@ pub async fn clear_queue(
 
 #[tauri::command]
 pub async fn add_media_to_queue(
-    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     media_type: MediaType,
     id: String,
@@ -31,7 +30,8 @@ pub async fn add_media_to_queue(
         MediaType::Track => vec![id],
         MediaType::Album => {
             let albums = db
-                .lock_unw()
+                .read()
+                .unwrap()
                 .get_every_album()
                 .map_err(|_| "Error while getting albums from db".to_string())?;
 
@@ -44,7 +44,8 @@ pub async fn add_media_to_queue(
         }
         MediaType::Performer => {
             let performers = db
-                .lock_unw()
+                .read()
+                .unwrap()
                 .get_every_performer()
                 .map_err(|_| "Error while getting performers from db".to_string())?;
 

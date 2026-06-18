@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, RwLock};
 
 use avalonix_api::{
     disk::{db::DB, user::settings::UserSettings},
@@ -8,20 +8,21 @@ use better_sms::mutex::MutexWork;
 
 #[tauri::command]
 pub async fn get_playables_ids(
-    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
     media_type: MediaType,
 ) -> Result<Vec<String>, String> {
-    db.lock_unw()
+    db.read()
+        .unwrap()
         .get_uuids(media_type)
         .map_err(|err| err.to_string())
 }
 
 #[tauri::command]
 pub async fn update_library(
-    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
     settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,
 ) -> Result<(), String> {
-    let guard = db.lock_unw();
+    let guard = db.read().unwrap();
     guard
         .update(&settings.lock_unw())
         .map_err(|err| err.to_string())
@@ -29,10 +30,10 @@ pub async fn update_library(
 
 #[tauri::command]
 pub async fn get_album_performer_name_by_id(
-    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
     id: String,
 ) -> Result<String, String> {
-    let guard = db.lock_unw();
+    let guard = db.read().unwrap();
     let albums = guard.get_every_album().map_err(|err| err.to_string())?;
 
     Ok(albums
@@ -44,11 +45,11 @@ pub async fn get_album_performer_name_by_id(
 
 #[tauri::command]
 pub async fn get_playable_by_id(
-    db: tauri::State<'_, Arc<Mutex<DB>>>,
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
     media_type: MediaType,
     id: String,
 ) -> Result<PlayableResult, String> {
-    let guard = db.lock_unw();
+    let guard = db.read().unwrap();
     let res = match media_type {
         MediaType::Track => {
             let tracks = guard.get_every_track().map_err(|err| err.to_string())?;

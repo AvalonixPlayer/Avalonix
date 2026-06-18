@@ -1,6 +1,6 @@
 use std::sync::{
     mpsc::{self, Receiver},
-    Arc, Mutex,
+    Arc, Mutex, RwLock,
 };
 
 use anyhow::Result;
@@ -13,7 +13,7 @@ use avalonix_api::{
 use better_sms::{arc::ArcCreate, mutex::MutexCreate};
 
 pub struct API {
-    pub db: Arc<Mutex<DB>>,
+    pub db: Arc<RwLock<DB>>,
     pub media_player: Arc<Mutex<MediaPlayer>>,
     pub queue: Arc<Mutex<PlayQueue>>,
     pub settings: Arc<Mutex<UserSettings>>,
@@ -25,7 +25,7 @@ pub fn init_api() -> Result<API> {
 
     let sender_arc = sender.create_mutex().create_arc();
 
-    let db = DB::open()?.create_mutex().create_arc();
+    let db = RwLock::new(DB::open()?).create_arc();
     let media_player = MediaPlayer::new()?.create_mutex().create_arc();
     let queue = PlayQueue::new(&media_player, &sender_arc)
         .create_mutex()

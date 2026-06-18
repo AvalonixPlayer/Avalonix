@@ -1,5 +1,5 @@
 use std::{
-    sync::{Arc, Mutex, mpsc::Sender},
+    sync::{Arc, Mutex, RwLock, mpsc::Sender},
     thread::{self, sleep},
     time::Duration,
 };
@@ -49,7 +49,7 @@ impl PlayQueue {
         self.media_player.lock_unw().stop();
     }
 
-    pub fn play(queue: &Arc<Mutex<Self>>, db: &Arc<Mutex<DB>>) -> Result<()> {
+    pub fn play(queue: &Arc<Mutex<Self>>, db: &Arc<RwLock<DB>>) -> Result<()> {
         let queue = queue.clone();
         let player = queue.lock_unw().media_player.clone();
         let db = db.clone();
@@ -94,7 +94,7 @@ impl PlayQueue {
 
                     if let Some(uuid) = current_uuid {
                         let track_path = {
-                            let db_lock = db.lock().unwrap();
+                            let db_lock = db.read().unwrap();
                             db_lock
                                 .get_every_track()?
                                 .into_iter()
