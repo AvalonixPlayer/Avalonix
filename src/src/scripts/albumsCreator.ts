@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Album } from "../bindings/Album";
 import { PlayableResult } from "../bindings/PlayableResult";
+import { addMediaToQueue, clearPlayQueue } from "./playQueue";
 
 const albumTemplate = (album_uuid: String): string =>
   `<div class="playable-sellect-item album" data-uuid="${album_uuid}">
@@ -52,7 +53,11 @@ export async function fillAlbumsList() {
             });
           }
 
-          element.querySelector(".album-title")!.textContent = album.title;
+          let albumTitleButton = element.querySelector(".album-title")!;
+          albumTitleButton.textContent = album.title;
+          albumTitleButton.addEventListener("click", async () => {
+            addMediaToQueue("Album", uuid!);
+          });
           observer.unobserve(element);
         }
       });

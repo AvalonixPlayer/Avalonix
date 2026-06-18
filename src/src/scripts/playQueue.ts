@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
+import { MediaType } from "../bindings/MediaType";
 import { Track } from "../bindings/Track";
 import { PlayableResult } from "../bindings/PlayableResult";
-import { addMediaToQueue } from "./playQueue";
 
 const trackTemplate = (uuid: string): string => `
   <div class="playable-sellect-item track" data-uuid=${uuid}>
@@ -10,16 +10,31 @@ const trackTemplate = (uuid: string): string => `
     <h3 class="track-album-title-button"></h3>
   </div>`;
 
-export async function fillTracksList() {
-  let tracks_ids = await invoke<string[]>("get_playables_ids", {
-    mediaType: "Track",
-  }).catch(() => console.error("Error while getting tracks ids"));
+export async function clearPlayQueue() {
+  await invoke("clear_queue");
+}
 
-  if (tracks_ids == null) {
-    return;
+export async function addMediaToQueue(mediaType: MediaType, id: string) {
+  switch (mediaType) {
+    case "Track":
+      break;
+    case "Album":
+      await clearPlayQueue();
+      break;
+    case "Performer":
+      await clearPlayQueue();
+      break;
   }
 
-  let tracksList = document.getElementById("tracks-list-section");
+  await invoke("add_media_to_queue", {
+    mediaType: mediaType.toString(),
+    id,
+  });
+}
+
+export async function fillPlayQueueList() {
+  let tracksList = document.getElementById("queue-section");
+  tracksList!.innerHTML = "";
 
   const observer = new IntersectionObserver(
     (enteries, observer) => {
@@ -36,9 +51,6 @@ export async function fillTracksList() {
 
           let titleButton = element.querySelector(".track-title-button")!;
           titleButton.textContent = track.title;
-          titleButton.addEventListener("click", async () => {
-            addMediaToQueue("Track", uuid!);
-          });
 
           element.querySelector(".track-performer-button")!.textContent =
             track.performer;
@@ -54,7 +66,7 @@ export async function fillTracksList() {
     },
   );
 
-  tracks_ids.forEach((track_id) => {
+  (await invoke<string[]>("get_queue_tracks_ids")).forEach((track_id) => {
     let element = trackTemplate(track_id);
     tracksList!.insertAdjacentHTML("beforeend", element);
 

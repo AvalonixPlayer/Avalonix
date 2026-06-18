@@ -61,3 +61,13 @@ pub async fn add_media_to_queue(
         .add_tracks(uuids)
         .map_err(|err| err.to_string())
 }
+
+#[tauri::command]
+pub async fn get_queue_tracks_ids(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<Vec<String>, String> {
+    Ok(play_queue
+        .lock_unw()
+        .tracks_uuids_in_queue_displaying
+        .clone())
+}

@@ -1,5 +1,5 @@
 use std::{
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc::Sender},
     thread::{self, sleep},
     time::Duration,
 };
@@ -11,6 +11,7 @@ use rand::{rng, seq::SliceRandom};
 use crate::{
     audio::media_player::MediaPlayer,
     disk::db::DB,
+    events::Event,
     media::{
         media_trait::Media,
         playable_type::{self, MediaType},
@@ -23,16 +24,21 @@ pub struct PlayQueue {
     pub current_uuid_index: i32,
     pub shuffle: bool,
     pub media_player: Arc<Mutex<MediaPlayer>>,
+    pub events_sender: Arc<Mutex<Sender<Event>>>,
 }
 
 impl PlayQueue {
-    pub fn new(media_player: &Arc<Mutex<MediaPlayer>>) -> Self {
+    pub fn new(
+        media_player: &Arc<Mutex<MediaPlayer>>,
+        events_sender: &Arc<Mutex<Sender<Event>>>,
+    ) -> Self {
         Self {
             tracks_uuids_in_queue_displaying: vec![],
             tracks_uuids_in_queue_real: vec![],
             current_uuid_index: -1,
             shuffle: false,
             media_player: media_player.clone(),
+            events_sender: events_sender.clone(),
         }
     }
 
@@ -121,6 +127,10 @@ impl PlayQueue {
         if self.shuffle {
             self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());
         }
+        self.events_sender
+            .lock_unw()
+            .send(Event::UpdateQueue)
+            .unwrap();
         Ok(())
     }
 
@@ -135,6 +145,10 @@ impl PlayQueue {
         if self.shuffle {
             self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());
         }
+        self.events_sender
+            .lock_unw()
+            .send(Event::UpdateQueue)
+            .unwrap();
         Ok(())
     }
 
@@ -160,6 +174,10 @@ impl PlayQueue {
         } else {
             self.tracks_uuids_in_queue_displaying = self.tracks_uuids_in_queue_real.clone();
         }
+        self.events_sender
+            .lock_unw()
+            .send(Event::UpdateQueue)
+            .unwrap();
         Ok(())
     }
 }

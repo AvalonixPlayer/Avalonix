@@ -48,3 +48,11 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+#queue-section {
+    display: flex;
+    flex-direction: column;
+    width: calc(100vw - var(--left-menu-section-width));
+    overflow-y: auto;
+    overflow-x: hidden;
+}

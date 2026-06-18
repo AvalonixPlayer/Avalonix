@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Performer } from "../bindings/Performer";
 import { PlayableResult } from "../bindings/PlayableResult";
+import { addMediaToQueue } from "./playQueue";
 
 let performerTemplate = (performer_uuid: string): string =>
   `<div class="playable-sellect-item performer" data-uuid="${performer_uuid}">
@@ -31,8 +32,13 @@ export async function fillPerformersList() {
             })
           ).data as Performer;
 
-          element.querySelector(".performer-title-button")!.textContent =
-            performer.title;
+          let performerTitleButton = element.querySelector(
+            ".performer-title-button",
+          )!;
+          performerTitleButton.textContent = performer.title;
+          performerTitleButton.addEventListener("click", async () => {
+            addMediaToQueue("Performer", uuid!);
+          });
           observer.unobserve(element);
         }
       });
