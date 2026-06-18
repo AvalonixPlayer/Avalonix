@@ -32,8 +32,16 @@ export async function fillTracksList() {
               id: uuid,
             })
           ).data as Track;
-          element.querySelector(".track-title-button")!.textContent =
-            track.title;
+
+          let titleButton = element.querySelector(".track-title-button")!;
+          titleButton.textContent = track.title;
+          titleButton.addEventListener("click", async () => {
+            await invoke("add_media_to_queue", {
+              mediaType: "Track",
+              id: uuid,
+            });
+          });
+
           element.querySelector(".track-performer-button")!.textContent =
             track.performer;
           element.querySelector(".track-album-title-button")!.textContent =

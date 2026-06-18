@@ -9,7 +9,6 @@ pub enum MediaType {
     Track,
     Album,
     Performer,
-    Playlist,
 }
 
 #[derive(TS, Serialize)]

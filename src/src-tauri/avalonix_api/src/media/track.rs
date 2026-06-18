@@ -190,6 +190,9 @@ impl Media for Track {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();
         Ok((self.uuid.clone(), value))
     }
+    fn get_tracks_uuids(&self) -> Vec<String> {
+        vec![self.uuid.clone()]
+    }
 }
 
 impl CoverGet for Track {

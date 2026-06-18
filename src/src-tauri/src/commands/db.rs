@@ -30,7 +30,6 @@ pub async fn get_playables_ids(
                 ids.push(performer.uuid);
             }
         }
-        _ => {}
     };
     Ok(ids)
 }
@@ -83,16 +82,6 @@ pub async fn get_playable_by_id(
             PlayableResult::Album(album)
         }
         MediaType::Performer => {
-            let performers = guard.get_every_performer().map_err(|err| err.to_string())?;
-
-            let performer = performers
-                .into_iter()
-                .find(|performer| performer.uuid == id)
-                .ok_or_else(|| format!("Performer with id {} not found", id))?;
-            PlayableResult::Performer(performer)
-        }
-        _ => {
-            // NOW LIKE THAT
             let performers = guard.get_every_performer().map_err(|err| err.to_string())?;
 
             let performer = performers

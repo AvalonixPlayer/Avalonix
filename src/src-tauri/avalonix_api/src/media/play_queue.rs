@@ -5,34 +5,47 @@ use std::{
 };
 
 use anyhow::{Context, Result};
+use better_sms::mutex::MutexWork;
 use rand::{rng, seq::SliceRandom};
 
-use crate::{audio::media_player::MediaPlayer, disk::db::DB};
+use crate::{
+    audio::media_player::MediaPlayer,
+    disk::db::DB,
+    media::{
+        media_trait::Media,
+        playable_type::{self, MediaType},
+    },
+};
 
 pub struct PlayQueue {
     pub tracks_uuids_in_queue_displaying: Vec<String>,
     pub tracks_uuids_in_queue_real: Vec<String>,
     pub current_uuid_index: i32,
     pub shuffle: bool,
+    pub media_player: Arc<Mutex<MediaPlayer>>,
 }
 
 impl PlayQueue {
-    pub fn new() -> Self {
+    pub fn new(media_player: &Arc<Mutex<MediaPlayer>>) -> Self {
         Self {
             tracks_uuids_in_queue_displaying: vec![],
             tracks_uuids_in_queue_real: vec![],
             current_uuid_index: -1,
             shuffle: false,
+            media_player: media_player.clone(),
         }
     }
 
-    pub fn play(
-        queue: &Arc<Mutex<Self>>,
-        player: &Arc<Mutex<MediaPlayer>>,
-        db: &Arc<Mutex<DB>>,
-    ) -> Result<()> {
+    pub fn clear(&mut self) {
+        self.current_uuid_index = -1;
+        self.tracks_uuids_in_queue_displaying.clear();
+        self.tracks_uuids_in_queue_real.clear();
+        self.media_player.lock_unw().stop();
+    }
+
+    pub fn play(queue: &Arc<Mutex<Self>>, db: &Arc<Mutex<DB>>) -> Result<()> {
         let queue = queue.clone();
-        let player = player.clone();
+        let player = queue.lock_unw().media_player.clone();
         let db = db.clone();
         thread::spawn(move || -> anyhow::Result<()> {
             let mut rng = rng();
@@ -97,8 +110,13 @@ impl PlayQueue {
         Ok(())
     }
 
-    pub fn add_track(&mut self, uuid: String) -> Result<()> {
-        self.tracks_uuids_in_queue_real.push(uuid);
+    pub fn add_tracks(&mut self, mut tracks_ids: Vec<String>) -> Result<()> {
+        for id in &tracks_ids {
+            if let Some(position) = self.tracks_uuids_in_queue_real.iter().position(|x| x == id) {
+                self.tracks_uuids_in_queue_real.remove(position);
+            }
+        }
+        self.tracks_uuids_in_queue_real.append(&mut tracks_ids);
         self.tracks_uuids_in_queue_displaying = self.tracks_uuids_in_queue_real.clone();
         if self.shuffle {
             self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());

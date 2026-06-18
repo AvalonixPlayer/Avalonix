@@ -11,7 +11,7 @@ use crate::{
     media::{media_trait::Media, playable_type::MediaType, track::Track},
 };
 
-#[derive(Archive, Deserialize, Serialize, serde::Serialize, TS)]
+#[derive(Archive, Deserialize, Serialize, serde::Serialize, TS, Clone)]
 #[ts(export)]
 pub struct Performer {
     pub uuid: String,
@@ -98,5 +98,8 @@ impl Media for Performer {
     fn convert_to_db(&self) -> anyhow::Result<(String, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();
         Ok((self.uuid.clone(), value))
+    }
+    fn get_tracks_uuids(&self) -> Vec<String> {
+        self.tracks_ids.clone()
     }
 }

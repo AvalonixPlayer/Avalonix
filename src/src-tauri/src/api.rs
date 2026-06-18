@@ -3,16 +3,10 @@ use std::sync::{Arc, Mutex};
 use anyhow::Result;
 use avalonix_api::{
     audio::media_player::MediaPlayer,
-    disk::{
-        db::DB,
-        user::settings::{self, UserSettings},
-    },
+    disk::{db::DB, user::settings::UserSettings},
     media::play_queue::PlayQueue,
 };
-use better_sms::{
-    arc::ArcCreate,
-    mutex::{MutexCreate, MutexGuardWork, MutexWork},
-};
+use better_sms::{arc::ArcCreate, mutex::MutexCreate};
 
 pub struct API {
     pub db: Arc<Mutex<DB>>,
@@ -24,10 +18,10 @@ pub struct API {
 pub fn init_api() -> Result<API> {
     let db = DB::open()?.create_mutex().create_arc();
     let media_player = MediaPlayer::new()?.create_mutex().create_arc();
-    let queue = PlayQueue::new().create_mutex().create_arc();
+    let queue = PlayQueue::new(&media_player).create_mutex().create_arc();
     let settings = UserSettings::open()?.create_mutex().create_arc();
 
-    PlayQueue::play(&queue, &media_player, &db)?;
+    PlayQueue::play(&queue, &db)?;
 
     Ok(API {
         db,

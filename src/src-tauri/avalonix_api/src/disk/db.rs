@@ -8,7 +8,7 @@ use crate::{
     logger::debug,
     media::{
         album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
-        playlist::Playlist, track::Track,
+        track::Track,
     },
 };
 
@@ -17,7 +17,6 @@ pub struct DB {
     tracks_tree: sled::Tree,
     albums_tree: sled::Tree,
     performers_tree: sled::Tree,
-    playlists_tree: sled::Tree,
 }
 
 impl DB {
@@ -27,13 +26,11 @@ impl DB {
         let tracks_tree = db.open_tree("tracks")?;
         let albums_tree = db.open_tree("albums")?;
         let performers_tree = db.open_tree("performers")?;
-        let playlists_tree = db.open_tree("playlists")?;
 
         let result = Self {
             tracks_tree,
             albums_tree,
             performers_tree,
-            playlists_tree,
         };
         Ok(result)
     }
@@ -48,7 +45,6 @@ impl DB {
             MediaType::Track => &self.tracks_tree,
             MediaType::Album => &self.albums_tree,
             MediaType::Performer => &self.performers_tree,
-            MediaType::Playlist => &self.playlists_tree,
         };
         tree.insert(key, value)?;
 
@@ -65,7 +61,6 @@ impl DB {
             MediaType::Track => &self.tracks_tree,
             MediaType::Album => &self.albums_tree,
             MediaType::Performer => &self.performers_tree,
-            MediaType::Playlist => &self.playlists_tree,
         };
         tree.remove(key)?;
         Ok(())
@@ -102,17 +97,6 @@ impl DB {
             performers.push(item);
         }
         Ok(performers)
-    }
-
-    /// Gets all playlists from the database.
-    pub fn get_every_playlist(&self) -> Result<Vec<Playlist>> {
-        let mut playlists = Vec::new();
-        for media in &self.playlists_tree {
-            let (_, value) = media?;
-            let item: Playlist = rkyv::from_bytes::<Playlist, Error>(&value)?;
-            playlists.push(item);
-        }
-        Ok(playlists)
     }
 
     pub fn update(&self) -> Result<()> {

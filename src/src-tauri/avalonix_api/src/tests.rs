@@ -80,16 +80,16 @@ mod tests {
 
     #[test]
     fn test_play_queue() -> Result<()> {
-        let mut queue = PlayQueue::new();
         let player = Arc::new(Mutex::new(MediaPlayer::new()?));
+        let mut queue = PlayQueue::new(&player);
 
         let db = Arc::new(Mutex::new(DB::open()?));
         let every_tracks_in_db = &db.lock().unwrap().get_every_track()?;
 
-        queue.add_track(every_tracks_in_db[0].uuid.clone());
+        queue.add_tracks(vec![every_tracks_in_db[0].uuid]);
 
         let queue_arc = Arc::new(Mutex::new(queue));
-        PlayQueue::play(&queue_arc, &player, &db);
+        PlayQueue::play(&queue_arc, &db);
         loop {
             sleep(Duration::new(5, 0));
             queue_arc.lock().unwrap().next(&player);

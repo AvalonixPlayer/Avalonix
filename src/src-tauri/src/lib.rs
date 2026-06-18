@@ -14,6 +14,8 @@ pub fn run() -> Result<()> {
             commands::get_playables_ids,
             commands::get_album_performer_name_by_id,
             commands::get_playable_by_id,
+            commands::clear_queue,
+            commands::add_media_to_queue,
         ])
         .manage(api.db)
         .manage(api.media_player)
