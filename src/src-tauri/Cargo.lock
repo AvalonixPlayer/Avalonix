@@ -264,6 +264,7 @@ dependencies = [
  "better-sms",
  "colored",
  "cpal",
+ "glob",
  "lofty",
  "rand",
  "rcue",

@@ -1,5 +1,6 @@
 use core::fmt;
 use std::{
+    fmt::format,
     fs,
     path::Path,
     time::{Duration, UNIX_EPOCH},
@@ -50,6 +51,7 @@ impl Track {
                 let tracks = Self::tracks_from_cue(cue, &path, modified)?;
                 for track in tracks {
                     db.add_to_db(&track)?;
+                    debug(format!("new track created: {}", track));
                     result.push(track);
                 }
                 Ok(())
@@ -186,9 +188,11 @@ impl Media for Track {
     fn get_media_type(&self) -> MediaType {
         MediaType::Track
     }
-    fn convert_to_db(&self) -> anyhow::Result<(String, Vec<u8>)> {
+    fn convert_to_db(&self) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();
-        Ok((self.uuid.clone(), value))
+        let uuid = rkyv::to_bytes::<Error>(&self.uuid)?.to_vec();
+
+        Ok((uuid, value))
     }
     fn get_tracks_uuids(&self) -> Vec<String> {
         vec![self.uuid.clone()]

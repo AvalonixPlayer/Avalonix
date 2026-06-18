@@ -33,6 +33,7 @@ pub fn run() -> Result<()> {
             commands::get_playables_ids,
             commands::get_album_performer_name_by_id,
             commands::get_playable_by_id,
+            commands::update_library,
             commands::clear_queue,
             commands::add_media_to_queue,
             commands::get_queue_tracks_ids,

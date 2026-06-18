@@ -2,12 +2,13 @@
 mod tests {
     use std::{
         env,
-        sync::{Arc, Mutex},
+        sync::{Arc, Mutex, mpsc},
         thread::{self, sleep},
         time::Duration,
     };
 
     use anyhow::Result;
+    use better_sms::mutex::MutexCreate;
 
     use crate::{
         audio::media_player::MediaPlayer,
@@ -17,10 +18,12 @@ mod tests {
             album::Album, performer::Performer, play_queue, play_queue::PlayQueue, track::Track,
         },
     };
+    use better_sms::arc::ArcCreate;
 
     #[test]
     fn test_db() -> Result<()> {
         let args: Vec<String> = env::args().collect();
+        let settings = UserSettings::open()?;
         let db = DB::open()?;
         let every_tracks_in_db: &[Track] = &db.get_every_track()?[0..];
 
@@ -30,7 +33,7 @@ mod tests {
             let performers = Performer::create_performers(&db, &db.get_every_track()?[0..])?;
         }
 
-        db.update();
+        db.update(&settings);
         let tracks = db.get_every_track()?;
         let albums = db.get_every_album()?;
         let performers = db.get_every_performer()?;
@@ -81,12 +84,13 @@ mod tests {
     #[test]
     fn test_play_queue() -> Result<()> {
         let player = Arc::new(Mutex::new(MediaPlayer::new()?));
-        let mut queue = PlayQueue::new(&player);
+        let (sender, reciver) = mpsc::channel();
+        let mut queue = PlayQueue::new(&player, &sender.create_mutex().create_arc());
 
         let db = Arc::new(Mutex::new(DB::open()?));
         let every_tracks_in_db = &db.lock().unwrap().get_every_track()?;
 
-        queue.add_tracks(vec![every_tracks_in_db[0].uuid]);
+        queue.add_tracks(vec![every_tracks_in_db[0].uuid.clone()]);
 
         let queue_arc = Arc::new(Mutex::new(queue));
         PlayQueue::play(&queue_arc, &db);

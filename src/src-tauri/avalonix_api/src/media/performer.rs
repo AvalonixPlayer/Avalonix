@@ -95,9 +95,11 @@ impl Media for Performer {
     fn get_media_type(&self) -> MediaType {
         MediaType::Performer
     }
-    fn convert_to_db(&self) -> anyhow::Result<(String, Vec<u8>)> {
+    fn convert_to_db(&self) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();
-        Ok((self.uuid.clone(), value))
+        let uuid = rkyv::to_bytes::<Error>(&self.uuid)?.to_vec();
+
+        Ok((uuid, value))
     }
     fn get_tracks_uuids(&self) -> Vec<String> {
         self.tracks_ids.clone()
