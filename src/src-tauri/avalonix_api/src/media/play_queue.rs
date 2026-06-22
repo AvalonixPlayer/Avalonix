@@ -93,18 +93,15 @@ impl PlayQueue {
                     };
 
                     if let Some(uuid) = current_uuid {
-                        let track_path = {
-                            let db_lock = db.read().unwrap();
-                            db_lock
-                                .get_every_track()?
-                                .into_iter()
-                                .find(|track| track.uuid == uuid)
-                                .context("Track can't be found in DB")?
-                                .path
-                        };
+                        let db_lock = db.read().unwrap();
+                        let track = db_lock
+                            .get_every_track()?
+                            .into_iter()
+                            .find(|track| track.uuid == uuid)
+                            .context("Track can't be found in DB")?;
 
-                        let player_lock = player.lock().unwrap();
-                        player_lock.play_audio_file(&track_path)?;
+                        let mut player_lock = player.lock().unwrap();
+                        player_lock.play_track(&track)?;
                     }
                 }
 
@@ -152,15 +149,15 @@ impl PlayQueue {
         Ok(())
     }
 
-    pub fn next(&mut self, player: &Arc<Mutex<MediaPlayer>>) -> Result<()> {
-        player.clone().lock().unwrap().stop();
+    pub fn next(&mut self) -> Result<()> {
+        self.media_player.lock_unw().stop();
         Ok(())
     }
 
-    pub fn back(&mut self, player: &Arc<Mutex<MediaPlayer>>) -> Result<()> {
-        player.clone().lock().unwrap().stop();
+    pub fn back(&mut self) -> Result<()> {
+        self.media_player.lock_unw().stop();
         if self.current_uuid_index - 1 >= 0 {
-            self.current_uuid_index -= 1;
+            self.current_uuid_index -= 2;
         } else {
             self.current_uuid_index = self.tracks_uuids_in_queue_real.len() as i32;
         }

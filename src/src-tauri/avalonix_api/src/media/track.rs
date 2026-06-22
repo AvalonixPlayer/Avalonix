@@ -7,7 +7,12 @@ use std::{
 };
 
 use anyhow::Result;
-use lofty::{config::ParseOptions, file::TaggedFileExt, probe::Probe, tag::Accessor};
+use lofty::{
+    config::ParseOptions,
+    file::{AudioFile, TaggedFileExt},
+    probe::Probe,
+    tag::Accessor,
+};
 use rcue::{cue::Cue, parser::parse_from_file};
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
 use rustc_serialize::base64::{MIME, ToBase64};
@@ -32,6 +37,10 @@ pub struct Track {
     pub title: String,
     pub album: String,
     pub performer: String,
+    #[ts(skip)]
+    pub start_time: Duration,
+    #[ts(skip)]
+    pub end_time: Duration,
 }
 
 impl Track {
@@ -70,6 +79,13 @@ impl Track {
                 create_new_tracks_with_save()?;
             }
         } else {
+            if every_tracks_in_db
+                .iter()
+                .any(|t| t.path == path.as_ref() && t.source_path != t.path)
+            {
+                return Ok(vec![]);
+            }
+
             let mut create_new_track_with_save = || -> Result<()> {
                 let track = Self::new_track(&path, modified)?;
                 db.add_to_db(&track)?;
@@ -122,6 +138,7 @@ impl Track {
             .map_or("Unknown artist", |v| v)
             .to_string();
         let uuid = Uuid::new_v4().to_string();
+
         let result = Self {
             uuid,
             path: path.as_ref().to_string(),
@@ -130,6 +147,8 @@ impl Track {
             title,
             album,
             performer,
+            start_time: Duration::new(0, 0),
+            end_time: tagged_file.properties().duration(),
         };
         debug(format!("track: {} loaded without hash", result.uuid));
         Ok(result)
@@ -141,14 +160,33 @@ impl Track {
         let p = Path::new(path.as_ref()).parent().unwrap();
 
         for file in cue.files {
-            for track in file.tracks {
+            let tracks_len = file.tracks.len();
+
+            for (i, track) in file.tracks.iter().enumerate() {
+                let start_time = track.indices[0].1;
+
+                let play_file_path = p.join(file.file.clone()).to_str().unwrap().to_string();
+
+                let end_time = if i + 1 < tracks_len {
+                    file.tracks[i + 1].indices[0].1
+                } else {
+                    let options =
+                        ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
+                    let tagged_file = Probe::open(&play_file_path)?
+                        .options(options)
+                        .guess_file_type()?
+                        .read()?;
+                    tagged_file.properties().duration()
+                };
+
                 result.push(Self {
                     uuid: Uuid::new_v4().to_string(),
-                    path: p.join(file.file.clone()).to_str().unwrap().to_string(),
+                    path: play_file_path,
                     modified: modified,
                     source_path: path.as_ref().to_string(),
                     title: track
                         .title
+                        .clone()
                         .map_or("Unknown track".to_string(), |f| f)
                         .to_string(),
                     album: cue
@@ -156,10 +194,13 @@ impl Track {
                         .clone()
                         .map_or("Unknown track".to_string(), |f| f)
                         .to_string(),
-                    performer: track
+                    performer: cue
                         .performer
+                        .clone()
                         .map_or("Unknown performer".to_string(), |f| f)
                         .to_string(),
+                    start_time: start_time,
+                    end_time: end_time,
                 });
             }
         }

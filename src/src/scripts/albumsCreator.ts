@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Album } from "../bindings/Album";
 import { PlayableResult } from "../bindings/PlayableResult";
-import { addMediaToQueue, clearPlayQueue } from "./playQueue";
+import { addMediaToQueue } from "./playQueue";
 
 const albumTemplate = (album_uuid: String): string =>
   `<div class="playable-sellect-item album" data-uuid="${album_uuid}">
@@ -32,6 +32,7 @@ export async function fillAlbumsList() {
   }
 
   let albumsList = document.getElementById("albums-list-section");
+  albumsList!.innerHTML = "";
 
   const observer = new IntersectionObserver(
     (enteries, observer) => {
@@ -68,7 +69,7 @@ export async function fillAlbumsList() {
     },
   );
 
-  albums_ids.forEach(async (album_id) => {
+  albums_ids!.forEach(async (album_id) => {
     let album_performer_name = await invoke<string>(
       "get_album_performer_name_by_id",
       {

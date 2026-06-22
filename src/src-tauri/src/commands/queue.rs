@@ -72,3 +72,21 @@ pub async fn get_queue_tracks_ids(
         .tracks_uuids_in_queue_displaying
         .clone())
 }
+
+#[tauri::command]
+pub async fn next_track(play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>) -> Result<(), String> {
+    play_queue
+        .lock_unw()
+        .use_guard(|guard| guard.next())
+        .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn previous_track(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<(), String> {
+    play_queue
+        .lock_unw()
+        .use_guard(|guard| guard.back())
+        .map_err(|err| err.to_string())
+}

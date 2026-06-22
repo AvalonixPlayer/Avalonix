@@ -18,10 +18,11 @@ export async function fillPerformersList() {
   }
 
   let performersList = document.getElementById("performers-list-section");
+  performersList!.innerHTML = "";
 
   const observer = new IntersectionObserver(
     (enteries, observer) => {
-      enteries.forEach(async (entry) => {
+      enteries!.forEach(async (entry) => {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
           let uuid = element.getAttribute("data-uuid");

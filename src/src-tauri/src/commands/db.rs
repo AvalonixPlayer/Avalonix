@@ -2,6 +2,7 @@ use std::sync::{Arc, Mutex, RwLock};
 
 use avalonix_api::{
     disk::{db::DB, user::settings::UserSettings},
+    logger::fatal,
     media::playable_type::{MediaType, PlayableResult},
 };
 use better_sms::mutex::MutexWork;
@@ -67,6 +68,7 @@ pub async fn get_playable_by_id(
                 .into_iter()
                 .find(|performer| performer.uuid == id)
                 .ok_or_else(|| format!("Album with id {} not found", id))?;
+            fatal(&album);
             PlayableResult::Album(album)
         }
         MediaType::Performer => {

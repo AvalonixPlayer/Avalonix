@@ -125,7 +125,7 @@
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
-    width: 30%;
+    text-justify: start;
     transition: all 0.1s ease-in-out;
 }
 

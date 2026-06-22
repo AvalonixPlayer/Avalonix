@@ -26,7 +26,7 @@ pub fn init_api() -> Result<API> {
     let sender_arc = sender.create_mutex().create_arc();
 
     let db = RwLock::new(DB::open()?).create_arc();
-    let media_player = MediaPlayer::new()?.create_mutex().create_arc();
+    let media_player = MediaPlayer::new(&sender_arc)?.create_mutex().create_arc();
     let queue = PlayQueue::new(&media_player, &sender_arc)
         .create_mutex()
         .create_arc();

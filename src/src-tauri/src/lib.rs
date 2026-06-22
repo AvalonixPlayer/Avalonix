@@ -23,6 +23,10 @@ pub fn run() -> Result<()> {
                         debug("queue-updated");
                         _ = app_handle.emit("queue-updated", ());
                     }
+                    Event::CurTrackChanged => {
+                        debug("track-updated");
+                        _ = app_handle.emit("cur-track-changed", ());
+                    }
                 }
                 debug("Event recived");
             });
@@ -37,6 +41,13 @@ pub fn run() -> Result<()> {
             commands::clear_queue,
             commands::add_media_to_queue,
             commands::get_queue_tracks_ids,
+            commands::next_track,
+            commands::previous_track,
+            commands::switch_media_player_state,
+            commands::get_media_player_state,
+            commands::get_media_player_end_pos,
+            commands::get_current_media_player_pos,
+            commands::try_seek,
         ])
         .manage(api.db)
         .manage(api.media_player)

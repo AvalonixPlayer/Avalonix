@@ -20,6 +20,7 @@ export async function fillTracksList() {
   }
 
   let tracksList = document.getElementById("tracks-list-section");
+  tracksList!.innerHTML = "";
 
   const observer = new IntersectionObserver(
     (enteries, observer) => {
@@ -54,7 +55,7 @@ export async function fillTracksList() {
     },
   );
 
-  tracks_ids.forEach((track_id) => {
+  tracks_ids!.forEach((track_id) => {
     let element = trackTemplate(track_id);
     tracksList!.insertAdjacentHTML("beforeend", element);
 

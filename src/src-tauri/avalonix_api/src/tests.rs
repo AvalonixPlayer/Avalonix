@@ -2,7 +2,7 @@
 mod tests {
     use std::{
         env,
-        sync::{Arc, Mutex, mpsc},
+        sync::{Arc, Mutex, RwLock, mpsc},
         thread::{self, sleep},
         time::Duration,
     };
@@ -59,7 +59,7 @@ mod tests {
     fn test_media_player() -> Result<()> {
         let player = MediaPlayer::new()?;
         if let Ok(media_path) = std::env::var("TRACK_FILE_PATH") {
-            player.play_audio_file(media_path);
+            player.play_track(media_path);
             player.set_volume(0.5);
             thread::sleep(Duration::new(1, 0));
             player.change_pause_state();
@@ -87,7 +87,7 @@ mod tests {
         let (sender, reciver) = mpsc::channel();
         let mut queue = PlayQueue::new(&player, &sender.create_mutex().create_arc());
 
-        let db = Arc::new(Mutex::new(DB::open()?));
+        let db = Arc::new(RwLock::new(DB::open()?));
         let every_tracks_in_db = &db.lock().unwrap().get_every_track()?;
 
         queue.add_tracks(vec![every_tracks_in_db[0].uuid.clone()]);
@@ -96,9 +96,9 @@ mod tests {
         PlayQueue::play(&queue_arc, &db);
         loop {
             sleep(Duration::new(5, 0));
-            queue_arc.lock().unwrap().next(&player);
+            queue_arc.lock().unwrap().next();
             sleep(Duration::new(5, 0));
-            queue_arc.lock().unwrap().back(&player);
+            queue_arc.lock().unwrap().back();
         }
 
         Ok(())

@@ -5,6 +5,8 @@ import { initMainSectionControll } from "./scripts/tabsBinding.js";
 import { fillTracksList } from "./scripts/tracksCreator.js";
 import { fillPlayQueueList } from "./scripts/playQueue.js";
 import { invoke } from "@tauri-apps/api/core";
+import { initPlayback } from "./scripts/bindPlayblack.js";
+import { initPlaybackControll } from "./scripts/playbackControll.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
@@ -12,11 +14,19 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 async function init() {
   console.log("start");
-
   initMainSectionControll();
+  await initPlaybackControll();
+  await initPlayback();
+  await loadLib();
+  await invoke("update_library");
+  console.log("library_updated");
+  await loadLib();
+  listen("queue-updated", async () => await fillPlayQueueList());
+}
+
+async function loadLib() {
   await fillTracksList();
   await fillAlbumsList();
   await fillPerformersList();
   await fillPlayQueueList();
-  listen("queue-updated", async () => await fillPlayQueueList());
 }
