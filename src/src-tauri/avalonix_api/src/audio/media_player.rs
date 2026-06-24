@@ -41,6 +41,7 @@ impl MediaPlayer {
         self.stop();
         self.player.append(Decoder::try_from(file)?);
         self.play();
+        self.seek(0)?;
         self.events_sender
             .lock_unw()
             .send(Event::CurTrackChanged)
@@ -97,6 +98,7 @@ impl MediaPlayer {
         self.cur_track
             .as_ref()
             .map(|track| {
+                fatal(format!("{:#?}", track));
                 track
                     .end_time
                     .as_secs()

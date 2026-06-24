@@ -25,7 +25,7 @@ use crate::{
     media::{cover_get::CoverGet, media_trait::Media, playable_type::MediaType},
 };
 
-#[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize, TS)]
+#[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize, TS, Debug)]
 #[ts(export)]
 pub struct Track {
     pub uuid: String,
