@@ -31,6 +31,8 @@ export async function fillAlbumsList() {
     return;
   }
 
+  console.log(`ids: ${albums_ids}`);
+
   let albumsList = document.getElementById("albums-list-section");
   albumsList!.innerHTML = "";
 

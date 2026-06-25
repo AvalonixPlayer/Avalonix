@@ -163,8 +163,9 @@ impl DB {
             }
         }
 
-        Album::create_albums(self, tracks)?;
-        Performer::create_performers(self, tracks)?;
+        let actual_tracks = self.get_every_track()?;
+        Album::create_albums(self, &actual_tracks)?;
+        Performer::create_performers(self, &actual_tracks)?;
         Ok(())
     }
 }

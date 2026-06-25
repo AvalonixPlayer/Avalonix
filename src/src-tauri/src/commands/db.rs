@@ -68,7 +68,6 @@ pub async fn get_playable_by_id(
                 .into_iter()
                 .find(|performer| performer.uuid == id)
                 .ok_or_else(|| format!("Album with id {} not found", id))?;
-            fatal(&album);
             PlayableResult::Album(album)
         }
         MediaType::Performer => {
