@@ -1,0 +1,30 @@
+#track-preview-cover > img,
+#track-preview-cover {
+    width: 300px;
+    height: 300px;
+
+    object-fit: cover;
+}
+
+#set-of-metadata-in-preview {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+
+    padding-left: 20px;
+}
+
+#set-of-metadata-in-preview > h1,
+#set-of-metadata-in-preview > h2,
+#set-of-metadata-in-preview > h3 {
+    text-align: start;
+    left: 0;
+
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+}

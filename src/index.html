@@ -33,7 +33,15 @@
             <section class="section main-tab-section" id="queue-section">
             </section>
             <section class="section main-tab-section" id="track-preview-section">
-                Track-preview
+                <div class="album-cover" id="track-preview-cover">
+                    <img src="./src/assets/black.jpg">
+                </div>
+
+                <div id="set-of-metadata-in-preview">
+                    <h1 id="track-title-show">Title</h1>
+                    <h2 id="track-album-show">Album</h2>
+                    <h3 id="track-performer-show">Performer</h3>
+                </div>
             </section>
         </section>
         <section
@@ -46,6 +54,9 @@
                 <input type="range" min="0" max="0" value="0" id="play-time-controll-slider"></input>
                 <h3 id="track-left-time">0</h3>
             </div>
+            <button id="current-track-show-button">
+                <h3>Current track title</h3>
+            </button>
             <div id="queue-controll">
                 <button
                     class="queue-controll-button track-index-controll"

@@ -98,7 +98,6 @@ impl MediaPlayer {
         self.cur_track
             .as_ref()
             .map(|track| {
-                fatal(format!("{:#?}", track));
                 track
                     .end_time
                     .as_secs()

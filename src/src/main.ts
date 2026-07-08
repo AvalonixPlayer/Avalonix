@@ -7,6 +7,7 @@ import { fillPlayQueueList } from "./scripts/playQueue.js";
 import { invoke } from "@tauri-apps/api/core";
 import { initPlayback } from "./scripts/bindPlayblack.js";
 import { initPlaybackControll } from "./scripts/playbackControll.js";
+import { initResizeControll } from "./scripts/resizeControll.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
@@ -15,6 +16,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 async function init() {
   console.log("start");
   initMainSectionControll();
+  initResizeControll();
   await initPlaybackControll();
   await initPlayback();
   await loadLib();

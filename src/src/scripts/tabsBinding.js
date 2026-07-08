@@ -7,20 +7,18 @@ const tabBinding = {
   "albums-tab-button": "albums-list-section",
   "performers-tab-button": "performers-list-section",
   "queue-tab-button": "queue-section",
+  "current-track-show-button": "track-preview-section",
 };
 
 export function initMainSectionControll() {
   disable_all();
 
-  Array.from(document.getElementsByClassName("left-menu-button")).forEach(
-    (button) => {
-      button.addEventListener("click", () => {
-        disable_all();
-        sections.find((x) => x.id == tabBinding[button.id]).style.display =
-          "flex";
-      });
-    },
-  );
+  Object.entries(tabBinding).forEach((tab, i) => {
+    document.getElementById(tab[0]).addEventListener("click", () => {
+      disable_all();
+      sections.find((x) => x.id == tab[1]).style.display = "flex";
+    });
+  });
 }
 
 function disable_all() {

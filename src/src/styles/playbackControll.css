@@ -41,3 +41,21 @@
     width: 100%;
     accent-color: #460077;
 }
+
+#current-track-show-button {
+    display: flex;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    height: 55px;
+
+    align-items: center;
+    justify-content: left;
+    width: 35%;
+}
+
+#current-track-show-button > h3 {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+}

@@ -7,6 +7,7 @@ use avalonix_api::{
         media_trait::Media,
         play_queue::{self, PlayQueue},
         playable_type::MediaType,
+        track::Track,
     },
 };
 use better_sms::mutex::{MutexGuardWork, MutexWork};
@@ -89,4 +90,18 @@ pub async fn previous_track(
         .lock_unw()
         .use_guard(|guard| guard.back())
         .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_current_track_uuid(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<String, String> {
+    if let Some(uuid) = play_queue
+        .lock_unw()
+        .use_guard(|guard| guard.get_current_uuid())
+    {
+        Ok(uuid)
+    } else {
+        Err("No track".to_string())
+    }
 }

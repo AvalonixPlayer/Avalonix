@@ -48,6 +48,8 @@ pub fn run() -> Result<()> {
             commands::get_media_player_end_pos,
             commands::get_current_media_player_pos,
             commands::try_seek,
+            commands::get_current_track_uuid,
+            commands::get_track_cover,
         ])
         .manage(api.db)
         .manage(api.media_player)

@@ -56,3 +56,10 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+#track-preview-section {
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
+    width: calc(100vw - var(--left-menu-section-width));
+}

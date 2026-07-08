@@ -4,8 +4,8 @@ use std::{
     time::Duration,
 };
 
-use anyhow::{Context, Result};
-use better_sms::mutex::MutexWork;
+use anyhow::{Context, Ok, Result, bail};
+use better_sms::mutex::{MutexGuardWork, MutexWork};
 use rand::{rng, seq::SliceRandom};
 
 use crate::{
@@ -15,6 +15,7 @@ use crate::{
     media::{
         media_trait::Media,
         playable_type::{self, MediaType},
+        track::Track,
     },
 };
 
@@ -25,6 +26,7 @@ pub struct PlayQueue {
     pub shuffle: bool,
     pub media_player: Arc<Mutex<MediaPlayer>>,
     pub events_sender: Arc<Mutex<Sender<Event>>>,
+    pub current_uuid: Option<String>,
 }
 
 impl PlayQueue {
@@ -39,6 +41,7 @@ impl PlayQueue {
             shuffle: false,
             media_player: media_player.clone(),
             events_sender: events_sender.clone(),
+            current_uuid: None,
         }
     }
 
@@ -54,7 +57,6 @@ impl PlayQueue {
         let player = queue.lock_unw().media_player.clone();
         let db = db.clone();
         thread::spawn(move || -> anyhow::Result<()> {
-            let mut rng = rng();
             loop {
                 let is_empty = {
                     let player_lock = player.lock().unwrap();
@@ -63,6 +65,7 @@ impl PlayQueue {
 
                 if is_empty {
                     let current_uuid = {
+                        let mut rng = rng();
                         let mut queue = queue.lock().unwrap();
                         if queue.tracks_uuids_in_queue_real.is_empty() {
                             None
@@ -101,7 +104,14 @@ impl PlayQueue {
                             .context("Track can't be found in DB")?;
 
                         let mut player_lock = player.lock().unwrap();
+                        queue
+                            .lock_unw()
+                            .use_guard(|guard| guard.current_uuid = Some(uuid.clone()));
                         player_lock.play_track(&track)?;
+                    } else {
+                        queue
+                            .lock_unw()
+                            .use_guard(|guard| guard.current_uuid = None);
                     }
                 }
 
@@ -176,5 +186,9 @@ impl PlayQueue {
             .send(Event::UpdateQueue)
             .unwrap();
         Ok(())
+    }
+
+    pub fn get_current_uuid(&mut self) -> Option<String> {
+        self.current_uuid.clone()
     }
 }

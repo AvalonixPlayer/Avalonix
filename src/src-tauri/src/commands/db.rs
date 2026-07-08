@@ -3,9 +3,15 @@ use std::sync::{Arc, Mutex, RwLock};
 use avalonix_api::{
     disk::{db::DB, user::settings::UserSettings},
     logger::fatal,
-    media::playable_type::{MediaType, PlayableResult},
+    media::{
+        cover_get::CoverGet,
+        play_queue::PlayQueue,
+        playable_type::{MediaType, PlayableResult},
+    },
 };
 use better_sms::mutex::MutexWork;
+
+use crate::commands::get_current_track_uuid;
 
 #[tauri::command]
 pub async fn get_playables_ids(
@@ -81,4 +87,18 @@ pub async fn get_playable_by_id(
         }
     };
     Ok(res)
+}
+
+#[tauri::command]
+pub async fn get_track_cover(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    id: String,
+) -> Result<String, String> {
+    let playable = get_playable_by_id(db, MediaType::Track, id).await?;
+
+    if let PlayableResult::Track(track) = playable {
+        Ok(track.get_cover_as_uri())
+    } else {
+        Err("Expected a track, but got something else".to_string())
+    }
 }
