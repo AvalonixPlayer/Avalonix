@@ -96,15 +96,15 @@ async function fillPreviewTrack() {
       let track_button = document.getElementById("current-track-show-button");
       track_button!.querySelector("h3")!.textContent = track.title;
 
-      let title = (document.getElementById("track-title-show")!.textContent =
-        track.title);
+      document.getElementById("track-title-show")!.textContent =
+        track.title;
 
-      let album = (document.getElementById("track-album-show")!.textContent =
-        track.album);
+      document.getElementById("track-album-show")!.textContent =
+        track.album;
 
-      let performer = (document.getElementById(
+      document.getElementById(
         "track-performer-show",
-      )!.textContent = track.performer);
+      )!.textContent = track.performer;
 
       let coverItem = document
         .querySelector("#track-preview-cover")!
@@ -114,12 +114,12 @@ async function fillPreviewTrack() {
         .then((cover) => {
           coverItem!.src = cover;
           if (cover == "") {
-            coverItem!.src = "./src/assets/black.jpg";
+            coverItem!.src = "./src/assets/no_cover.jpg";
           }
         })
         .catch((error) => {
           console.error(error);
-          coverItem!.src = "./src/assets/black.jpg";
+          coverItem!.src = "./src/assets/no_cover.jpg";
         });
     }
   });

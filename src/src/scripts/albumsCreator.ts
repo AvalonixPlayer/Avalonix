@@ -6,7 +6,7 @@ import { addMediaToQueue } from "./playQueue";
 const albumTemplate = (album_uuid: String): string =>
   `<div class="playable-sellect-item album" data-uuid="${album_uuid}">
     <div class="album-cover">
-        <img src="./src/assets/black.jpg">
+        <img src="./src/assets/no_cover.jpg">
     </div>
     <h4 class="album-title"></h4>
 </div>`;
