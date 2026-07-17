@@ -22,6 +22,7 @@
 
 #left-menu {
     width: var(--left-menu-section-width);
+    min-width: var(--left-menu-section-width);
     border-right: solid 1px;
     display: block;
     justify-content: center;

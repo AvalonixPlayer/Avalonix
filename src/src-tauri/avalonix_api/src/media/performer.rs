@@ -21,53 +21,75 @@ pub struct Performer {
 
 impl Performer {
     pub fn create_performers(db: &DB, every_tracks_in_db: &[Track]) -> Result<Vec<Self>> {
-        let mut every_performers_in_db = db.get_every_performer()?;
+        let every_performers_in_db = db.get_every_performer()?;
+        let mut performers_map: HashMap<String, Self> = every_performers_in_db
+            .into_iter()
+            .map(|performer| (performer.title.clone(), performer))
+            .collect();
 
-        let mut performers: HashMap<String, Vec<String>> = HashMap::new();
+        let existing_tracks_ids: HashSet<&str> =
+            every_tracks_in_db.iter().map(|t| t.uuid.as_str()).collect();
+
+        let mut performers_needs_to_update = Vec::new();
+
+        for (performer_title, performer) in performers_map.iter_mut() {
+            let original_len = performer.tracks_ids.len();
+
+            performer
+                .tracks_ids
+                .retain(|id| existing_tracks_ids.contains(id.as_str()));
+
+            if performer.tracks_ids.len() != original_len {
+                performers_needs_to_update.push(performer_title.clone());
+            }
+        }
+
+        let mut tracks_by_performer: HashMap<String, Vec<String>> = HashMap::new();
         for track in every_tracks_in_db {
-            if let Some(performer) = performers
-                .iter_mut()
-                .find(|performer| *performer.0 == track.performer)
-            {
-                performer.1.push(track.uuid.clone());
-            } else {
-                performers.insert(track.performer.clone(), vec![track.uuid.clone()]);
-            }
+            tracks_by_performer
+                .entry(track.performer.clone())
+                .or_default()
+                .push(track.uuid.clone());
         }
 
-        let mut performers_needs_to_update = HashSet::new();
+        let tracks_map: HashMap<&str, &Track> = every_tracks_in_db
+            .iter()
+            .map(|t| (t.uuid.as_str(), t))
+            .collect();
 
-        for new_performer in performers {
-            if let Some(old_performer) = every_performers_in_db
-                .iter_mut()
-                .find(|old_performer| old_performer.title == new_performer.0)
-            {
-                if old_performer.tracks_ids != new_performer.1 {
-                    old_performer.tracks_ids = new_performer.1;
-                    performers_needs_to_update.insert(new_performer.0);
+        for (performer_title, track_ids) in tracks_by_performer {
+            if let Some(old_performer) = performers_map.get_mut(&performer_title) {
+                if old_performer.tracks_ids != track_ids {
+                    old_performer.tracks_ids = track_ids;
+                    if !performers_needs_to_update.contains(&performer_title) {
+                        performers_needs_to_update.push(performer_title.clone());
+                    }
                 }
             } else {
-                if let Some(track) = every_tracks_in_db
-                    .iter()
-                    .find(|track| *track.uuid == new_performer.1[0])
-                {
-                    every_performers_in_db
-                        .push(Self::create_new_performer(track, new_performer.1)?);
-                    performers_needs_to_update.insert(new_performer.0);
+                if let Some(first_track_id) = track_ids.first() {
+                    if let Some(track) = tracks_map.get(first_track_id.as_str()) {
+                        let new_performer = Self::create_new_performer(track, track_ids)?;
+                        performers_map.insert(performer_title.clone(), new_performer);
+                        performers_needs_to_update.push(performer_title);
+                    }
                 }
             }
         }
 
-        for performer_name in performers_needs_to_update {
-            if let Some(performer) = every_performers_in_db
-                .iter_mut()
-                .find(|performer| *performer.title == performer_name)
-            {
-                db.add_to_db(performer)?;
+        for performer_name in &performers_needs_to_update {
+            if let Some(performer) = performers_map.get(performer_name) {
+                if performer.tracks_ids.is_empty() {
+                    db.remove_from_db(performer)?;
+                } else {
+                    db.add_to_db(performer)?;
+                }
             }
         }
 
-        Ok(every_performers_in_db)
+        Ok(performers_map
+            .into_values()
+            .filter(|performer| !performer.tracks_ids.is_empty())
+            .collect())
     }
 
     fn create_new_performer(track: &Track, tracks_ids: Vec<String>) -> Result<Self> {

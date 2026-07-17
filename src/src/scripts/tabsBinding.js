@@ -7,6 +7,7 @@ const tabBinding = {
   "albums-tab-button": "albums-list-section",
   "performers-tab-button": "performers-list-section",
   "queue-tab-button": "queue-section",
+  "settings-tab-button": "settings-section",
   "current-track-show-button": "track-preview-section",
 };
 

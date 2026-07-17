@@ -27,11 +27,11 @@ pub async fn get_playables_ids(
 #[tauri::command]
 pub async fn update_library(
     db: tauri::State<'_, Arc<RwLock<DB>>>,
-    settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,
+    settings: tauri::State<'_, Arc<RwLock<UserSettings>>>,
 ) -> Result<(), String> {
     let guard = db.read().unwrap();
     guard
-        .update(&settings.lock_unw())
+        .update(&mut settings.write().unwrap())
         .map_err(|err| err.to_string())
 }
 

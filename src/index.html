@@ -23,14 +23,22 @@
                 <button class="left-menu-button" id="queue-tab-button">
                     <img src="./src/assets/queue.png" />
                 </button>
+                <button class="left-menu-button" id="settings-tab-button">
+                    <img src="./src/assets/settings.png" />
+                </button>
             </section>
-            <section class="section main-tab-section" id="tracks-list-section">
-            </section>
-            <section class="section main-tab-section" id="albums-list-section">
-            </section>
-            <section class="section main-tab-section" id="performers-list-section">
-            </section>
-            <section class="section main-tab-section" id="queue-section">
+            <section class="section main-tab-section" id="tracks-list-section"></section>
+            <section class="section main-tab-section" id="albums-list-section"></section>
+            <section class="section main-tab-section" id="performers-list-section"></section>
+            <section class="section main-tab-section" id="queue-section"></section>
+            <section class="section main-tab-section" id="settings-section">
+                <div class="settings-div">
+                    <h1>Library</h1>
+                    <row>
+                        <drop-list id="lib-paths" title="Library laths" add-button="add-path-to-lib"></drop-list>
+                    </row>
+
+                </div>
             </section>
             <section class="section main-tab-section" id="track-preview-section">
                 <div class="album-cover" id="track-preview-cover">
@@ -76,4 +84,16 @@
             </div>
         </section>
     </body>
+
+    <template id="drop-list-template">
+        <row>
+            <button><h2>Menu name</h2></button>
+            <button class="drop-list-add-button"><img src="src/assets/add_smth.png"></button>
+        </row>
+        <div class="drop-list-items" style="display: none; flex-direction: column;"></div>
+    </template>
+
+    <template id="drop-list-button-template">
+        <button class="drop-list-button"><h3></h3></button>
+    </template>
 </html>

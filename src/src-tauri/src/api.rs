@@ -16,7 +16,7 @@ pub struct API {
     pub db: Arc<RwLock<DB>>,
     pub media_player: Arc<Mutex<MediaPlayer>>,
     pub queue: Arc<Mutex<PlayQueue>>,
-    pub settings: Arc<Mutex<UserSettings>>,
+    pub settings: Arc<RwLock<UserSettings>>,
     pub events_reciver: Receiver<Event>,
 }
 
@@ -30,7 +30,7 @@ pub fn init_api() -> Result<API> {
     let queue = PlayQueue::new(&media_player, &sender_arc)
         .create_mutex()
         .create_arc();
-    let settings = UserSettings::open()?.create_mutex().create_arc();
+    let settings = RwLock::new(UserSettings::open()?).create_arc();
 
     PlayQueue::play(&queue, &db)?;
 

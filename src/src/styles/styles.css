@@ -6,6 +6,8 @@
 @import "text.css";
 @import "scrollbar.css";
 @import "trackPreview.css";
+@import "settings.css";
+@import "row.css";
 
 :root {
     font-family:

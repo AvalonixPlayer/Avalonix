@@ -13,6 +13,7 @@ pub mod commands;
 pub fn run() -> Result<()> {
     let api = init_api()?;
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
             let app_handle = app.app_handle().clone();
@@ -50,6 +51,9 @@ pub fn run() -> Result<()> {
             commands::try_seek,
             commands::get_current_track_uuid,
             commands::get_track_cover,
+            commands::get_library_paths,
+            commands::remove_path_from_lib,
+            commands::add_path_to_lib
         ])
         .manage(api.db)
         .manage(api.media_player)

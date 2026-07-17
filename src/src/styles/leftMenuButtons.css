@@ -25,3 +25,8 @@
     width: 60px;
     height: 60px;
 }
+
+#settings-tab-button > img {
+    width: 45px;
+    height: 45px;
+}

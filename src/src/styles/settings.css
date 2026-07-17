@@ -1,0 +1,26 @@
+.settings-div {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-div > h1 {
+    display: flex;
+}
+
+.drop-list-button > h3 {
+    text-align: left;
+    text-overflow: ellipsis;
+
+    text-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.drop-list-button {
+    width: calc(100vw - var(--left-menu-section-width));
+    white-space: nowrap;
+}
+
+#add-path-to-lib > img {
+    width: 40px;
+    height: 40px;
+}

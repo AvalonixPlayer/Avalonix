@@ -6,7 +6,7 @@ use rkyv::rancor::Error;
 
 use crate::{
     disk::{disk_paths::avalonix_db, user::settings::UserSettings},
-    logger::{debug, error},
+    logger::{debug, error, fatal},
     media::{
         album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
         track::Track,
@@ -130,9 +130,8 @@ impl DB {
         Ok(performers)
     }
 
-    pub fn update(&self, settings: &UserSettings) -> Result<()> {
+    pub fn update(&self, settings: &mut UserSettings) -> Result<()> {
         let tracks = &self.get_every_track()?[0..];
-        let mut tracks_to_append = vec![];
 
         for folder in &settings.library_paths {
             let folder = glob::Pattern::escape(folder);
@@ -142,11 +141,7 @@ impl DB {
                 {
                     match entry {
                         Ok(path) => {
-                            tracks_to_append.push(Track::get_tracks_by_path(
-                                path.to_str().unwrap(),
-                                tracks,
-                                self,
-                            ));
+                            Track::get_tracks_by_path(path.to_str().unwrap(), tracks, self)?;
                         }
                         Err(err) => {
                             error(err.to_string());
@@ -157,13 +152,34 @@ impl DB {
         }
 
         for track in self.get_every_track()? {
-            if !fs::exists(&track.path)? {
+            if !fs::exists(&track.source_path)? {
                 self.remove_from_db(&track)?;
                 debug(format!("not exists path removed: {}", track.path));
             }
+
+            if settings.path_removed == true {
+                let mut contains = false;
+                for folder in &settings.library_paths {
+                    if track.source_path.contains(folder) {
+                        contains = true;
+                    }
+                }
+
+                if contains == false {
+                    debug(format!(
+                        "not exists in lib paths track removed: {}",
+                        track.path
+                    ));
+                    self.remove_from_db(&track)?;
+                }
+            }
+        }
+        if settings.path_removed == true {
+            settings.path_removed = false;
         }
 
         let actual_tracks = self.get_every_track()?;
+
         Album::create_albums(self, &actual_tracks)?;
         Performer::create_performers(self, &actual_tracks)?;
         Ok(())

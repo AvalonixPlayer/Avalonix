@@ -23,49 +23,72 @@ pub struct Album {
 
 impl Album {
     pub fn create_albums(db: &DB, every_tracks_in_db: &[Track]) -> Result<Vec<Self>> {
-        let mut every_albums_in_db = db.get_every_album()?;
+        let every_albums_in_db = db.get_every_album()?;
+        let mut albums_map: HashMap<String, Self> = every_albums_in_db
+            .into_iter()
+            .map(|album| (album.title.clone(), album))
+            .collect();
 
-        let mut albums: HashMap<String, Vec<String>> = HashMap::new();
+        let existing_tracks_ids: HashSet<&str> =
+            every_tracks_in_db.iter().map(|t| t.uuid.as_str()).collect();
+
+        let mut albums_needs_to_update = Vec::new();
+
+        for (album_title, album) in albums_map.iter_mut() {
+            let original_len = album.tracks_ids.len();
+
+            album
+                .tracks_ids
+                .retain(|id| existing_tracks_ids.contains(id.as_str()));
+
+            if album.tracks_ids.len() != original_len {
+                albums_needs_to_update.push(album_title.clone());
+            }
+        }
+
+        let mut tracks_by_album: HashMap<String, Vec<String>> = HashMap::new();
         for track in every_tracks_in_db {
-            if let Some(album) = albums.iter_mut().find(|album| *album.0 == track.album) {
-                album.1.push(track.uuid.clone());
-            } else {
-                albums.insert(track.album.clone(), vec![track.uuid.clone()]);
-            }
+            tracks_by_album
+                .entry(track.album.clone())
+                .or_default()
+                .push(track.uuid.clone());
         }
 
-        let mut albums_needs_to_update = HashSet::new();
+        let tracks_map: HashMap<&str, &Track> = every_tracks_in_db
+            .iter()
+            .map(|t| (t.uuid.as_str(), t))
+            .collect();
 
-        for new_album in albums {
-            if let Some(old_album) = every_albums_in_db
-                .iter_mut()
-                .find(|old_album| old_album.title == new_album.0)
-            {
-                if old_album.tracks_ids != new_album.1 {
-                    old_album.tracks_ids = new_album.1;
-                    albums_needs_to_update.insert(new_album.0);
+        for (album_title, track_ids) in tracks_by_album {
+            if let Some(old_album) = albums_map.get_mut(&album_title) {
+                if old_album.tracks_ids != track_ids {
+                    old_album.tracks_ids = track_ids;
+                    if !albums_needs_to_update.contains(&album_title) {
+                        albums_needs_to_update.push(album_title.clone());
+                    }
                 }
             } else {
-                if let Some(track) = every_tracks_in_db
-                    .iter()
-                    .find(|track| *track.uuid == new_album.1[0])
-                {
-                    every_albums_in_db.push(Self::create_new_album(track, new_album.1)?);
-                    albums_needs_to_update.insert(new_album.0);
+                if let Some(first_track_id) = track_ids.first() {
+                    if let Some(track) = tracks_map.get(first_track_id.as_str()) {
+                        let new_album = Self::create_new_album(track, track_ids)?;
+                        albums_map.insert(album_title.clone(), new_album);
+                        albums_needs_to_update.push(album_title);
+                    }
                 }
             }
         }
 
-        for album_name in albums_needs_to_update {
-            if let Some(album) = every_albums_in_db
-                .iter_mut()
-                .find(|album| *album.title == album_name)
-            {
-                db.add_to_db(album)?;
+        for album_name in &albums_needs_to_update {
+            if let Some(album) = albums_map.get(album_name) {
+                if album.tracks_ids.is_empty() {
+                    db.remove_from_db(album)?;
+                } else {
+                    db.add_to_db(album)?;
+                }
             }
         }
 
-        Ok(every_albums_in_db)
+        Ok(albums_map.into_values().collect())
     }
 
     fn create_new_album(track: &Track, tracks_ids: Vec<String>) -> Result<Self> {

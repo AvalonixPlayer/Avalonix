@@ -8,12 +8,16 @@ import { invoke } from "@tauri-apps/api/core";
 import { initPlayback } from "./scripts/bindPlayblack.js";
 import { initPlaybackControll } from "./scripts/playbackControll.js";
 import { initResizeControll } from "./scripts/resizeControll.js";
+import { regCustomElements } from "./scripts/customElements.js";
+import { initSettings } from "./scripts/settings.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
 });
 
 async function init() {
+  regCustomElements();
+  await initSettings();
   console.log("start");
   initMainSectionControll();
   initResizeControll();

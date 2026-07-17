@@ -10,6 +10,7 @@ pub struct UserSettings {
     pub library_paths: Vec<String>,
     pub themes: Vec<Theme>,
     pub active_theme: Theme,
+    pub path_removed: bool,
 }
 
 impl UserSettings {
@@ -23,6 +24,7 @@ impl UserSettings {
             library_paths: vec![],
             themes: vec![theme.clone()],
             active_theme: theme,
+            path_removed: false,
         };
         Ok(settings)
     }
