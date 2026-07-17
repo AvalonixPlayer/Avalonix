@@ -141,7 +141,10 @@ impl DB {
                 {
                     match entry {
                         Ok(path) => {
-                            Track::get_tracks_by_path(path.to_str().unwrap(), tracks, self)?;
+                            if let Ok(_) =
+                                Track::get_tracks_by_path(path.to_str().unwrap(), tracks, self)
+                            {
+                            }
                         }
                         Err(err) => {
                             error(err.to_string());
@@ -174,6 +177,7 @@ impl DB {
                 }
             }
         }
+
         if settings.path_removed == true {
             settings.path_removed = false;
         }
