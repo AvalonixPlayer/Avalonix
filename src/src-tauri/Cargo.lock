@@ -247,6 +247,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "avalonix_api",
+ "base64 0.22.1",
  "better-sms",
  "serde",
  "serde_json",

@@ -8,6 +8,7 @@
 @import "trackPreview.css";
 @import "settings.css";
 @import "row.css";
+@import "inputs.css";
 
 :root {
     font-family:
@@ -20,6 +21,11 @@
     --button-active-color: rgba(127, 104, 162, 0.8);
     --text-select-color: rgba(127, 104, 162, 0.8);
     --albums-empty-color: rgba(10, 10, 10);
+
+    --text-size-1: 0,
+    --text-size-2: 0,
+    --text-size-3: 0,
+    --text-size-4: 0,
 }
 
 body {
@@ -27,8 +33,6 @@ body {
     padding: 0;
     overflow: hidden;
     user-select: none;
-
-    background: rgb(25, 25, 25);
 }
 
 img {

@@ -2,10 +2,12 @@ use std::fs;
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 use crate::disk::{disk_paths::settings_path, user::theme::Theme};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, TS)]
+#[ts(export)]
 pub struct UserSettings {
     pub library_paths: Vec<String>,
     pub themes: Vec<Theme>,

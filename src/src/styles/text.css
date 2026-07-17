@@ -1,5 +1,5 @@
 h1 {
-    font-size: 40px;
+    font-size: var(--text-size-1);
     font-weight: bold;
     color: aliceblue;
     text-align: center;
@@ -7,7 +7,7 @@ h1 {
 }
 
 h2 {
-    font-size: 32px;
+    font-size: var(--text-size-2);
     font-weight: bold;
     color: aliceblue;
     text-align: center;
@@ -15,7 +15,7 @@ h2 {
 }
 
 h3 {
-    font-size: 25px;
+    font-size: var(--text-size-3);
     font-weight: bold;
     color: aliceblue;
     text-align: center;
@@ -23,7 +23,7 @@ h3 {
 }
 
 h4 {
-    font-size: 20px;
+    font-size: var(--text-size-4);
     font-weight: bold;
     color: aliceblue;
     text-align: center;

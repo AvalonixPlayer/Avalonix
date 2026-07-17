@@ -64,3 +64,8 @@
     padding-left: 50px;
     width: calc(100vw - var(--left-menu-section-width));
 }
+
+#settings-section {
+    display: flex;
+    flex-direction: column;
+}

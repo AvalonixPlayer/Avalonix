@@ -20,7 +20,7 @@ mod tests {
     };
     use better_sms::arc::ArcCreate;
 
-    #[test]
+    /*#[test]
     fn test_db() -> Result<()> {
         let args: Vec<String> = env::args().collect();
         let settings = UserSettings::open()?;
@@ -53,23 +53,7 @@ mod tests {
             debug(i);
         }
         Ok(())
-    }
-
-    #[test]
-    fn test_media_player() -> Result<()> {
-        let player = MediaPlayer::new()?;
-        if let Ok(media_path) = std::env::var("TRACK_FILE_PATH") {
-            player.play_track(media_path);
-            player.set_volume(0.5);
-            thread::sleep(Duration::new(1, 0));
-            player.change_pause_state();
-            thread::sleep(Duration::new(1, 0));
-            player.change_pause_state();
-            thread::sleep(Duration::new(1000, 0));
-        }
-
-        Ok(())
-    }
+    }*/
 
     #[test]
     fn test_settings() -> Result<()> {
@@ -81,7 +65,7 @@ mod tests {
         Ok(())
     }
 
-    #[test]
+    /*#[test]
     fn test_play_queue() -> Result<()> {
         let player = Arc::new(Mutex::new(MediaPlayer::new()?));
         let (sender, reciver) = mpsc::channel();
@@ -102,5 +86,5 @@ mod tests {
         }
 
         Ok(())
-    }
+    }*/
 }

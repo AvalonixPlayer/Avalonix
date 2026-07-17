@@ -53,7 +53,11 @@ pub fn run() -> Result<()> {
             commands::get_track_cover,
             commands::get_library_paths,
             commands::remove_path_from_lib,
-            commands::add_path_to_lib
+            commands::add_path_to_lib,
+            commands::get_theme,
+            commands::save_settings,
+            commands::set_theme,
+            commands::get_bg_gif_uri
         ])
         .manage(api.db)
         .manage(api.media_player)
