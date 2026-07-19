@@ -6,7 +6,22 @@ import { Theme } from "../bindings/Theme";
 export async function initSettings() {
   let pathsList = document.querySelector("#lib-paths") as DropList;
 
-  await theme();
+  await loadTheme();
+  await applyTheme();
+
+  let setBgImage = document.querySelector("#set-bg-image-button")! as HTMLElement;
+  setBgImage.addEventListener("click", async () => {
+    let file = await pickFile("img", ["gif", "png", "jpg", "jpeg"]);
+    if (file) {
+      setBgImage.dataset.bgPath = file;
+    }
+  });
+
+  let applyBtn = document.querySelector("#apply-settings");
+  applyBtn!.addEventListener("click", async () => {
+    await applyTheme();
+    await loadTheme();
+  })
 
   document.querySelector("#add-path-to-lib")!.addEventListener("click", async () => {
     let dir = await pickDir();
@@ -31,11 +46,14 @@ export async function initSettings() {
       })
     });
   }
+
+  document.querySelector("#update-library")!.addEventListener("click", async () => {
+    await invoke("update_library");
+  })
 }
 
-async function theme() {
+async function loadTheme() {
   let theme = await invoke<Theme>("get_theme");
-  document.querySelector("#apply-settings")!.addEventListener("click", async () => await applyTheme());
 
   let textSize1 = document.querySelector("#font-size-input-1") as HTMLInputElement;
   let textSize2 = document.querySelector("#font-size-input-2") as HTMLInputElement;
@@ -48,26 +66,73 @@ async function theme() {
   textSize4.value = theme.font_size4.toString();
 
   let bgColor = document.querySelector("#set-bg-color") as HTMLInputElement;
-
-  bgColor.value = theme.background_color;
+  bgColor.value = theme.background_color.toString();
 
   let useBgImg = document.querySelector("#use-bg-img") as HTMLInputElement;
-
   useBgImg.checked = theme.use_background_image;
 
-  await applyTheme();
+  let setBgImage = document.querySelector("#set-bg-image-button")! as HTMLElement;
+  setBgImage.dataset.bgPath = theme.path_to_background_image?.toString();
+
+  let bgBlurSlider = document.querySelector("#bg-blur-slider")! as HTMLInputElement;
+  bgBlurSlider.value = theme.bg_blur.toString();
+
+  let buttonHoverColor = document.querySelector("#set-button-hover-color")! as HTMLInputElement;
+  buttonHoverColor.value = theme.button_hover_color;
+  let buttonActiveColor = document.querySelector("#set-button-active-color")! as HTMLInputElement;
+  buttonActiveColor.value = theme.button_active_color;
+  let slidersColor = document.querySelector("#set-sliders-color")! as HTMLInputElement;
+  slidersColor.value = theme.sliders_color;
+
+  if (theme.use_background_image) {
+    invoke<string>("get_bg_gif_uri").then(x => {
+      let bgImg = document.querySelector("#background-image") as HTMLElement;
+      bgImg.style.background = `url("${x}")`;
+      bgImg.style.backgroundSize = "cover";
+      bgImg.style.backgroundRepeat = "no-repeat";
+      bgImg.style.backgroundPosition = "center center";
+      bgImg.style.minHeight = "100vh";
+      bgImg.style.backgroundAttachment = "fixed";
+      root.style.setProperty("--background-blur", `${bgBlurSlider.value}px`);
+    }).catch(err => {
+      console.error(err);
+      let bgImg = document.querySelector("#background-image") as HTMLElement;
+      document.body.style.background = bgColor.value;
+      bgImg.style.background = ``;
+    })
+  }
+  else {
+    document.body.style.background = bgColor.value;
+    let bgImg = document.querySelector("#background-image") as HTMLElement;
+    bgImg.style.background = ``;
+  };
+
+  const root = document.documentElement;
+
+  root.style.setProperty("--text-size-1", theme.font_size1.toString() + "px");
+  root.style.setProperty("--text-size-2", theme.font_size2.toString() + "px");
+  root.style.setProperty("--text-size-3", theme.font_size3.toString() + "px");
+  root.style.setProperty("--text-size-4", theme.font_size4.toString() + "px");
+
+  root.style.setProperty("--button-hover-color", theme.button_hover_color.toString());
+  root.style.setProperty("--button-active-color", theme.button_active_color.toString());
+  root.style.setProperty("--sliders-color", theme.sliders_color.toString());
 }
 
 async function applyTheme() {
-
   let textSize1 = document.querySelector("#font-size-input-1") as HTMLInputElement;
   let textSize2 = document.querySelector("#font-size-input-2") as HTMLInputElement;
   let textSize3 = document.querySelector("#font-size-input-3") as HTMLInputElement;
   let textSize4 = document.querySelector("#font-size-input-4") as HTMLInputElement;
 
   let bgColor = document.querySelector("#set-bg-color") as HTMLInputElement;
-
   let useBgImg = document.querySelector("#use-bg-img") as HTMLInputElement;
+  let setBgImage = document.querySelector("#set-bg-image-button")! as HTMLElement;
+  let bgBlurSlider = document.querySelector("#bg-blur-slider")! as HTMLInputElement;
+
+  let buttonHoverColor = document.querySelector("#set-button-hover-color")! as HTMLInputElement;
+  let buttonActiveColor = document.querySelector("#set-button-active-color")! as HTMLInputElement;
+  let slidersColor = document.querySelector("#set-sliders-color")! as HTMLInputElement;
 
   const parseFontSize = (input: HTMLInputElement | null): number => {
     let value = Number.parseFloat(input?.value || "");
@@ -80,53 +145,20 @@ async function applyTheme() {
     return Number.isNaN(value) ? 20 : value;
   };
 
-  const myTheme: Theme = {
-    path_to_background_image: (await invoke<Theme>("get_theme")).path_to_background_image,
+  const newTheme: Theme = {
+    path_to_background_image: setBgImage.dataset.bgPath!,
     background_color: bgColor.value,
     use_background_image: useBgImg.checked,
+    button_hover_color: buttonHoverColor.value,
+    button_active_color: buttonActiveColor.value,
+    sliders_color: slidersColor.value,
+    bg_blur: Number.parseInt(bgBlurSlider.value),
     font_size1: parseFontSize(textSize1),
     font_size2: parseFontSize(textSize2),
     font_size3: parseFontSize(textSize3),
     font_size4: parseFontSize(textSize4),
   };
 
-  await invoke("set_theme", {theme: myTheme})
-
+  await invoke("set_theme", { theme: newTheme });
   await invoke("save_settings");
-
-  const root = document.documentElement;
-
-  let theme = await invoke<Theme>("get_theme");
-
-  root.style.setProperty("--text-size-1", theme.font_size1.toString() + "px");
-  root.style.setProperty("--text-size-2", theme.font_size2.toString() + "px");
-  root.style.setProperty("--text-size-3", theme.font_size3.toString() + "px");
-  root.style.setProperty("--text-size-4", theme.font_size4.toString() + "px");
-
-  document.querySelector("#set-bg-image-button")!.addEventListener("click", async () => {
-    let file = await pickFile();
-    if (file) {
-      theme.path_to_background_image = file;
-      console.log(file);
-      await invoke("set_theme", { theme: theme });
-      await invoke("save_settings");
-      let the1me = await invoke<Theme>("get_theme");
-      console.log(the1me);
-    }
-  })
-
-  document.body.style.background = theme.background_color.toString();
-  if (theme.use_background_image)
-  {
-    invoke<string>("get_bg_gif_uri").then(x => {
-      document.body.style.background = `url("${x}")`;
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundRepeat = "no-repeat";
-      document.body.style.backgroundPosition = "center center";
-      document.body.style.minHeight = "100vh";
-      document.body.style.backgroundAttachment = "fixed";
-    })
-  }
-
-
 }

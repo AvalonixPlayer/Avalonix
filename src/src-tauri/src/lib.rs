@@ -24,6 +24,10 @@ pub fn run() -> Result<()> {
                         debug("queue-updated");
                         _ = app_handle.emit("queue-updated", ());
                     }
+                    Event::UpdateLibrary => {
+                        debug("library-updated");
+                        _ = app_handle.emit("library-updated", ());
+                    }
                     Event::CurTrackChanged => {
                         debug("track-updated");
                         _ = app_handle.emit("cur-track-changed", ());

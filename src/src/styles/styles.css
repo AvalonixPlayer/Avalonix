@@ -17,15 +17,19 @@
 
     --playback-controll-section-height: 80px;
     --left-menu-section-width: 50px;
-    --button-hover-color: rgba(101, 84, 125, 0.8);
-    --button-active-color: rgba(127, 104, 162, 0.8);
+    --button-hover-color: #65547D;
+    --button-active-color: #7F68A2CC;
     --text-select-color: rgba(127, 104, 162, 0.8);
     --albums-empty-color: rgba(10, 10, 10);
 
-    --text-size-1: 0,
-    --text-size-2: 0,
-    --text-size-3: 0,
-    --text-size-4: 0,
+    --text-size-1: 0;
+    --text-size-2: 0;
+    --text-size-3: 0;
+    --text-size-4: 0;
+
+    --background-blur: 0px;
+
+    --sliders-color: #460077
 }
 
 body {
@@ -37,4 +41,13 @@ body {
 
 img {
     pointer-events: none;
+}
+
+#background-image {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: -100;
+  scale: 1.2;
+  filter: blur(var(--background-blur));
 }

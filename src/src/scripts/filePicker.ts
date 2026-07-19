@@ -8,14 +8,14 @@ export async function pickDir() {
   return file;
 }
 
-export async function pickFile() {
+export async function pickFile(name: string, exts: string[]) {
   const file = await open({
     multiple: false,
     directory: false,
     filters: [
           {
-            name: 'gif',
-            extensions: ['gif']
+            name: name,
+            extensions: exts
           },]
   });
   return file;

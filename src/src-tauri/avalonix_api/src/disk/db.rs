@@ -1,11 +1,16 @@
-use std::fs;
+use std::{
+    fs,
+    sync::{Arc, Mutex, mpsc::Sender},
+};
 
 use anyhow::Result;
+use better_sms::mutex::MutexWork;
 use glob::glob;
 use rkyv::rancor::Error;
 
 use crate::{
     disk::{disk_paths::avalonix_db, user::settings::UserSettings},
+    events::Event,
     logger::{debug, error, fatal},
     media::{
         album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
@@ -15,6 +20,7 @@ use crate::{
 
 /// Media database
 pub struct DB {
+    events_sender: Arc<Mutex<Sender<Event>>>,
     tracks_tree: sled::Tree,
     albums_tree: sled::Tree,
     performers_tree: sled::Tree,
@@ -24,13 +30,14 @@ const EXTS_TO_LIB: [&str; 4] = [".mp3", ".flac", ".wav", ".cue"];
 
 impl DB {
     /// Opens avalonix media database
-    pub fn open() -> Result<Self> {
+    pub fn open(event_sender: &Arc<Mutex<Sender<Event>>>) -> Result<Self> {
         let db = sled::open(avalonix_db()?)?;
         let tracks_tree = db.open_tree("tracks")?;
         let albums_tree = db.open_tree("albums")?;
         let performers_tree = db.open_tree("performers")?;
 
         let result = Self {
+            events_sender: event_sender.clone(),
             tracks_tree,
             albums_tree,
             performers_tree,
@@ -186,6 +193,10 @@ impl DB {
 
         Album::create_albums(self, &actual_tracks)?;
         Performer::create_performers(self, &actual_tracks)?;
+        self.events_sender
+            .lock_unw()
+            .send(Event::UpdateLibrary)
+            .unwrap();
         Ok(())
     }
 }

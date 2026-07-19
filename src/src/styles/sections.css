@@ -68,4 +68,6 @@
 #settings-section {
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    width: 100%;
 }

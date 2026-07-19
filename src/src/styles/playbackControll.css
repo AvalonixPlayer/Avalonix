@@ -39,7 +39,6 @@
 
 #track-time-controll > input[type="range"] {
     width: 100%;
-    accent-color: #460077;
 }
 
 #current-track-show-button {

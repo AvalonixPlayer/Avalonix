@@ -31,3 +31,12 @@ input[type="checkbox"] {
 
     transition: all 0.1s;
 }
+
+input[type="range"] {
+    display: flex;
+    accent-color: var(--sliders-color);
+}
+
+#bg-blur-slider {
+    width: 100px;
+}

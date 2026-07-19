@@ -9,6 +9,7 @@
     </head>
 
     <body>
+        <div id="background-image"></div>
         <section class="section main-section" id="main-section-base">
             <section class="section" id="left-menu">
                 <button class="left-menu-button" id="tracks-tab-button">
@@ -37,6 +38,7 @@
                     <row>
                         <drop-list id="lib-paths" title="Library paths" add-button="add-path-to-lib"></drop-list>
                     </row>
+                    <button id="update-library"><h2>Update lib</h2></button>
                 </div>
                 <div class="settings-div">
                     <h1>Customization</h1>
@@ -65,10 +67,26 @@
                         <input id="set-bg-color" type="color">
                     </row>
                     <row>
-                        <h3>Background file(gif): </h3>
+                        <h3>Background file: </h3>
                         <button id="set-bg-image-button"><h3>Select</h3></button>
                     </row>
+                    <row>
+                        <h3>Background blur: </h3>
+                        <input type="range" id="bg-blur-slider" min="0" max="10">
+                    </row>
 
+                    <row>
+                        <h3>Button hover color: </h3>
+                        <input id="set-button-hover-color" type="color">
+                    </row>
+                    <row>
+                        <h3>Button active color: </h3>
+                        <input id="set-button-active-color" type="color">
+                    </row>
+                    <row>
+                        <h3>Sliders color: </h3>
+                        <input id="set-sliders-color" type="color">
+                    </row>
                 </div>
                 <button id="apply-settings"><h2>Apply settings</h2></button>
             </section>

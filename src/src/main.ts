@@ -24,9 +24,8 @@ async function init() {
   await initPlaybackControll();
   await initPlayback();
   await loadLib();
-  await invoke("update_library");
-  console.log("library_updated");
-  await loadLib();
+  listen("library-updated", async () => await loadLib());
+  await invoke("update_library");;
   listen("queue-updated", async () => await fillPlayQueueList());
 }
 
