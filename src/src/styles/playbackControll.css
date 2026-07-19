@@ -3,6 +3,7 @@
 }
 
 .queue-controll-button {
+    margin-bottom: 10px;
     background: none;
     border: none;
 }
@@ -27,8 +28,9 @@
 }
 
 #track-time-controll {
+    margin-bottom: 15px;
     display: flex;
-    width: 100%;
+    width: calc(100% - 50px);
     height: 40px;
     position: fixed;
 
@@ -42,6 +44,8 @@
 }
 
 #current-track-show-button {
+    margin-left: 15px;
+    margin-bottom: 15px;
     display: flex;
     position: fixed;
     bottom: 0px;

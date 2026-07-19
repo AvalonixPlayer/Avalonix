@@ -5,16 +5,17 @@
 
 .section.main-section {
     display: flex;
-    height: calc(100vh - var(--playback-controll-section-height));
+    height: calc(100vh - var(--playback-controll-section-height) - 35px);
 }
 
 .section.footer-section {
+    padding-top: 35px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: fixed;
-    bottom: 0;
+    bottom: 0px;
     height: var(--playback-controll-section-height);
     width: 100%;
     border-top: solid 1px;
@@ -36,6 +37,7 @@
 }
 
 #albums-list-section {
+    padding-left: 25px;
     display: flex;
     flex-direction: column;
     width: calc(100vw - var(--left-menu-section-width));

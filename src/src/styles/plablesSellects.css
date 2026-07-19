@@ -10,7 +10,7 @@
 }
 
 .playable-sellect-item.track:hover {
-    background: var(--button-hover-color);
+    scale: 1.05;
     border-radius: 15px;
 }
 
@@ -33,6 +33,7 @@
 }
 
 .albums-set > div {
+    padding: 20px;
     border-radius: 15px;
     width: 90vw;
     display: flex;
@@ -44,6 +45,7 @@
 }
 
 .playable-sellect-item.album {
+    padding-right: 20px;
     display: flex;
     flex-direction: column;
     width: 200px;
@@ -56,7 +58,7 @@
 
 .playable-sellect-item.album:hover {
     border-radius: 15px;
-    background: var(--button-hover-color);
+    scale: 1.1;
 }
 
 .playable-sellect-item.album > h4 {
@@ -117,7 +119,8 @@
 }
 
 .playable-sellect-item.performer:hover {
-    background: var(--button-hover-color);
+    padding-left: 100px;
+    scale: 1.1;
     border-radius: 15px;
 }
 

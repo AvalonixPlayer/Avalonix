@@ -12,8 +12,7 @@
 
 :root {
     font-family:
-        system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    URW Chancery L, cursive;
 
     --playback-controll-section-height: 80px;
     --left-menu-section-width: 50px;
