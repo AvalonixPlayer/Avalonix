@@ -1,4 +1,5 @@
 use std::{
+    ops::Index,
     sync::{Arc, Mutex, RwLock, mpsc::Sender},
     thread::{self, sleep},
     time::Duration,
@@ -8,16 +9,7 @@ use anyhow::{Context, Ok, Result, bail};
 use better_sms::mutex::{MutexGuardWork, MutexWork};
 use rand::{rng, seq::SliceRandom};
 
-use crate::{
-    audio::media_player::MediaPlayer,
-    disk::db::DB,
-    events::Event,
-    media::{
-        media_trait::Media,
-        playable_type::{self, MediaType},
-        track::Track,
-    },
-};
+use crate::{audio::media_player::MediaPlayer, disk::db::DB, events::Event};
 
 pub struct PlayQueue {
     pub tracks_uuids_in_queue_displaying: Vec<String>,
@@ -156,6 +148,9 @@ impl PlayQueue {
             .lock_unw()
             .send(Event::UpdateQueue)
             .unwrap();
+        if self.tracks_uuids_in_queue_real.len() == 0 {
+            self.media_player.lock_unw().stop();
+        }
         Ok(())
     }
 
@@ -190,5 +185,19 @@ impl PlayQueue {
 
     pub fn get_current_uuid(&mut self) -> Option<String> {
         self.current_uuid.clone()
+    }
+
+    pub fn start_by_uuid(&mut self, uuid: String) -> Result<()> {
+        self.media_player.lock_unw().stop();
+        if let Some(index) = self
+            .tracks_uuids_in_queue_displaying
+            .iter()
+            .position(|x| *x == uuid)
+        {
+            self.current_uuid_index = (index as i32 - 1) as i32;
+            Ok(())
+        } else {
+            bail!("no uuid in queue")
+        }
     }
 }

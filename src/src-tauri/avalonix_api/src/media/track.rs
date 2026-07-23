@@ -1,6 +1,5 @@
 use core::fmt;
 use std::{
-    fmt::format,
     fs,
     path::Path,
     time::{Duration, UNIX_EPOCH},
@@ -37,6 +36,9 @@ pub struct Track {
     pub title: String,
     pub album: String,
     pub performer: String,
+    pub genre: String,
+    pub year: u16,
+    pub lyrics: String,
     #[ts(skip)]
     pub start_time: Duration,
     #[ts(skip)]
@@ -137,6 +139,27 @@ impl Track {
             .as_deref()
             .map_or("Unknown artist", |v| v)
             .to_string();
+
+        let genre = tag
+            .genre()
+            .as_deref()
+            .map_or("Unknown genre", |v| v)
+            .to_string();
+
+        let year = if let Some(year) = tag.get_string(lofty::tag::ItemKey::Year) {
+            year.to_string().parse().map_or(0, |r| r)
+        } else if let Some(date) = tag.date() {
+            date.year
+        } else {
+            0 as u16
+        };
+
+        let lyrics = if let Some(lyrics) = tag.get_string(lofty::tag::ItemKey::Lyrics) {
+            lyrics.to_string()
+        } else {
+            String::new()
+        };
+
         let uuid = Uuid::new_v4().to_string();
 
         let result = Self {
@@ -147,6 +170,9 @@ impl Track {
             title,
             album,
             performer,
+            genre,
+            year,
+            lyrics,
             start_time: Duration::new(0, 0),
             end_time: tagged_file.properties().duration(),
         };
@@ -158,6 +184,30 @@ impl Track {
         let mut result = vec![];
 
         let p = Path::new(path.as_ref()).parent().unwrap();
+        let genre = if let Some(genre) = cue
+            .comments
+            .iter()
+            .find(|comment| comment.0.starts_with("GENRE"))
+        {
+            let res = genre.1.to_string();
+            if genre.1.to_string() == "" {
+                "Unknown genre".to_string()
+            } else {
+                res
+            }
+        } else {
+            "Unknown genre".to_string()
+        };
+
+        let year: u16 = if let Some(year) = cue
+            .comments
+            .iter()
+            .find(|comment| comment.0.starts_with("DATE"))
+        {
+            year.1.to_string().parse().map_or(0, |r| r)
+        } else {
+            0 as u16
+        };
 
         for file in cue.files {
             let tracks_len = file.tracks.len();
@@ -199,6 +249,9 @@ impl Track {
                         .clone()
                         .map_or("Unknown performer".to_string(), |f| f)
                         .to_string(),
+                    genre: genre.clone(),
+                    year,
+                    lyrics: "".to_string(),
                     start_time: start_time,
                     end_time: end_time,
                 });
@@ -229,14 +282,16 @@ impl Media for Track {
     fn get_media_type(&self) -> MediaType {
         MediaType::Track
     }
+
     fn convert_to_db(&self) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();
         let uuid = rkyv::to_bytes::<Error>(&self.uuid)?.to_vec();
 
         Ok((uuid, value))
     }
+
     fn get_tracks_uuids(&self) -> Vec<String> {
-        vec![self.uuid.clone()]
+        return vec![self.uuid.clone()];
     }
 }
 

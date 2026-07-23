@@ -49,7 +49,18 @@ export async function fillPlayQueueList() {
             })
           ).data as Track;
 
+          let timer = setTimeout(() => {});
+          const delay = 100;
+
           let titleButton = element.querySelector(".track-title-button")!;
+          titleButton.addEventListener("click", async () => {
+            timer = setTimeout(async () => { await invoke("start_track_in_queue_by_id", {id: uuid});}, delay);
+          });
+          titleButton.addEventListener("dblclick", async () => {
+            clearTimeout(timer);
+            await invoke("remove_track_from_queue_by_id", {id: uuid});
+          });
+
           titleButton.textContent = track.title;
 
           element.querySelector(".track-performer-button")!.textContent =

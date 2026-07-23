@@ -61,7 +61,9 @@ pub fn run() -> Result<()> {
             commands::get_theme,
             commands::save_settings,
             commands::set_theme,
-            commands::get_bg_gif_uri
+            commands::get_bg_gif_uri,
+            commands::start_track_in_queue_by_id,
+            commands::remove_track_from_queue_by_id
         ])
         .manage(api.db)
         .manage(api.media_player)

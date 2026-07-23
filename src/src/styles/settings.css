@@ -33,5 +33,5 @@
     display: flex;
     position: fixed;
     right: 0px;
-    bottom: var(--playback-controll-section-height);
+    bottom: calc(var(--playback-controll-section-height) + 35px);
 }

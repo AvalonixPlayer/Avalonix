@@ -4,13 +4,12 @@ use std::{
     time::Duration,
 };
 
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result};
 use better_sms::mutex::MutexWork;
 use rodio::{Decoder, DeviceSinkBuilder, MixerDeviceSink, Player};
 
 use crate::{
     events::Event,
-    logger::{debug, fatal},
     media::track::Track,
 };
 

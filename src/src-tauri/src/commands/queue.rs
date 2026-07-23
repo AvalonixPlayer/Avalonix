@@ -105,3 +105,25 @@ pub async fn get_current_track_uuid(
         Err("No track".to_string())
     }
 }
+
+#[tauri::command]
+pub async fn start_track_in_queue_by_id(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    id: String,
+) -> Result<(), String> {
+    play_queue
+        .lock_unw()
+        .start_by_uuid(id)
+        .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn remove_track_from_queue_by_id(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    id: String,
+) -> Result<(), String> {
+    play_queue
+        .lock_unw()
+        .remove_track(id)
+        .map_err(|err| err.to_string())
+}

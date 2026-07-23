@@ -11,7 +11,7 @@ use rkyv::rancor::Error;
 use crate::{
     disk::{disk_paths::avalonix_db, user::settings::UserSettings},
     events::Event,
-    logger::{debug, error, fatal},
+    logger::{debug, error},
     media::{
         album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
         track::Track,
@@ -81,7 +81,7 @@ impl DB {
         match media_type {
             MediaType::Track => {
                 for media in &self.tracks_tree {
-                    let (id, val) = media?;
+                    let (id, _val) = media?;
                     let id: String = rkyv::from_bytes::<String, Error>(&id)?;
                     result.push(id);
                 }

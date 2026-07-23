@@ -33,3 +33,12 @@
     text-wrap: nowrap;
     text-overflow: ellipsis;
 }
+#track-lyrics-show {
+    white-space: pre-line;
+    text-align: left;
+}
+
+#lyrics-container-in-preview {
+    height: 100px;
+    overflow-y: auto;
+}
