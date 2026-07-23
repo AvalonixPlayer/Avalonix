@@ -1,6 +1,7 @@
 use std::{
     fs::File,
     sync::{Arc, Mutex, mpsc::Sender},
+    thread::{self, sleep},
     time::Duration,
 };
 
@@ -8,10 +9,7 @@ use anyhow::{Context, Result};
 use better_sms::mutex::MutexWork;
 use rodio::{Decoder, DeviceSinkBuilder, MixerDeviceSink, Player};
 
-use crate::{
-    events::Event,
-    media::track::Track,
-};
+use crate::{events::Event, media::track::Track};
 
 pub struct MediaPlayer {
     _stream_handle: MixerDeviceSink,
@@ -123,6 +121,21 @@ impl MediaPlayer {
         let target_secs = track.start_time.as_secs() + pos;
         self.player.try_seek(Duration::from_secs(target_secs))?;
 
+        Ok(())
+    }
+
+    pub fn update(player: &Arc<Mutex<Self>>) -> Result<()> {
+        let player = player.clone();
+        thread::spawn(move || {
+            loop {
+                let mut player = player.lock_unw();
+                if (player.get_end_pos() as i64) - (player.get_cur_pos() as i64) <= 0 {
+                    player.stop();
+                }
+                drop(player);
+                sleep(Duration::from_millis(100));
+            }
+        });
         Ok(())
     }
 }
