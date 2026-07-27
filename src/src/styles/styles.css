@@ -9,6 +9,7 @@
 @import "settings.css";
 @import "row.css";
 @import "inputs.css";
+@import "contextMenu.css";
 
 :root {
     font-family:
@@ -28,7 +29,9 @@
 
     --background-blur: 0px;
 
-    --sliders-color: #460077
+    --sliders-color: #460077;
+
+    --context-menu-bg: red;
 }
 
 body {

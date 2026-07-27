@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Album } from "../bindings/Album";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
+import { contextMenuForAlbumInLib } from "./contextMenu";
 
 const albumTemplate = (album_uuid: String): string =>
   `<div class="playable-sellect-item album" data-uuid="${album_uuid}">
@@ -61,6 +62,10 @@ export async function fillAlbumsList() {
           albumTitleButton.addEventListener("click", async () => {
             addMediaToQueue("Album", uuid!);
           });
+
+          albumTitleButton.addEventListener("contextmenu", async (e) => {
+            await contextMenuForAlbumInLib(uuid!, e);
+          })
           observer.unobserve(element);
         }
       });

@@ -14,7 +14,7 @@ pub fn run() -> Result<()> {
     let api = init_api()?;
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_prevent_default::init())
         .setup(|app| {
             let app_handle = app.app_handle().clone();
 

@@ -1,0 +1,8 @@
+context-menu {
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    background-color: var(--context-menu-bg);
+    border-radius: 15px;
+}

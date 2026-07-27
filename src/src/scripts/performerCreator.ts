@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Performer } from "../bindings/Performer";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
+import { contextMenuForPerformerInLib } from "./contextMenu";
 
 let performerTemplate = (performer_uuid: string): string =>
   `<div class="playable-sellect-item performer" data-uuid="${performer_uuid}">
@@ -40,6 +41,10 @@ export async function fillPerformersList() {
           performerTitleButton.addEventListener("click", async () => {
             addMediaToQueue("Performer", uuid!);
           });
+
+          performerTitleButton.addEventListener("contextmenu", async (e) => {
+            await contextMenuForPerformerInLib(uuid!, e);
+          })
           observer.unobserve(element);
         }
       });

@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { MediaType } from "../bindings/MediaType";
 import { Track } from "../bindings/Track";
 import { PlayableResult } from "../bindings/PlayableResult";
+import { contextMenuForTracksInQueue } from "./contextMenu";
 
 const trackTemplate = (uuid: string): string => `
   <div class="playable-sellect-item track" data-uuid=${uuid}>
@@ -15,17 +16,14 @@ export async function clearPlayQueue() {
 }
 
 export async function addMediaToQueue(mediaType: MediaType, id: string) {
-  switch (mediaType) {
-    case "Track":
-      break;
-    case "Album":
-      await clearPlayQueue();
-      break;
-    case "Performer":
-      await clearPlayQueue();
-      break;
-  }
+  await invoke("add_media_to_queue", {
+    mediaType: mediaType.toString(),
+    id,
+  });
+}
 
+export async function startMedia(mediaType: MediaType, id: string) {
+  await clearPlayQueue();
   await invoke("add_media_to_queue", {
     mediaType: mediaType.toString(),
     id,
@@ -49,16 +47,14 @@ export async function fillPlayQueueList() {
             })
           ).data as Track;
 
-          let timer = setTimeout(() => {});
-          const delay = 100;
 
           let titleButton = element.querySelector(".track-title-button")!;
           titleButton.addEventListener("click", async () => {
-            timer = setTimeout(async () => { await invoke("start_track_in_queue_by_id", {id: uuid});}, delay);
+            await invoke("start_track_in_queue_by_id", {id: uuid});
           });
-          titleButton.addEventListener("dblclick", async () => {
-            clearTimeout(timer);
-            await invoke("remove_track_from_queue_by_id", {id: uuid});
+
+          titleButton.addEventListener("contextmenu", async (e) => {
+            await contextMenuForTracksInQueue(uuid!, e)
           });
 
           titleButton.textContent = track.title;

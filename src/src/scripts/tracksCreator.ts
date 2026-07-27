@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Track } from "../bindings/Track";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
+import { contextMenuForTrackInLib } from "./contextMenu";
 
 const trackTemplate = (uuid: string): string => `
   <div class="playable-sellect-item track" data-uuid=${uuid}>
@@ -40,6 +41,10 @@ export async function fillTracksList() {
           titleButton.addEventListener("click", async () => {
             addMediaToQueue("Track", uuid!);
           });
+
+          titleButton.addEventListener("contextmenu", async (e) => {
+            await contextMenuForTrackInLib(uuid!, e);
+          })
 
           element.querySelector(".track-performer-button")!.textContent =
             track.performer;
