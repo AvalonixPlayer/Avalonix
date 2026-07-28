@@ -60,7 +60,7 @@ export async function fillAlbumsList() {
           let albumTitleButton = element.querySelector(".album-title")!;
           albumTitleButton.textContent = album.title;
           albumTitleButton.addEventListener("click", async () => {
-            addMediaToQueue("Album", uuid!);
+            await addMediaToQueue("Album", uuid!);
           });
 
           albumTitleButton.addEventListener("contextmenu", async (e) => {
