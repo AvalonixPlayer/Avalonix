@@ -2,16 +2,16 @@ use std::sync::{Arc, Mutex, RwLock};
 
 use avalonix_api::{
     disk::{db::DB, user::settings::UserSettings},
-    logger::fatal,
     media::{
+        self,
         cover_get::CoverGet,
-        play_queue::PlayQueue,
-        playable_type::{MediaType, PlayableResult},
+        playable_type::{
+            MediaType::{self, Playlist},
+            PlayableResult,
+        },
+        playlist,
     },
 };
-use better_sms::mutex::MutexWork;
-
-use crate::commands::get_current_track_uuid;
 
 #[tauri::command]
 pub async fn get_playables_ids(
@@ -85,6 +85,16 @@ pub async fn get_playable_by_id(
                 .ok_or_else(|| format!("Performer with id {} not found", id))?;
             PlayableResult::Performer(performer)
         }
+
+        MediaType::Playlist => {
+            let playlists = guard.get_every_playlist().map_err(|err| err.to_string())?;
+
+            let playlist = playlists
+                .into_iter()
+                .find(|playlists| playlists.uuid == id)
+                .ok_or_else(|| format!("Playlist with id {} not found", id))?;
+            PlayableResult::Playlist(playlist)
+        }
     };
     Ok(res)
 }
@@ -101,4 +111,40 @@ pub async fn get_track_cover(
     } else {
         Err("Expected a track, but got something else".to_string())
     }
+}
+
+#[tauri::command]
+pub async fn create_playlist(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    playlist_name: String,
+) -> Result<(), String> {
+    let db_guard = &db.write().unwrap();
+    media::playlist::Playlist::create_new_playlist(db_guard, playlist_name)
+        .map_err(|err| err.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn remove_playlist(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    playlist_uuid: String,
+) -> Result<(), String> {
+    let db_guard = &db.write().unwrap();
+    db_guard
+        .remove_playlist(playlist_uuid)
+        .map_err(|err| err.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn add_track_to_playlist(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    playlist_uuid: String,
+    track_uuid: String,
+) -> Result<(), String> {
+    let db_guard = &db.write().unwrap();
+    db_guard
+        .add_track_to_playlist(playlist_uuid, track_uuid)
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }

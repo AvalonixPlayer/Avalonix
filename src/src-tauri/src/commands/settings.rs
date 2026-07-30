@@ -1,14 +1,9 @@
 use std::{
     fs,
-    ops::DerefMut,
-    sync::{Arc, Mutex, RwLock},
-    thread::Thread,
+    sync::{Arc, Mutex},
 };
 
-use avalonix_api::{
-    disk::user::{settings::UserSettings, theme::Theme},
-    logger::error,
-};
+use avalonix_api::disk::user::{settings::UserSettings, theme::Theme};
 use base64::{engine::general_purpose, Engine};
 
 #[tauri::command]

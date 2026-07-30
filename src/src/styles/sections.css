@@ -73,3 +73,43 @@
     overflow-y: auto;
     width: 100%;
 }
+
+#playlists-section {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.section.top-section {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: fixed;
+    z-index: 200;
+    justify-content: start;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: #2B2B2B;
+
+    width: 70%;
+    height: 60%;
+    border-radius: 30px;
+}
+
+#blur-for-top {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    position: fixed;
+    z-index: 199;
+    width: 120vw;
+    height: 120vh;
+    background: #202020;
+    opacity: 0.3;
+    filter: blur(var(--background-blur));
+}

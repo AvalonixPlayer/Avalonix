@@ -2,13 +2,7 @@ use std::sync::{Arc, Mutex, RwLock};
 
 use avalonix_api::{
     disk::db::DB,
-    media::{
-        album,
-        media_trait::Media,
-        play_queue::{self, PlayQueue},
-        playable_type::MediaType,
-        track::Track,
-    },
+    media::{media_trait::Media, play_queue::PlayQueue, playable_type::MediaType},
 };
 use better_sms::mutex::{MutexGuardWork, MutexWork};
 
@@ -56,6 +50,21 @@ pub async fn add_media_to_queue(
                 .ok_or_else(|| "Performer not found".to_string())?;
 
             performer.get_tracks_uuids().clone()
+        }
+
+        MediaType::Playlist => {
+            let playlists = db
+                .read()
+                .unwrap()
+                .get_every_playlist()
+                .map_err(|_| "Error while getting playlists from db".to_string())?;
+
+            let playlists = playlists
+                .iter()
+                .find(|playlist| playlist.uuid == id)
+                .ok_or_else(|| "Playlist not found".to_string())?;
+
+            playlists.get_tracks_uuids().clone()
         }
     };
     play_queue

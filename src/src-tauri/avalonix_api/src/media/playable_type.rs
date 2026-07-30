@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-use crate::media::{album::Album, performer::Performer, track::Track};
+use crate::media::{album::Album, performer::Performer, playlist::Playlist, track::Track};
 
 #[derive(TS, Deserialize)]
 #[ts(export)]
@@ -9,6 +9,7 @@ pub enum MediaType {
     Track,
     Album,
     Performer,
+    Playlist,
 }
 
 #[derive(TS, Serialize)]
@@ -18,4 +19,5 @@ pub enum PlayableResult {
     Track(Track),
     Album(Album),
     Performer(Performer),
+    Playlist(Playlist),
 }

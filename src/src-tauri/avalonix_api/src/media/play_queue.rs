@@ -1,5 +1,4 @@
 use std::{
-    ops::Index,
     sync::{Arc, Mutex, RwLock, mpsc::Sender},
     thread::{self, sleep},
     time::Duration,

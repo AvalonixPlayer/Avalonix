@@ -2,8 +2,18 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { Track } from "../bindings/Track";
 import { PlayableResult } from "../bindings/PlayableResult";
+import { playlistTemplate } from "./playlistsCreator";
+import { Playlist } from "../bindings/Playlist";
 
 export async function initPlaybackControll() {
+
+  deactivateAddToPlaylist();
+  let addToPlaylist = document.querySelector("#save-to-playlist-button");
+  addToPlaylist!.addEventListener("click", async () => {
+
+    await activateAddToPlaylist(await invoke("get_current_track_uuid"));
+  })
+
   let pauseBtn = document.querySelector("#pause")!;
 
   async function ch() {
@@ -136,3 +146,41 @@ async function fillPreviewTrack() {
     }
   });
 }
+
+function deactivateAddToPlaylist() {
+  (document.querySelector("#blur-for-top")! as HTMLElement).remove();
+  (document.querySelector(".section.top-section")! as HTMLElement).remove();
+}
+
+async function activateAddToPlaylist(track_uuid: String) {
+  document.body.insertAdjacentHTML("beforeend", '<div id="blur-for-top"></div>');
+  document.body.insertAdjacentHTML("beforeend", '<section class="section top-section"></section>');
+  (document.querySelector("#blur-for-top")! as HTMLElement).addEventListener("click", () => deactivateAddToPlaylist());
+
+  let playlists_ids = await invoke<string[]>("get_playables_ids", {
+    mediaType: "Playlist",
+  }).catch(() => console.error("Error while getting playlists ids"));
+
+  let section = document.querySelector(".section.top-section")! as HTMLElement;
+  playlists_ids?.forEach(async (id) => {
+    console.log(id);
+    section.insertAdjacentHTML("beforeend", await playlistTemplate(id));
+    section.lastChild?.addEventListener("click", async () => {
+      await invoke("add_track_to_playlist", {playlistUuid: id, trackUuid: track_uuid});
+      deactivateAddToPlaylist();
+    });
+  });
+}
+
+let playlistTemplate = async (playlist_uuid: string) => {
+  let playlist = (
+    await invoke<PlayableResult>("get_playable_by_id", {
+      mediaType: "Playlist",
+      id: playlist_uuid,
+    })
+  ).data as Playlist;
+
+  return `<div class="sellect-playlist-to-save-track-button" data-uuid="${playlist_uuid}">
+  <h3 class="playlist-title-button">${playlist.title}</h3>
+</div>`;
+};

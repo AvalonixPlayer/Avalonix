@@ -10,12 +10,14 @@ import { initPlaybackControll } from "./scripts/playbackControll.js";
 import { initResizeControll } from "./scripts/resizeControll.js";
 import { regCustomElements } from "./scripts/customElements.js";
 import { initSettings } from "./scripts/settings.js";
+import { createPlaylistButton, fillPlaylistsList } from "./scripts/playlistsCreator.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
 });
 
 async function init() {
+  await createPlaylistButton();
   regCustomElements();
   await initSettings();
   console.log("start");
@@ -34,4 +36,5 @@ async function loadLib() {
   await fillAlbumsList();
   await fillPerformersList();
   await fillPlayQueueList();
+  await fillPlaylistsList();
 }

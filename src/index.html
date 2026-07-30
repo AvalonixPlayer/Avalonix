@@ -21,6 +21,9 @@
                 <button class="left-menu-button" id="performers-tab-button">
                     <img src="./src/assets/performer_icon.png" />
                 </button>
+                <button class="left-menu-button" id="playlists-tab-button">
+                    <img src="./src/assets/playlists.png" />
+                </button>
                 <button class="left-menu-button" id="queue-tab-button">
                     <img src="./src/assets/queue.png" />
                 </button>
@@ -31,6 +34,13 @@
             <section class="section main-tab-section" id="tracks-list-section"></section>
             <section class="section main-tab-section" id="albums-list-section"></section>
             <section class="section main-tab-section" id="performers-list-section"></section>
+            <section class="section main-tab-section" id="playlists-section">
+                <row style="width: 100%;">
+                    <input type="text" placeholder="Name" style="width: 50%;" id="create-playlist-name" autocomplete="off">
+                    <button style="width: 50%;" id="create-playlist-button"><h2>Create playlist</h2></button>
+                </row>
+                <div id="playlists" style="display: flex; flex-direction: column;"></div>
+            </section>
             <section class="section main-tab-section" id="queue-section"></section>
             <section class="section main-tab-section" id="settings-section">
                 <div class="settings-div">
@@ -44,19 +54,19 @@
                     <h1>Customization</h1>
                     <row>
                         <h3>Text 1 size: </h3>
-                        <input id="font-size-input-1" type="number" min="5" max="70">
+                        <input id="font-size-input-1" type="number" min="5" max="70" autocomplete="off">
                     </row>
                     <row>
                         <h3>Text 2 size: </h3>
-                        <input id="font-size-input-2" type="number" min="5" max="70">
+                        <input id="font-size-input-2" type="number" min="5" max="70" autocomplete="off">
                     </row>
                     <row>
                         <h3>Text 3 size: </h3>
-                        <input id="font-size-input-3" type="number" min="5" max="70">
+                        <input id="font-size-input-3" type="number" min="5" max="70" autocomplete="off">
                     </row>
                     <row>
                         <h3>Text 4 size: </h3>
-                        <input id="font-size-input-4" type="number" min="5" max="70">
+                        <input id="font-size-input-4" type="number" min="5" max="70" autocomplete="off">
                     </row>
                     <row>
                         <h3>Use background image: </h3>
@@ -135,7 +145,13 @@
                     <img src="./src/assets/next_track.png" />
                 </button>
             </div>
+            <button id="save-to-playlist-button">
+                <img src="./src/assets/save_to_playlist.png" />
+            </button>
         </section>
+
+        <div id="blur-for-top"></div>
+        <section class="section top-section"></section>
     </body>
 
     <template id="drop-list-template">

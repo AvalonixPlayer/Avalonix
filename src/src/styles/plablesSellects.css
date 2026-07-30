@@ -119,7 +119,7 @@
 }
 
 .playable-sellect-item.performer:hover {
-    padding-left: 100px;
+    padding-left: 60px;
     scale: 1.1;
     border-radius: 15px;
 }
@@ -138,6 +138,74 @@
 }
 
 .playable-sellect-item.performer > h3:active {
+    background: var(--button-active-color);
+    border-radius: 15px;
+}
+
+.playlist-title-button.playlist h3 {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    text-justify: start;
+    transition: all 0.1s ease-in-out;
+}
+
+.playable-sellect-item.playlist > h3:hover {
+    background: var(--button-hover-color);
+    border-radius: 15px;
+}
+
+.playable-sellect-item.playlist > h3:active {
+    background: var(--button-active-color);
+    border-radius: 15px;
+}
+
+.playable-sellect-item.playlist {
+    height: 40px;
+    min-height: 40px;
+    width: auto;
+    display: flex;
+    justify-content: start;
+    transition: all 0.2s ease-in-out;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.playable-sellect-item.playlist:hover {
+    padding-left: 60px;
+    scale: 1.1;
+    border-radius: 15px;
+}
+
+.sellect-playlist-to-save-track-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    background: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.sellect-playlist-to-save-track-button:hover {
+    scale: 1.05;
+    border-radius: 15px;
+}
+
+.sellect-playlist-to-save-track-button > h3 {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    transition: all 0.1s ease-in-out;
+}
+
+.sellect-playlist-to-save-track-button > h3:hover {
+    background: var(--button-hover-color);
+    border-radius: 15px;
+}
+
+.sellect-playlist-to-save-track-button > h3:active {
     background: var(--button-active-color);
     border-radius: 15px;
 }

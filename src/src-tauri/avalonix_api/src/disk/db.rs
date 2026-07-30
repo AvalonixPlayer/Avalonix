@@ -14,7 +14,7 @@ use crate::{
     logger::{debug, error},
     media::{
         album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
-        track::Track,
+        playlist::Playlist, track::Track,
     },
 };
 
@@ -24,6 +24,7 @@ pub struct DB {
     tracks_tree: sled::Tree,
     albums_tree: sled::Tree,
     performers_tree: sled::Tree,
+    playlists_tree: sled::Tree,
 }
 
 const EXTS_TO_LIB: [&str; 4] = [".mp3", ".flac", ".wav", ".cue"];
@@ -35,12 +36,14 @@ impl DB {
         let tracks_tree = db.open_tree("tracks")?;
         let albums_tree = db.open_tree("albums")?;
         let performers_tree = db.open_tree("performers")?;
+        let playlists_tree = db.open_tree("playlists")?;
 
         let result = Self {
             events_sender: event_sender.clone(),
             tracks_tree,
             albums_tree,
             performers_tree,
+            playlists_tree,
         };
         Ok(result)
     }
@@ -55,6 +58,7 @@ impl DB {
             MediaType::Track => &self.tracks_tree,
             MediaType::Album => &self.albums_tree,
             MediaType::Performer => &self.performers_tree,
+            MediaType::Playlist => &self.playlists_tree,
         };
         tree.insert(key, value)?;
 
@@ -71,6 +75,7 @@ impl DB {
             MediaType::Track => &self.tracks_tree,
             MediaType::Album => &self.albums_tree,
             MediaType::Performer => &self.performers_tree,
+            MediaType::Playlist => &self.playlists_tree,
         };
         tree.remove(key)?;
         Ok(())
@@ -95,6 +100,13 @@ impl DB {
             }
             MediaType::Performer => {
                 for media in &self.performers_tree {
+                    let (id, _) = media?;
+                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
+                    result.push(id);
+                }
+            }
+            MediaType::Playlist => {
+                for media in &self.playlists_tree {
                     let (id, _) = media?;
                     let id: String = rkyv::from_bytes::<String, Error>(&id)?;
                     result.push(id);
@@ -135,6 +147,17 @@ impl DB {
             performers.push(item);
         }
         Ok(performers)
+    }
+
+    /// Gets all playlists from the database.
+    pub fn get_every_playlist(&self) -> Result<Vec<Playlist>> {
+        let mut playlists = Vec::new();
+        for media in &self.playlists_tree {
+            let (_, value) = media?;
+            let item: Playlist = rkyv::from_bytes::<Playlist, Error>(&value)?;
+            playlists.push(item);
+        }
+        Ok(playlists)
     }
 
     pub fn update(&self, settings: &mut UserSettings) -> Result<()> {
@@ -197,6 +220,37 @@ impl DB {
             .lock_unw()
             .send(Event::UpdateLibrary)
             .unwrap();
+        Ok(())
+    }
+
+    pub fn add_track_to_playlist(&self, playlist_uuid: String, track_uuid: String) -> Result<()> {
+        if let Some(playlist) = self
+            .get_every_playlist()?
+            .iter_mut()
+            .find(|playlist| playlist.uuid == playlist_uuid)
+        {
+            if let Some(_) = playlist
+                .tracks_ids
+                .iter()
+                .find(|track| **track == track_uuid)
+            {
+                debug("track now in playlist btw");
+            } else {
+                playlist.tracks_ids.push(track_uuid);
+                self.add_to_db(playlist)?;
+            }
+        }
+        Ok(())
+    }
+
+    pub fn remove_playlist(&self, playlist_uuid: String) -> Result<()> {
+        if let Some(playlist) = self
+            .get_every_playlist()?
+            .iter_mut()
+            .find(|playlist| playlist.uuid == playlist_uuid)
+        {
+            self.remove_from_db(playlist)?;
+        }
         Ok(())
     }
 }

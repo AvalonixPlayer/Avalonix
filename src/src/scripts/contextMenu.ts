@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { MediaType } from "../bindings/MediaType";
 import { addMediaToQueue, startMedia } from "./playQueue";
+import { fillPlaylistsList } from "./playlistsCreator";
 
 const menu = (): string => `<context-menu></context-menu>`;
 
@@ -24,6 +25,14 @@ async function startBtn(mt: MediaType, uuid: string) {
   (document.querySelector("context-menu") as HTMLElement).insertAdjacentHTML("beforeend", `<button id="context-start"><h2>Start media</h2></button>`);
   document.querySelector("#context-start")!.addEventListener("click", async () => {
     await startMedia(mt, uuid);
+  })
+}
+
+async function removePlaylistBtn(uuid: string) {
+  (document.querySelector("context-menu") as HTMLElement).insertAdjacentHTML("beforeend", `<button id="context-remove"><h2>Remove media</h2></button>`);
+  document.querySelector("#context-remove")!.addEventListener("click", async () => {
+    await invoke("remove_playlist", { playlistUuid: uuid });
+    await fillPlaylistsList();
   })
 }
 
@@ -63,6 +72,15 @@ export async function contextMenuForTracksInQueue(track_uuid: String, e: Event) 
 
   await jumpToTrack(track_uuid as string);
   await removeTrackFromQueue(track_uuid as string);
+}
+
+export async function contextMenuForPlaylist(playlist_uuid: String, e: Event) {
+  spawnMenu();
+  setPos(e);
+
+  await addToQueueButton("Playlist", playlist_uuid as string);
+  await startBtn("Playlist", playlist_uuid as string);
+  await removePlaylistBtn(playlist_uuid as string);
 }
 
 function spawnMenu() {
