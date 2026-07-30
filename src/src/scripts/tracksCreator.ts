@@ -38,11 +38,11 @@ export async function fillTracksList() {
 
           let titleButton = element.querySelector(".track-title-button")!;
           titleButton.textContent = track.title;
-          titleButton.addEventListener("click", async () => {
+          element.addEventListener("click", async () => {
             addMediaToQueue("Track", uuid!);
           });
 
-          titleButton.addEventListener("contextmenu", async (e) => {
+          element.addEventListener("contextmenu", async (e) => {
             await contextMenuForTrackInLib(uuid!, e);
           })
 

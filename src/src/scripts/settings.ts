@@ -65,8 +65,11 @@ async function loadTheme() {
   textSize3.value = theme.font_size3.toString();
   textSize4.value = theme.font_size4.toString();
 
-  let bgColor = document.querySelector("#set-bg-color") as HTMLInputElement;
-  bgColor.value = theme.background_color.toString();
+  let firstColor = document.querySelector("#set-first-color") as HTMLInputElement;
+  firstColor.value = theme.first_color.toString();
+
+  let secondColor = document.querySelector("#set-second-color") as HTMLInputElement;
+  secondColor.value = theme.second_color.toString();
 
   let useBgImg = document.querySelector("#use-bg-img") as HTMLInputElement;
   useBgImg.checked = theme.use_background_image;
@@ -97,12 +100,12 @@ async function loadTheme() {
     }).catch(err => {
       console.error(err);
       let bgImg = document.querySelector("#background-image") as HTMLElement;
-      document.body.style.background = bgColor.value;
+      document.body.style.background = firstColor.value;
       bgImg.style.background = ``;
     })
   }
   else {
-    document.body.style.background = bgColor.value;
+    document.body.style.background = firstColor.value;
     let bgImg = document.querySelector("#background-image") as HTMLElement;
     bgImg.style.background = ``;
   };
@@ -117,6 +120,8 @@ async function loadTheme() {
   root.style.setProperty("--button-hover-color", theme.button_hover_color.toString());
   root.style.setProperty("--button-active-color", theme.button_active_color.toString());
   root.style.setProperty("--sliders-color", theme.sliders_color.toString());
+  root.style.setProperty("--first-color", theme.first_color.toString());
+  root.style.setProperty("--second-color", theme.second_color.toString());
 }
 
 async function applyTheme() {
@@ -125,7 +130,8 @@ async function applyTheme() {
   let textSize3 = document.querySelector("#font-size-input-3") as HTMLInputElement;
   let textSize4 = document.querySelector("#font-size-input-4") as HTMLInputElement;
 
-  let bgColor = document.querySelector("#set-bg-color") as HTMLInputElement;
+  let firstColor = document.querySelector("#set-first-color") as HTMLInputElement;
+  let secondColor = document.querySelector("#set-second-color") as HTMLInputElement;
   let useBgImg = document.querySelector("#use-bg-img") as HTMLInputElement;
   let setBgImage = document.querySelector("#set-bg-image-button")! as HTMLElement;
   let bgBlurSlider = document.querySelector("#bg-blur-slider")! as HTMLInputElement;
@@ -147,7 +153,8 @@ async function applyTheme() {
 
   const newTheme: Theme = {
     path_to_background_image: setBgImage.dataset.bgPath!,
-    background_color: bgColor.value,
+    first_color: firstColor.value,
+    second_color: secondColor.value,
     use_background_image: useBgImg.checked,
     button_hover_color: buttonHoverColor.value,
     button_active_color: buttonActiveColor.value,

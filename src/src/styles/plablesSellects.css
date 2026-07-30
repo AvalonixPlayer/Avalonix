@@ -1,17 +1,23 @@
+.playable-sellect-item {
+    transition: all 0.2s ease-in-out;
+}
+
+.playable-sellect-item:hover {
+    background-color: var(--button-hover-color);
+}
+
+.playable-sellect-item:active {
+    background-color: var(--button-active-color);
+}
+
 .playable-sellect-item.track {
     height: 40px;
     min-height: 40px;
     width: auto;
     display: flex;
     justify-content: space-between;
-    transition: all 0.2s ease-in-out;
     align-items: center;
     padding: 0 60px;
-}
-
-.playable-sellect-item.track:hover {
-    scale: 1.05;
-    border-radius: 15px;
 }
 
 .playable-sellect-item.track > h3 {
@@ -22,15 +28,6 @@
     transition: all 0.1s ease-in-out;
 }
 
-.playable-sellect-item.track > h3:hover {
-    background: var(--button-hover-color);
-    border-radius: 15px;
-}
-
-.playable-sellect-item.track > h3:active {
-    background: var(--button-active-color);
-    border-radius: 15px;
-}
 
 .albums-set > div {
     padding: 20px;
@@ -45,21 +42,15 @@
 }
 
 .playable-sellect-item.album {
-    padding-right: 20px;
     display: flex;
     flex-direction: column;
-    width: 200px;
-    height: 200px;
+    min-width: 200px;
+    min-height: 200px;
     align-items: center;
     justify-content: start;
-
-    transition: all 0.2s ease-in-out;
+    border-radius: 20px;
 }
 
-.playable-sellect-item.album:hover {
-    border-radius: 15px;
-    scale: 1.1;
-}
 
 .playable-sellect-item.album > h4 {
     width: 170px;
@@ -67,28 +58,6 @@
     text-wrap: nowrap;
     text-overflow: ellipsis;
     text-align: center;
-
-    transition: all 0.2s ease-in-out;
-}
-
-.playable-sellect-item.album > h4:hover {
-    background: var(--button-hover-color);
-    border-radius: 15px;
-}
-
-.playable-sellect-item.album > h4:active {
-    background: var(--button-active-color);
-    border-radius: 15px;
-}
-
-.album-cover-back {
-    width: 170px;
-    height: 170px;
-    top: 0;
-    border-radius: 15px;
-    z-index: 0;
-
-    background: var(--albums-empty-color);
 }
 
 .album-cover {
@@ -113,15 +82,8 @@
     width: auto;
     display: flex;
     justify-content: start;
-    transition: all 0.2s ease-in-out;
     align-items: center;
     padding: 0 20px;
-}
-
-.playable-sellect-item.performer:hover {
-    padding-left: 60px;
-    scale: 1.1;
-    border-radius: 15px;
 }
 
 .playable-sellect-item.performer > h3 {
@@ -129,35 +91,6 @@
     text-wrap: nowrap;
     text-overflow: ellipsis;
     text-justify: start;
-    transition: all 0.1s ease-in-out;
-}
-
-.playable-sellect-item.performer > h3:hover {
-    background: var(--button-hover-color);
-    border-radius: 15px;
-}
-
-.playable-sellect-item.performer > h3:active {
-    background: var(--button-active-color);
-    border-radius: 15px;
-}
-
-.playlist-title-button.playlist h3 {
-    overflow: hidden;
-    text-wrap: nowrap;
-    text-overflow: ellipsis;
-    text-justify: start;
-    transition: all 0.1s ease-in-out;
-}
-
-.playable-sellect-item.playlist > h3:hover {
-    background: var(--button-hover-color);
-    border-radius: 15px;
-}
-
-.playable-sellect-item.playlist > h3:active {
-    background: var(--button-active-color);
-    border-radius: 15px;
 }
 
 .playable-sellect-item.playlist {
@@ -166,15 +99,8 @@
     width: auto;
     display: flex;
     justify-content: start;
-    transition: all 0.2s ease-in-out;
     align-items: center;
     padding: 0 20px;
-}
-
-.playable-sellect-item.playlist:hover {
-    padding-left: 60px;
-    scale: 1.1;
-    border-radius: 15px;
 }
 
 .sellect-playlist-to-save-track-button {
@@ -188,24 +114,9 @@
 }
 
 .sellect-playlist-to-save-track-button:hover {
-    scale: 1.05;
-    border-radius: 15px;
-}
-
-.sellect-playlist-to-save-track-button > h3 {
-    overflow: hidden;
-    text-wrap: nowrap;
-    text-overflow: ellipsis;
-    width: 100%;
-    transition: all 0.1s ease-in-out;
-}
-
-.sellect-playlist-to-save-track-button > h3:hover {
     background: var(--button-hover-color);
-    border-radius: 15px;
 }
 
-.sellect-playlist-to-save-track-button > h3:active {
+.sellect-playlist-to-save-track-button:active {
     background: var(--button-active-color);
-    border-radius: 15px;
 }

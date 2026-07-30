@@ -3,6 +3,6 @@ context-menu {
     display: flex;
     flex-direction: column;
     position: fixed;
-    background-color: var(--context-menu-bg);
+    background-color: var(--second-color);
     border-radius: 15px;
 }

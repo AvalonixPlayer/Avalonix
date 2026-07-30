@@ -93,7 +93,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    background: #2B2B2B;
+    background: var(--second-color);
 
     width: 70%;
     height: 60%;
@@ -109,7 +109,7 @@
     z-index: 199;
     width: 120vw;
     height: 120vh;
-    background: #202020;
+    background: var(--second-color);
     opacity: 0.3;
     filter: blur(var(--background-blur));
 }

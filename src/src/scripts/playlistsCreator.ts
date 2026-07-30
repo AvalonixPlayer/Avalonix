@@ -50,11 +50,11 @@ export async function fillPlaylistsList() {
           )!;
           playlistTitleButton.textContent = playlist.title;
 
-          playlistTitleButton.addEventListener("click", async () => {
+          element.addEventListener("click", async () => {
             addMediaToQueue("Playlist", uuid!);
           });
 
-          playlistTitleButton.addEventListener("contextmenu", async (e) => {
+          element.addEventListener("contextmenu", async (e) => {
             await contextMenuForPlaylist(uuid!, e);
           })
           observer.unobserve(element);

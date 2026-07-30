@@ -38,11 +38,11 @@ export async function fillPerformersList() {
             ".performer-title-button",
           )!;
           performerTitleButton.textContent = performer.title;
-          performerTitleButton.addEventListener("click", async () => {
+          element.addEventListener("click", async () => {
             addMediaToQueue("Performer", uuid!);
           });
 
-          performerTitleButton.addEventListener("contextmenu", async (e) => {
+          element.addEventListener("contextmenu", async (e) => {
             await contextMenuForPerformerInLib(uuid!, e);
           })
           observer.unobserve(element);
