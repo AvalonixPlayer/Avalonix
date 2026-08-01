@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { Track } from "../bindings/Track";
 import { addMediaToQueue } from "./playQueue";
-import { contextMenuForAlbumInLib, contextMenuForTrackInLib } from "./contextMenu";
+import { contextMenuForAlbumInLib, contextMenuForPerformerInLib, contextMenuForTrackInLib } from "./contextMenu";
 import { trackTemplate } from "./tracksCreator";
 import { albumTemplate } from "./albumsCreator";
 import { Album } from "../bindings/Album";
@@ -159,7 +159,7 @@ async function fillPerformers(partOfName: string) {
           });
 
           element.addEventListener("contextmenu", async (e) => {
-            await contextMenuForTrackInLib(uuid!, e);
+            await contextMenuForPerformerInLib(uuid!, e);
           })
           observer.unobserve(element);
         }
