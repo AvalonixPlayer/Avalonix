@@ -4,7 +4,7 @@ import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
 import { contextMenuForTrackInLib } from "./contextMenu";
 
-const trackTemplate = (uuid: string): string => `
+export const trackTemplate = (uuid: string): string => `
   <div class="playable-sellect-item track" data-uuid=${uuid}>
     <h3 class="track-title-button"></h3>
     <h3 class="track-performer-button"></h3>

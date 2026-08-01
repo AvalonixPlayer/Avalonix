@@ -283,6 +283,12 @@ impl Media for Track {
         MediaType::Track
     }
 
+    fn name_starts_with<P: AsRef<str>>(&self, start: P) -> bool {
+        self.title
+            .to_lowercase()
+            .starts_with(&start.as_ref().to_lowercase())
+    }
+
     fn convert_to_db(&self) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
         let value = rkyv::to_bytes::<Error>(self)?.to_vec();
         let uuid = rkyv::to_bytes::<Error>(&self.uuid)?.to_vec();

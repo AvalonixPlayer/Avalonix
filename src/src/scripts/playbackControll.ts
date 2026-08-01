@@ -2,7 +2,6 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { Track } from "../bindings/Track";
 import { PlayableResult } from "../bindings/PlayableResult";
-import { playlistTemplate } from "./playlistsCreator";
 import { Playlist } from "../bindings/Playlist";
 
 export async function initPlaybackControll() {
@@ -10,7 +9,6 @@ export async function initPlaybackControll() {
   deactivateAddToPlaylist();
   let addToPlaylist = document.querySelector("#save-to-playlist-button");
   addToPlaylist!.addEventListener("click", async () => {
-
     await activateAddToPlaylist(await invoke("get_current_track_uuid"));
   })
 

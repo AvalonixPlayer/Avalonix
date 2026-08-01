@@ -3,6 +3,7 @@ const sections = Array.from(
 );
 
 const tabBinding = {
+  "search-media-tab-button" : "media-search-section",
   "tracks-tab-button": "tracks-list-section",
   "albums-tab-button": "albums-list-section",
   "performers-tab-button": "performers-list-section",

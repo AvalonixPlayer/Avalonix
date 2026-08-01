@@ -10,8 +10,11 @@
 
     <body>
         <div id="background-image"></div>
-        <section class="section main-section" id="main-section-base">
+        <section class="section" id="main-section-base">
             <section class="section" id="left-menu">
+                <button class="left-menu-button" id="search-media-tab-button">
+                    <img src="./src/assets/search_media.png" />
+                </button>
                 <button class="left-menu-button" id="tracks-tab-button">
                     <img src="./src/assets/track_icon.png" />
                 </button>
@@ -30,6 +33,15 @@
                 <button class="left-menu-button" id="settings-tab-button">
                     <img src="./src/assets/settings.png" />
                 </button>
+            </section>
+            <section class="section main-tab-section" id="media-search-section">
+                <input type="text" placeholder="Media name" id="media-search-line" autocomplete="off"></input>
+                <h2>Performers</h2>
+                <div id="media-search-performers-list"></div>
+                <h2>Albums</h2>
+                <div id="media-search-albums-list" style="display: flex; overflow-x: auto; min-height: 220px;"></div>
+                <h2>Tracks</h2>
+                <div id="media-search-tracks-list"></div>
             </section>
             <section class="section main-tab-section" id="tracks-list-section"></section>
             <section class="section main-tab-section" id="albums-list-section"></section>

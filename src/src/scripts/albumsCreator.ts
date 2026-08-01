@@ -4,7 +4,7 @@ import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
 import { contextMenuForAlbumInLib } from "./contextMenu";
 
-const albumTemplate = (album_uuid: String): string =>
+export const albumTemplate = (album_uuid: String): string =>
   `<div class="playable-sellect-item album" data-uuid="${album_uuid}">
     <div class="album-cover">
         <img src="./no_cover.jpg">

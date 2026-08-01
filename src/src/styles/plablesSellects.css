@@ -28,9 +28,12 @@
     transition: all 0.1s ease-in-out;
 }
 
+.albums-set {
+    display: flex;
+    flex-direction: column;
+}
 
 .albums-set > div {
-    padding: 20px;
     border-radius: 15px;
     width: 90vw;
     display: flex;

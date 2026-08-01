@@ -25,6 +25,18 @@ pub async fn get_playables_ids(
 }
 
 #[tauri::command]
+pub async fn get_playables_ids_by_part_of_name(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    part_of_name: String,
+    media_type: MediaType,
+) -> Result<Vec<String>, String> {
+    db.read()
+        .unwrap()
+        .get_ids_by_part_of_name(&part_of_name, media_type)
+        .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
 pub async fn update_library(
     db: tauri::State<'_, Arc<RwLock<DB>>>,
     settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,

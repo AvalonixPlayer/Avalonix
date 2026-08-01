@@ -3,8 +3,11 @@
     overflow: hidden;
 }
 
-.section.main-section {
+.section.main-tab-section {
     display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    width: 100vw;
     height: calc(100vh - var(--playback-controll-section-height) - 35px);
 }
 
@@ -27,58 +30,6 @@
     border-right: solid 1px;
     display: block;
     justify-content: center;
-}
-
-#tracks-list-section {
-    display: flex;
-    flex-direction: column;
-    width: calc(100vw - var(--left-menu-section-width));
-    overflow-y: auto;
-}
-
-#albums-list-section {
-    padding-left: 25px;
-    display: flex;
-    flex-direction: column;
-    width: calc(100vw - var(--left-menu-section-width));
-    overflow-y: auto;
-}
-
-#performers-list-section {
-    display: flex;
-    flex-direction: column;
-    width: calc(100vw - var(--left-menu-section-width));
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-#queue-section {
-    display: flex;
-    flex-direction: column;
-    width: calc(100vw - var(--left-menu-section-width));
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-#track-preview-section {
-    display: flex;
-    align-items: center;
-    padding-left: 50px;
-    width: calc(100vw - var(--left-menu-section-width));
-}
-
-#settings-section {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    width: 100%;
-}
-
-#playlists-section {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    width: 100%;
 }
 
 .section.top-section {
@@ -112,4 +63,12 @@
     background: var(--second-color);
     opacity: 0.3;
     filter: blur(var(--background-blur));
+}
+
+#track-preview-section {
+    display: flex;
+    flex-direction: unset;
+    align-items: center;
+    padding-left: 50px;
+    width: calc(100vw - var(--left-menu-section-width));
 }

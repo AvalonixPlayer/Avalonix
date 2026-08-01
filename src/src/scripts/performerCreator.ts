@@ -4,7 +4,7 @@ import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
 import { contextMenuForPerformerInLib } from "./contextMenu";
 
-let performerTemplate = (performer_uuid: string): string =>
+export const performerTemplate = (performer_uuid: string): string =>
   `<div class="playable-sellect-item performer" data-uuid="${performer_uuid}">
   <h3 class="performer-title-button"></h3>
 </div>`;

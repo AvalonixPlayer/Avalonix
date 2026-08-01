@@ -90,9 +90,10 @@ function spawnMenu() {
 }
 
 function setPos(e: Event) {
+  let e2 = e as MouseEvent;
   let menu = document.querySelector("context-menu") as HTMLElement;
-  menu.style.top = `${e.clientY - 5}px`;
-  menu.style.left = `${e.clientX - 5}px`;
+  menu.style.top = `${e2.clientY - 5}px`;
+  menu.style.left = `${e2.clientX - 5}px`;
   document.addEventListener("click", () => {
     let elements = document.querySelector("context-menu");
     elements?.remove();

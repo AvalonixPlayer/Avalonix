@@ -1,5 +1,5 @@
 use std::{
-    fs,
+    format, fs,
     sync::{Arc, Mutex, mpsc::Sender},
 };
 
@@ -110,6 +110,57 @@ impl DB {
                     let (id, _) = media?;
                     let id: String = rkyv::from_bytes::<String, Error>(&id)?;
                     result.push(id);
+                }
+            }
+        }
+        Ok(result)
+    }
+
+    pub fn get_ids_by_part_of_name(
+        &self,
+        part_of_name: &String,
+        media_type: MediaType,
+    ) -> Result<Vec<String>> {
+        let mut result = vec![];
+        match media_type {
+            MediaType::Track => {
+                for media in &self.tracks_tree {
+                    let (id, value) = media?;
+                    let item: Track = rkyv::from_bytes::<Track, Error>(&value)?;
+                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
+                    if item.name_starts_with(part_of_name) {
+                        result.push(id);
+                    }
+                }
+            }
+            MediaType::Album => {
+                for media in &self.albums_tree {
+                    let (id, value) = media?;
+                    let item: Album = rkyv::from_bytes::<Album, Error>(&value)?;
+                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
+                    if item.name_starts_with(part_of_name) {
+                        result.push(id);
+                    }
+                }
+            }
+            MediaType::Performer => {
+                for media in &self.performers_tree {
+                    let (id, value) = media?;
+                    let item: Performer = rkyv::from_bytes::<Performer, Error>(&value)?;
+                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
+                    if item.name_starts_with(part_of_name) {
+                        result.push(id);
+                    }
+                }
+            }
+            MediaType::Playlist => {
+                for media in &self.playlists_tree {
+                    let (id, value) = media?;
+                    let item: Playlist = rkyv::from_bytes::<Playlist, Error>(&value)?;
+                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
+                    if item.name_starts_with(part_of_name) {
+                        result.push(id);
+                    }
                 }
             }
         }

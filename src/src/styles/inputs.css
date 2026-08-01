@@ -40,3 +40,8 @@ input[type="range"] {
 #bg-blur-slider {
     width: 100px;
 }
+
+#media-search-line {
+    display: flex;
+    left: var(--left-menu-section-width);
+}

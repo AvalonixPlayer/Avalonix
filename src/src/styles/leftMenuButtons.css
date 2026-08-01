@@ -6,6 +6,11 @@
     height: 50px;
 }
 
+#search-media-tab-button > img {
+    width: 40px;
+    height: 40px;
+}
+
 #tracks-tab-button > img {
     width: 40px;
     height: 40px;
