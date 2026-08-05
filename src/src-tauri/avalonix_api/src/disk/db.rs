@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex, mpsc::Sender},
 };
 
-use anyhow::Result;
+use anyhow::{Result, anyhow, bail};
 use better_sms::mutex::MutexWork;
 use glob::glob;
 use rkyv::rancor::Error;
@@ -13,8 +13,12 @@ use crate::{
     events::Event,
     logger::{debug, error},
     media::{
-        album::Album, media_trait::Media, performer::Performer, playable_type::MediaType,
-        playlist::Playlist, track::Track,
+        album::Album,
+        media_trait::Media,
+        performer::Performer,
+        playable_type::{MediaType, PlayableResult},
+        playlist::Playlist,
+        track::Track,
     },
 };
 
@@ -114,6 +118,38 @@ impl DB {
             }
         }
         Ok(result)
+    }
+
+    pub fn get_media_by_id(&self, id: String, media_type: MediaType) -> Result<PlayableResult> {
+        match media_type {
+            MediaType::Track => self
+                .get_every_track()?
+                .into_iter()
+                .find(|t| t.uuid == id)
+                .map(PlayableResult::Track)
+                .ok_or_else(|| anyhow!("Track with id {} not found", id)),
+
+            MediaType::Album => self
+                .get_every_album()?
+                .into_iter()
+                .find(|a| a.uuid == id)
+                .map(PlayableResult::Album)
+                .ok_or_else(|| anyhow!("Album with id {} not found", id)),
+
+            MediaType::Performer => self
+                .get_every_performer()?
+                .into_iter()
+                .find(|p| p.uuid == id)
+                .map(PlayableResult::Performer)
+                .ok_or_else(|| anyhow!("Performer with id {} not found", id)),
+
+            MediaType::Playlist => self
+                .get_every_playlist()?
+                .into_iter()
+                .find(|p| p.uuid == id)
+                .map(PlayableResult::Playlist)
+                .ok_or_else(|| anyhow!("Playlist with id {} not found", id)),
+        }
     }
 
     pub fn get_ids_by_part_of_name(
@@ -271,6 +307,20 @@ impl DB {
             .lock_unw()
             .send(Event::UpdateLibrary)
             .unwrap();
+        Ok(())
+    }
+
+    pub fn edit_media<T>(&self, old_media_id: String, new_media: T) -> Result<()>
+    where
+        T: Media,
+    {
+        let old_media = self.get_media_by_id(old_media_id, new_media.get_media_type())?;
+        match old_media {
+            PlayableResult::Track(media) => media.edit_media(media.uuid.clone(), self),
+            PlayableResult::Album(media) => media.edit_media(media.uuid.clone(), self),
+            PlayableResult::Performer(media) => media.edit_media(media.uuid.clone(), self),
+            PlayableResult::Playlist(media) => media.edit_media(media.uuid.clone(), self),
+        };
         Ok(())
     }
 

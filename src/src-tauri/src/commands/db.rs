@@ -69,46 +69,9 @@ pub async fn get_playable_by_id(
     id: String,
 ) -> Result<PlayableResult, String> {
     let guard = db.read().unwrap();
-    let res = match media_type {
-        MediaType::Track => {
-            let tracks = guard.get_every_track().map_err(|err| err.to_string())?;
-
-            let track = tracks
-                .into_iter()
-                .find(|performer| performer.uuid == id)
-                .ok_or_else(|| format!("Track with id {} not found", id))?;
-            PlayableResult::Track(track)
-        }
-        MediaType::Album => {
-            let albums = guard.get_every_album().map_err(|err| err.to_string())?;
-
-            let album = albums
-                .into_iter()
-                .find(|performer| performer.uuid == id)
-                .ok_or_else(|| format!("Album with id {} not found", id))?;
-            PlayableResult::Album(album)
-        }
-        MediaType::Performer => {
-            let performers = guard.get_every_performer().map_err(|err| err.to_string())?;
-
-            let performer = performers
-                .into_iter()
-                .find(|performer| performer.uuid == id)
-                .ok_or_else(|| format!("Performer with id {} not found", id))?;
-            PlayableResult::Performer(performer)
-        }
-
-        MediaType::Playlist => {
-            let playlists = guard.get_every_playlist().map_err(|err| err.to_string())?;
-
-            let playlist = playlists
-                .into_iter()
-                .find(|playlists| playlists.uuid == id)
-                .ok_or_else(|| format!("Playlist with id {} not found", id))?;
-            PlayableResult::Playlist(playlist)
-        }
-    };
-    Ok(res)
+    guard
+        .get_media_by_id(id, media_type)
+        .map_err(|err| err.to_string())
 }
 
 #[tauri::command]

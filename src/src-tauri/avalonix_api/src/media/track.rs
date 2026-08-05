@@ -19,7 +19,7 @@ use ts_rs::TS;
 use uuid::Uuid;
 
 use crate::{
-    disk::db::DB,
+    disk::db::{self, DB},
     logger::debug,
     media::{cover_get::CoverGet, media_trait::Media, playable_type::MediaType},
 };
@@ -298,6 +298,13 @@ impl Media for Track {
 
     fn get_tracks_uuids(&self) -> Vec<String> {
         return vec![self.uuid.clone()];
+    }
+
+    fn edit_media(&self, uuid: String, db: &DB) -> Result<()> {
+        let mut self_clone = self.clone();
+        self_clone.uuid = uuid;
+        db.add_to_db(&self_clone)?;
+        Ok(())
     }
 }
 

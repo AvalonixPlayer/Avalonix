@@ -134,4 +134,11 @@ impl Media for Performer {
     fn get_tracks_uuids(&self) -> Vec<String> {
         self.tracks_ids.clone()
     }
+
+    fn edit_media(&self, uuid: String, db: &DB) -> Result<()> {
+        let mut self_clone = self.clone();
+        self_clone.uuid = uuid;
+        db.add_to_db(&self_clone)?;
+        Ok(())
+    }
 }
