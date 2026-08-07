@@ -1,0 +1,43 @@
+#track-edit-window {
+    padding: 25px;
+    display: flex;
+    flex-direction: row;
+}
+
+#track-edit-window > #text-metadatas {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: 10%;
+    width: 40%;
+}
+
+#track-edit-window > #not-text-metadatas {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: 10%;
+    width: 40%;
+}
+
+#track-edit-window > #text-metadatas > input[type="text"] {
+    min-height: 20px;
+}
+
+#track-edit-window > #text-metadatas > h4 {
+    width: 200px;
+}
+
+#track-edit-cover {
+    width: 100%;
+    height: auto;
+}
+
+#track-edit-cover > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}

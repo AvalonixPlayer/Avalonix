@@ -123,3 +123,10 @@ pub async fn add_track_to_playlist(
         .map_err(|err| err.to_string())?;
     Ok(())
 }
+
+pub async fn edit_media(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    media_uuid: String,
+    media_type: MediaType,
+) {
+}

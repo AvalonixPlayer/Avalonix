@@ -8,7 +8,12 @@ use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
-    media::{cover_get::CoverGet, media_trait::Media, playable_type::MediaType, track::Track},
+    media::{
+        cover_get::CoverGet,
+        media_trait::Media,
+        playable_type::{MediaType, PlayableResult},
+        track::Track,
+    },
 };
 
 #[derive(Archive, Deserialize, Serialize, serde::Serialize, TS, Clone)]
@@ -140,6 +145,17 @@ impl Media for Album {
         let mut self_clone = self.clone();
         self_clone.uuid = uuid;
         db.add_to_db(&self_clone)?;
+        for id in &self.tracks_ids {
+            let track = db.get_media_by_id(id.clone(), MediaType::Track)?;
+            match track {
+                PlayableResult::Track(track) => {
+                    let mut new_track = track.clone();
+                    new_track.album = self.title.clone();
+                    new_track.edit_media(track.uuid, db)?;
+                }
+                _ => {}
+            }
+        }
         Ok(())
     }
 }

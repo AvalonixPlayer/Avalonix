@@ -2,6 +2,9 @@ import { invoke } from "@tauri-apps/api/core";
 import { MediaType } from "../bindings/MediaType";
 import { addMediaToQueue, startMedia } from "./playQueue";
 import { fillPlaylistsList } from "./playlistsCreator";
+import { PlayableResult } from "../bindings/PlayableResult";
+import { Track } from "../bindings/Track";
+import { PlayableType } from "../bindings/PlayableType";
 
 const menu = (): string => `<context-menu></context-menu>`;
 
@@ -12,12 +15,20 @@ export async function contextMenuForTrackInLib(track_uuid: String, e: Event) {
 
   await addToQueueButton("Track", track_uuid as string);
   await startBtn("Track", track_uuid as string);
+  await editMediaButton("Track", track_uuid as string);
 }
 
 async function addToQueueButton(mt: MediaType, uuid: string) {
   (document.querySelector("context-menu") as HTMLElement).insertAdjacentHTML("beforeend", `<button id="context-add-to-queue"><h2>Add to queue</h2></button>`);
   document.querySelector("#context-add-to-queue")!.addEventListener("click", async () => {
     await addMediaToQueue(mt, uuid);
+  })
+}
+
+async function editMediaButton(mt: MediaType, uuid: string) {
+  (document.querySelector("context-menu") as HTMLElement).insertAdjacentHTML("beforeend", `<button id="context-edit-media"><h2>Edit media</h2></button>`);
+  document.querySelector("#context-edit-media")!.addEventListener("click", async () => {
+    await activateEditMediaMenu(uuid, mt);
   })
 }
 
@@ -72,6 +83,7 @@ export async function contextMenuForTracksInQueue(track_uuid: String, e: Event) 
 
   await jumpToTrack(track_uuid as string);
   await removeTrackFromQueue(track_uuid as string);
+  await editMediaButton("Track", track_uuid as string);
 }
 
 export async function contextMenuForPlaylist(playlist_uuid: String, e: Event) {
@@ -98,4 +110,66 @@ function setPos(e: Event) {
     let elements = document.querySelector("context-menu");
     elements?.remove();
   })
+}
+
+function deactivateEditMediaMenu() {
+  (document.querySelector("#blur-for-top")! as HTMLElement).remove();
+  (document.querySelector(".section.top-section")! as HTMLElement).remove();
+}
+
+async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
+  document.body.insertAdjacentHTML("beforeend", '<div id="blur-for-top"></div>');
+  document.body.insertAdjacentHTML("beforeend", '<section class="section top-section" id="track-edit-window"><div id="text-metadatas"></div><div id="not-text-metadatas"></div></section>');
+  (document.querySelector("#blur-for-top")! as HTMLElement).addEventListener("click", () => deactivateEditMediaMenu());
+
+  switch (medaiaType) {
+    case "Track":
+      await edit_track()
+      break;
+    case "Album":
+      break;
+    case "Performer":
+      break;
+    case "Playlist":
+      break;
+  }
+
+
+
+  async function edit_track() {
+    let topSection = document.querySelector(".section.top-section");
+    let textData = topSection!.querySelector("#text-metadatas");
+    let notTextData = topSection!.querySelector("#not-text-metadatas");
+
+    let track = (await invoke<PlayableResult>("get_playable_by_id", {
+      mediaType: "Track",
+      id: mediaUuid,
+    })
+    ).data as Track;
+    textData!.insertAdjacentHTML("beforeend", '<h4>Title</h4>');
+    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.title} placeholder="Title">`);
+    textData!.insertAdjacentHTML("beforeend", '<h4>Album</h4>');
+    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.album} placeholder="Album">`);
+    textData!.insertAdjacentHTML("beforeend", '<h4>Performer</h4>');
+    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.performer} placeholder="Performer">`);
+    textData!.insertAdjacentHTML("beforeend", '<h4>Performer</h4>');
+    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.genre} placeholder="Genre">`);
+    textData!.insertAdjacentHTML("beforeend", '<h4>Performer</h4>');
+    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.year} placeholder="Year">`);
+
+    notTextData!.insertAdjacentHTML("beforeend", '<div class="album-cover" id="track-edit-cover"><img src="./src/assets/no_cover.jpg"></div>');
+    let coverItem = notTextData!.querySelector("#track-edit-cover")!.lastChild as HTMLImageElement;
+    await invoke<string>("get_track_cover", { id: mediaUuid })
+      .then((cover) => {
+        coverItem!.src = cover;
+        if (cover == "") {
+          coverItem!.src = "./src/assets/no_cover.jpg";
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        coverItem!.src = "./src/assets/no_cover.jpg";
+      });
+
+  }
 }

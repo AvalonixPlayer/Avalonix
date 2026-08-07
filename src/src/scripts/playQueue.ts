@@ -49,11 +49,11 @@ export async function fillPlayQueueList() {
 
 
           let titleButton = element.querySelector(".track-title-button")!;
-          titleButton.addEventListener("click", async () => {
+          element.addEventListener("click", async () => {
             await invoke("start_track_in_queue_by_id", {id: uuid});
           });
 
-          titleButton.addEventListener("contextmenu", async (e) => {
+          element.addEventListener("contextmenu", async (e) => {
             await contextMenuForTracksInQueue(uuid!, e)
           });
 

@@ -316,10 +316,10 @@ impl DB {
     {
         let old_media = self.get_media_by_id(old_media_id, new_media.get_media_type())?;
         match old_media {
-            PlayableResult::Track(media) => media.edit_media(media.uuid.clone(), self),
-            PlayableResult::Album(media) => media.edit_media(media.uuid.clone(), self),
-            PlayableResult::Performer(media) => media.edit_media(media.uuid.clone(), self),
-            PlayableResult::Playlist(media) => media.edit_media(media.uuid.clone(), self),
+            PlayableResult::Track(media) => media.edit_media(media.uuid.clone(), self)?,
+            PlayableResult::Album(media) => media.edit_media(media.uuid.clone(), self)?,
+            PlayableResult::Performer(media) => media.edit_media(media.uuid.clone(), self)?,
+            PlayableResult::Playlist(media) => media.edit_media(media.uuid.clone(), self)?,
         };
         Ok(())
     }
