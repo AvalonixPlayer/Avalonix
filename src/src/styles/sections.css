@@ -51,6 +51,13 @@
     border-radius: 30px;
 }
 
+#apply-edit-media {
+    display: flex;
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+}
+
 #blur-for-top {
     top: 50%;
     left: 50%;

@@ -34,6 +34,7 @@ async function init() {
 }
 
 async function loadLib() {
+  await initMediaSearch();
   await fillTracksList();
   await fillAlbumsList();
   await fillPerformersList();

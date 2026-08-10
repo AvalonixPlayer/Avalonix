@@ -70,7 +70,8 @@ pub async fn add_media_to_queue(
     play_queue
         .lock_unw()
         .add_tracks(uuids)
-        .map_err(|err| err.to_string())
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }
 
 #[tauri::command]
@@ -123,7 +124,8 @@ pub async fn start_track_in_queue_by_id(
     play_queue
         .lock_unw()
         .start_by_uuid(id)
-        .map_err(|err| err.to_string())
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }
 
 #[tauri::command]
@@ -134,5 +136,6 @@ pub async fn remove_track_from_queue_by_id(
     play_queue
         .lock_unw()
         .remove_track(id)
-        .map_err(|err| err.to_string())
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }

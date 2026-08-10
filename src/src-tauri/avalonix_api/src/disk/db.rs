@@ -310,17 +310,24 @@ impl DB {
         Ok(())
     }
 
-    pub fn edit_media<T>(&self, old_media_id: String, new_media: T) -> Result<()>
-    where
-        T: Media,
-    {
-        let old_media = self.get_media_by_id(old_media_id, new_media.get_media_type())?;
-        match old_media {
-            PlayableResult::Track(media) => media.edit_media(media.uuid.clone(), self)?,
-            PlayableResult::Album(media) => media.edit_media(media.uuid.clone(), self)?,
-            PlayableResult::Performer(media) => media.edit_media(media.uuid.clone(), self)?,
-            PlayableResult::Playlist(media) => media.edit_media(media.uuid.clone(), self)?,
-        };
+    pub fn edit_track(
+        &self,
+        uuid: String,
+        title: String,
+        album: String,
+        performer: String,
+        genre: String,
+        cover_path: Option<String>,
+    ) -> Result<()> {
+        let media = self.get_media_by_id(uuid, MediaType::Track)?;
+        match media {
+            PlayableResult::Track(mut track) => {
+                track.edit_metadata(title, album, performer, genre, cover_path)?;
+            }
+            PlayableResult::Album(_) => todo!(),
+            PlayableResult::Performer(_) => todo!(),
+            PlayableResult::Playlist(_) => todo!(),
+        }
         Ok(())
     }
 

@@ -5,6 +5,7 @@ import { fillPlaylistsList } from "./playlistsCreator";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { Track } from "../bindings/Track";
 import { PlayableType } from "../bindings/PlayableType";
+import { pickFile } from "./filePicker";
 
 const menu = (): string => `<context-menu></context-menu>`;
 
@@ -140,22 +141,25 @@ async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
     let topSection = document.querySelector(".section.top-section");
     let textData = topSection!.querySelector("#text-metadatas");
     let notTextData = topSection!.querySelector("#not-text-metadatas");
+    topSection!.insertAdjacentHTML("beforeend", '<button id="apply-edit-media"><h2>Apply</h2></button>');
+    let apply = topSection!.querySelector("#apply-edit-media");
 
     let track = (await invoke<PlayableResult>("get_playable_by_id", {
       mediaType: "Track",
       id: mediaUuid,
     })
     ).data as Track;
+
     textData!.insertAdjacentHTML("beforeend", '<h4>Title</h4>');
-    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.title} placeholder="Title">`);
+    textData!.insertAdjacentHTML("beforeend", `<input id="new-track-title" type="text" value="${track.title}" placeholder="Title">`);
     textData!.insertAdjacentHTML("beforeend", '<h4>Album</h4>');
-    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.album} placeholder="Album">`);
+    textData!.insertAdjacentHTML("beforeend", `<input id="new-track-album" type="text" value="${track.album}" placeholder="Album">`);
     textData!.insertAdjacentHTML("beforeend", '<h4>Performer</h4>');
-    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.performer} placeholder="Performer">`);
-    textData!.insertAdjacentHTML("beforeend", '<h4>Performer</h4>');
-    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.genre} placeholder="Genre">`);
-    textData!.insertAdjacentHTML("beforeend", '<h4>Performer</h4>');
-    textData!.insertAdjacentHTML("beforeend", `<input type="text" value=${track.year} placeholder="Year">`);
+    textData!.insertAdjacentHTML("beforeend", `<input id="new-track-performer" type="text" value="${track.performer}" placeholder="Performer">`);
+    textData!.insertAdjacentHTML("beforeend", '<h4>Genre</h4>');
+    textData!.insertAdjacentHTML("beforeend", `<input id="new-track-genre" type="text" value="${track.genre}" placeholder="Genre">`);
+
+    let pathToCover: string | null = null;
 
     notTextData!.insertAdjacentHTML("beforeend", '<div class="album-cover" id="track-edit-cover"><img src="./src/assets/no_cover.jpg"></div>');
     let coverItem = notTextData!.querySelector("#track-edit-cover")!.lastChild as HTMLImageElement;
@@ -171,5 +175,20 @@ async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
         coverItem!.src = "./src/assets/no_cover.jpg";
       });
 
+    notTextData!.querySelector("#track-edit-cover")!.addEventListener("click", async () => {
+      pathToCover = await pickFile("Sellect a cover", ["png", "jpg", "jpeg"]);
+    })
+
+    apply!.addEventListener("click", async () => {
+      await invoke("edit_track", {
+        uuid: mediaUuid,
+        title: (textData!.querySelector("#new-track-title") as HTMLInputElement).value,
+        album: (textData!.querySelector("#new-track-album") as HTMLInputElement).value,
+        performer: (textData!.querySelector("#new-track-performer") as HTMLInputElement).value,
+        genre: (textData!.querySelector("#new-track-genre") as HTMLInputElement).value,
+        pathToCover: pathToCover,
+      })
+      await deactivateEditMediaMenu();
+    })
   }
 }

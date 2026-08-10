@@ -118,14 +118,6 @@ async function fillPreviewTrack() {
         "track-genre-show",
       )!.textContent = track.genre;
 
-      document.getElementById(
-        "track-year-show",
-      )!.textContent = track.year.toString();
-
-      document.getElementById(
-        "track-lyrics-show",
-      )!.textContent = track.lyrics;
-
       let coverItem = document
         .querySelector("#track-preview-cover")!
         .querySelector("img");

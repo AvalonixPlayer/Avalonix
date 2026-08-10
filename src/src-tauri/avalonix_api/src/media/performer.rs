@@ -15,7 +15,7 @@ use crate::{
     },
 };
 
-#[derive(Archive, Deserialize, Serialize, serde::Serialize, TS, Clone)]
+#[derive(Archive, Deserialize, Serialize, serde::Serialize, serde::Deserialize, TS, Clone)]
 #[ts(export)]
 pub struct Performer {
     pub uuid: String,
@@ -139,8 +139,8 @@ impl Media for Performer {
         self.tracks_ids.clone()
     }
 
-    fn edit_media(&self, uuid: String, db: &DB) -> Result<()> {
-        let mut self_clone = self.clone();
+    fn edit_media(&self, db: &DB) -> Result<()> {
+        /*let mut self_clone = self.clone();
         self_clone.uuid = uuid;
         db.add_to_db(&self_clone)?;
         for id in &self.tracks_ids {
@@ -153,7 +153,7 @@ impl Media for Performer {
                 }
                 _ => {}
             }
-        }
+        }*/
         Ok(())
     }
 }

@@ -12,7 +12,7 @@ pub enum MediaType {
     Playlist,
 }
 
-#[derive(TS, Serialize)]
+#[derive(TS, Serialize, Deserialize)]
 #[serde(tag = "type", content = "data")]
 #[ts(export)]
 pub enum PlayableResult {

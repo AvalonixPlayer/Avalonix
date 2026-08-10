@@ -1,10 +1,13 @@
 use std::sync::{Arc, Mutex, RwLock};
 
 use avalonix_api::{
+    audio::media_player::MediaPlayer,
     disk::{db::DB, user::settings::UserSettings},
+    logger::fatal,
     media::{
         self,
         cover_get::CoverGet,
+        play_queue::PlayQueue,
         playable_type::{
             MediaType::{self, Playlist},
             PlayableResult,
@@ -12,6 +15,8 @@ use avalonix_api::{
         playlist,
     },
 };
+use better_sms::mutex::MutexWork;
+use tauri::webview::cookie::time::format_description::modifier::Year;
 
 #[tauri::command]
 pub async fn get_playables_ids(
@@ -124,9 +129,36 @@ pub async fn add_track_to_playlist(
     Ok(())
 }
 
-pub async fn edit_media(
+#[tauri::command]
+pub async fn edit_track(
     db: tauri::State<'_, Arc<RwLock<DB>>>,
-    media_uuid: String,
-    media_type: MediaType,
-) {
+    player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
+    settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    uuid: String,
+    title: String,
+    album: String,
+    performer: String,
+    genre: String,
+    path_to_cover: Option<String>,
+) -> Result<(), String> {
+    let mut queue = play_queue.lock_unw();
+
+    if let Some(cur_uuid) = &queue.current_uuid {
+        if *cur_uuid == uuid {
+            queue
+                .remove_track(uuid.clone())
+                .map_err(|err| err.to_string())?;
+        }
+    }
+
+    db.write()
+        .unwrap()
+        .edit_track(uuid, title, album, performer, genre, path_to_cover)
+        .map_err(|err| err.to_string())?;
+    db.write()
+        .unwrap()
+        .update(&mut settings.lock_unw())
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }

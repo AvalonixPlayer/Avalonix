@@ -8,7 +8,9 @@ use crate::{
     media::{media_trait::Media, playable_type::MediaType},
 };
 
-#[derive(Debug, Archive, Serialize, Deserialize, serde::Serialize, TS, Clone)]
+#[derive(
+    Debug, Archive, Serialize, Deserialize, serde::Serialize, serde::Deserialize, TS, Clone,
+)]
 #[ts(export)]
 pub struct Playlist {
     pub uuid: String,
@@ -62,10 +64,11 @@ impl Media for Playlist {
         self.tracks_ids.clone()
     }
 
-    fn edit_media(&self, uuid: String, db: &DB) -> Result<()> {
+    fn edit_media(&self, db: &DB) -> Result<()> {
+        /*
         let mut self_clone = self.clone();
         self_clone.uuid = uuid;
-        db.add_to_db(&self_clone)?;
+        db.add_to_db(&self_clone)?; */
         Ok(())
     }
 }

@@ -133,24 +133,26 @@ impl PlayQueue {
     }
 
     pub fn remove_track(&mut self, uuid: String) -> Result<()> {
-        let index = self
+        if let Some(index) = self
             .tracks_uuids_in_queue_real
             .iter()
             .position(|x| *x == uuid)
-            .unwrap();
-        self.tracks_uuids_in_queue_real.remove(index);
-        self.tracks_uuids_in_queue_displaying = self.tracks_uuids_in_queue_real.clone();
-        if self.shuffle {
-            self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());
+        {
+            self.tracks_uuids_in_queue_real.remove(index);
+            self.tracks_uuids_in_queue_displaying = self.tracks_uuids_in_queue_real.clone();
+            if self.shuffle {
+                self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());
+            }
+            self.events_sender
+                .lock_unw()
+                .send(Event::UpdateQueue)
+                .unwrap();
+            if self.tracks_uuids_in_queue_real.len() == 0 {
+                self.media_player.lock_unw().stop();
+            }
+            return Ok(());
         }
-        self.events_sender
-            .lock_unw()
-            .send(Event::UpdateQueue)
-            .unwrap();
-        if self.tracks_uuids_in_queue_real.len() == 0 {
-            self.media_player.lock_unw().stop();
-        }
-        Ok(())
+        bail!("not uuid")
     }
 
     pub fn next(&mut self) -> Result<()> {

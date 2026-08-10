@@ -14,7 +14,7 @@ use crate::{events::Event, media::track::Track};
 pub struct MediaPlayer {
     _stream_handle: MixerDeviceSink,
     player: Player,
-    cur_track: Option<Track>,
+    pub cur_track: Option<Track>,
     events_sender: Arc<Mutex<Sender<Event>>>,
 }
 

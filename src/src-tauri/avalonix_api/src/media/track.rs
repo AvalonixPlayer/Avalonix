@@ -1,6 +1,6 @@
 use core::fmt;
 use std::{
-    fs,
+    fs::{self, File},
     path::Path,
     time::{Duration, UNIX_EPOCH},
 };
@@ -8,9 +8,14 @@ use std::{
 use anyhow::Result;
 use lofty::{
     config::ParseOptions,
-    file::{AudioFile, TaggedFileExt},
+    file::{self, AudioFile, TaggedFile, TaggedFileExt},
+    picture::{Picture, PictureBuilder},
     probe::Probe,
-    tag::Accessor,
+    tag::{
+        Accessor,
+        ItemKey::{self, Lyricist},
+        ItemValue, TagExt, TagItem,
+    },
 };
 use rcue::{cue::Cue, parser::parse_from_file};
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
@@ -19,12 +24,17 @@ use ts_rs::TS;
 use uuid::Uuid;
 
 use crate::{
-    disk::db::{self, DB},
-    logger::debug,
+    disk::{
+        db::{self, DB},
+        user::settings::UserSettings,
+    },
+    logger::{debug, fatal},
     media::{cover_get::CoverGet, media_trait::Media, playable_type::MediaType},
 };
 
-#[derive(Archive, Deserialize, Serialize, Clone, serde::Serialize, TS, Debug)]
+#[derive(
+    Archive, Deserialize, Serialize, Clone, serde::Serialize, serde::Deserialize, TS, Debug,
+)]
 #[ts(export)]
 pub struct Track {
     pub uuid: String,
@@ -37,8 +47,6 @@ pub struct Track {
     pub album: String,
     pub performer: String,
     pub genre: String,
-    pub year: u16,
-    pub lyrics: String,
     #[ts(skip)]
     pub start_time: Duration,
     #[ts(skip)]
@@ -124,6 +132,7 @@ impl Track {
             Some(primary_tag) => primary_tag,
             None => tagged_file.first_tag().expect("ERROR: No tags found!"),
         };
+
         let title = tag
             .title()
             .as_deref()
@@ -146,20 +155,6 @@ impl Track {
             .map_or("Unknown genre", |v| v)
             .to_string();
 
-        let year = if let Some(year) = tag.get_string(lofty::tag::ItemKey::Year) {
-            year.to_string().parse().map_or(0, |r| r)
-        } else if let Some(date) = tag.date() {
-            date.year
-        } else {
-            0 as u16
-        };
-
-        let lyrics = if let Some(lyrics) = tag.get_string(lofty::tag::ItemKey::Lyrics) {
-            lyrics.to_string()
-        } else {
-            String::new()
-        };
-
         let uuid = Uuid::new_v4().to_string();
 
         let result = Self {
@@ -171,8 +166,6 @@ impl Track {
             album,
             performer,
             genre,
-            year,
-            lyrics,
             start_time: Duration::new(0, 0),
             end_time: tagged_file.properties().duration(),
         };
@@ -250,8 +243,6 @@ impl Track {
                         .map_or("Unknown performer".to_string(), |f| f)
                         .to_string(),
                     genre: genre.clone(),
-                    year,
-                    lyrics: "".to_string(),
                     start_time: start_time,
                     end_time: end_time,
                 });
@@ -259,6 +250,53 @@ impl Track {
         }
 
         Ok(result)
+    }
+
+    pub fn edit_metadata(
+        &mut self,
+        title: String,
+        album: String,
+        performer: String,
+        genre: String,
+        cover_path: Option<String>,
+    ) -> Result<()> {
+        let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
+        let mut tagged_file = Probe::open(&self.path)?
+            .options(options)
+            .guess_file_type()?
+            .read()?;
+
+        let tag = match tagged_file.primary_tag_mut() {
+            Some(primary_tag) => primary_tag,
+            None => {
+                if let Some(first_tag) = tagged_file.first_tag_mut() {
+                    first_tag
+                } else {
+                    let tag_type = tagged_file.primary_tag_type();
+                    tagged_file.insert_tag(lofty::tag::Tag::new(tag_type));
+                    tagged_file.primary_tag_mut().unwrap()
+                }
+            }
+        };
+
+        tag.set_title(title);
+        tag.set_album(album);
+        tag.set_artist(performer);
+        tag.set_genre(genre);
+
+        if let Some(path) = cover_path {
+            let bytes = fs::read(path)?;
+            let pic = Picture::unchecked(bytes).build();
+            tag.set_picture(0, pic);
+        }
+
+        let mut file = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .open(&self.path)?;
+
+        tag.save_to(&mut file, lofty::config::WriteOptions::default())?;
+        Ok(())
     }
 }
 
@@ -300,10 +338,8 @@ impl Media for Track {
         return vec![self.uuid.clone()];
     }
 
-    fn edit_media(&self, uuid: String, db: &DB) -> Result<()> {
-        let mut self_clone = self.clone();
-        self_clone.uuid = uuid;
-        db.add_to_db(&self_clone)?;
+    fn edit_media(&self, db: &DB) -> Result<()> {
+        todo!();
         Ok(())
     }
 }
@@ -320,7 +356,7 @@ impl CoverGet for Track {
                         let data = picture.data();
 
                         let bs64 = data.to_base64(MIME);
-                        let string = format!("data:image/jpg;base64,{}", bs64);
+                        let string = format!("data:image/png;base64,{}", bs64);
                         return Ok(string);
                     }
                 }
