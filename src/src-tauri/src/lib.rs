@@ -21,19 +21,15 @@ pub fn run() -> Result<()> {
             thread::spawn(move || loop {
                 match api.events_reciver.recv().unwrap() {
                     Event::UpdateQueue => {
-                        debug("queue-updated");
                         _ = app_handle.emit("queue-updated", ());
                     }
                     Event::UpdateLibrary => {
-                        debug("library-updated");
                         _ = app_handle.emit("library-updated", ());
                     }
                     Event::CurTrackChanged => {
-                        debug("track-updated");
                         _ = app_handle.emit("cur-track-changed", ());
                     }
                 }
-                debug("Event recived");
             });
 
             Ok(())

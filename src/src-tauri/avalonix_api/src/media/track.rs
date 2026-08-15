@@ -192,16 +192,6 @@ impl Track {
             "Unknown genre".to_string()
         };
 
-        let year: u16 = if let Some(year) = cue
-            .comments
-            .iter()
-            .find(|comment| comment.0.starts_with("DATE"))
-        {
-            year.1.to_string().parse().map_or(0, |r| r)
-        } else {
-            0 as u16
-        };
-
         for file in cue.files {
             let tracks_len = file.tracks.len();
 

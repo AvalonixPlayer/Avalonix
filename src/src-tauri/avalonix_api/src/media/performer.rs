@@ -8,6 +8,7 @@ use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
+    logger::debug,
     media::{
         media_trait::Media,
         playable_type::{MediaType, PlayableResult},
@@ -24,84 +25,89 @@ pub struct Performer {
 }
 
 impl Performer {
-    pub fn create_performers(db: &DB, every_tracks_in_db: &[Track]) -> Result<Vec<Self>> {
-        let every_performers_in_db = db.get_every_performer()?;
-        let mut performers_map: HashMap<String, Self> = every_performers_in_db
-            .into_iter()
-            .map(|performer| (performer.title.clone(), performer))
-            .collect();
+    pub fn create_performers(db: &DB, every_tracks_in_db: &[Track]) -> Result<()> {
+        let mut every_performers_in_db = db.get_every_performer()?;
 
-        let existing_tracks_ids: HashSet<&str> =
+        let mut exists_tracks: HashSet<&str> =
             every_tracks_in_db.iter().map(|t| t.uuid.as_str()).collect();
 
-        let mut performers_needs_to_update = Vec::new();
+        let mut new_performers: HashMap<String, Performer> = HashMap::new();
 
-        for (performer_title, performer) in performers_map.iter_mut() {
-            let original_len = performer.tracks_ids.len();
+        for performer in every_performers_in_db.iter_mut() {
+            let orig_size = performer.tracks_ids.len();
 
             performer
                 .tracks_ids
-                .retain(|id| existing_tracks_ids.contains(id.as_str()));
+                .retain(|t| exists_tracks.contains(t.as_str()));
 
-            if performer.tracks_ids.len() != original_len {
-                performers_needs_to_update.push(performer_title.clone());
+            // update if need
+            if orig_size != performer.tracks_ids.len() && performer.tracks_ids.len() != 0 {
+                let first_track = every_tracks_in_db
+                    .iter()
+                    .find(|t| t.uuid == performer.tracks_ids[0])
+                    .unwrap();
+
+                performer.update_performer(first_track);
+                db.add_to_db(performer)?;
+                debug(format!("{} updated", performer.title.to_string()));
+            }
+
+            // remove if empty
+            if performer.tracks_ids.len() == 0 {
+                debug(format!("{} removed", performer.title.to_string()));
+                db.remove_from_db(performer)?;
+            }
+
+            // remove tracks, that now in performers
+            for i in &performer.tracks_ids {
+                exists_tracks.remove(i.as_str());
             }
         }
 
-        let mut tracks_by_performer: HashMap<String, Vec<String>> = HashMap::new();
-        for track in every_tracks_in_db {
-            tracks_by_performer
-                .entry(track.performer.clone())
-                .or_default()
-                .push(track.uuid.clone());
-        }
+        for track_uuid in exists_tracks.iter() {
+            let track = every_tracks_in_db
+                .iter()
+                .find(|t| t.uuid == *track_uuid)
+                .unwrap();
 
-        let tracks_map: HashMap<&str, &Track> = every_tracks_in_db
-            .iter()
-            .map(|t| (t.uuid.as_str(), t))
-            .collect();
+            if let Some(performer) = new_performers.get_mut(&track.performer) {
+                performer.tracks_ids.push(track_uuid.to_string());
+            } else if let Some(performer) = every_performers_in_db
+                .iter_mut()
+                .find(|a| a.title == track.performer)
+            {
+                performer.tracks_ids.push(track_uuid.to_string());
+                performer.update_performer(track);
 
-        for (performer_title, track_ids) in tracks_by_performer {
-            if let Some(old_performer) = performers_map.get_mut(&performer_title) {
-                if old_performer.tracks_ids != track_ids {
-                    old_performer.tracks_ids = track_ids;
-                    if !performers_needs_to_update.contains(&performer_title) {
-                        performers_needs_to_update.push(performer_title.clone());
-                    }
-                }
+                db.add_to_db(performer)?;
+                debug(format!(
+                    "{} updated with new track",
+                    performer.title.to_string()
+                ));
             } else {
-                if let Some(first_track_id) = track_ids.first() {
-                    if let Some(track) = tracks_map.get(first_track_id.as_str()) {
-                        let new_performer = Self::create_new_performer(track, track_ids)?;
-                        performers_map.insert(performer_title.clone(), new_performer);
-                        performers_needs_to_update.push(performer_title);
-                    }
-                }
+                let performer = Self::create_new_performer(track, vec![track_uuid.to_string()]);
+                new_performers.insert(performer.title.clone(), performer);
             }
         }
 
-        for performer_name in &performers_needs_to_update {
-            if let Some(performer) = performers_map.get(performer_name) {
-                if performer.tracks_ids.is_empty() {
-                    db.remove_from_db(performer)?;
-                } else {
-                    db.add_to_db(performer)?;
-                }
-            }
+        for performer in new_performers {
+            debug(format!("{} created", performer.0));
+            db.add_to_db(&performer.1)?;
         }
 
-        Ok(performers_map
-            .into_values()
-            .filter(|performer| !performer.tracks_ids.is_empty())
-            .collect())
+        Ok(())
     }
 
-    fn create_new_performer(track: &Track, tracks_ids: Vec<String>) -> Result<Self> {
-        Ok(Self {
+    fn update_performer(&mut self, first_track: &Track) {
+        self.title = first_track.performer.clone();
+    }
+
+    fn create_new_performer(track: &Track, tracks_ids: Vec<String>) -> Self {
+        Self {
             uuid: Uuid::new_v4().to_string(),
             tracks_ids,
             title: track.performer.clone(),
-        })
+        }
     }
 }
 

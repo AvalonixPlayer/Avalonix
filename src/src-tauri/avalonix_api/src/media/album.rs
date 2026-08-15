@@ -1,14 +1,19 @@
 use core::fmt;
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    format, vec,
+};
 
 use anyhow::Result;
-use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
+use rkyv::{Archive, Deserialize, Serialize, hash::hash_value, rancor::Error};
 use ts_rs::TS;
 use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
+    logger::{debug, error},
     media::{
+        album,
         cover_get::CoverGet,
         media_trait::Media,
         playable_type::{MediaType, PlayableResult},
@@ -27,83 +32,92 @@ pub struct Album {
 }
 
 impl Album {
-    pub fn create_albums(db: &DB, every_tracks_in_db: &[Track]) -> Result<Vec<Self>> {
-        let every_albums_in_db = db.get_every_album()?;
-        let mut albums_map: HashMap<String, Self> = every_albums_in_db
-            .into_iter()
-            .map(|album| (album.title.clone(), album))
-            .collect();
+    pub fn create_albums(db: &DB, every_tracks_in_db: &[Track]) -> Result<()> {
+        let mut every_albums_in_db = db.get_every_album()?;
 
-        let existing_tracks_ids: HashSet<&str> =
+        let mut exists_tracks: HashSet<&str> =
             every_tracks_in_db.iter().map(|t| t.uuid.as_str()).collect();
 
-        let mut albums_needs_to_update = Vec::new();
+        let mut new_albums: HashMap<String, Album> = HashMap::new();
 
-        for (album_title, album) in albums_map.iter_mut() {
-            let original_len = album.tracks_ids.len();
+        for album in every_albums_in_db.iter_mut() {
+            let orig_size = album.tracks_ids.len();
 
             album
                 .tracks_ids
-                .retain(|id| existing_tracks_ids.contains(id.as_str()));
+                .retain(|t| exists_tracks.contains(t.as_str()));
 
-            if album.tracks_ids.len() != original_len {
-                albums_needs_to_update.push(album_title.clone());
+            // update if need
+            if orig_size != album.tracks_ids.len() && album.tracks_ids.len() != 0 {
+                let first_track = every_tracks_in_db
+                    .iter()
+                    .find(|t| t.uuid == album.tracks_ids[0])
+                    .unwrap();
+                album.update_album(first_track);
+                db.add_to_db(album)?;
+                debug(format!("{} updated", album.title.to_string()));
+            }
+
+            // remove if empty
+            if album.tracks_ids.len() == 0 {
+                debug(format!("{} removed", album.title.to_string()));
+                db.remove_from_db(album)?;
+            }
+
+            // remove tracks, that now in albums
+            for i in &album.tracks_ids {
+                exists_tracks.remove(i.as_str());
             }
         }
 
-        let mut tracks_by_album: HashMap<String, Vec<String>> = HashMap::new();
-        for track in every_tracks_in_db {
-            tracks_by_album
-                .entry(track.album.clone())
-                .or_default()
-                .push(track.uuid.clone());
-        }
+        for track_uuid in exists_tracks.iter() {
+            let track = every_tracks_in_db
+                .iter()
+                .find(|t| t.uuid == *track_uuid)
+                .unwrap();
 
-        let tracks_map: HashMap<&str, &Track> = every_tracks_in_db
-            .iter()
-            .map(|t| (t.uuid.as_str(), t))
-            .collect();
+            if let Some(album) = new_albums.get_mut(&track.album) {
+                album.tracks_ids.push(track_uuid.to_string());
+            } else if let Some(album) = every_albums_in_db
+                .iter_mut()
+                .find(|a| a.title == track.album)
+            {
+                album.tracks_ids.push(track_uuid.to_string());
+                album.update_album(track);
 
-        for (album_title, track_ids) in tracks_by_album {
-            if let Some(old_album) = albums_map.get_mut(&album_title) {
-                if old_album.tracks_ids != track_ids {
-                    old_album.tracks_ids = track_ids;
-                    if !albums_needs_to_update.contains(&album_title) {
-                        albums_needs_to_update.push(album_title.clone());
-                    }
-                }
+                db.add_to_db(album)?;
+                debug(format!(
+                    "{} updated with new track",
+                    album.title.to_string()
+                ));
             } else {
-                if let Some(first_track_id) = track_ids.first() {
-                    if let Some(track) = tracks_map.get(first_track_id.as_str()) {
-                        let new_album = Self::create_new_album(track, track_ids)?;
-                        albums_map.insert(album_title.clone(), new_album);
-                        albums_needs_to_update.push(album_title);
-                    }
-                }
+                let album = Self::create_new_album(track, vec![track_uuid.to_string()]);
+                new_albums.insert(album.title.clone(), album);
             }
         }
 
-        for album_name in &albums_needs_to_update {
-            if let Some(album) = albums_map.get(album_name) {
-                if album.tracks_ids.is_empty() {
-                    db.remove_from_db(album)?;
-                } else {
-                    db.add_to_db(album)?;
-                }
-            }
+        for album in new_albums {
+            debug(format!("{} created", album.0));
+            db.add_to_db(&album.1)?;
         }
 
-        Ok(albums_map.into_values().collect())
+        Ok(())
     }
 
-    fn create_new_album(track: &Track, tracks_ids: Vec<String>) -> Result<Self> {
-        Ok(Self {
+    fn update_album(&mut self, first_track: &Track) {
+        self.title = first_track.album.clone();
+        self.performer = first_track.performer.clone();
+        self.cover_uri = first_track.get_cover_as_uri();
+    }
+
+    fn create_new_album(first_track: &Track, tracks_ids: Vec<String>) -> Self {
+        Self {
             uuid: Uuid::new_v4().to_string(),
             tracks_ids,
-            title: track.album.clone(),
-            performer: track.performer.clone(),
-            cover_uri: track.get_cover_as_uri(),
-        })
+            title: first_track.album.clone(),
+            performer: first_track.performer.clone(),
+            cover_uri: first_track.get_cover_as_uri(),
+        }
     }
 }
 
