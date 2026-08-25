@@ -5,7 +5,7 @@ use std::{
     time::{Duration, UNIX_EPOCH},
 };
 
-use anyhow::Result;
+use anyhow::{Result, bail};
 use lofty::{
     config::ParseOptions,
     file::{self, AudioFile, TaggedFile, TaggedFileExt},
@@ -20,6 +20,7 @@ use lofty::{
 use rcue::{cue::Cue, parser::parse_from_file};
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
 use rustc_serialize::base64::{MIME, ToBase64};
+use sled::Db;
 use ts_rs::TS;
 use uuid::Uuid;
 
@@ -28,8 +29,15 @@ use crate::{
         db::{self, DB},
         user::settings::UserSettings,
     },
-    logger::{debug, fatal},
-    media::{cover_get::CoverGet, media_trait::Media, playable_type::MediaType},
+    logger::{debug, error, fatal},
+    media::{
+        album::{self, Album},
+        cover_get::CoverGet,
+        media_array::MediaArrayType::{self},
+        media_trait::Media,
+        performer,
+        playable_type::MediaType,
+    },
 };
 
 #[derive(
@@ -244,12 +252,19 @@ impl Track {
 
     pub fn edit_metadata(
         &mut self,
+        db: &DB,
         title: String,
         album: String,
         performer: String,
         genre: String,
         cover_path: Option<String>,
     ) -> Result<()> {
+        let old_album = self.album.clone();
+        let old_performer = self.performer.clone();
+
+        if self.path != self.source_path {
+            bail!("Track from cue")
+        }
         let options = ParseOptions::new().parsing_mode(lofty::config::ParsingMode::Relaxed);
         let mut tagged_file = Probe::open(&self.path)?
             .options(options)
@@ -269,10 +284,10 @@ impl Track {
             }
         };
 
-        tag.set_title(title);
-        tag.set_album(album);
-        tag.set_artist(performer);
-        tag.set_genre(genre);
+        tag.set_title(title.clone());
+        tag.set_album(album.clone());
+        tag.set_artist(performer.clone());
+        tag.set_genre(genre.clone());
 
         if let Some(path) = cover_path {
             let bytes = fs::read(path)?;
@@ -286,6 +301,23 @@ impl Track {
             .open(&self.path)?;
 
         tag.save_to(&mut file, lofty::config::WriteOptions::default())?;
+
+        self.title = title;
+        self.album = album;
+        self.performer = performer;
+        self.genre = genre;
+
+        if self.album != old_album {}
+
+        _ = db.update_in_db(self).map_err(|err| error(err.to_string()));
+
+        if old_album != self.album {
+            db.add_track_to_media_array(&self.album, MediaArrayType::Album, self);
+        }
+        if old_performer != self.performer {
+            db.add_track_to_media_array(&self.performer, MediaArrayType::Performer, self);
+        }
+
         Ok(())
     }
 }
@@ -328,9 +360,8 @@ impl Media for Track {
         return vec![self.uuid.clone()];
     }
 
-    fn edit_media(&self, db: &DB) -> Result<()> {
-        todo!();
-        Ok(())
+    fn get_uuid(&self) -> String {
+        self.uuid.clone()
     }
 }
 

@@ -21,3 +21,33 @@ pub enum PlayableResult {
     Performer(Performer),
     Playlist(Playlist),
 }
+
+impl PlayableResult {
+    pub fn unwrap_as_track(self) -> Track {
+        match self {
+            Self::Track(track) => track,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn unwrap_as_album(self) -> Album {
+        match self {
+            Self::Album(album) => album,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn unwrap_as_performer(self) -> Performer {
+        match self {
+            Self::Performer(performer) => performer,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn unwrap_as_playlist(self) -> Playlist {
+        match self {
+            Self::Playlist(playylist) => playylist,
+            _ => unreachable!(),
+        }
+    }
+}

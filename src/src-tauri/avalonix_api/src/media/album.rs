@@ -15,6 +15,7 @@ use crate::{
     media::{
         album,
         cover_get::CoverGet,
+        media_array::MediaArray,
         media_trait::Media,
         playable_type::{MediaType, PlayableResult},
         track::Track,
@@ -110,7 +111,7 @@ impl Album {
         self.cover_uri = first_track.get_cover_as_uri();
     }
 
-    fn create_new_album(first_track: &Track, tracks_ids: Vec<String>) -> Self {
+    pub fn create_new_album(first_track: &Track, tracks_ids: Vec<String>) -> Self {
         Self {
             uuid: Uuid::new_v4().to_string(),
             tracks_ids,
@@ -118,6 +119,39 @@ impl Album {
             performer: first_track.performer.clone(),
             cover_uri: first_track.get_cover_as_uri(),
         }
+    }
+
+    pub fn edit_metadata(&mut self, db: &DB, title: String, performer: String) -> Result<()> {
+        self.title = title;
+        self.performer = performer;
+
+        let mut tracks_removes_from_other_albums: HashMap<String, String> = HashMap::new();
+
+        for track_uuid in self.tracks_ids.iter() {
+            let track = db
+                .get_media_by_id(track_uuid.clone(), MediaType::Track)
+                .unwrap()
+                .unwrap_as_track();
+
+            if track.album != self.title {
+                tracks_removes_from_other_albums.insert(track.album.clone(), track_uuid.clone());
+            }
+
+            _ = db
+                .edit_track(
+                    track_uuid.clone(),
+                    track.title,
+                    self.title.clone(),
+                    self.performer.clone(),
+                    track.genre,
+                    None,
+                )
+                .map_err(|err| error(err.to_string()));
+        }
+
+        db.update_in_db(self)?;
+
+        Ok(())
     }
 }
 
@@ -155,21 +189,33 @@ impl Media for Album {
         self.tracks_ids.clone()
     }
 
-    fn edit_media(&self, db: &DB) -> Result<()> {
-        /*let mut self_clone = self.clone();
-        self_clone.uuid = uuid;
-        db.add_to_db(&self_clone)?;
-        for id in &self.tracks_ids {
-            let track = db.get_media_by_id(id.clone(), MediaType::Track)?;
-            match track {
-                PlayableResult::Track(track) => {
-                    let mut new_track = track.clone();
-                    new_track.album = self.title.clone();
-                    new_track.edit_media(track.uuid, db)?;
-                }
-                _ => {}
-            }
-        }*/
-        Ok(())
+    fn get_uuid(&self) -> String {
+        self.uuid.clone()
+    }
+}
+
+impl MediaArray for Album {
+    fn add_track(&mut self, db: &DB, track_uuid: String) {
+        self.tracks_ids.push(track_uuid);
+        _ = db.update_in_db(self);
+    }
+
+    fn remove_track(&mut self, db: &DB, track_uuid: String) {
+        let ind = self
+            .tracks_ids
+            .iter_mut()
+            .position(|uuid| *uuid == track_uuid)
+            .unwrap();
+        self.tracks_ids.remove(ind);
+        if self.tracks_ids.len() > 0 {
+            _ = db.update_in_db(self);
+        } else {
+            _ = db.remove_from_db(self);
+        }
+    }
+
+    fn create_new_for_track(db: &DB, track: &Track) {
+        let album = Self::create_new_album(track, vec![track.uuid.clone()]);
+        db.add_to_db(&album);
     }
 }

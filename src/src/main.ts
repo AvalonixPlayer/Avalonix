@@ -33,7 +33,7 @@ async function init() {
   listen("queue-updated", async () => await fillPlayQueueList());
 }
 
-async function loadLib() {
+export async function loadLib() {
   await initMediaSearch();
   await fillTracksList();
   await fillAlbumsList();

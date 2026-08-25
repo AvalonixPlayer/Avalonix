@@ -1,3 +1,5 @@
+use std::todo;
+
 use anyhow::{Result, bail};
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
 use ts_rs::TS;
@@ -5,7 +7,7 @@ use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
-    media::{media_trait::Media, playable_type::MediaType},
+    media::{media_array::MediaArray, media_trait::Media, playable_type::MediaType, track::Track},
 };
 
 #[derive(
@@ -64,11 +66,32 @@ impl Media for Playlist {
         self.tracks_ids.clone()
     }
 
-    fn edit_media(&self, db: &DB) -> Result<()> {
-        /*
-        let mut self_clone = self.clone();
-        self_clone.uuid = uuid;
-        db.add_to_db(&self_clone)?; */
-        Ok(())
+    fn get_uuid(&self) -> String {
+        self.uuid.clone()
+    }
+}
+
+impl MediaArray for Playlist {
+    fn add_track(&mut self, db: &DB, track_uuid: String) {
+        self.tracks_ids.push(track_uuid);
+        _ = db.update_in_db(self);
+    }
+
+    fn remove_track(&mut self, db: &DB, track_uuid: String) {
+        let ind = self
+            .tracks_ids
+            .iter_mut()
+            .position(|uuid| *uuid == track_uuid)
+            .unwrap();
+        self.tracks_ids.remove(ind);
+        if self.tracks_ids.len() > 0 {
+            _ = db.update_in_db(self);
+        } else {
+            _ = db.remove_from_db(self);
+        }
+    }
+
+    fn create_new_for_track(db: &DB, track: &Track) {
+        todo!()
     }
 }

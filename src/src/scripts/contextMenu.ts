@@ -6,6 +6,8 @@ import { PlayableResult } from "../bindings/PlayableResult";
 import { Track } from "../bindings/Track";
 import { PlayableType } from "../bindings/PlayableType";
 import { pickFile } from "./filePicker";
+import { Album } from "../bindings/Album";
+import { loadLib } from "../main";
 
 const menu = (): string => `<context-menu></context-menu>`;
 
@@ -16,7 +18,15 @@ export async function contextMenuForTrackInLib(track_uuid: String, e: Event) {
 
   await addToQueueButton("Track", track_uuid as string);
   await startBtn("Track", track_uuid as string);
-  await editMediaButton("Track", track_uuid as string);
+  let track = (
+    await invoke<PlayableResult>("get_playable_by_id", {
+      mediaType: "Track",
+      id: track_uuid,
+    })
+  ).data as Track;
+  if (track.path == track.source_path) {
+    await editMediaButton("Track", track_uuid as string);
+  }
 }
 
 async function addToQueueButton(mt: MediaType, uuid: string) {
@@ -68,6 +78,8 @@ export async function contextMenuForAlbumInLib(album_uuid: String, e: Event) {
 
   await addToQueueButton("Album", album_uuid as string);
   await startBtn("Album", album_uuid as string);
+
+  await editMediaButton("Album", album_uuid as string);
 }
 
 export async function contextMenuForPerformerInLib(performer_uuid: String, e: Event) {
@@ -84,7 +96,16 @@ export async function contextMenuForTracksInQueue(track_uuid: String, e: Event) 
 
   await jumpToTrack(track_uuid as string);
   await removeTrackFromQueue(track_uuid as string);
-  await editMediaButton("Track", track_uuid as string);
+
+  let track = (
+    await invoke<PlayableResult>("get_playable_by_id", {
+      mediaType: "Track",
+      id: track_uuid,
+    })
+  ).data as Track;
+  if (track.path == track.source_path) {
+    await editMediaButton("Track", track_uuid as string);
+  }
 }
 
 export async function contextMenuForPlaylist(playlist_uuid: String, e: Event) {
@@ -120,14 +141,16 @@ function deactivateEditMediaMenu() {
 
 async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
   document.body.insertAdjacentHTML("beforeend", '<div id="blur-for-top"></div>');
-  document.body.insertAdjacentHTML("beforeend", '<section class="section top-section" id="track-edit-window"><div id="text-metadatas"></div><div id="not-text-metadatas"></div></section>');
+
+
   (document.querySelector("#blur-for-top")! as HTMLElement).addEventListener("click", () => deactivateEditMediaMenu());
 
   switch (medaiaType) {
     case "Track":
-      await edit_track()
+      await edit_track();
       break;
     case "Album":
+      await edit_album();
       break;
     case "Performer":
       break;
@@ -135,9 +158,8 @@ async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
       break;
   }
 
-
-
   async function edit_track() {
+    document.body.insertAdjacentHTML("beforeend", '<section class="section top-section" id="track-edit-window"><div id="text-metadatas"></div><div id="not-text-metadatas"></div></section>');
     let topSection = document.querySelector(".section.top-section");
     let textData = topSection!.querySelector("#text-metadatas");
     let notTextData = topSection!.querySelector("#not-text-metadatas");
@@ -187,8 +209,39 @@ async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
         performer: (textData!.querySelector("#new-track-performer") as HTMLInputElement).value,
         genre: (textData!.querySelector("#new-track-genre") as HTMLInputElement).value,
         pathToCover: pathToCover,
-      })
+      });
       await deactivateEditMediaMenu();
+      await invoke("update_library");
+    })
+  }
+
+  async function edit_album() {
+
+    document.body.insertAdjacentHTML("beforeend", '<section class="section top-section" id="album-edit-window"></section>');
+    let edit_window = document.querySelector("#album-edit-window");
+    let topSection = document.querySelector(".section.top-section");
+    topSection!.insertAdjacentHTML("beforeend", '<button id="apply-edit-media"><h2>Apply</h2></button>');
+    let apply = topSection!.querySelector("#apply-edit-media");
+
+    let album = (await invoke<PlayableResult>("get_playable_by_id", {
+      mediaType: "Album",
+      id: mediaUuid,
+    })
+    ).data as Album;
+
+    edit_window!.insertAdjacentHTML("beforeend", '<h4>Title</h4>');
+    edit_window!.insertAdjacentHTML("beforeend", `<input id="new-album-title" type="text" value="${album.title}" placeholder="Title">`);
+    edit_window!.insertAdjacentHTML("beforeend", '<h4>Performer</h4>');
+    edit_window!.insertAdjacentHTML("beforeend", `<input id="new-album-performer" type="text" value="${album.performer}" placeholder="Album">`);
+
+    apply!.addEventListener("click", async () => {
+      await invoke("edit_album", {
+        uuid: mediaUuid,
+        title: (edit_window!.querySelector("#new-album-title") as HTMLInputElement).value,
+        performer: (edit_window!.querySelector("#new-album-performer") as HTMLInputElement).value,
+      });
+      await deactivateEditMediaMenu();
+      await invoke("update_library");
     })
   }
 }

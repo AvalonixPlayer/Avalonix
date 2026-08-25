@@ -7,5 +7,5 @@ pub trait Media {
     fn name_starts_with<P: AsRef<str>>(&self, start: P) -> bool;
     fn convert_to_db(&self) -> Result<(Vec<u8>, Vec<u8>)>;
     fn get_tracks_uuids(&self) -> Vec<String>;
-    fn edit_media(&self, db: &DB) -> Result<()>;
+    fn get_uuid(&self) -> String;
 }

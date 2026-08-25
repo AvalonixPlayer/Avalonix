@@ -64,7 +64,8 @@ pub fn run() -> Result<()> {
             commands::remove_playlist,
             commands::add_track_to_playlist,
             commands::get_playables_ids_by_part_of_name,
-            commands::edit_track
+            commands::edit_track,
+            commands::edit_album
         ])
         .manage(api.db)
         .manage(api.media_player)

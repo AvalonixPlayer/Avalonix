@@ -131,7 +131,6 @@ pub async fn add_track_to_playlist(
 #[tauri::command]
 pub async fn edit_track(
     db: tauri::State<'_, Arc<RwLock<DB>>>,
-    player: tauri::State<'_, Arc<Mutex<MediaPlayer>>>,
     settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     uuid: String,
@@ -155,9 +154,22 @@ pub async fn edit_track(
         .unwrap()
         .edit_track(uuid, title, album, performer, genre, path_to_cover)
         .map_err(|err| err.to_string())?;
+
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn edit_album(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    uuid: String,
+    title: String,
+    performer: String,
+) -> Result<(), String> {
     db.write()
         .unwrap()
-        .update(&mut settings.lock_unw())
+        .edit_album(uuid, title, performer)
         .map_err(|err| err.to_string())?;
     Ok(())
 }

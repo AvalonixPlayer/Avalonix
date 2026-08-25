@@ -1,6 +1,7 @@
 use std::{
     format, fs,
     sync::{Arc, Mutex, mpsc::Sender},
+    todo,
 };
 
 use anyhow::{Result, anyhow, bail};
@@ -14,6 +15,7 @@ use crate::{
     logger::{debug, error},
     media::{
         album::Album,
+        media_array::{MediaArray, MediaArrayType},
         media_trait::Media,
         performer::Performer,
         playable_type::{MediaType, PlayableResult},
@@ -69,6 +71,24 @@ impl DB {
         Ok(())
     }
 
+    pub fn update_in_db<T>(&self, media: &T) -> Result<()>
+    where
+        T: Media,
+    {
+        let (_, value) = media.convert_to_db()?;
+
+        let tree = match media.get_media_type() {
+            MediaType::Track => &self.tracks_tree,
+            MediaType::Album => &self.albums_tree,
+            MediaType::Performer => &self.performers_tree,
+            MediaType::Playlist => &self.playlists_tree,
+        };
+        let uuid = rkyv::to_bytes::<Error>(&media.get_uuid())?.to_vec();
+        tree.insert(uuid, value)?;
+
+        Ok(())
+    }
+
     /// Removes media from db
     pub fn remove_from_db<T>(&self, media: &T) -> Result<()>
     where
@@ -85,38 +105,111 @@ impl DB {
         Ok(())
     }
 
-    pub fn get_uuids(&self, media_type: MediaType) -> Result<Vec<String>> {
-        let mut result = vec![];
-        match media_type {
-            MediaType::Track => {
-                for media in &self.tracks_tree {
-                    let (id, _val) = media?;
-                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
-                    result.push(id);
+    pub fn add_track_to_media_array<P: AsRef<str>>(
+        &self,
+        media_array_name: P,
+        media_array_type: MediaArrayType,
+        track: &Track,
+    ) -> Result<()> {
+        match media_array_type {
+            MediaArrayType::Album => {
+                let mut albums = self.get_every_album().unwrap();
+                if let Some(album) = albums
+                    .iter_mut()
+                    .find(|album| album.title == media_array_name.as_ref())
+                {
+                    album.add_track(self, track.uuid.clone());
+                } else {
+                    Album::create_new_for_track(self, track);
                 }
             }
-            MediaType::Album => {
-                for media in &self.albums_tree {
-                    let (id, _) = media?;
-                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
-                    result.push(id);
+            MediaArrayType::Performer => {
+                let mut performers = self.get_every_performer().unwrap();
+                if let Some(performer) = performers
+                    .iter_mut()
+                    .find(|performer| performer.title == media_array_name.as_ref())
+                {
+                    performer.add_track(self, track.uuid.clone());
+                } else {
+                    Performer::create_new_for_track(self, track);
                 }
             }
-            MediaType::Performer => {
-                for media in &self.performers_tree {
-                    let (id, _) = media?;
-                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
-                    result.push(id);
-                }
-            }
-            MediaType::Playlist => {
-                for media in &self.playlists_tree {
-                    let (id, _) = media?;
-                    let id: String = rkyv::from_bytes::<String, Error>(&id)?;
-                    result.push(id);
+            MediaArrayType::Playlist => {
+                let mut playlists = self.get_every_performer().unwrap();
+                if let Some(playlist) = playlists
+                    .iter_mut()
+                    .find(|playlist| playlist.title == media_array_name.as_ref())
+                {
+                    playlist.add_track(self, track.uuid.clone());
+                } else {
+                    error("Playlist don`t exists");
                 }
             }
         }
+
+        Ok(())
+    }
+
+    pub fn remove_track_from_media_array<P: AsRef<str>>(
+        &self,
+        media_array_name: P,
+        media_array_type: MediaArrayType,
+        track: &Track,
+    ) -> Result<()> {
+        match media_array_type {
+            MediaArrayType::Album => {
+                let mut albums = self.get_every_album().unwrap();
+                if let Some(album) = albums
+                    .iter_mut()
+                    .find(|album| album.title == media_array_name.as_ref())
+                {
+                    album.remove_track(self, track.uuid.clone());
+                } else {
+                    Album::create_new_for_track(self, track);
+                }
+            }
+            MediaArrayType::Performer => {
+                let mut performers = self.get_every_performer().unwrap();
+                if let Some(performer) = performers
+                    .iter_mut()
+                    .find(|performer| performer.title == media_array_name.as_ref())
+                {
+                    performer.remove_track(self, track.uuid.clone());
+                } else {
+                    Performer::create_new_for_track(self, track);
+                }
+            }
+            MediaArrayType::Playlist => {
+                let mut playlists = self.get_every_performer().unwrap();
+                if let Some(playlist) = playlists
+                    .iter_mut()
+                    .find(|playlist| playlist.title == media_array_name.as_ref())
+                {
+                    playlist.add_track(self, track.uuid.clone());
+                } else {
+                    error("Playlist don`t exists");
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn get_uuids(&self, media_type: MediaType) -> Result<Vec<String>> {
+        let mut result = vec![];
+        let media_tree = match media_type {
+            MediaType::Track => &self.tracks_tree,
+            MediaType::Album => &self.albums_tree,
+            MediaType::Performer => &self.performers_tree,
+            MediaType::Playlist => &self.playlists_tree,
+        };
+
+        for media in media_tree {
+            let (id, _val) = media?;
+            let id: String = rkyv::from_bytes::<String, Error>(&id)?;
+            result.push(id);
+        }
+
         Ok(result)
     }
 
@@ -320,14 +413,17 @@ impl DB {
         cover_path: Option<String>,
     ) -> Result<()> {
         let media = self.get_media_by_id(uuid, MediaType::Track)?;
-        match media {
-            PlayableResult::Track(mut track) => {
-                track.edit_metadata(title, album, performer, genre, cover_path)?;
-            }
-            PlayableResult::Album(_) => todo!(),
-            PlayableResult::Performer(_) => todo!(),
-            PlayableResult::Playlist(_) => todo!(),
-        }
+        media
+            .unwrap_as_track()
+            .edit_metadata(self, title, album, performer, genre, cover_path)?;
+        Ok(())
+    }
+
+    pub fn edit_album(&self, uuid: String, title: String, performer: String) -> Result<()> {
+        let media = self.get_media_by_id(uuid, MediaType::Album)?;
+        media
+            .unwrap_as_album()
+            .edit_metadata(self, title, performer)?;
         Ok(())
     }
 
