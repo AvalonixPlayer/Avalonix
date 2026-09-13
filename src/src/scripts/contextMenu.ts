@@ -4,10 +4,9 @@ import { addMediaToQueue, startMedia } from "./playQueue";
 import { fillPlaylistsList } from "./playlistsCreator";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { Track } from "../bindings/Track";
-import { PlayableType } from "../bindings/PlayableType";
 import { pickFile } from "./filePicker";
 import { Album } from "../bindings/Album";
-import { loadLib } from "../main";
+import { Performer } from "../bindings/Performer";
 
 const menu = (): string => `<context-menu></context-menu>`;
 
@@ -88,6 +87,9 @@ export async function contextMenuForPerformerInLib(performer_uuid: String, e: Ev
 
   await addToQueueButton("Performer", performer_uuid as string);
   await startBtn("Performer", performer_uuid as string);
+
+  await editMediaButton("Performer", performer_uuid as string);
+
 }
 
 export async function contextMenuForTracksInQueue(track_uuid: String, e: Event) {
@@ -153,6 +155,7 @@ async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
       await edit_album();
       break;
     case "Performer":
+      await edit_performer();
       break;
     case "Playlist":
       break;
@@ -216,7 +219,6 @@ async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
   }
 
   async function edit_album() {
-
     document.body.insertAdjacentHTML("beforeend", '<section class="section top-section" id="album-edit-window"></section>');
     let edit_window = document.querySelector("#album-edit-window");
     let topSection = document.querySelector(".section.top-section");
@@ -239,6 +241,32 @@ async function activateEditMediaMenu(mediaUuid: String, medaiaType: MediaType) {
         uuid: mediaUuid,
         title: (edit_window!.querySelector("#new-album-title") as HTMLInputElement).value,
         performer: (edit_window!.querySelector("#new-album-performer") as HTMLInputElement).value,
+      });
+      await deactivateEditMediaMenu();
+      await invoke("update_library");
+    })
+  }
+
+  async function edit_performer() {
+    document.body.insertAdjacentHTML("beforeend", '<section class="section top-section" id="album-edit-window"></section>');
+    let edit_window = document.querySelector("#album-edit-window");
+    let topSection = document.querySelector(".section.top-section");
+    topSection!.insertAdjacentHTML("beforeend", '<button id="apply-edit-media"><h2>Apply</h2></button>');
+    let apply = topSection!.querySelector("#apply-edit-media");
+
+    let performer = (await invoke<PlayableResult>("get_playable_by_id", {
+      mediaType: "Performer",
+      id: mediaUuid,
+    })
+    ).data as Performer;
+
+    edit_window!.insertAdjacentHTML("beforeend", '<h4>Title</h4>');
+    edit_window!.insertAdjacentHTML("beforeend", `<input id="new-performer-title" type="text" value="${performer.title}" placeholder="Title">`);
+
+    apply!.addEventListener("click", async () => {
+      await invoke("edit_performer", {
+        uuid: mediaUuid,
+        title: (edit_window!.querySelector("#new-performer-title") as HTMLInputElement).value,
       });
       await deactivateEditMediaMenu();
       await invoke("update_library");

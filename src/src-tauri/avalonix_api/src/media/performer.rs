@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 use crate::{
     disk::db::DB,
-    logger::debug,
+    logger::{debug, error},
     media::{
         media_array::MediaArray,
         media_trait::Media,
@@ -109,6 +109,36 @@ impl Performer {
             tracks_ids,
             title: track.performer.clone(),
         }
+    }
+
+    pub fn edit_metadata(&mut self, db: &DB, title: String) -> Result<()> {
+        self.title = title;
+
+        for track_uuid in self.tracks_ids.iter() {
+            let track = db
+                .get_media_by_id(track_uuid.clone(), MediaType::Track)
+                .unwrap()
+                .unwrap_as_track();
+
+            let title = track.title.clone();
+            let album = track.album.clone();
+            let genre = track.genre.clone();
+            _ = db
+                .edit_track(
+                    track,
+                    track_uuid.clone(),
+                    title,
+                    album,
+                    self.title.clone(),
+                    genre,
+                    None,
+                )
+                .map_err(|err| error(err.to_string()));
+        }
+
+        db.update_in_db(self)?;
+
+        Ok(())
     }
 }
 

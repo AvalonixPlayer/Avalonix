@@ -150,9 +150,16 @@ pub async fn edit_track(
         }
     }
 
+    let track = db
+        .read()
+        .unwrap()
+        .get_media_by_id(uuid.clone(), MediaType::Track)
+        .unwrap()
+        .unwrap_as_track();
+
     db.write()
         .unwrap()
-        .edit_track(uuid, title, album, performer, genre, path_to_cover)
+        .edit_track(track, uuid, title, album, performer, genre, path_to_cover)
         .map_err(|err| err.to_string())?;
 
     Ok(())
@@ -170,6 +177,20 @@ pub async fn edit_album(
     db.write()
         .unwrap()
         .edit_album(uuid, title, performer)
+        .map_err(|err| err.to_string())?;
+    Ok(())
+}
+#[tauri::command]
+pub async fn edit_performer(
+    db: tauri::State<'_, Arc<RwLock<DB>>>,
+    settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    uuid: String,
+    title: String,
+) -> Result<(), String> {
+    db.write()
+        .unwrap()
+        .edit_performer(uuid, title)
         .map_err(|err| err.to_string())?;
     Ok(())
 }

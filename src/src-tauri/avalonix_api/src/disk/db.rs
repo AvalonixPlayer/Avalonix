@@ -405,6 +405,7 @@ impl DB {
 
     pub fn edit_track(
         &self,
+        mut media: Track,
         uuid: String,
         title: String,
         album: String,
@@ -412,10 +413,7 @@ impl DB {
         genre: String,
         cover_path: Option<String>,
     ) -> Result<()> {
-        let media = self.get_media_by_id(uuid, MediaType::Track)?;
-        media
-            .unwrap_as_track()
-            .edit_metadata(self, title, album, performer, genre, cover_path)?;
+        media.edit_metadata(self, title, album, performer, genre, cover_path)?;
         Ok(())
     }
 
@@ -424,6 +422,12 @@ impl DB {
         media
             .unwrap_as_album()
             .edit_metadata(self, title, performer)?;
+        Ok(())
+    }
+
+    pub fn edit_performer(&self, uuid: String, title: String) -> Result<()> {
+        let media = self.get_media_by_id(uuid, MediaType::Performer)?;
+        media.unwrap_as_performer().edit_metadata(self, title)?;
         Ok(())
     }
 

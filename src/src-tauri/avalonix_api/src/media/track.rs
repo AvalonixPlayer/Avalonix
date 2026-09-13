@@ -29,7 +29,7 @@ use crate::{
         db::{self, DB},
         user::settings::UserSettings,
     },
-    logger::{debug, error, fatal},
+    logger::{debug, error, fatal, info},
     media::{
         album::{self, Album},
         cover_get::CoverGet,
@@ -318,6 +318,7 @@ impl Track {
             db.add_track_to_media_array(&self.performer, MediaArrayType::Performer, self);
         }
 
+        info("Track updated");
         Ok(())
     }
 }

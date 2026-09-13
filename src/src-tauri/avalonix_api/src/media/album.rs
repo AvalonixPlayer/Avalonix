@@ -125,25 +125,22 @@ impl Album {
         self.title = title;
         self.performer = performer;
 
-        let mut tracks_removes_from_other_albums: HashMap<String, String> = HashMap::new();
-
         for track_uuid in self.tracks_ids.iter() {
             let track = db
                 .get_media_by_id(track_uuid.clone(), MediaType::Track)
                 .unwrap()
                 .unwrap_as_track();
 
-            if track.album != self.title {
-                tracks_removes_from_other_albums.insert(track.album.clone(), track_uuid.clone());
-            }
-
+            let title = track.title.clone();
+            let genre = track.genre.clone();
             _ = db
                 .edit_track(
+                    track,
                     track_uuid.clone(),
-                    track.title,
+                    title,
                     self.title.clone(),
                     self.performer.clone(),
-                    track.genre,
+                    genre,
                     None,
                 )
                 .map_err(|err| error(err.to_string()));
