@@ -1,31 +1,37 @@
-h1 {
-    font-size: var(--text-size-1);
-    font-weight: bold;
-    color: aliceblue;
-    text-align: center;
+body {
+    font-family: "IBMPlexSans";
+}
+
+@font-face {
+  font-family: "IBMPlexSans";
+  src: url("../assets/fonts/IBMPlexSans-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+h1, h2,h3,h4,h5{
+    font-family: "IBMPlexSans" !important;
+    color: whitesmoke;
     margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 50px;
 }
 
 h2 {
-    font-size: var(--text-size-2);
-    font-weight: bold;
-    color: aliceblue;
-    text-align: center;
-    margin: 0;
+    font-size: 42px;
 }
 
 h3 {
-    font-size: var(--text-size-3);
-    font-weight: bold;
-    color: aliceblue;
-    text-align: center;
-    margin: 0;
+    font-size: 35px;
 }
 
 h4 {
-    font-size: var(--text-size-4);
-    font-weight: bold;
-    color: aliceblue;
-    text-align: center;
-    margin: 0;
+    font-size: 24px;
+}
+
+h5 {
+    font-size: 16px;
 }

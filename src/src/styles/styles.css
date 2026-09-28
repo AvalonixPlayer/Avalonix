@@ -1,41 +1,18 @@
-@import "sections.css";
-@import "leftMenuButtons.css";
-@import "playbackControll.css";
-@import "button.css";
-@import "plablesSellects.css";
-@import "text.css";
+@import "background.css";
+@import "panels.css";
+@import "buttons.css";
 @import "scrollbar.css";
-@import "trackPreview.css";
-@import "settings.css";
-@import "row.css";
-@import "inputs.css";
-@import "contextMenu.css";
-@import "editWindows.css";
+@import "tabs.css";
+@import "text.css";
+@import "playableList.css";
 
 :root {
-    font-family:
-    Roboto;
+    --background-src: #1c1c1c;
+    --second-color: #212121;
+    --third-color: #2E8B57;
 
-    --playback-controll-section-height: 80px;
-    --left-menu-section-width: 50px;
-    --button-hover-color: #65547D;
-    --button-active-color: #7F68A2CC;
-    --text-select-color: rgba(127, 104, 162, 0.8);
-    --albums-empty-color: rgba(10, 10, 10);
-
-    --text-size-1: 0;
-    --text-size-2: 0;
-    --text-size-3: 0;
-    --text-size-4: 0;
-
-    --first-color: #212020;
-    --second-color: #202020;
-
-    --background-blur: 0px;
-
-    --sliders-color: #460077;
-
-    --context-menu-bg: red;
+    --playback-panel-height: 75px;
+    --left-panel-width: 75px;
 }
 
 body {
@@ -43,17 +20,4 @@ body {
     padding: 0;
     overflow: hidden;
     user-select: none;
-}
-
-img {
-    pointer-events: none;
-}
-
-#background-image {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: -100;
-  scale: 1.2;
-  filter: blur(var(--background-blur));
 }

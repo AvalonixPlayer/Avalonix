@@ -1,26 +1,20 @@
 import { invoke } from "@tauri-apps/api/core";
-import { Track } from "../bindings/Track";
 import { PlayableResult } from "../bindings/PlayableResult";
+import { Track } from "../bindings/Track";
 import { addMediaToQueue } from "./playQueue";
-import { contextMenuForTrackInLib } from "./contextMenu";
 
-export const trackTemplate = (uuid: string): string => `
-  <div class="playable-sellect-item track" data-uuid=${uuid}>
-    <h3 class="track-title-button"></h3>
-    <h3 class="track-performer-button"></h3>
-    <h3 class="track-album-title-button"></h3>
+const trackButtonTemplate = (track_uuid: string): string =>
+  `<div class="button playable track-button" data-uuid="${track_uuid}">
+    <h4 class="track-title"></h3>
+    <h5 class="track-performer"></h4>
   </div>`;
 
-export async function fillTracksList() {
-  let tracks_ids = await invoke<string[]>("get_playables_ids", {
+export async function fillTracksLibrary() {
+  let tracksIds = await invoke<string[]>("get_playables_ids", {
     mediaType: "Track",
-  }).catch(() => console.error("Error while getting tracks ids"));
+  }).catch(() => console.error("Error while getting tracks in library ids"));
 
-  if (tracks_ids == null) {
-    return;
-  }
-
-  let tracksList = document.getElementById("tracks-list-section");
+  let tracksList = document.getElementById("tracks-list");
   tracksList!.innerHTML = "";
 
   const observer = new IntersectionObserver(
@@ -28,6 +22,7 @@ export async function fillTracksList() {
       enteries.forEach(async (entry) => {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
+          console.log(element);
           let uuid = element.getAttribute("data-uuid");
           let track = (
             await invoke<PlayableResult>("get_playable_by_id", {
@@ -36,38 +31,33 @@ export async function fillTracksList() {
             })
           ).data as Track;
 
-          let titleButton = element.querySelector(".track-title-button")!;
-          titleButton.textContent = track.title;
+          let trackTitle = element.querySelector(".track-title")!;
+          trackTitle.textContent = track.title;
+          let trackPerformer = element.querySelector(".track-performer")!;
+          trackPerformer.textContent = track.performer;
+
           element.addEventListener("click", async () => {
-            addMediaToQueue("Track", uuid!);
+            await addMediaToQueue("Track", uuid!);
           });
-
-          element.addEventListener("contextmenu", async (e) => {
-            await contextMenuForTrackInLib(uuid!, e);
-          })
-
-          element.querySelector(".track-performer-button")!.textContent =
-            track.performer;
-          element.querySelector(".track-album-title-button")!.textContent =
-            track.album;
           observer.unobserve(element);
         }
       });
     },
     {
-      root: null,
       threshold: 0.1,
     },
+
   );
 
-  tracks_ids!.forEach((track_id) => {
-    let element = trackTemplate(track_id);
-    tracksList!.insertAdjacentHTML("beforeend", element);
+  tracksIds?.forEach(id => {
+    let trackButton = trackButtonTemplate(id);
+
+    tracksList!.insertAdjacentHTML("beforeend", trackButton);
 
     const lastInsertedElement = tracksList!.lastElementChild as HTMLElement;
 
     if (lastInsertedElement) {
-      observer.observe(lastInsertedElement);
+      observer.observe(lastInsertedElement)
     }
   });
 }

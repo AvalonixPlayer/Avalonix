@@ -1,0 +1,8 @@
+.tab {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100vh - var(--playback-panel-height));
+    overflow-x: hidden;
+    overflow-y: auto;
+}

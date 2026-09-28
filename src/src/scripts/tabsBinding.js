@@ -1,19 +1,19 @@
 const sections = Array.from(
-  document.getElementsByClassName("section main-tab-section"),
+  document.getElementsByClassName("tab"),
 );
 
 const tabBinding = {
-  "search-media-tab-button" : "media-search-section",
-  "tracks-tab-button": "tracks-list-section",
-  "albums-tab-button": "albums-list-section",
-  "performers-tab-button": "performers-list-section",
-  "playlists-tab-button": "playlists-section",
-  "queue-tab-button": "queue-section",
-  "settings-tab-button": "settings-section",
-  "current-track-show-button": "track-preview-section",
+  "search-media-tab-button" : "media-search-tab",
+  "tracks-tab-button": "tracks-list-tab",
+  "albums-tab-button": "albums-list-tab",
+  "performers-tab-button": "performers-list-tab",
+  "playlists-tab-button": "playlists-tab",
+  "queue-tab-button": "queue-tab",
+  "settings-tab-button": "settings-tab",
+  //"current-track-show-button": "track-preview-tab",
 };
 
-export function initMainSectionControll() {
+export function initTabs() {
   disable_all();
 
   Object.entries(tabBinding).forEach((tab, i) => {

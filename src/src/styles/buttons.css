@@ -1,0 +1,59 @@
+.button {
+    --button-scale: 100%;
+    --border-radius: 20px;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+
+    transition: ease 0.2s;
+}
+
+.button-image > img{
+    user-select: none;
+}
+
+.button.left-panel-button {
+    --button-scale: 110%;
+    padding: 30px;
+    width: 50px;
+    height: 50px;
+}
+
+.button.left-panel-button > img {
+    width: 40px;
+}
+
+.button:hover {
+    background: var(--third-color);
+    border-radius: var(--border-radius);
+}
+
+.button:active{
+    scale: var(--button-scale);
+}
+
+.button.playable.track-button {
+    --button-scale: 105%;
+    --border-radius: 10px;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+    padding-left: 25px;
+}
+
+.button.playable.track-button > .track-title {
+    max-width: calc(100vw - var(--left-panel-width) - 50px);
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
