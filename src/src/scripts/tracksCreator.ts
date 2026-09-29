@@ -5,8 +5,11 @@ import { addMediaToQueue } from "./playQueue";
 
 const trackButtonTemplate = (track_uuid: string): string =>
   `<div class="button playable track-button" data-uuid="${track_uuid}">
-    <h4 class="track-title"></h3>
-    <h5 class="track-performer"></h4>
+    <img class="cover track cover-in-library" src="">
+    <div>
+      <h4 class="track-title"></h3>
+      <h5 class="track-performer"></h4>
+    </div>
   </div>`;
 
 export async function fillTracksLibrary() {
@@ -22,7 +25,6 @@ export async function fillTracksLibrary() {
       enteries.forEach(async (entry) => {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
-          console.log(element);
           let uuid = element.getAttribute("data-uuid");
           let track = (
             await invoke<PlayableResult>("get_playable_by_id", {
@@ -39,6 +41,24 @@ export async function fillTracksLibrary() {
           element.addEventListener("click", async () => {
             await addMediaToQueue("Track", uuid!);
           });
+
+          let trackCover: string = await invoke("get_track_cover", { id: uuid });
+
+          let trackCoverElement = element.querySelector("img") as HTMLImageElement;
+
+          trackCoverElement.animate([
+            { opacity: 0, transform: 'translateX(-20px)'},
+            { opacity: 1, transform: 'translateX(0)'}
+          ], {
+            duration: 1400,
+            easing: 'ease',
+            fill: 'forwards'
+          });
+
+          trackCoverElement.src = trackCover;
+
+          trackCoverElement.onerror = () => { trackCoverElement.classList.add('broken-cover'); };
+
           observer.unobserve(element);
         }
       });

@@ -1,0 +1,11 @@
+img:not([src]),
+img[src=""],
+img.broken-cover{
+    content: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+    background: white;
+}
+
+.cover.track.cover-in-library {
+    width: 60px;
+    height: 60px;
+}

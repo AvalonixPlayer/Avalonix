@@ -43,15 +43,26 @@
     --border-radius: 10px;
     width: 100%;
     height: 70px;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 75px 400px 1fr;
     padding-left: 25px;
 }
 
-.button.playable.track-button > .track-title {
+.button.playable.track-button > div {
+    padding-left: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    text-align: left;
+
+    min-width: 0;
+}
+
+.button.playable.track-button > div > .track-title {
     max-width: calc(100vw - var(--left-panel-width) - 50px);
+    width: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
     text-overflow: ellipsis;
