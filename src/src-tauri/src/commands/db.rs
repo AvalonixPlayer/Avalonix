@@ -1,8 +1,11 @@
-use std::sync::{Arc, Mutex, RwLock};
+use std::{
+    collections::{BTreeMap, HashMap},
+    sync::{Arc, Mutex, RwLock},
+};
 
 use avalonix_api::{
     audio::media_player::MediaPlayer,
-    disk::{db::DB, user::settings::UserSettings},
+    disk::{db::DB, sort_by::SortBy, user::settings::UserSettings},
     logger::fatal,
     media::{
         self,
@@ -21,10 +24,11 @@ use better_sms::mutex::MutexWork;
 pub async fn get_playables_ids(
     db: tauri::State<'_, Arc<RwLock<DB>>>,
     media_type: MediaType,
-) -> Result<Vec<String>, String> {
+    sort_by: SortBy,
+) -> Result<BTreeMap<String, Vec<String>>, String> {
     db.read()
         .unwrap()
-        .get_uuids(media_type)
+        .get_uuids(media_type, sort_by)
         .map_err(|err| err.to_string())
 }
 
@@ -131,7 +135,6 @@ pub async fn add_track_to_playlist(
 #[tauri::command]
 pub async fn edit_track(
     db: tauri::State<'_, Arc<RwLock<DB>>>,
-    settings: tauri::State<'_, Arc<Mutex<UserSettings>>>,
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
     uuid: String,
     title: String,

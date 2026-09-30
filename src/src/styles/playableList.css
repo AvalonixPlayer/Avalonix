@@ -1,4 +1,8 @@
 .playable-list {
+    display: flex;
+    flex-direction: column;
+    padding-top: 70px;
+    top: 50px;
     height: 100%;
     width: 100%;
 }

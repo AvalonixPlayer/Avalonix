@@ -6,6 +6,7 @@
 @import "text.css";
 @import "playableList.css";
 @import "cover.css";
+@import "select.css";
 
 :root {
     --background-src: #1c1c1c;

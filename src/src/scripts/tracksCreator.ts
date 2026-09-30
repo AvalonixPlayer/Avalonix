@@ -10,11 +10,26 @@ const trackButtonTemplate = (track_uuid: string): string =>
       <h4 class="track-title"></h3>
       <h5 class="track-performer"></h4>
     </div>
+    <div>
+      <h5 class="track-genre"></h5>
+    </div>
   </div>`;
 
 export async function fillTracksLibrary() {
-  let tracksIds = await invoke<string[]>("get_playables_ids", {
+  let sortModPicker = document.getElementById("tracks-sort-select") as HTMLSelectElement;
+
+  let sortBy = "ByName";
+  sortModPicker.addEventListener("change", async (e) => {
+    sortBy = (e.target as HTMLSelectElement).value;
+    await spawn(sortBy);
+  });
+  await spawn(sortBy);
+}
+
+async function spawn(sortBy: string) {
+  let tracksSets = await invoke<Record<string, string[]>>("get_playables_ids", {
     mediaType: "Track",
+    sortBy: {SortTracks: sortBy}
   }).catch(() => console.error("Error while getting tracks in library ids"));
 
   let tracksList = document.getElementById("tracks-list");
@@ -37,6 +52,8 @@ export async function fillTracksLibrary() {
           trackTitle.textContent = track.title;
           let trackPerformer = element.querySelector(".track-performer")!;
           trackPerformer.textContent = track.performer;
+          let trackGenre = element.querySelector(".track-genre")!;
+          trackGenre.textContent = track.genre;
 
           element.addEventListener("click", async () => {
             await addMediaToQueue("Track", uuid!);
@@ -69,7 +86,10 @@ export async function fillTracksLibrary() {
 
   );
 
-  tracksIds?.forEach(id => {
+
+  const allIds = tracksSets ? Object.values(tracksSets).flat() : [];
+
+  allIds?.forEach(id => {
     let trackButton = trackButtonTemplate(id);
 
     tracksList!.insertAdjacentHTML("beforeend", trackButton);

@@ -1,0 +1,73 @@
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+select {
+border: 2px solid;
+
+  background: var(--third-color);
+  padding: 10px;
+  transition: 0.4s;
+
+  color: whitesmoke;
+  font-size: 20px;
+  border: none;
+
+  font-family: "IBMPlexSans" !important;
+}
+
+
+
+
+::picker(select) {
+  background: none;
+  border: 1px solid;
+  border-radius: 20px;
+}
+
+option {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+
+  border: 1px solid;
+  border-radius: 20px;
+  background: var(--second-color);
+  padding: 10px;
+  transition: 0.4s;
+}
+
+option:hover,
+option:focus {
+  background: var(--third-color);
+}
+
+option:first-of-type {
+  border-radius: 20px 20px 0px 0px;
+}
+
+option:last-of-type {
+  border-radius: 0px 0px 0px 0px;
+}
+
+option:not(option:last-of-type) {
+  border-bottom: none;
+  border-radius: 0;
+}
+
+option::checkmark {
+   display: none;
+}
+
+.sort-select {
+    display: flex;
+    position: fixed;
+    z-index: 1;
+
+    right: 0;
+    top: 5px;
+    padding: 10px;
+    margin: 5px;
+    width: calc(100vw - var(--left-panel-width) - 10px);
+}

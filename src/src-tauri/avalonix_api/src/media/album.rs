@@ -5,7 +5,7 @@ use std::{
 };
 
 use anyhow::Result;
-use rkyv::{Archive, Deserialize, Serialize, hash::hash_value, rancor::Error};
+use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
 use ts_rs::TS;
 use uuid::Uuid;
 

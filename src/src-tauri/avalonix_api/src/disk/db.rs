@@ -1,7 +1,8 @@
 use std::{
+    collections::{BTreeMap, HashMap},
     format, fs,
     sync::{Arc, Mutex, mpsc::Sender},
-    todo,
+    todo, vec,
 };
 
 use anyhow::{Result, anyhow, bail};
@@ -10,7 +11,15 @@ use glob::glob;
 use rkyv::rancor::Error;
 
 use crate::{
-    disk::{disk_paths::avalonix_db, user::settings::UserSettings},
+    disk::{
+        disk_paths::avalonix_db,
+        sort_by::{
+            SortBy,
+            SortByResolver::{SortAlbums, SortPerformers},
+            SortTracks,
+        },
+        user::settings::UserSettings,
+    },
     events::Event,
     logger::{debug, error},
     media::{
@@ -195,8 +204,13 @@ impl DB {
         Ok(())
     }
 
-    pub fn get_uuids(&self, media_type: MediaType) -> Result<Vec<String>> {
-        let mut result = vec![];
+    pub fn get_uuids(
+        &self,
+        media_type: MediaType,
+        sort_by: SortBy,
+    ) -> Result<BTreeMap<String, Vec<String>>> {
+        let mut result: BTreeMap<String, Vec<(String, String)>> = BTreeMap::new();
+
         let media_tree = match media_type {
             MediaType::Track => &self.tracks_tree,
             MediaType::Album => &self.albums_tree,
@@ -205,12 +219,90 @@ impl DB {
         };
 
         for media in media_tree {
-            let (id, _val) = media?;
+            let (id, val) = media?;
             let id: String = rkyv::from_bytes::<String, Error>(&id)?;
-            result.push(id);
+
+            let mut n = String::new();
+
+            let key = match sort_by {
+                SortBy::SortTracks(ref sort) => {
+                    let val: Track = rkyv::from_bytes::<Track, Error>(&val)?;
+                    match sort {
+                        SortTracks::ByName => {
+                            n = val.title.clone();
+                            val.title.chars().nth(0).unwrap().to_string()
+                        }
+                        SortTracks::ByPerformer => {
+                            n = val.performer.clone();
+                            val.performer.chars().nth(0).unwrap().to_string()
+                        }
+                        SortTracks::ByGenre => {
+                            n = val.genre.clone();
+                            val.genre.chars().nth(0).unwrap().to_string()
+                        }
+                    }
+                }
+                SortBy::SortAlbums(ref sort) => {
+                    let val: Album = rkyv::from_bytes::<Album, Error>(&val)?;
+                    match sort {
+                        super::sort_by::SortAlbums::ByName => {
+                            n = val.title.clone();
+                            val.title.chars().nth(0).unwrap().to_string()
+                        }
+                        super::sort_by::SortAlbums::ByPerformer => {
+                            n = val.performer.clone();
+                            val.performer.chars().nth(0).unwrap().to_string()
+                        }
+                        super::sort_by::SortAlbums::ByLenght => val.tracks_ids.len().to_string(),
+                    }
+                }
+                SortBy::SortPerformers(ref sort) => {
+                    let val: Performer = rkyv::from_bytes::<Performer, Error>(&val)?;
+                    match sort {
+                        super::sort_by::SortPerformers::ByName => {
+                            n = val.title.clone();
+                            val.title.chars().nth(0).unwrap().to_string()
+                        }
+                        super::sort_by::SortPerformers::ByLenght => {
+                            n = val.tracks_ids.len().to_string();
+                            val.tracks_ids.len().to_string()
+                        }
+                    }
+                }
+                SortBy::SortPlaylists(ref sort) => {
+                    let val: Playlist = rkyv::from_bytes::<Playlist, Error>(&val)?;
+                    match sort {
+                        super::sort_by::SortPlaylists::ByName => {
+                            n = val.title.clone();
+                            val.title.chars().nth(0).unwrap().to_string()
+                        }
+                        super::sort_by::SortPlaylists::ByLenght => {
+                            n = val.tracks_ids.len().to_string();
+                            val.tracks_ids.len().to_string()
+                        }
+                    }
+                }
+            };
+
+            if let Some(set) = result.get_mut(&key) {
+                set.push((id, n));
+            } else {
+                result.insert(key, vec![(id, n)]);
+            }
         }
 
-        Ok(result)
+        for set in &mut result {
+            set.1.sort_by_key(|x| x.1.clone());
+        }
+
+        let mut res = BTreeMap::new();
+
+        for set in result {
+            let vec: Vec<String> = set.1.into_iter().map(|(id, _n)| id).collect();
+            res.insert(set.0, vec);
+        }
+
+        Ok(res)
     }
 
     pub fn get_media_by_id(&self, id: String, media_type: MediaType) -> Result<PlayableResult> {

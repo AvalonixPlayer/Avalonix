@@ -44,7 +44,8 @@
     width: 100%;
     height: 70px;
     display: grid;
-    grid-template-columns: 75px 400px 1fr;
+    grid-template-columns: 75px 250px 200px 1fr;
+    gap: 25px;
     padding-left: 25px;
 }
 
@@ -60,7 +61,7 @@
     min-width: 0;
 }
 
-.button.playable.track-button > div > .track-title {
+.button.playable.track-button > div > * {
     max-width: calc(100vw - var(--left-panel-width) - 50px);
     width: 100%;
     overflow-x: hidden;

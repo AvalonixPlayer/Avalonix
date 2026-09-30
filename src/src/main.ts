@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { fillAlbumsLibrary } from "./scripts/albumsCreator";
 import { initTabs } from "./scripts/tabsBinding";
 import { fillTracksLibrary } from "./scripts/tracksCreator";
 
@@ -9,4 +9,5 @@ window.addEventListener("DOMContentLoaded", async () => {
 async function init() {
   await initTabs();
   await fillTracksLibrary();
+  //await fillAlbumsLibrary();
 }
