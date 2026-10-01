@@ -6,6 +6,7 @@ img.broken-cover{
 }
 
 .cover.track.cover-in-library {
+    opacity: 0;
     width: 60px;
     height: 60px;
 }
