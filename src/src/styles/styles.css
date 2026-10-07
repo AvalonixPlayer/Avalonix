@@ -7,13 +7,15 @@
 @import "playableList.css";
 @import "cover.css";
 @import "select.css";
+@import "slider.css";
 
 :root {
     --background-src: #1c1c1c;
+    --first-color: #1c1c1c;
     --second-color: #212121;
     --third-color: #2E8B57;
 
-    --playback-panel-height: 75px;
+    --playback-panel-height: 120px;
     --left-panel-width: 75px;
 }
 

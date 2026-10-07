@@ -44,4 +44,47 @@
     width: 100%;
     bottom: 0;
     height: var(--playback-panel-height);
+    display: grid;
+    grid-template-rows: 40px 1fr;
+}
+
+#queue-control-grid {
+    --active-secondary-in-queue-controll: 1;
+    display: grid;
+    grid-template-columns: calc(var(--active-secondary-in-queue-controll) * 300px) minmax(200px,1fr) calc(var(--active-secondary-in-queue-controll) * 300px);
+    grid-template-rows: 1fr;
+    grid-auto-rows: 0;
+    overflow-wrap: nowrap;
+}
+
+
+#track-preview-in-queue-control {
+    display: grid;
+    padding-left: 20px;
+    grid-template-columns: 80px 180px;
+    overflow: hidden;
+}
+
+#track-preview-in-queue-control > div > * {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+#queue-control-buttons {
+    display: grid;
+    grid-template-columns: 1fr 60px 60px 60px 1fr;
+}
+
+#playtime-grid {
+    height: 20px;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 100px 1fr 100px;
+    justify-items: center;
+    text-align: center;
+}
+
+#playtime-grid > input {
+    width: 100%;
 }

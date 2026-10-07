@@ -1,0 +1,31 @@
+input[type=range] {
+  height: 2.2em;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  --value: 30%;
+  --val: calc(100% - var(--value))
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 2em;
+  height: 2em;
+  border-radius: 0.4em;
+  background: var(--third-color);
+  border: none;
+  margin-top: calc(max((1em - 1px - 1px) * 0.5,0px) - 2em * 0.5);
+  transition: ease 0.2s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover
+{
+    border-radius: 1em;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 9px;
+  background: linear-gradient(to right, var(--third-color) calc(100% - var(--val)), var(--third-color) calc(100% - var(--val)),
+  color-mix(in srgb ,var(--third-color), black 50%) calc(100% - var(--val)), color-mix(in srgb ,var(--third-color), black 50%) 100%);
+  border-radius: 4px;
+}

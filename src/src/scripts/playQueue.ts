@@ -1,86 +1,52 @@
 import { invoke } from "@tauri-apps/api/core";
 import { MediaType } from "../bindings/MediaType";
-import { Track } from "../bindings/Track";
+import { listen } from "@tauri-apps/api/event";
 import { PlayableResult } from "../bindings/PlayableResult";
-import { contextMenuForTracksInQueue } from "./contextMenu";
+import { Track } from "../bindings/Track";
 
-const trackTemplate = (uuid: string): string => `
-  <div class="playable-sellect-item track" data-uuid=${uuid}>
-    <h3 class="track-title-button"></h3>
-    <h3 class="track-performer-button"></h3>
-    <h3 class="track-album-title-button"></h3>
-  </div>`;
+export async function initPlayqueue() {
 
-export async function clearPlayQueue() {
-  await invoke("clear_queue");
 }
 
-export async function addMediaToQueue(mediaType: MediaType, id: string) {
-  await invoke("add_media_to_queue", {
-    mediaType: mediaType.toString(),
-    id,
+export async function addMediaToQueue(mediaType: MediaType, mediaUuid: string) {
+  await invoke("add_media_to_queue", {mediaType: mediaType, id: mediaUuid})
+}
+
+export async function initPlayqueueControll() {
+  await updatePlayqueueTrackPreview();
+  await listen("cur-track-changed", async () => {
+    await updatePlayqueueTrackPreview();
   });
 }
 
-export async function startMedia(mediaType: MediaType, id: string) {
-  await clearPlayQueue();
-  await invoke("add_media_to_queue", {
-    mediaType: mediaType.toString(),
-    id,
-  });
-}
+async function updatePlayqueueTrackPreview() {
+  let trackPreviewInControll = document.getElementById("track-preview-in-queue-control");
 
-export async function fillPlayQueueList() {
-  let tracksList = document.getElementById("queue-section");
-  tracksList!.innerHTML = "";
+  let trackPreviewInControllName = trackPreviewInControll?.querySelector("h4") as Element;
+  let trackPreviewInControllPerformer = trackPreviewInControll?.querySelector("h5") as Element;
+  let trackPreviewInControllCover = trackPreviewInControll?.querySelector("img") as HTMLImageElement;
 
-  const observer = new IntersectionObserver(
-    (enteries, observer) => {
-      enteries.forEach(async (entry) => {
-        if (entry.isIntersecting) {
-          const element = entry.target as HTMLElement;
-          let uuid = element.getAttribute("data-uuid");
-          let track = (
-            await invoke<PlayableResult>("get_playable_by_id", {
-              mediaType: "Track",
-              id: uuid,
-            })
-          ).data as Track;
+  let currentTrackUuid = await invoke<string>("get_current_track_uuid");
 
+  let track = (
+    await invoke<PlayableResult>("get_playable_by_id", {
+      mediaType: "Track",
+      id: currentTrackUuid,
+    })
+  ).data as Track;
+  let trackCover: string = await invoke("get_track_cover", { id: currentTrackUuid });
 
-          let titleButton = element.querySelector(".track-title-button")!;
-          element.addEventListener("click", async () => {
-            await invoke("start_track_in_queue_by_id", {id: uuid});
-          });
+  trackPreviewInControllName.textContent = track.title;
+  trackPreviewInControllPerformer.textContent = track.performer;
 
-          element.addEventListener("contextmenu", async (e) => {
-            await contextMenuForTracksInQueue(uuid!, e)
-          });
+  trackPreviewInControllCover.src = trackCover;
 
-          titleButton.textContent = track.title;
-
-          element.querySelector(".track-performer-button")!.textContent =
-            track.performer;
-          element.querySelector(".track-album-title-button")!.textContent =
-            track.album;
-          observer.unobserve(element);
-        }
-      });
-    },
-    {
-      root: null,
-      threshold: 0.1,
-    },
-  );
-
-  (await invoke<string[]>("get_queue_tracks_ids")).forEach((track_id) => {
-    let element = trackTemplate(track_id);
-    tracksList!.insertAdjacentHTML("beforeend", element);
-
-    const lastInsertedElement = tracksList!.lastElementChild as HTMLElement;
-
-    if (lastInsertedElement) {
-      observer.observe(lastInsertedElement);
-    }
+  trackPreviewInControllCover.animate([
+    { opacity: 0, transform: 'translateX(-20px)'},
+    { opacity: 1, transform: 'translateX(0)'}
+  ], {
+    duration: 1400,
+    easing: 'ease',
+    fill: 'forwards'
   });
 }

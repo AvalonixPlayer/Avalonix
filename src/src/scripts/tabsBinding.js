@@ -1,3 +1,5 @@
+import { fillTracksLibrary } from "./tracksCreator";
+
 const sections = Array.from(
   document.getElementsByClassName("tab"),
 );
@@ -13,13 +15,14 @@ const tabBinding = {
   //"current-track-show-button": "track-preview-tab",
 };
 
-export function initTabs() {
+export async function initTabs() {
   disable_all();
 
   Object.entries(tabBinding).forEach((tab, i) => {
-    document.getElementById(tab[0]).addEventListener("click", () => {
+    document.getElementById(tab[0]).addEventListener("click", async () => {
       disable_all();
       sections.find((x) => x.id == tab[1]).style.display = "flex";
+      if (i == 1) await fillTracksLibrary();
     });
   });
 }

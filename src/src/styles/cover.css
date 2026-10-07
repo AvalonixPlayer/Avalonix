@@ -9,4 +9,11 @@ img.broken-cover{
     opacity: 0;
     width: 60px;
     height: 60px;
+    border-radius: 10px;
+}
+
+.cover.track.cover-in-queue-control {
+    border-radius: 10px;
+    width: 60px;
+    height: 60px;
 }

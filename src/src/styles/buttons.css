@@ -70,3 +70,17 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.button.queue-control {
+    width: 50px;
+    height: 50px;
+}
+
+.button.queue-control > img {
+    width: 50px;
+    height: 50px;
+}
+
+#previous-track-button > img {
+    scale: -1;
+}
