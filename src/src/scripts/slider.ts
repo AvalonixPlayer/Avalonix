@@ -10,5 +10,5 @@ export async function initSliders() {
 }
 
 export function updateSlider(slider: HTMLInputElement) {
-  slider.style.setProperty("--value", `${slider.value}%`);
+  slider.style.setProperty("--value", `${Number.parseInt(slider.value) / Number.parseInt(slider.max) * 100}%`);
 }
