@@ -34,11 +34,12 @@ async function initControllQueueButtons() {
   await process();
 
   document.getElementById("pause-track-button")?.addEventListener("click", async () => {
-    await invoke("switch_media_player_state");
     await process();
   })
 
   async function process() {
+    await invoke("switch_media_player_state");
+
     let paused = await invoke<boolean>("get_media_player_state");
 
     if (paused) {

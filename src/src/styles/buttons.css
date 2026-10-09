@@ -71,6 +71,32 @@
     white-space: nowrap;
 }
 
+.button.playable.album-button {
+    --button-scale: 105%;
+    --border-radius: 10px;
+    height: 200px;
+    width: 160px;
+    display: grid;
+    grid-template-rows: 160px 1fr;
+
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+.button.playable.album-button > div {
+    width: 150px;
+    display: block;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.button.playable.album-button > div > h4 {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
 .button.queue-control {
     width: 50px;
     height: 50px;

@@ -17,3 +17,10 @@ img.broken-cover{
     width: 60px;
     height: 60px;
 }
+
+
+.cover.album.cover-in-library {
+    border-radius: 10px;
+    width: 160px;
+    height: 160px;
+}

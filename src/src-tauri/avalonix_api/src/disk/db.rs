@@ -252,7 +252,7 @@ impl DB {
                         }
                         super::sort_by::SortAlbums::ByPerformer => {
                             n = val.performer.clone();
-                            val.performer.chars().nth(0).unwrap().to_string()
+                            val.performer.to_string()
                         }
                         super::sort_by::SortAlbums::ByLenght => val.tracks_ids.len().to_string(),
                     }

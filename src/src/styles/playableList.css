@@ -6,3 +6,20 @@
     height: 100%;
     width: 100%;
 }
+
+.playable-list.albums-set {
+    padding: 0;
+    padding-left: 20px;
+}
+
+.playable-list.albums-set > h2 {
+    padding-left: 20px;
+}
+
+.playable-list.albums-set > div{
+    height: 220px;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+}

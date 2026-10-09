@@ -1,3 +1,4 @@
+import { fillAlbumsLibrary } from "./albumsCreator";
 import { fillTracksLibrary } from "./tracksCreator";
 
 const sections = Array.from(
@@ -23,6 +24,7 @@ export async function initTabs() {
       disable_all();
       sections.find((x) => x.id == tab[1]).style.display = "flex";
       if (i == 1) await fillTracksLibrary();
+      if (i == 2) await fillAlbumsLibrary();
     });
   });
 }
