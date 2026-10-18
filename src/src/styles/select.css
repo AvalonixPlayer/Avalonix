@@ -17,9 +17,6 @@ border: 2px solid;
   font-family: "IBMPlexSans" !important;
 }
 
-
-
-
 ::picker(select) {
   background: none;
   border: 1px solid;
@@ -70,4 +67,10 @@ option::checkmark {
     padding: 10px;
     margin: 5px;
     width: calc(100vw - var(--left-panel-width) - 10px);
+}
+
+#playlists-create-line {
+    width: calc(100vw - var(--left-panel-width) - 10px);
+    display: flex;
+    position: fixed;
 }

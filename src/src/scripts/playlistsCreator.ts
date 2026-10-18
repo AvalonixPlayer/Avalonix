@@ -1,40 +1,44 @@
 import { invoke } from "@tauri-apps/api/core";
-import { PlayableResult } from "../bindings/PlayableResult";
-import { Playlist } from "../bindings/Playlist";
 import { addMediaToQueue } from "./playQueue";
-import { contextMenuForPlaylist } from "./contextMenu";
+import { Playlist } from "../bindings/Playlist";
+import { PlayableResult } from "../bindings/PlayableResult";
+
 
 let playlistTemplate = (playlist_uuid: string): string =>
-  `<div class="playable-sellect-item playlist" data-uuid="${playlist_uuid}">
-  <h3 class="playlist-title-button"></h3>
+  `<div class="button playable playlist-button" data-uuid="${playlist_uuid}">
+  <div>
+    <h4 class="playlist-title"></h4>
+  </div>
+  <div>
+  <h4 class="playlist-len"></h4>
+  </div>
 </div>`;
 
-export async function createPlaylistButton() {
-  let name = document.querySelector("#create-playlist-name") as HTMLInputElement;
-  let button = document.querySelector("#create-playlist-button");
+export async function fillPlaylistsLibrary() {
+  let sortBy = "ByName";
 
-  button!.addEventListener("click", async () => {
-    await invoke("create_playlist", { playlistName: name.value });
-    await fillPlaylistsList();
-    name.value = "";
-  });
+  let createNewPlaylistButton = document.getElementById("create-new-playlist");
+  let createNewPlaylistTextField = document.getElementById("new-playlist-name") as HTMLInputElement;
+  createNewPlaylistButton?.addEventListener("click", async () => {
+    await invoke("create_playlist", {playlist_name: createNewPlaylistTextField.value});
+    await spawn(sortBy);
+  })
+
+  await spawn(sortBy);
 }
 
-export async function fillPlaylistsList() {
-  let playlists_ids = await invoke<string[]>("get_playables_ids", {
+async function spawn(sortBy: string) {
+  let playlistsSet = await invoke<Record<string, string[]>>("get_playables_ids", {
     mediaType: "Playlist",
-  }).catch(() => console.error("Error while getting playlists ids"));
+    sortBy: {SortPerformers: sortBy}
+  }).catch(() => console.error("Error while getting playlists in library ids"));
 
-  if (playlists_ids == null) {
-    return;
-  }
-
-  let playlistsList = document.getElementById("playlists");
-  playlistsList!.innerHTML = "";
+  let playlists = document.getElementById("playlists-list");
+  playlists!.innerHTML = "";
 
   const observer = new IntersectionObserver(
     (enteries, observer) => {
-      enteries!.forEach(async (entry) => {
+      enteries.forEach(async (entry) => {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
           let uuid = element.getAttribute("data-uuid");
@@ -45,36 +49,37 @@ export async function fillPlaylistsList() {
             })
           ).data as Playlist;
 
-          let playlistTitleButton = element.querySelector(
-            ".playlist-title-button",
-          )!;
-          playlistTitleButton.textContent = playlist.title;
+          let playlistTitle = element.querySelector(".playlist-title")!;
+          playlistTitle.textContent = playlist.title;
+          let len = element.querySelector(".playlist-len")!;
+          len.textContent = playlist.tracks_ids.length.toString();
 
           element.addEventListener("click", async () => {
-            addMediaToQueue("Playlist", uuid!);
+            await addMediaToQueue("Playlist", uuid!);
           });
 
-          element.addEventListener("contextmenu", async (e) => {
-            await contextMenuForPlaylist(uuid!, e);
-          })
           observer.unobserve(element);
         }
       });
     },
     {
-      root: null,
       threshold: 0.1,
     },
+
   );
 
-  playlists_ids.forEach((performer_id) => {
-    let element = playlistTemplate(performer_id);
-    playlistsList!.insertAdjacentHTML("beforeend", element);
 
-    const lastInsertedElement = playlistsList!.lastElementChild as HTMLElement;
+  const allIds = playlistsSet ? Object.values(playlistsSet).flat() : [];
+
+  allIds?.forEach(id => {
+    let playlistButton = playlistTemplate(id);
+
+    playlists!.insertAdjacentHTML("beforeend", playlistButton);
+
+    const lastInsertedElement = playlists!.lastElementChild as HTMLElement;
 
     if (lastInsertedElement) {
-      observer.observe(lastInsertedElement);
+      observer.observe(lastInsertedElement)
     }
   });
 }

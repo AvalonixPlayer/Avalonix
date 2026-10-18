@@ -1,4 +1,6 @@
 import { fillAlbumsLibrary } from "./albumsCreator";
+import { fillPerformersLibrary } from "./performerCreator";
+import { fillPlaylistsLibrary as fillPlaylistsLibrary } from "./playlistsCreator";
 import { fillTracksLibrary } from "./tracksCreator";
 
 const sections = Array.from(
@@ -10,8 +12,8 @@ const tabBinding = {
   "tracks-tab-button": "tracks-list-tab",
   "albums-tab-button": "albums-list-tab",
   "performers-tab-button": "performers-list-tab",
-  "playlists-tab-button": "playlists-tab",
-  "queue-tab-button": "queue-tab",
+  "playlists-tab-button": "playlists-list-tab",
+  "queue-tab-button": "queue-list-tab",
   "settings-tab-button": "settings-tab",
   //"current-track-show-button": "track-preview-tab",
 };
@@ -25,6 +27,8 @@ export async function initTabs() {
       sections.find((x) => x.id == tab[1]).style.display = "flex";
       if (i == 1) await fillTracksLibrary();
       if (i == 2) await fillAlbumsLibrary();
+      if (i == 3) await fillPerformersLibrary();
+      if (i == 4) await fillPlaylistsLibrary();
     });
   });
 }

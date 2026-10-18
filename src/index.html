@@ -22,13 +22,13 @@
             <button class="button left-panel-button" id="performers-tab-button">
                 <img class="button-image"  src="src/assets/performer_icon.png">
             </button>
-            <button class="button left-panel-button" id="queue-tab-button">
+            <button class="button left-panel-button" id="playlists-tab-button">
                 <img class="button-image" style="width: 50px;" src="src/assets/playlists.png">
             </button>
-            <button class="button left-panel-button" id="settings-tab-button">
+            <button class="button left-panel-button" id="queue-tab-button">
                 <img class="button-image" style="width: 60px;" src="src/assets/queue.png">
             </button>
-            <button class="button left-panel-button" id="playlists-tab-button">
+            <button class="button left-panel-button" id="settings-tab-button">
                 <img class="button-image" style="width: 50px;" src="src/assets/settings.png">
             </button>
 
@@ -55,10 +55,23 @@
                 <div class="playable-list" id="albums-list"></div>
             </div>
             <div class="tab" id="performers-list-tab">
+                <select class="sort-select" id="performers-sort-select">
+                    <option value="ByName"><h4>Name</h4></option>
+                    <option value="ByLenght"><h4>Lenght</h4></option>
+                </select>
+                <div class="playable-list" id="performers-list"></div>
             </div>
             <div class="tab" id="playlists-list-tab">
+                <div id="playlists-create-line">
+                    <input type="text" id="new-playlist-name" placeholder="New playlist name">
+                    <button class="button" id="create-new-playlist">
+                        <img src="src/assets/add_smth.png">
+                    </button>
+                </div>
+                <div class="playable-list" id="playlists-list"></div>
             </div>
             <div class="tab" id="queue-list-tab">
+                <div class="playable-list" id="queue-list"></div>
             </div>
             <div class="tab" id="settings-tab">
             </div>

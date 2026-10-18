@@ -3,7 +3,7 @@ import { PlayableResult } from "../bindings/PlayableResult";
 import { Track } from "../bindings/Track";
 import { addMediaToQueue } from "./playQueue";
 
-const trackButtonTemplate = (track_uuid: string): string =>
+export const trackButtonTemplate = (track_uuid: string): string =>
   `<div class="button playable track-button" data-uuid="${track_uuid}">
     <img class="cover track cover-in-library" src="">
     <div>

@@ -4,22 +4,98 @@ import { listen } from "@tauri-apps/api/event";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { Track } from "../bindings/Track";
 import { updateSlider } from "./slider";
-
-export async function initPlayqueue() {
-
-}
+import { trackButtonTemplate } from "./tracksCreator";
 
 export async function addMediaToQueue(mediaType: MediaType, mediaUuid: string) {
-  await invoke("add_media_to_queue", {mediaType: mediaType, id: mediaUuid})
+  await invoke("add_media_to_queue", { mediaType: mediaType, id: mediaUuid });
+  await fillQueue();
+}
+
+
+async function fillQueue() {
+  let everyTracksIds = await invoke<string[]>("get_queue_tracks_ids");
+
+  let tracksList = document.getElementById("queue-list");
+  tracksList!.innerHTML = "";
+
+  const observer = new IntersectionObserver(
+    (enteries, observer) => {
+      enteries.forEach(async (entry) => {
+        if (entry.isIntersecting) {
+          const element = entry.target as HTMLElement;
+          let uuid = element.getAttribute("data-uuid");
+          let track = (
+            await invoke<PlayableResult>("get_playable_by_id", {
+              mediaType: "Track",
+              id: uuid,
+            })
+          ).data as Track;
+
+          let trackTitle = element.querySelector(".track-title")!;
+          trackTitle.textContent = track.title;
+          let trackPerformer = element.querySelector(".track-performer")!;
+          trackPerformer.textContent = track.performer;
+          let trackGenre = element.querySelector(".track-genre")!;
+          trackGenre.textContent = track.genre;
+
+          element.addEventListener("click", async () => {
+            await invoke("start_track_in_queue_by_id", {id: uuid})
+          });
+
+          let trackCover: string = await invoke("get_track_cover", { id: uuid });
+
+          let trackCoverElement = element.querySelector("img") as HTMLImageElement;
+
+          trackCoverElement.animate([
+            { opacity: 0, transform: 'translateX(-20px)'},
+            { opacity: 1, transform: 'translateX(0)'}
+          ], {
+            duration: 1400,
+            easing: 'ease',
+            fill: 'forwards'
+          });
+
+          trackCoverElement.src = trackCover;
+
+          trackCoverElement.onerror = () => { trackCoverElement.classList.add('broken-cover'); };
+
+          observer.unobserve(element);
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+    },
+
+  );
+
+
+  const allIds = everyTracksIds ? Object.values(everyTracksIds).flat() : [];
+
+  allIds?.forEach(id => {
+    let trackButton = trackButtonTemplate(id);
+
+    tracksList!.insertAdjacentHTML("beforeend", trackButton);
+
+    const lastInsertedElement = tracksList!.lastElementChild as HTMLElement;
+
+    if (lastInsertedElement) {
+      observer.observe(lastInsertedElement)
+    }
+  });
 }
 
 export async function initPlayqueueControll() {
   await updatePlayqueueTrackPreview();
+  await fillQueue();
   await initControllTrackTime();
   await initControllQueueButtons();
   await listen("cur-track-changed", async () => {
     await updatePlayqueueTrackPreview();
   });
+  await listen("queue-updated", async () => {
+    await fillQueue();
+  })
 }
 
 async function initControllQueueButtons() {
@@ -61,6 +137,7 @@ async function initControllTrackTime() {
 
   slider.addEventListener("pointerdown", () => { userSelecting = true });
   slider.addEventListener("pointerup", () => { userSelecting = false });
+
   setInterval(async () => {
     let maxValue = await invoke<number>("get_media_player_end_pos");
     if (userSelecting) {
@@ -74,7 +151,6 @@ async function initControllTrackTime() {
     }
     playedTime.textContent = toMMSS(Number.parseInt(slider.value));
     leftTime.textContent = toMMSS(Number.parseInt(slider.max) - Number.parseInt(slider.value));
-
   }, 100)
 
 

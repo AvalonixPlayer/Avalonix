@@ -8,6 +8,7 @@
 @import "cover.css";
 @import "select.css";
 @import "slider.css";
+@import "inputs.css";
 
 :root {
     --background-src: #1c1c1c;

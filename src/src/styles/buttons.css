@@ -97,6 +97,72 @@
     white-space: nowrap;
 }
 
+.button.playable.performer-button {
+    --button-scale: 105%;
+    --border-radius: 10px;
+    height: 70px;
+    display: grid;
+    grid-template-columns: 300px 30px 1fr;
+    gap: 25px;
+
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+.button.playable.performer-button > div {
+    padding-left: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    text-align: left;
+
+    min-width: 0;
+}
+
+.button.playable.performer-button > div > * {
+    max-width: calc(100vw - var(--left-panel-width) - 50px);
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.button.playable.playlist-button {
+    --button-scale: 105%;
+    --border-radius: 10px;
+    height: 70px;
+    display: grid;
+    grid-template-columns: 300px 30px 1fr;
+    gap: 25px;
+
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+.button.playable.playlist-button > div {
+    padding-left: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    text-align: left;
+
+    min-width: 0;
+}
+
+.button.playable.playlist-button > div > * {
+    max-width: calc(100vw - var(--left-panel-width) - 50px);
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .button.queue-control {
     width: 50px;
     height: 50px;
@@ -109,4 +175,17 @@
 
 #previous-track-button > img {
     scale: -1;
+}
+
+#create-new-playlist {
+    width: 50px;
+    height: 50px;
+    margin-left: 1px;
+    margin-right: 40px;
+    padding: 30px;
+}
+
+#create-new-playlist > img {
+    width: 50px;
+    height: 50px;
 }
