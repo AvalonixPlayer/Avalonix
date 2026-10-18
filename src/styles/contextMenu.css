@@ -1,0 +1,32 @@
+.context-menu {
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+}
+
+.context-menu > :first-child {
+    border-radius: 10px 10px 0px 0px ;
+    border: solid 2px;
+}
+
+.context-menu > :last-child {
+    border-radius: 0px 0px 10px 10px;
+    border: solid 2px;
+    border-top: none;
+}
+
+.context-menu > :not(:last-child):not(:first-child) {
+    border: solid 2px;
+    border-top: none;
+    border-bottom: solid 2px;
+}
+
+.context-menu-field {
+    padding: 10px;
+    background: color-mix(in srgb, var(--second-color), black 40%);
+    transition: 0.1s ease-in-out;
+}
+
+.context-menu-field:hover {
+    background: var(--third-color);
+}

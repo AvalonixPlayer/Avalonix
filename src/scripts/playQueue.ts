@@ -11,6 +11,11 @@ export async function addMediaToQueue(mediaType: MediaType, mediaUuid: string) {
   await fillQueue();
 }
 
+export async function setMediaToQueue(mediaType: MediaType, mediaUuid: string) {
+  await invoke("clear_queue");
+  await invoke("add_media_to_queue", { mediaType: mediaType, id: mediaUuid });
+  await fillQueue();
+}
 
 async function fillQueue() {
   let everyTracksIds = await invoke<string[]>("get_queue_tracks_ids");

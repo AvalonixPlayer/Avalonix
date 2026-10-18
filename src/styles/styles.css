@@ -9,6 +9,7 @@
 @import "select.css";
 @import "slider.css";
 @import "inputs.css";
+@import "contextMenu.css";
 
 :root {
     --background-src: #1c1c1c;
