@@ -95,9 +95,17 @@ export async function initPlayqueueControll() {
   await fillQueue();
   await initControllTrackTime();
   await initControllQueueButtons();
-  await listen("cur-track-changed", async () => {
-    await updatePlayqueueTrackPreview();
-  });
+
+  let pauseBtn = document.getElementById("pause-track-button")!;
+  await listen("cur-track-changed", async () =>
+  {
+      if ((await invoke<boolean>("get_media_player_state")) == false)
+        pauseBtn.querySelector("img")!.src = "/pause.png";
+      else {
+        pauseBtn.querySelector("img")!.src = "/play.png";
+      }
+      await updatePlayqueueTrackPreview();
+    });
   await listen("queue-updated", async () => {
     await fillQueue();
   })

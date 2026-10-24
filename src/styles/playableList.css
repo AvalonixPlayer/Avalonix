@@ -23,3 +23,7 @@
     flex-direction: row;
     overflow-x: auto;
 }
+
+#queue-list {
+    padding-top: 15px;
+}
