@@ -20,7 +20,7 @@ export async function fillPlaylistsLibrary() {
   let createNewPlaylistButton = document.getElementById("create-new-playlist");
   let createNewPlaylistTextField = document.getElementById("new-playlist-name") as HTMLInputElement;
   createNewPlaylistButton?.addEventListener("click", async () => {
-    await invoke("create_playlist", {playlist_name: createNewPlaylistTextField.value});
+    await invoke("create_playlist", {playlistName: createNewPlaylistTextField.value});
     await spawn(sortBy);
   })
 

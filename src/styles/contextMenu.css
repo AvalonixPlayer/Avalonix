@@ -21,6 +21,11 @@
     border-bottom: solid 2px;
 }
 
+.context-menu > :first-child:last-child {
+    border-radius: 10px 10px 10px 10px ;
+    border: solid 2px;
+}
+
 .context-menu-field {
     padding: 10px;
     background: color-mix(in srgb, var(--second-color), black 40%);

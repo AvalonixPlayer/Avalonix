@@ -1,5 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { addMediaToQueue, setMediaToQueue } from "./playQueue";
+import { PlayableResult } from "../bindings/PlayableResult";
+import { Playlist } from "../bindings/Playlist";
 
 export class ContextMenu {
   private x: number = 0;
@@ -31,11 +33,16 @@ export class ContextMenu {
     });
   }
 
+  private async removeFields() {
+    const menu = document.body.querySelector(".context-menu");
+    menu!.innerHTML! = "";
+  }
+
   private draw() {
     this.closeMenu();
     document.body.insertAdjacentHTML("beforeend", this.html);
     const newMenu = (document.querySelector(".context-menu") as HTMLElement);
-    document.body.addEventListener("click", () => {
+    document.getElementById("panels-grid")!.addEventListener("click", () => {
       this.closeMenu();
     });
     newMenu.style.left = `${this.x}px`;
@@ -52,8 +59,32 @@ export class ContextMenu {
       this.closeMenu();
     });
     this.addField("Add to playlist", async () => {
-      this.closeMenu();
+      this.removeFields();
+      await this.spawnForSellectPlaylist(uuid);
     });
+  }
 
+  async spawnForSellectPlaylist(uuid: String) {
+    let playlistsSet = await invoke<Record<string, string[]>>("get_playables_ids", {
+      mediaType: "Playlist",
+      sortBy: {SortPerformers: "ByName"}
+    }).catch(() => console.error("Error while getting playlists in library ids"));
+    const allIds = playlistsSet ? Object.values(playlistsSet).flat() : [];
+
+    allIds.forEach(async (id) => {
+      let playlist = (
+        await invoke<PlayableResult>("get_playable_by_id", {
+          mediaType: "Playlist",
+          id: id,
+        })
+      ).data as Playlist;
+      this.addField(playlist.title, async () => {
+        await invoke("add_track_to_playlist", {
+          playlistUuid: id,
+          trackUuid: uuid
+        });
+        this.closeMenu();
+      });
+    })
   }
 }
