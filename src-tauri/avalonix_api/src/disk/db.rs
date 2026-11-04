@@ -306,33 +306,33 @@ impl DB {
         Ok(res)
     }
 
-    pub fn get_media_by_id(&self, id: String, media_type: MediaType) -> Result<PlayableResult> {
+    pub fn get_media_by_id(&self, id: &String, media_type: MediaType) -> Result<PlayableResult> {
         match media_type {
             MediaType::Track => self
                 .get_every_track()?
                 .into_iter()
-                .find(|t| t.uuid == id)
+                .find(|t| t.uuid == *id)
                 .map(PlayableResult::Track)
                 .ok_or_else(|| anyhow!("Track with id {} not found", id)),
 
             MediaType::Album => self
                 .get_every_album()?
                 .into_iter()
-                .find(|a| a.uuid == id)
+                .find(|a| a.uuid == *id)
                 .map(PlayableResult::Album)
                 .ok_or_else(|| anyhow!("Album with id {} not found", id)),
 
             MediaType::Performer => self
                 .get_every_performer()?
                 .into_iter()
-                .find(|p| p.uuid == id)
+                .find(|p| p.uuid == *id)
                 .map(PlayableResult::Performer)
                 .ok_or_else(|| anyhow!("Performer with id {} not found", id)),
 
             MediaType::Playlist => self
                 .get_every_playlist()?
                 .into_iter()
-                .find(|p| p.uuid == id)
+                .find(|p| p.uuid == *id)
                 .map(PlayableResult::Playlist)
                 .ok_or_else(|| anyhow!("Playlist with id {} not found", id)),
         }
@@ -511,7 +511,7 @@ impl DB {
     }
 
     pub fn edit_album(&self, uuid: String, title: String, performer: String) -> Result<()> {
-        let media = self.get_media_by_id(uuid, MediaType::Album)?;
+        let media = self.get_media_by_id(&uuid, MediaType::Album)?;
         media
             .unwrap_as_album()
             .edit_metadata(self, title, performer)?;
@@ -519,28 +519,48 @@ impl DB {
     }
 
     pub fn edit_performer(&self, uuid: String, title: String) -> Result<()> {
-        let media = self.get_media_by_id(uuid, MediaType::Performer)?;
+        let media = self.get_media_by_id(&uuid, MediaType::Performer)?;
         media.unwrap_as_performer().edit_metadata(self, title)?;
         Ok(())
     }
 
-    pub fn add_track_to_playlist(&self, playlist_uuid: String, track_uuid: String) -> Result<()> {
-        if let Some(playlist) = self
-            .get_every_playlist()?
+    pub fn add_media_to_playlist(
+        &self,
+        playlist_uuid: String,
+        uuid: String,
+        media_type: MediaType,
+    ) -> Result<()> {
+        let mut playlists = self.get_every_playlist()?;
+        let playlist = playlists
             .iter_mut()
             .find(|playlist| playlist.uuid == playlist_uuid)
-        {
-            if let Some(_) = playlist
-                .tracks_ids
-                .iter()
-                .find(|track| **track == track_uuid)
-            {
-                debug("track now in playlist btw");
-            } else {
-                playlist.tracks_ids.push(track_uuid);
-                self.add_to_db(playlist)?;
+            .ok_or_else(|| anyhow!("Playlist not exists"))?;
+
+        let mut tracks_uuids = vec![];
+        match media_type {
+            MediaType::Track => {
+                tracks_uuids = vec![uuid.clone()];
+            }
+            MediaType::Album => {
+                let playable = self.get_media_by_id(&uuid, media_type)?;
+                tracks_uuids = playable.unwrap_as_album().get_tracks_uuids();
+            }
+            MediaType::Performer => {
+                let playable = self.get_media_by_id(&uuid, media_type)?;
+                tracks_uuids = playable.unwrap_as_performer().get_tracks_uuids();
+            }
+            MediaType::Playlist => {
+                let playable = self.get_media_by_id(&uuid, media_type)?;
+                tracks_uuids = playable.unwrap_as_playlist().get_tracks_uuids();
             }
         }
+
+        for id in tracks_uuids {
+            if !playlist.get_tracks_uuids().contains(&uuid) {
+                playlist.add_track(&self, id);
+            }
+        }
+
         Ok(())
     }
 

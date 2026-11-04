@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { addMediaToQueue } from "./playQueue";
 import { Playlist } from "../bindings/Playlist";
 import { PlayableResult } from "../bindings/PlayableResult";
+import { ContextMenu } from "./contextMenu";
 
 
 let playlistTemplate = (playlist_uuid: string): string =>
@@ -53,6 +54,12 @@ async function spawn(sortBy: string) {
           playlistTitle.textContent = playlist.title;
           let len = element.querySelector(".playlist-len")!;
           len.textContent = playlist.tracks_ids.length.toString();
+
+          element.addEventListener("contextmenu", async (e) => {
+            const pos = [e.pageX,e.pageY];
+            let menu = new ContextMenu(pos[0], pos[1]);
+            await menu.spawnForPlaylist(uuid!);
+          });
 
           element.addEventListener("click", async () => {
             await addMediaToQueue("Playlist", uuid!);

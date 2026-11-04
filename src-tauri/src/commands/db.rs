@@ -78,7 +78,7 @@ pub async fn get_playable_by_id(
 ) -> Result<PlayableResult, String> {
     let guard = db.read().unwrap();
     guard
-        .get_media_by_id(id, media_type)
+        .get_media_by_id(&id, media_type)
         .map_err(|err| err.to_string())
 }
 
@@ -120,14 +120,15 @@ pub async fn remove_playlist(
 }
 
 #[tauri::command]
-pub async fn add_track_to_playlist(
+pub async fn add_media_to_playlist(
     db: tauri::State<'_, Arc<RwLock<DB>>>,
     playlist_uuid: String,
-    track_uuid: String,
+    media_type: MediaType,
+    uuid: String,
 ) -> Result<(), String> {
     let db_guard = &db.write().unwrap();
     db_guard
-        .add_track_to_playlist(playlist_uuid, track_uuid)
+        .add_media_to_playlist(playlist_uuid, uuid, media_type)
         .map_err(|err| err.to_string())?;
     Ok(())
 }
@@ -156,7 +157,7 @@ pub async fn edit_track(
     let track = db
         .read()
         .unwrap()
-        .get_media_by_id(uuid.clone(), MediaType::Track)
+        .get_media_by_id(&uuid, MediaType::Track)
         .unwrap()
         .unwrap_as_track();
 

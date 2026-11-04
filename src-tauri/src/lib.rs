@@ -62,7 +62,7 @@ pub fn run() -> Result<()> {
             commands::remove_track_from_queue_by_id,
             commands::create_playlist,
             commands::remove_playlist,
-            commands::add_track_to_playlist,
+            commands::add_media_to_playlist,
             commands::get_playables_ids_by_part_of_name,
             commands::edit_track,
             commands::edit_album,

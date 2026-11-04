@@ -127,7 +127,7 @@ impl Album {
 
         for track_uuid in self.tracks_ids.iter() {
             let track = db
-                .get_media_by_id(track_uuid.clone(), MediaType::Track)
+                .get_media_by_id(&track_uuid, MediaType::Track)
                 .unwrap()
                 .unwrap_as_track();
 

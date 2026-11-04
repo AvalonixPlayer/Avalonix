@@ -5,6 +5,7 @@ import { PlayableResult } from "../bindings/PlayableResult";
 import { Track } from "../bindings/Track";
 import { updateSlider } from "./slider";
 import { trackButtonTemplate } from "./tracksCreator";
+import { ContextMenu } from "./contextMenu";
 
 export async function addMediaToQueue(mediaType: MediaType, mediaUuid: string) {
   await invoke("add_media_to_queue", { mediaType: mediaType, id: mediaUuid });
@@ -43,8 +44,14 @@ async function fillQueue() {
           let trackGenre = element.querySelector(".track-genre")!;
           trackGenre.textContent = track.genre;
 
+          element.addEventListener("contextmenu", async (e) => {
+            const pos = [e.pageX,e.pageY];
+            let menu = new ContextMenu(pos[0], pos[1]);
+            await menu.spawnForTrackInQueue(uuid!);
+          });
+
           element.addEventListener("click", async () => {
-            await invoke("start_track_in_queue_by_id", {id: uuid})
+            await startTrack(uuid!);
           });
 
           let trackCover: string = await invoke("get_track_cover", { id: uuid });
@@ -88,6 +95,14 @@ async function fillQueue() {
       observer.observe(lastInsertedElement)
     }
   });
+}
+
+export async function startTrack(uuid: String) {
+  await invoke("start_track_in_queue_by_id", { id: uuid });
+}
+
+export async function removeTrack(uuid: String) {
+  await invoke("remove_track_from_queue_by_id", { id: uuid });
 }
 
 export async function initPlayqueueControll() {

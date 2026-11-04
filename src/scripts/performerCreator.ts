@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Performer } from "../bindings/Performer";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
+import { ContextMenu } from "./contextMenu";
 
 const performerButtonTemplate = (performer_uuid: string): string =>
   `<div class="button playable performer-button" data-uuid="${performer_uuid}">
@@ -50,6 +51,12 @@ async function spawn(sortBy: string) {
           performerTitle.textContent = performer.title;
           let len = element.querySelector(".performer-lenght")!;
           len.textContent = performer.tracks_ids.length.toString();
+
+          element.addEventListener("contextmenu", async (e) => {
+            const pos = [e.pageX,e.pageY];
+            let menu = new ContextMenu(pos[0], pos[1]);
+            await menu.spawnForPerformerInLibrary(uuid!);
+          });
 
           element.addEventListener("click", async () => {
             await addMediaToQueue("Performer", uuid!);

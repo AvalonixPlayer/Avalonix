@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Album } from "../bindings/Album";
 import { PlayableResult } from "../bindings/PlayableResult";
 import { addMediaToQueue } from "./playQueue";
-import { contextMenuForAlbumInLib } from "./contextMenu";
+import { ContextMenu } from "./contextMenu";
 
 export const albumTemplate = (albumUuid: String): string =>
   `<div class="button playable album-button" data-uuid="${albumUuid}">
@@ -60,6 +60,12 @@ async function spawn(sortBy: string) {
 
           let titleElement = element.querySelector("h4") as Element;
           titleElement.textContent = album.title;
+
+          element.addEventListener("contextmenu", async (e) => {
+            const pos = [e.pageX,e.pageY];
+            let menu = new ContextMenu(pos[0], pos[1]);
+            await menu.spawnForAlbumInLibrary(uuid!);
+          });
 
           albumCoverElement.animate([
             { opacity: 0, transform: 'translateX(-20px)'},
