@@ -4,16 +4,22 @@ use std::{
     time::Duration,
 };
 
-use anyhow::{Context, Ok, Result, bail};
+use anyhow::{Context, Ok, Result, anyhow, bail};
 use better_sms::mutex::{MutexGuardWork, MutexWork};
 use rand::{rng, seq::SliceRandom};
 
-use crate::{audio::media_player::MediaPlayer, disk::db::DB, events::Event};
+use crate::{
+    audio::media_player::MediaPlayer,
+    disk::db::DB,
+    events::Event,
+    logger::{error, fatal, warn},
+    media::playable_type::MediaType::Track,
+};
 
 pub struct PlayQueue {
     pub tracks_uuids_in_queue_displaying: Vec<String>,
     pub tracks_uuids_in_queue_real: Vec<String>,
-    pub current_uuid_index: i32,
+    pub current_uuid_index: usize,
     pub shuffle: bool,
     pub media_player: Arc<Mutex<MediaPlayer>>,
     pub events_sender: Arc<Mutex<Sender<Event>>>,
@@ -28,7 +34,7 @@ impl PlayQueue {
         Self {
             tracks_uuids_in_queue_displaying: vec![],
             tracks_uuids_in_queue_real: vec![],
-            current_uuid_index: -1,
+            current_uuid_index: 0,
             shuffle: false,
             media_player: media_player.clone(),
             events_sender: events_sender.clone(),
@@ -37,10 +43,63 @@ impl PlayQueue {
     }
 
     pub fn clear(&mut self) {
-        self.current_uuid_index = -1;
+        self.current_uuid_index = 0;
         self.tracks_uuids_in_queue_displaying.clear();
         self.tracks_uuids_in_queue_real.clear();
         self.media_player.lock_unw().stop();
+    }
+
+    fn play_loop(
+        queue: Arc<Mutex<Self>>,
+        player: Arc<Mutex<MediaPlayer>>,
+        db: Arc<RwLock<DB>>,
+    ) -> Result<()> {
+        let empty = player.lock_unw().empty();
+
+        let mut queue = queue.lock_unw();
+
+        if queue.tracks_uuids_in_queue_real.len() == 0 {
+            queue.current_uuid_index = 0;
+            return Ok(());
+        }
+
+        if !empty {
+            return Ok(());
+        }
+
+        warn(queue.tracks_uuids_in_queue_real.len());
+        error(queue.current_uuid_index);
+        fatal(queue.current_uuid_index + 1);
+
+        if queue.tracks_uuids_in_queue_real.len() == 1 {
+            queue.current_uuid_index += 0;
+        } else {
+            if queue.tracks_uuids_in_queue_real.len() > queue.current_uuid_index + 1 {
+                queue.current_uuid_index += 1;
+            } else {
+                queue.current_uuid_index = 0;
+            }
+        }
+
+        if queue.current_uuid_index > queue.tracks_uuids_in_queue_real.len() {
+            queue.current_uuid_index = queue.tracks_uuids_in_queue_real.len();
+        }
+
+        let uuid = queue
+            .tracks_uuids_in_queue_real
+            .get(queue.current_uuid_index as usize)
+            .ok_or_else(|| anyhow!("Current index incorrect"))?
+            .clone();
+        queue.current_uuid = Some(uuid.clone());
+
+        let track = db
+            .read()
+            .unwrap()
+            .get_media_by_id(&uuid, Track)?
+            .unwrap_as_track();
+
+        player.lock_unw().play_track(&track)?;
+        Ok(())
     }
 
     pub fn play(queue: &Arc<Mutex<Self>>, db: &Arc<RwLock<DB>>) -> Result<()> {
@@ -49,62 +108,8 @@ impl PlayQueue {
         let db = db.clone();
         thread::spawn(move || -> anyhow::Result<()> {
             loop {
-                let is_empty = {
-                    let player_lock = player.lock().unwrap();
-                    player_lock.empty()
-                };
-
-                if is_empty {
-                    let current_uuid = {
-                        let mut rng = rng();
-                        let mut queue = queue.lock().unwrap();
-                        if queue.tracks_uuids_in_queue_real.is_empty() {
-                            None
-                        } else {
-                            if queue.current_uuid_index == -1 {
-                                if queue.shuffle {
-                                    queue.tracks_uuids_in_queue_displaying.shuffle(&mut rng);
-                                }
-                                queue.current_uuid_index = 0;
-                            } else {
-                                if queue.current_uuid_index as usize + 1
-                                    >= queue.tracks_uuids_in_queue_real.len()
-                                {
-                                    queue.current_uuid_index = 0;
-                                    if queue.shuffle {
-                                        queue.tracks_uuids_in_queue_displaying.shuffle(&mut rng);
-                                    }
-                                } else {
-                                    queue.current_uuid_index += 1;
-                                }
-                            }
-                            Some(
-                                queue.tracks_uuids_in_queue_displaying
-                                    [queue.current_uuid_index as usize]
-                                    .clone(),
-                            )
-                        }
-                    };
-
-                    if let Some(uuid) = current_uuid {
-                        let db_lock = db.read().unwrap();
-                        let track = db_lock
-                            .get_every_track()?
-                            .into_iter()
-                            .find(|track| track.uuid == uuid)
-                            .context("Track can't be found in DB")?;
-
-                        let mut player_lock = player.lock().unwrap();
-                        queue
-                            .lock_unw()
-                            .use_guard(|guard| guard.current_uuid = Some(uuid.clone()));
-                        player_lock.play_track(&track)?;
-                    } else {
-                        queue
-                            .lock_unw()
-                            .use_guard(|guard| guard.current_uuid = None);
-                    }
-                }
+                Self::play_loop(queue.clone(), player.clone(), db.clone())
+                    .unwrap_or_else(|err| error(err));
 
                 sleep(Duration::from_millis(100));
             }
@@ -165,7 +170,7 @@ impl PlayQueue {
         if self.current_uuid_index - 1 >= 0 {
             self.current_uuid_index -= 2;
         } else {
-            self.current_uuid_index = self.tracks_uuids_in_queue_real.len() as i32;
+            self.current_uuid_index = self.tracks_uuids_in_queue_real.len();
         }
         Ok(())
     }
@@ -195,7 +200,7 @@ impl PlayQueue {
             .iter()
             .position(|x| *x == uuid)
         {
-            self.current_uuid_index = (index as i32 - 1) as i32;
+            self.current_uuid_index = index;
             Ok(())
         } else {
             bail!("no uuid in queue")
