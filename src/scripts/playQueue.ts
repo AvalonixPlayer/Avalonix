@@ -51,6 +51,7 @@ async function fillQueue() {
           });
 
           element.addEventListener("click", async () => {
+            console.log(uuid!);
             await startTrack(uuid!);
           });
 

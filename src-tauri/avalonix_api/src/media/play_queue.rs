@@ -12,7 +12,7 @@ use crate::{
     audio::media_player::MediaPlayer,
     disk::db::DB,
     events::Event,
-    logger::{error, fatal, warn},
+    logger::{error, fatal, info, warn},
     media::playable_type::MediaType::Track,
 };
 
@@ -24,6 +24,7 @@ pub struct PlayQueue {
     pub media_player: Arc<Mutex<MediaPlayer>>,
     pub events_sender: Arc<Mutex<Sender<Event>>>,
     pub current_uuid: Option<String>,
+    force_back: bool,
 }
 
 impl PlayQueue {
@@ -39,6 +40,7 @@ impl PlayQueue {
             media_player: media_player.clone(),
             events_sender: events_sender.clone(),
             current_uuid: None,
+            force_back: false,
         }
     }
 
@@ -67,17 +69,15 @@ impl PlayQueue {
             return Ok(());
         }
 
-        warn(queue.tracks_uuids_in_queue_real.len());
-        error(queue.current_uuid_index);
-        fatal(queue.current_uuid_index + 1);
-
-        if queue.tracks_uuids_in_queue_real.len() == 1 {
-            queue.current_uuid_index += 0;
-        } else {
-            if queue.tracks_uuids_in_queue_real.len() > queue.current_uuid_index + 1 {
-                queue.current_uuid_index += 1;
+        if !queue.force_back {
+            if queue.tracks_uuids_in_queue_real.len() == 1 {
+                queue.current_uuid_index += 0;
             } else {
-                queue.current_uuid_index = 0;
+                if queue.tracks_uuids_in_queue_real.len() > queue.current_uuid_index + 1 {
+                    queue.current_uuid_index += 1;
+                } else {
+                    queue.current_uuid_index = 0;
+                }
             }
         }
 
@@ -99,6 +99,7 @@ impl PlayQueue {
             .unwrap_as_track();
 
         player.lock_unw().play_track(&track)?;
+        queue.force_back = false;
         Ok(())
     }
 
@@ -120,6 +121,9 @@ impl PlayQueue {
     }
 
     pub fn add_tracks(&mut self, mut tracks_ids: Vec<String>) -> Result<()> {
+        if self.tracks_uuids_in_queue_real.len() == 0 {
+            self.force_back = true;
+        }
         for id in &tracks_ids {
             if let Some(position) = self.tracks_uuids_in_queue_real.iter().position(|x| x == id) {
                 self.tracks_uuids_in_queue_real.remove(position);
@@ -166,11 +170,12 @@ impl PlayQueue {
     }
 
     pub fn back(&mut self) -> Result<()> {
+        self.force_back = true;
         self.media_player.lock_unw().stop();
-        if self.current_uuid_index - 1 >= 0 {
-            self.current_uuid_index -= 2;
+        if self.current_uuid_index > 0 {
+            self.current_uuid_index -= 1;
         } else {
-            self.current_uuid_index = self.tracks_uuids_in_queue_real.len();
+            self.current_uuid_index = 0;
         }
         Ok(())
     }
@@ -200,6 +205,7 @@ impl PlayQueue {
             .iter()
             .position(|x| *x == uuid)
         {
+            self.force_back = true;
             self.current_uuid_index = index;
             Ok(())
         } else {
