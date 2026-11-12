@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use crate::{disk::db::DB, media::playable_type::MediaType};
+use crate::media::playable_type::MediaType;
 
 pub trait Media {
     fn get_media_type(&self) -> MediaType;

@@ -91,7 +91,7 @@ impl MediaArray for Playlist {
         }
     }
 
-    fn create_new_for_track(db: &DB, track: &Track) {
+    fn create_new_for_track(_db: &DB, _track: &Track) {
         todo!()
     }
 }

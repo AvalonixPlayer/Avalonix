@@ -1,22 +1,19 @@
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::BTreeMap,
     format, fs,
-    sync::{Arc, Mutex, mpsc::Sender},
-    todo, vec,
+    sync::{Arc, Mutex, mpsc::Sender}, vec,
 };
 
-use anyhow::{Result, anyhow, bail};
+use anyhow::{Result, anyhow};
 use better_sms::mutex::MutexWork;
 use glob::glob;
 use rkyv::rancor::Error;
-use rustc_serialize::json::ToJson;
 
 use crate::{
     disk::{
         disk_paths::avalonix_db,
         sort_by::{
             SortBy,
-            SortByResolver::{SortAlbums, SortPerformers},
             SortTracks,
         },
         user::settings::UserSettings,
@@ -499,7 +496,7 @@ impl DB {
     pub fn edit_track(
         &self,
         mut media: Track,
-        uuid: String,
+        _uuid: String,
         title: String,
         album: String,
         performer: String,

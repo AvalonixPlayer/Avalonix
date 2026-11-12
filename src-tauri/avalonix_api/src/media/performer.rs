@@ -12,7 +12,7 @@ use crate::{
     media::{
         media_array::MediaArray,
         media_trait::Media,
-        playable_type::{MediaType, PlayableResult},
+        playable_type::MediaType,
         track::Track,
     },
 };

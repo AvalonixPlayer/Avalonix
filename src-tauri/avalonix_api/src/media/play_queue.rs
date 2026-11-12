@@ -4,15 +4,15 @@ use std::{
     time::Duration,
 };
 
-use anyhow::{Context, Ok, Result, anyhow, bail};
-use better_sms::mutex::{MutexGuardWork, MutexWork};
+use anyhow::{Ok, Result, anyhow, bail};
+use better_sms::mutex::MutexWork;
 use rand::{rng, seq::SliceRandom};
 
 use crate::{
     audio::media_player::MediaPlayer,
     disk::db::DB,
     events::Event,
-    logger::{error, fatal, info, warn},
+    logger::error,
     media::playable_type::MediaType::Track,
 };
 

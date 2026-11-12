@@ -1,6 +1,6 @@
 use core::fmt;
 use std::{
-    fs::{self, File},
+    fs::{self},
     path::Path,
     time::{Duration, UNIX_EPOCH},
 };
@@ -8,34 +8,26 @@ use std::{
 use anyhow::{Result, bail};
 use lofty::{
     config::ParseOptions,
-    file::{self, AudioFile, TaggedFile, TaggedFileExt},
-    picture::{Picture, PictureBuilder},
+    file::{AudioFile, TaggedFileExt},
+    picture::Picture,
     probe::Probe,
     tag::{
-        Accessor,
-        ItemKey::{self, Lyricist},
-        ItemValue, TagExt, TagItem,
+        Accessor, TagExt,
     },
 };
 use rcue::{cue::Cue, parser::parse_from_file};
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
 use rustc_serialize::base64::{MIME, ToBase64};
-use sled::Db;
 use ts_rs::TS;
 use uuid::Uuid;
 
 use crate::{
-    disk::{
-        db::{self, DB},
-        user::settings::UserSettings,
-    },
-    logger::{debug, error, fatal, info},
+    disk::db::DB,
+    logger::{debug, error, info},
     media::{
-        album::{self, Album},
         cover_get::CoverGet,
         media_array::MediaArrayType::{self},
         media_trait::Media,
-        performer,
         playable_type::MediaType,
     },
 };

@@ -13,11 +13,7 @@ use crate::{
     disk::db::DB,
     logger::{debug, error},
     media::{
-        album,
-        cover_get::CoverGet,
-        media_array::MediaArray,
-        media_trait::Media,
-        playable_type::{MediaType, PlayableResult},
+        cover_get::CoverGet, media_array::MediaArray, media_trait::Media, playable_type::MediaType,
         track::Track,
     },
 };
