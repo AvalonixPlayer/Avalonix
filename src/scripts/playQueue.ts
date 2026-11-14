@@ -141,6 +141,25 @@ async function initControllQueueButtons() {
   document.getElementById("pause-track-button")?.addEventListener("click", async () => {
     await process();
   })
+  let shuffleButton = document.getElementById("shuffle-button");
+
+  await shuffle_process(false);
+
+  shuffleButton?.addEventListener("click", async () => {
+    let shuffle: boolean = await invoke("switch_shuffle");
+    await shuffle_process(shuffle);
+  })
+
+  async function shuffle_process(shuffle: boolean) {
+    let shuffleButton = document.getElementById("shuffle-button");
+    if (shuffle == true) {
+      shuffleButton!.querySelector("img")!.src = "/shuffle.png";
+    }
+    else
+    {
+      shuffleButton!.querySelector("img")!.src = "/not_shuffle.png";
+    }
+  }
 
   async function process() {
     await invoke("switch_media_player_state");

@@ -67,6 +67,7 @@ pub fn run() -> Result<()> {
             commands::edit_track,
             commands::edit_album,
             commands::edit_performer,
+            commands::switch_shuffle
         ])
         .manage(api.db)
         .manage(api.media_player)

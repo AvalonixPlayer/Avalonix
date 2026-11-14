@@ -12,12 +12,12 @@ use crate::{
     audio::media_player::MediaPlayer,
     disk::db::DB,
     events::Event,
-    logger::error,
+    logger::{error, fatal},
     media::playable_type::MediaType::Track,
 };
 
 pub struct PlayQueue {
-    pub tracks_uuids_in_queue_displaying: Vec<String>,
+    pub tracks_uuids_in_queue_shuffled: Vec<String>,
     pub tracks_uuids_in_queue_real: Vec<String>,
     pub current_uuid_index: usize,
     pub shuffle: bool,
@@ -33,7 +33,7 @@ impl PlayQueue {
         events_sender: &Arc<Mutex<Sender<Event>>>,
     ) -> Self {
         Self {
-            tracks_uuids_in_queue_displaying: vec![],
+            tracks_uuids_in_queue_shuffled: vec![],
             tracks_uuids_in_queue_real: vec![],
             current_uuid_index: 0,
             shuffle: false,
@@ -46,7 +46,7 @@ impl PlayQueue {
 
     pub fn clear(&mut self) {
         self.current_uuid_index = 0;
-        self.tracks_uuids_in_queue_displaying.clear();
+        self.tracks_uuids_in_queue_shuffled.clear();
         self.tracks_uuids_in_queue_real.clear();
         self.media_player.lock_unw().stop();
     }
@@ -85,11 +85,18 @@ impl PlayQueue {
             queue.current_uuid_index = queue.tracks_uuids_in_queue_real.len();
         }
 
-        let uuid = queue
-            .tracks_uuids_in_queue_real
-            .get(queue.current_uuid_index as usize)
-            .ok_or_else(|| anyhow!("Current index incorrect"))?
-            .clone();
+        let uuid = match queue.shuffle {
+            true => queue
+                .tracks_uuids_in_queue_shuffled
+                .get(queue.current_uuid_index as usize)
+                .ok_or_else(|| anyhow!("Current index incorrect"))?
+                .clone(),
+            false => queue
+                .tracks_uuids_in_queue_real
+                .get(queue.current_uuid_index as usize)
+                .ok_or_else(|| anyhow!("Current index incorrect"))?
+                .clone(),
+        };
         queue.current_uuid = Some(uuid.clone());
 
         let track = db
@@ -130,9 +137,9 @@ impl PlayQueue {
             }
         }
         self.tracks_uuids_in_queue_real.append(&mut tracks_ids);
-        self.tracks_uuids_in_queue_displaying = self.tracks_uuids_in_queue_real.clone();
+        self.tracks_uuids_in_queue_shuffled = self.tracks_uuids_in_queue_real.clone();
         if self.shuffle {
-            self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());
+            self.tracks_uuids_in_queue_shuffled.shuffle(&mut rng());
         }
         self.events_sender
             .lock_unw()
@@ -148,17 +155,27 @@ impl PlayQueue {
             .position(|x| *x == uuid)
         {
             self.tracks_uuids_in_queue_real.remove(index);
-            self.tracks_uuids_in_queue_displaying = self.tracks_uuids_in_queue_real.clone();
+
             if self.shuffle {
-                self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());
+                let p = self
+                    .tracks_uuids_in_queue_shuffled
+                    .iter()
+                    .position(|x| *x == uuid)
+                    .unwrap();
+                self.tracks_uuids_in_queue_shuffled.remove(p);
+            }
+            if index == self.current_uuid_index {
+                self.media_player.lock_unw().stop();
             }
             self.events_sender
                 .lock_unw()
                 .send(Event::UpdateQueue)
                 .unwrap();
+
             if self.tracks_uuids_in_queue_real.len() == 0 {
                 self.media_player.lock_unw().stop();
             }
+
             return Ok(());
         }
         bail!("not uuid")
@@ -180,18 +197,38 @@ impl PlayQueue {
         Ok(())
     }
 
-    pub fn switch_shuffle(&mut self) -> Result<()> {
+    pub fn switch_shuffle(&mut self) -> Result<bool> {
         self.shuffle = !self.shuffle;
         if self.shuffle {
-            self.tracks_uuids_in_queue_displaying.shuffle(&mut rng());
+            if self.tracks_uuids_in_queue_real.len() > 1 {
+                self.tracks_uuids_in_queue_shuffled.shuffle(&mut rng());
+                let index = {
+                    if self.tracks_uuids_in_queue_real.len() == 2 {
+                        0
+                    } else {
+                        if self.tracks_uuids_in_queue_real.len() >= self.current_uuid_index + 1 {
+                            0
+                        } else {
+                            self.current_uuid_index + 1
+                        }
+                    }
+                };
+
+                let next_track_uuid = self.tracks_uuids_in_queue_shuffled[index].clone();
+                if let Some(cur) = self.current_uuid.clone() {
+                    if next_track_uuid == cur {
+                        self.tracks_uuids_in_queue_shuffled.reverse();
+                    }
+                }
+            }
         } else {
-            self.tracks_uuids_in_queue_displaying = self.tracks_uuids_in_queue_real.clone();
+            self.tracks_uuids_in_queue_shuffled = self.tracks_uuids_in_queue_real.clone();
         }
         self.events_sender
             .lock_unw()
             .send(Event::UpdateQueue)
             .unwrap();
-        Ok(())
+        Ok(self.shuffle)
     }
 
     pub fn get_current_uuid(&mut self) -> Option<String> {
@@ -201,7 +238,7 @@ impl PlayQueue {
     pub fn start_by_uuid(&mut self, uuid: String) -> Result<()> {
         self.media_player.lock_unw().stop();
         if let Some(index) = self
-            .tracks_uuids_in_queue_displaying
+            .tracks_uuids_in_queue_shuffled
             .iter()
             .position(|x| *x == uuid)
         {
