@@ -77,8 +77,12 @@ pub async fn add_media_to_queue(
 #[tauri::command]
 pub async fn get_queue_tracks_ids(
     play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+    shuffle: bool,
 ) -> Result<Vec<String>, String> {
-    Ok(play_queue.lock_unw().tracks_uuids_in_queue_real.clone())
+    match shuffle {
+        true => Ok(play_queue.lock_unw().tracks_uuids_in_queue_shuffled.clone()),
+        false => Ok(play_queue.lock_unw().tracks_uuids_in_queue_real.clone()),
+    }
 }
 
 #[tauri::command]
@@ -145,4 +149,11 @@ pub async fn switch_shuffle(
         .lock_unw()
         .use_guard(|guard| guard.switch_shuffle())
         .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn get_shuffle_state(
+    play_queue: tauri::State<'_, Arc<Mutex<PlayQueue>>>,
+) -> Result<bool, String> {
+    play_queue.lock_unw().use_guard(|guard| Ok(guard.shuffle))
 }

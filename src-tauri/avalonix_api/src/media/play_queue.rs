@@ -81,20 +81,32 @@ impl PlayQueue {
             }
         }
 
-        if queue.current_uuid_index > queue.tracks_uuids_in_queue_real.len() {
-            queue.current_uuid_index = queue.tracks_uuids_in_queue_real.len();
+        if queue.current_uuid_index >= queue.tracks_uuids_in_queue_real.len() {
+            queue.current_uuid_index = queue.tracks_uuids_in_queue_real.len() - 1;
         }
 
         let uuid = match queue.shuffle {
             true => queue
                 .tracks_uuids_in_queue_shuffled
                 .get(queue.current_uuid_index as usize)
-                .ok_or_else(|| anyhow!("Current index incorrect"))?
+                .ok_or_else(|| {
+                    anyhow!(format!(
+                        "Current index incorrect: {} {}",
+                        queue.current_uuid_index,
+                        queue.tracks_uuids_in_queue_real.len()
+                    ))
+                })?
                 .clone(),
             false => queue
                 .tracks_uuids_in_queue_real
                 .get(queue.current_uuid_index as usize)
-                .ok_or_else(|| anyhow!("Current index incorrect"))?
+                .ok_or_else(|| {
+                    anyhow!(format!(
+                        "Current index incorrect: {} {}",
+                        queue.current_uuid_index,
+                        queue.tracks_uuids_in_queue_real.len()
+                    ))
+                })?
                 .clone(),
         };
         queue.current_uuid = Some(uuid.clone());
@@ -154,6 +166,11 @@ impl PlayQueue {
             .iter()
             .position(|x| *x == uuid)
         {
+            if let Some(cur_uuid) = &self.current_uuid {
+                if uuid == *cur_uuid {
+                    self.media_player.lock_unw().stop();
+                }
+            }
             self.tracks_uuids_in_queue_real.remove(index);
 
             if self.shuffle {
@@ -199,31 +216,28 @@ impl PlayQueue {
 
     pub fn switch_shuffle(&mut self) -> Result<bool> {
         self.shuffle = !self.shuffle;
-        if self.shuffle {
-            if self.tracks_uuids_in_queue_real.len() > 1 {
-                self.tracks_uuids_in_queue_shuffled.shuffle(&mut rng());
-                let index = {
-                    if self.tracks_uuids_in_queue_real.len() == 2 {
-                        0
-                    } else {
-                        if self.tracks_uuids_in_queue_real.len() >= self.current_uuid_index + 1 {
-                            0
-                        } else {
-                            self.current_uuid_index + 1
-                        }
-                    }
-                };
 
-                let next_track_uuid = self.tracks_uuids_in_queue_shuffled[index].clone();
-                if let Some(cur) = self.current_uuid.clone() {
-                    if next_track_uuid == cur {
-                        self.tracks_uuids_in_queue_shuffled.reverse();
-                    }
-                }
+        let mut queue_to_set_index = vec![];
+
+        if self.shuffle {
+            if !self.tracks_uuids_in_queue_real.is_empty() {
+                self.tracks_uuids_in_queue_shuffled.shuffle(&mut rng());
+                queue_to_set_index = self.tracks_uuids_in_queue_shuffled.clone();
             }
         } else {
+            queue_to_set_index = self.tracks_uuids_in_queue_real.clone();
             self.tracks_uuids_in_queue_shuffled = self.tracks_uuids_in_queue_real.clone();
         }
+
+        if let Some(current_uuid) = &self.current_uuid {
+            if let Some(new_uuid_index) = queue_to_set_index
+                .iter()
+                .position(|uuid| *uuid == *current_uuid)
+            {
+                self.current_uuid_index = new_uuid_index;
+            }
+        }
+
         self.events_sender
             .lock_unw()
             .send(Event::UpdateQueue)

@@ -19,7 +19,7 @@ export async function setMediaToQueue(mediaType: MediaType, mediaUuid: string) {
 }
 
 async function fillQueue() {
-  let everyTracksIds = await invoke<string[]>("get_queue_tracks_ids");
+  let everyTracksIds = await invoke<string[]>("get_queue_tracks_ids", {shuffle: await invoke("get_shuffle_state")});
 
   let tracksList = document.getElementById("queue-list");
   tracksList!.innerHTML = "";
@@ -143,7 +143,7 @@ async function initControllQueueButtons() {
   })
   let shuffleButton = document.getElementById("shuffle-button");
 
-  await shuffle_process(false);
+  await shuffle_process(await invoke("get_shuffle_state"));
 
   shuffleButton?.addEventListener("click", async () => {
     let shuffle: boolean = await invoke("switch_shuffle");
